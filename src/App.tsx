@@ -84,6 +84,13 @@ function App() {
               <ServicesSection />
               <AboutSection />
               <TestimonialsSection />
+              <section id="faq" className="mt-20 px-4 max-w-4xl mx-auto">
+                <h2 className="text-2xl font-bold text-white mb-4">Frequently Asked Questions</h2>
+                <details className="bg-neutral-800 rounded-lg p-4">
+                  <summary className="text-white font-semibold">What should I expect when calling Aksarben Locksmiths?</summary>
+                  <p className="mt-2 text-gray-300">You'll speak with a local expert who can assess your needs and dispatch help. We're fully licensed and ready to assist with residential, commercial, or vehicle lockouts.</p>
+                </details>
+              </section>
               <PricingSection />
               <ContactSection />
             </main>
