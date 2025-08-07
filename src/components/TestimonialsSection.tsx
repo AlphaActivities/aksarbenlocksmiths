@@ -114,10 +114,10 @@ const TestimonialsSection: React.FC = () => {
                 What Our Customers Say
               </h2>
               <p className="text-white text-lg text-shadow-white">
-                We pride ourselves on providing exceptional service to every customer<br />
-                Here's what some of them have to say about their experience with us
-              </p>
-            </div>
+            <p className="text-white text-lg leading-relaxed text-center max-w-3xl mx-auto">
+              <strong>What should I expect when calling Aksarben Locksmiths?</strong><br />
+              You'll speak with a local expert who can assess your needs and dispatch help. We're fully licensed and ready to assist with residential, commercial, or vehicle lockouts.
+            </p>
           </div>
         </div>
         
