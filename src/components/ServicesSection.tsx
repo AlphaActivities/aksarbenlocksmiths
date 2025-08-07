@@ -68,6 +68,9 @@ const ServicesSection: React.FC = () => {
             <h2 className="text-4xl font-bold text-transparent bg-clip-text red-blue-hypersweep">
               Professional Locksmith Services
             </h2>
+            <span className="sr-only">
+              Mobile locksmith Omaha, key duplication services in Council Bluffs, licensed locksmiths in Bellevue, residential lock rekeying, commercial entry locksmith Omaha, emergency locksmith support in the metro area.
+            </span>
             <p className="text-white text-lg [text-shadow:0_0_6px_rgba(255,255,255,0.8)]">
               From Emergency Lockouts to Complete Key Solutions<br />
               Our Team of Skilled Locksmiths are Ready to Help 24/7

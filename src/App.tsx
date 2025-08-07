@@ -110,6 +110,11 @@ function App() {
               </div>
             </section>
             
+            <details>
+              <summary>How fast can a locksmith arrive in Omaha?</summary>
+              <p>We typically arrive quickly depending on availability, but call us for real-time updates.</p>
+            </details>
+            
             <Helmet>
               <script type="application/ld+json">{`
                 {
