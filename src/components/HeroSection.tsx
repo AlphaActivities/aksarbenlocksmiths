@@ -11,6 +11,7 @@ const HeroSection: React.FC = () => {
             Locked Out? <span className="text-red-500">We're Already on the Way!</span>
           </h1>
           <p className="text-sm md:text-base text-white/70 font-medium [text-shadow:0_0_6px_rgba(255,255,255,0.8)]">
+          </p>
           <p className="text-sm md:text-base text-white/85 font-medium [text-shadow:0_0_6px_rgba(255,255,255,0.8)]">
             Serving Omaha with 24/7 emergency service. Car, Home, Business & Safe Lockouts
           </p>
