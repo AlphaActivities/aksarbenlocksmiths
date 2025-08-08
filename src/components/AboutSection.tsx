@@ -46,9 +46,17 @@ const AboutSection: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-black to-blue-900 opacity-40 animate-luxury-horizontal-shimmer z-0"></div>
               <div className="relative z-10">
                 <h2 className="text-3xl md:text-4xl font-bold mb-6 bg-gradient-to-r from-blue-900 via-blue-300 to-blue-900 bg-clip-text text-transparent bg-[length:400%_100%] bg-[position:0%_50%] animate-[text-shimmer_10s_linear_infinite] text-center">Trusted Locksmith Services in Omaha for Over 15 Years</h2>
-                <p className="text-white/80 font-bold text-base md:text-lg tracking-wide leading-normal mb-6">
-                  At Aksarben Locksmiths, we pride ourselves on providing fast, reliable, and professional locksmith services.
-                </p>
+                <div className="mt-8 text-white">
+                  <details className="bg-neutral-800 rounded-lg p-4 mb-4">
+                    <summary className="text-white font-semibold">What should I expect when calling Aksarben Locksmiths?</summary>
+                    <p className="mt-2 text-gray-300">You'll speak with a local expert who can assess your needs and dispatch help. We're fully licensed and ready to assist with residential, commercial, or vehicle lockouts.</p>
+                  </details>
+
+                  <details className="bg-neutral-800 rounded-lg p-4">
+                    <summary className="text-white font-semibold">Do you provide 24/7 emergency locksmith service?</summary>
+                    <p className="mt-2 text-gray-300">Yes! We offer 24/7 emergency service across Omaha and surrounding areas for residential, commercial, and auto lockouts.</p>
+                  </details>
+                </div>
                 
                 <div className="space-y-3 mb-4">
                   {[
