@@ -66,13 +66,6 @@ const AboutSection: React.FC = () => {
               </div>
             </div>
 
-            <div className="mt-8 text-white">
-              <p className="font-semibold">What should I expect when calling Aksarben Locksmiths?</p>
-              <p className="text-gray-300 mt-2">
-                You'll speak with a local expert who can assess your needs and dispatch help. We're fully licensed and ready to assist with residential, commercial, or vehicle lockouts.
-              </p>
-            </div>
-
             <div className="flex justify-center gap-4 flex-wrap mt-4">
               <a 
                 href="#contact" 
