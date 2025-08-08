@@ -74,19 +74,19 @@ function App() {
                 })}
                 className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition animate-pulse"
               >
-            <section id="faq" className="mt-20 px-4 max-w-4xl mx-auto">
-              <h2 className="text-2xl font-bold text-white mb-6 text-center">Frequently Asked Questions</h2>
-
-              <details className="bg-neutral-800 rounded-lg p-4 mb-4">
-                <summary className="text-white font-semibold">What should I expect when calling Aksarben Locksmiths?</summary>
-                <p className="mt-2 text-gray-300">You'll speak with a local expert who can assess your needs and dispatch help. We're fully licensed and ready to assist with residential, commercial, or vehicle lockouts.</p>
-              </details>
-
-              <details className="bg-neutral-800 rounded-lg p-4">
-                <summary className="text-white font-semibold">Do you provide 24/7 emergency locksmith service?</summary>
-                <p className="mt-2 text-gray-300">Yes! We offer 24/7 emergency service across Omaha and surrounding areas for residential, commercial, and auto lockouts.</p>
-              </details>
-            </section>
+                <Phone className="h-4 w-4" />
+                (402) 556-6715
+              </a>
+            </div>
+            <Navbar />
+            <main>
+              <HeroSection />
+              <ServicesSection />
+              <AboutSection />
+              <TestimonialsSection />
+              <PricingSection />
+              <ContactSection />
+            </main>
             <EmergencyButton />
             <BackToTop />
             {/* Invisible FAQ Schema for AEO */}
@@ -171,6 +171,3 @@ function App() {
 // test push from StackBlitz
 
 export default App;
-        }
-  )
-}
