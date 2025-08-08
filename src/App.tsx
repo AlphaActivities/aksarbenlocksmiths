@@ -74,6 +74,19 @@ function App() {
                 })}
                 className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition animate-pulse"
               >
+                <Phone className="h-4 w-4" />
+                (402) 556-6715
+              </a>
+            </div>
+            <Navbar />
+            <main>
+              <HeroSection />
+              <ServicesSection />
+              <AboutSection />
+              <TestimonialsSection />
+              <PricingSection />
+              <ContactSection />
+            </main>
             <section id="faq" className="mt-20 px-4 max-w-4xl mx-auto">
               <h2 className="text-2xl font-bold text-white mb-6 text-center">Frequently Asked Questions</h2>
 
@@ -171,6 +184,3 @@ function App() {
 // test push from StackBlitz
 
 export default App;
-        }
-  )
-}
