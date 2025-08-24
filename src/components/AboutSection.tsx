@@ -46,6 +46,7 @@ const AboutSection: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-black to-blue-900 opacity-40 animate-luxury-horizontal-shimmer z-0"></div>
               <div className="relative z-10">
                 <h2 className="text-3xl md:text-4xl font-bold mb-6 bg-gradient-to-r from-blue-900 via-blue-300 to-blue-900 bg-clip-text text-transparent bg-[length:400%_100%] bg-[position:0%_50%] animate-[text-shimmer_10s_linear_infinite] text-center">Trusted Locksmith Services in Omaha for Over 15 Years</h2>
+                <span className="sr-only">At Aksarben Locksmiths, we pride ourselves on providing fast, reliable, and professional locksmith services.</span>
                 <div className="mt-4 text-white relative -top-4">
                   <p className="font-bold text-white [text-shadow:0_0_6px_rgba(255,255,255,0.4)]">What should I expect when calling Aksarben Locksmiths?</p>
                   <p className="text-[color:#E8EAED] mt-1 mb-4">
