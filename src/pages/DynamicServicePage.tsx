@@ -3,15 +3,9 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, Phone } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { trackVideoEvent, trackClick } from "../utils/analytics";
+import servicesData from "../data/services.json";
 
-const allServices = [
-  { slug: 'residential', title: 'Residential Lockouts' },
-  { slug: 'automotive', title: 'Automotive Lockouts' },
-  { slug: 'extraction', title: 'Broken Key Extraction' },
-  { slug: 'duplication', title: 'Key Duplication' },
-  { slug: 'rekeying', title: 'Lock Rekeying' },
-  { slug: 'consultation', title: 'Security Consultation' }
-];
+const allServices = servicesData.services;
 
 const serviceData = {
   residential: {
