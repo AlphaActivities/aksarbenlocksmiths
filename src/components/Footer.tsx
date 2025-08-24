@@ -69,12 +69,12 @@ const Footer: React.FC = () => (
                 <Facebook className="w-5 h-5 text-white" />
               </a>
               <a
-                href="https://twitter.com/USERNAME_HERE"
+                href="https://x.com/Aksarbenlocks"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => trackClick('footer_social_click', e.currentTarget, { 
                   platform: 'Twitter',
-                  url: 'https://twitter.com/USERNAME_HERE',
+                  url: 'https://x.com/Aksarbenlocks',
                   page_section: 'footer'
                 })}
                 aria-label="Twitter"
