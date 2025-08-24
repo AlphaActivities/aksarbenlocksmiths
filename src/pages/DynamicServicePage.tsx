@@ -511,6 +511,19 @@ export default function DynamicServicePage() {
           </p>
         </div>
         
+        <div className="text-center mt-4 max-w-3xl mx-auto">
+          <p className="text-white/80 text-sm italic">
+            {slug === 'residential' ? 'Watch our technician demonstrate safe home entry techniques without damage.' :
+             slug === 'automotive' ? 'See how we unlock vehicles quickly while protecting your car\'s interior.' :
+             slug === 'extraction' ? 'Learn our professional method for removing broken keys from any lock.' :
+             slug === 'duplication' ? 'Observe the precision key cutting process for perfect duplicates.' :
+             slug === 'rekeying' ? 'View the lock rekeying process that gives you new keys instantly.' :
+             slug === 'consultation' ? 'Discover how we assess and upgrade your property\'s security systems.' :
+             slug === 'emergency' ? 'See our rapid response emergency locksmith service in action.' :
+             'Professional lock repair techniques demonstrated by our certified technicians.'}
+          </p>
+        </div>
+        
         <div className="flex justify-center mt-8">
           <a 
             href="tel:+14025566715" 
@@ -525,6 +538,33 @@ export default function DynamicServicePage() {
             Request Service
           </a>
         </div>
+        
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://aksarbenlocksmiths.com/"
+              },
+              {
+                "@type": "ListItem", 
+                "position": 2,
+                "name": "Services",
+                "item": "https://aksarbenlocksmiths.com/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": data.title,
+                "item": `https://aksarbenlocksmiths.com/services/${slug}`
+              }
+            ]
+          })}
+        </script>
         
         <div className="text-sm mt-12 text-white">
           <strong>More Locksmith Services:</strong>

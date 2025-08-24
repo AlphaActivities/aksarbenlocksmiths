@@ -101,6 +101,8 @@ const AboutSection: React.FC = () => {
                   src="/images/About Us Thumbnails/About-Us-Photo-1.webp" 
                   alt="Key duplication omaha - mobile locksmith omaha cutting keys" 
                   className="object-cover w-full h-full border-2 border-white/20 shadow-lg rounded-2xl transition-transform duration-300 ease-out transform hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
                   onMouseEnter={() => handleImageHover('1', 'enter')}
                   onMouseLeave={() => handleImageHover('1', 'leave')}
                   onClick={(e) => trackClick('about_image_click', e.currentTarget, {
@@ -114,6 +116,8 @@ const AboutSection: React.FC = () => {
                   src="/images/About Us Thumbnails/About-Us-Photo-3.webp" 
                   alt="Commercial locksmith omaha repairing business door locks" 
                   className="object-cover w-full h-full border-2 border-white/20 shadow-lg rounded-2xl transition-transform duration-300 ease-out transform hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
                   onMouseEnter={() => handleImageHover('3', 'enter')}
                   onMouseLeave={() => handleImageHover('3', 'leave')}
                   onClick={(e) => trackClick('about_image_click', e.currentTarget, {
@@ -129,6 +133,8 @@ const AboutSection: React.FC = () => {
                   src="/images/About Us Thumbnails/About-Us-Photo-2.webp" 
                   alt="Residential locksmith omaha installing home door locks" 
                   className="object-cover w-full h-full border-2 border-white/20 shadow-lg rounded-2xl transition-transform duration-300 ease-out transform hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
                   onMouseEnter={() => handleImageHover('2', 'enter')}
                   onMouseLeave={() => handleImageHover('2', 'leave')}
                   onClick={(e) => trackClick('about_image_click', e.currentTarget, {
@@ -142,6 +148,8 @@ const AboutSection: React.FC = () => {
                   src="/images/About Us Thumbnails/About-Us-Photo-4.webp" 
                   alt="Emergency locksmith omaha mobile tools for 24 hour service" 
                   className="object-cover w-full h-full border-2 border-white/20 shadow-lg rounded-2xl transition-transform duration-300 ease-out transform hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
                   onMouseEnter={() => handleImageHover('4', 'enter')}
                   onMouseLeave={() => handleImageHover('4', 'leave')}
                   onClick={(e) => trackClick('about_image_click', e.currentTarget, {

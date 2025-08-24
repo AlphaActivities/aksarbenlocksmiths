@@ -142,6 +142,8 @@ const TestimonialsSection: React.FC = () => {
                           src={testimonial.image} 
                           alt={`Customer testimonial photo of ${testimonial.name}, ${testimonial.position || 'locksmith customer'}`}
                           className="w-full h-full object-cover"
+                          loading="lazy"
+                          decoding="async"
                         />
                       </div>
                       <div className="flex-1">
