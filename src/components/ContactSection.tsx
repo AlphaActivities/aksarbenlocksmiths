@@ -86,9 +86,15 @@ const ContactSection: React.FC = () => {
           <div className="bg-gradient-to-r from-[#7b1414] via-[#4e0e2f] via-[#2c0727] via-[#0f1f4c] via-[#1e3267] to-[#0a112e] bg-[length:300%_300%] animate-contactHeatWave transition-all duration-[3000ms] ease-in-out rounded-xl shadow-lg border border-white/10 px-6 py-4 max-w-4xl mx-auto flex flex-col items-center justify-center">
             <h2
               ref={headingRef}
-              className={`text-3xl md:text-5xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[#00A8FF] via-[#00B7FF] to-[#00D1FF]`}
+              className={`text-3xl md:text-5xl font-bold mb-6`}
             >
-              <span className={hasAnimated ? 'typewriter whitespace-nowrap relative inline-block' : 'whitespace-nowrap relative inline-block'}>
+              <span
+                className={
+                  hasAnimated
+                    ? 'typewriter whitespace-nowrap relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-[#00A8FF] via-[#00B7FF] to-[#00D1FF]'
+                    : 'whitespace-nowrap relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-[#00A8FF] via-[#00B7FF] to-[#00D1FF]'
+                }
+              >
                 Get in Touch
               </span>
             </h2>
