@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import servicesData from "../src/data/services.json" assert { type: "json" };
+import servicesData from "../src/data/services.json\" assert { type: "json" };
 
 const site = "https://aksarbenlocksmiths.com";
 const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
