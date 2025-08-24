@@ -98,7 +98,7 @@ html {
 .typewriter::after {
   content: "_";
   position: absolute;
-  right: -0.02em;
+  right: -0.05em;
   bottom: 0;
   font-weight: bold;
   font-size: 0.9em;
