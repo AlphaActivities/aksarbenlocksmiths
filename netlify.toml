@@ -4,13 +4,8 @@
   publish = "dist"
 
 [[redirects]]
-  from = "/sitemap.xml"
-  to = "/sitemap.xml"
-  status = 200
-
-[[redirects]]
-  from = "/robots.txt"
-  to = "/robots.txt"
+  from = "/*"
+  to = "/index.html"
   status = 200
 
 [build.environment]
