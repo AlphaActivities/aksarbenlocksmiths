@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, MapPin, Phone, Mail } from 'lucide-react';
+import { Facebook, MapPin, Phone, Mail, Twitter } from 'lucide-react';
 import { trackClick, trackNavigation, trackEvent } from '../utils/analytics';
 
 const serviceLinks = [
@@ -67,6 +67,20 @@ const Footer: React.FC = () => (
                 className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500 transition"
               >
                 <Facebook className="w-5 h-5 text-white" />
+              </a>
+              <a
+                href="https://twitter.com/USERNAME_HERE"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => trackClick('footer_social_click', e.currentTarget, { 
+                  platform: 'Twitter',
+                  url: 'https://twitter.com/USERNAME_HERE',
+                  page_section: 'footer'
+                })}
+                aria-label="Twitter"
+                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500 transition"
+              >
+                <Twitter className="w-5 h-5 text-white" />
               </a>
               <a
                 href="https://www.google.com/maps/place/Aksarben+Locksmiths+LLC/@41.3203175,-96.4756949,10z"
