@@ -1,0 +1,1 @@
+GA4 annotation note: Compliance sweep complete, removed time-promise language in App.tsx and DynamicServicePage JSON-LD, verified project wide clean including footer, date: 2025-08-26.
