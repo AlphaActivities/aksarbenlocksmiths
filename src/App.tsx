@@ -94,7 +94,7 @@ function App() {
               <h2>Frequently Asked Questions - Aksarben Locksmiths LLC</h2>
               <div>
                 <h3>How fast can a locksmith get to me in Omaha?</h3>
-                <p>We typically arrive within 15–30 minutes anywhere in the Omaha metro area, including Council Bluffs, Papillion, Bellevue, and surrounding suburbs.</p>
+                <p>Serving the Omaha metro with mobile locksmith support, response times vary by distance and traffic.</p>
                 
                 <h3>Do you offer 24/7 emergency locksmith services?</h3>
                 <p>Yes! Aksarben Locksmiths LLC operates 24 hours a day, 7 days a week — including weekends and holidays. Locked out? Call us anytime.</p>

@@ -203,7 +203,7 @@ export default function DynamicServicePage() {
                   "name": "How fast can a residential locksmith arrive in Omaha?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Available 24/7 for residential lockouts across Omaha with reliable emergency response."
+                    "text": "Serving the Omaha metro with mobile locksmith support, response times vary by distance and traffic."
                   }
                 },
                 {
@@ -373,7 +373,7 @@ export default function DynamicServicePage() {
                   "name": "How fast can an emergency locksmith arrive?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Our team typically arrives within 20 to 30 minutes anywhere in the Omaha area."
+                    "text": "Serving the Omaha metro with mobile locksmith support, response times vary by distance and traffic."
                   }
                 }
               ]
