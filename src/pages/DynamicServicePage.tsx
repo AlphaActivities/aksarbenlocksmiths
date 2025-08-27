@@ -466,6 +466,10 @@ export default function DynamicServicePage() {
           </div>
         </div>
         
+        <p className="text-white text-sm opacity-80 mt-2 text-center">
+          <a href="/service-areas" className="underline hover:opacity-100">See full coverage list</a>
+        </p>
+        
         <div className="relative w-full max-w-4xl mx-auto overflow-hidden rounded-2xl shadow-xl aspect-video group bg-black/80">
           {!playing && (
             <button

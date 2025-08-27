@@ -163,6 +163,7 @@ const Footer: React.FC = () => (
           <div>
             <h3 className="font-bold text-white text-lg mb-10">Contact Us</h3>
             <ul className="space-y-8 text-white/70">
+            <ul className="space-y-6 text-white/70">
               <li className="flex items-center space-x-5">
                 <Phone className="w-6 h-6 text-red-500" />
                 <a 
@@ -196,6 +197,11 @@ const Footer: React.FC = () => (
                 <span className="text-lg font-medium leading-relaxed">
                   Omaha, Nebraska & All<br />Surrounding Cities
                 </span>
+              </li>
+              <li>
+                <p className="text-white/80 text-sm">
+                  <a href="/service-areas" className="underline hover:text-red-500 transition-colors">Service Areas</a>
+                </p>
               </li>
             </ul>
           </div>
