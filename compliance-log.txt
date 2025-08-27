@@ -2,4 +2,6 @@ GA4 annotation note: Compliance sweep complete, removed time-promise language in
 
 GA4 annotation note: Compliance sweep complete, removed time-promise language in App.tsx and DynamicServicePage JSON-LD, verified project wide clean including footer, date: 2025-08-26.
 
+[2025-08-26T20:36:00-05:00] chore, remove time promise language across site, verified project wide clean including footer, added Service Areas planning diagnostics, no git CLI available in Bolt so logged via file
+
 GA4 annotation note: Compliance sweep complete, removed time-promise language in App.tsx and DynamicServicePage JSON-LD, verified project wide clean including footer, date: 2025-08-26.
