@@ -1,12 +1,20 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { trackClick } from "../utils/analytics";
 
 export default function ServiceAreasPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!location?.state?.restorePosition) {
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+  }, []); // run once on mount
   const location = useLocation();
 
   useEffect(() => {
@@ -103,6 +111,8 @@ export default function ServiceAreasPage() {
       />
       <div className="animated-footer-bg" />
       <div className="footer-glass-effect" />
+      <div className="animated-footer-bg" />
+      <div className="footer-glass-effect" />
 
       {/* page shell, mirror DynamicServicePage tokens */}
       <div className="relative z-10 min-h-screen px-6 py-12 pt-16">
@@ -132,8 +142,6 @@ export default function ServiceAreasPage() {
           <h2 className="text-white text-2xl font-bold mb-4 text-center">Main Areas</h2>
           <div className="flex flex-wrap gap-3 justify-center">
             {mainAreas.map(area => (
-              <span
-                key={area}
                 className="rounded-full px-4 py-2 bg-white/10 border border-white/20 backdrop-blur-sm hover:bg-white/15 hover:scale-105 transition-all text-sm font-medium"
               >
                 {area}
@@ -149,8 +157,6 @@ export default function ServiceAreasPage() {
             {otherAreas.map(area => (
               <span
                 key={area}
-                className="rounded-full px-4 py-2 bg-white/10 border border-white/20 backdrop-blur-sm hover:bg-white/15 hover:scale-105 transition-all text-sm font-medium"
-              >
                 {area}
               </span>
             ))}
