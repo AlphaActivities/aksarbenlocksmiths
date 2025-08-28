@@ -162,7 +162,7 @@ const Footer: React.FC = () => (
           {/* COLUMN 4 — CONTACT */}
           <div>
             <h3 className="font-bold text-white text-lg mb-10">Contact Us</h3>
-            <ul className="text-white/70">
+            <ul className="text-white/70 space-y-4">
               <li className="flex items-center space-x-5">
                 <Phone className="w-6 h-6 text-red-500" />
                 <a 
@@ -177,7 +177,7 @@ const Footer: React.FC = () => (
                   (402) 556-6715
                 </a>
               </li>
-              <li className="flex items-center space-x-5 mt-4">
+              <li className="flex items-center space-x-5">
                 <Mail className="w-6 h-6 text-red-500" />
                 <a 
                   href="mailto:Aksarbenlocks@gmail.com" 
@@ -191,22 +191,24 @@ const Footer: React.FC = () => (
                   info@aksarbenlocksmiths.com
                 </a>
               </li>
-              <li className="flex items-start space-x-5 mt-2">
+              <li className="flex items-start space-x-5">
                 <MapPin className="w-6 h-6 text-red-500 mt-1" />
                 <span className="text-lg font-medium leading-relaxed">
                   Omaha, Nebraska & All<br />Surrounding Cities
                 </span>
               </li>
-              <p className="text-white/80 text-sm mt-1">
-                <Link
-                  to="/service-areas"
-                  onClick={() => { sessionStorage.setItem("lastScrollY", String(window.scrollY)); }}
-                  className="underline hover:text-red-500 transition-colors"
-                >
-                  Service Areas
-                </Link>
-              </p>
             </ul>
+            <div className="flex justify-center mt-4">
+              <Link
+                to="/service-areas"
+                state={{ openAtTop: true }}
+                onClick={() => { sessionStorage.setItem("lastScrollY", String(window.scrollY)); }}
+                aria-label="View complete service area coverage"
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm shadow-[0_8px_30px_rgba(0,0,0,0.25)] hover:bg-white/10 hover:scale-105 transition-all text-white text-sm"
+              >
+                <span className="font-semibold tracking-wide">Service Areas</span>
+              </Link>
+            </div>
           </div>
 
         </div>
