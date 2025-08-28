@@ -138,13 +138,13 @@ export default function ServiceAreasPage() {
         </p>
 
         {/* Main Areas */}
-        <section className="mb-12 rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6">
+        <section className="mb-12 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-4 sm:p-6">
           <h2 className="text-white text-2xl font-bold mb-4 text-center">Main Areas</h2>
           <div className="flex flex-wrap gap-3 justify-center">
             {mainAreas.map(area => (
               <span
                 key={area}
-                className="rounded-full px-4 py-2 bg-white/5 border border-white/15 hover:bg-white/10 hover:scale-105 transition-all text-sm font-medium"
+                className="rounded-full px-4 py-2 bg-white/10 border border-white/20 backdrop-blur-sm hover:bg-white/15 hover:scale-105 transition-all text-sm font-medium"
               >
                 {area}
               </span>
@@ -153,13 +153,13 @@ export default function ServiceAreasPage() {
         </section>
 
         {/* Surrounding Communities */}
-        <section className="mb-12 rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6">
+        <section className="mb-12 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-4 sm:p-6">
           <h2 className="text-white text-2xl font-bold mb-4 text-center">Surrounding Communities</h2>
           <div className="flex flex-wrap gap-3 justify-center">
             {otherAreas.map(area => (
               <span
                 key={area}
-                className="rounded-full px-4 py-2 bg-white/5 border border-white/15 hover:bg-white/10 hover:scale-105 transition-all text-sm font-medium"
+                className="rounded-full px-4 py-2 bg-white/10 border border-white/20 backdrop-blur-sm hover:bg-white/15 hover:scale-105 transition-all text-sm font-medium"
               >
                 {area}
               </span>
