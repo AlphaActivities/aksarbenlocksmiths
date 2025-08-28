@@ -198,7 +198,13 @@ const Footer: React.FC = () => (
                 </span>
               </li>
               <p className="text-white/80 text-sm mt-1">
-                <a href="/service-areas" className="underline hover:text-red-500 transition-colors">Service Areas</a>
+                <Link
+                  to="/service-areas"
+                  onClick={() => { sessionStorage.setItem("lastScrollY", String(window.scrollY)); }}
+                  className="underline hover:text-red-500 transition-colors"
+                >
+                  Service Areas
+                </Link>
               </p>
             </ul>
           </div>
