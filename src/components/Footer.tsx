@@ -162,7 +162,7 @@ const Footer: React.FC = () => (
           {/* COLUMN 4 — CONTACT */}
           <div>
             <h3 className="font-bold text-white text-lg mb-10">Contact Us</h3>
-            <ul className="space-y-8 text-white/70">
+            <ul className="text-white/70">
               <li className="flex items-center space-x-5">
                 <Phone className="w-6 h-6 text-red-500" />
                 <a 
@@ -177,7 +177,7 @@ const Footer: React.FC = () => (
                   (402) 556-6715
                 </a>
               </li>
-              <li className="flex items-center space-x-5">
+              <li className="flex items-center space-x-5 mt-4">
                 <Mail className="w-6 h-6 text-red-500" />
                 <a 
                   href="mailto:Aksarbenlocks@gmail.com" 
@@ -191,12 +191,15 @@ const Footer: React.FC = () => (
                   info@aksarbenlocksmiths.com
                 </a>
               </li>
-              <li className="flex items-start space-x-5">
+              <li className="flex items-start space-x-5 mt-2">
                 <MapPin className="w-6 h-6 text-red-500 mt-1" />
                 <span className="text-lg font-medium leading-relaxed">
                   Omaha, Nebraska & All<br />Surrounding Cities
                 </span>
               </li>
+              <p className="text-white/80 text-sm mt-1">
+                <a href="/service-areas" className="underline hover:text-red-500 transition-colors">Service Areas</a>
+              </p>
             </ul>
           </div>
 
