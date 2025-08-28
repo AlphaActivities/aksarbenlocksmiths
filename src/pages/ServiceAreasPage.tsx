@@ -142,6 +142,8 @@ export default function ServiceAreasPage() {
           <h2 className="text-white text-2xl font-bold mb-4 text-center">Main Areas</h2>
           <div className="flex flex-wrap gap-3 justify-center">
             {mainAreas.map(area => (
+              <span
+                key={area}
                 className="rounded-full px-4 py-2 bg-white/10 border border-white/20 backdrop-blur-sm hover:bg-white/15 hover:scale-105 transition-all text-sm font-medium"
               >
                 {area}
@@ -157,6 +159,8 @@ export default function ServiceAreasPage() {
             {otherAreas.map(area => (
               <span
                 key={area}
+                className="rounded-full px-4 py-2 bg-white/10 border border-white/20 backdrop-blur-sm hover:bg-white/15 hover:scale-105 transition-all text-sm font-medium"
+              >
                 {area}
               </span>
             ))}
