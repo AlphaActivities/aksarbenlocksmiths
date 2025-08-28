@@ -1,7 +1,12 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { trackClick } from "../utils/analytics";
 
 export default function ServiceAreasPage() {
+  const navigate = useNavigate();
+
   const mainAreas = [
     "Omaha",
     "Bellevue",
@@ -69,6 +74,21 @@ export default function ServiceAreasPage() {
 
       {/* page shell, mirror DynamicServicePage tokens */}
       <div className="relative z-10 min-h-screen bg-gradient-to-br backdrop-blur-sm px-6 py-12 pt-16">
+        <button
+          onClick={(e) => {
+            navigate("/", { state: { restorePosition: true } });
+            trackClick("back_to_home", e.currentTarget, {
+              from_page: "service_areas",
+              page_section: "service_areas_page"
+            });
+          }}
+          className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out mb-6"
+          aria-label="Back to Home"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Home
+        </button>
+
         <div className="flex justify-center mb-8">
           <div className="inline-block px-6 py-3 rounded-xl backdrop-blur-sm border border-white/10 shadow-lg">
             <h1 className="text-white text-3xl sm:text-4xl font-extrabold tracking-wide text-center">
