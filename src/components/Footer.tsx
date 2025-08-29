@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, MapPin, Phone, Mail, Twitter } from 'lucide-react';
+import { Facebook, MapPin, Phone, Mail, Twitter, ChevronRight } from 'lucide-react';
 import { trackClick, trackNavigation, trackEvent } from '../utils/analytics';
 
 const serviceLinks = [
@@ -162,7 +162,7 @@ const Footer: React.FC = () => (
           {/* COLUMN 4 — CONTACT */}
           <div>
             <h3 className="font-bold text-white text-lg mb-10">Contact Us</h3>
-            <ul className="space-y-8 text-white/70">
+            <ul className="text-white/70">
               <li className="flex items-center space-x-5">
                 <Phone className="w-6 h-6 text-red-500" />
                 <a 
@@ -177,27 +177,50 @@ const Footer: React.FC = () => (
                   (402) 556-6715
                 </a>
               </li>
-              <li className="flex items-center space-x-5">
+
+              <li className="flex items-center space-x-5 mt-4">
                 <Mail className="w-6 h-6 text-red-500" />
                 <a 
-                  href="mailto:Aksarbenlocks@gmail.com" 
+                  href="mailto:aksarbenlocksmiths@gmail.com"
                   onClick={(e) => trackClick('footer_email_click', e.currentTarget, { 
-                    email: 'info@aksarbenlocksmiths.com',
+                    email: 'aksarbenlocksmiths@gmail.com',
+                    source: 'footer',
+                    page_section: 'footer'
+                  })}
+                  className="text-lg font-medium hover:text-red-500 transition-colors break-all"
+                >
+                  aksarbenlocksmiths@gmail.com
+                </a>
+              </li>
+
+              <li className="flex items-center space-x-5 mt-4">
+                <MapPin className="w-6 h-6 text-red-500" />
+                <a 
+                  href="https://maps.google.com/?q=Aksarben+Locksmiths+Omaha+NE"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => trackClick('footer_address_click', e.currentTarget, { 
                     source: 'footer',
                     page_section: 'footer'
                   })}
                   className="text-lg font-medium hover:text-red-500 transition-colors"
                 >
-                  info@aksarbenlocksmiths.com
+                  Omaha, Nebraska
                 </a>
               </li>
-              <li className="flex items-start space-x-5">
-                <MapPin className="w-6 h-6 text-red-500 mt-1" />
-                <span className="text-lg font-medium leading-relaxed">
-                  Omaha, Nebraska & All<br />Surrounding Cities
-                </span>
-              </li>
             </ul>
+            <div className="flex justify-center mt-4">
+              <Link
+                to="/service-areas"
+                state={{ openAtTop: true }}
+                onClick={() => { sessionStorage.setItem('lastScrollY', String(window.scrollY)); }}
+                aria-label="View complete service area coverage"
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm shadow-[0_8px_30px_rgba(0,0,0,0.25)] hover:bg-white/10 hover:scale-105 transition-all text-white text-sm"
+              >
+                Service Areas
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
 
         </div>
