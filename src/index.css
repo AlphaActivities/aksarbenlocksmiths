@@ -293,6 +293,57 @@ html {
   transform: scale(1.05);
 }
 
+/* Service Areas, versioned overlays and dimmer to bypass stale rules */
+.sa-dim {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 14, 28, 0.72);
+  z-index: 5;              /* above video, below content */
+  pointer-events: none;
+}
+
+.sa2-animated-bg {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(8, 16, 32, 0.97),
+    rgba(10, 26, 48, 0.97),
+    rgba(6, 14, 28, 0.98)
+  );
+  background-size: 400% 400%;
+  animation: deepShimmer 8s ease-in-out infinite;
+  z-index: 6;              /* above dim, below content */
+  pointer-events: none;
+  backdrop-filter: none;
+}
+
+/* Very subtle sweep, no brightening */
+.sa2-glass-effect {
+  position: fixed;
+  inset: 0;
+  z-index: 7;              /* above animated, below content */
+  pointer-events: none;
+}
+.sa2-glass-effect::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(30, 80, 130, 0.06),
+    rgba(40, 90, 140, 0.02),
+    rgba(30, 80, 130, 0.06)
+  );
+  animation: glassSlideSweep 6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 7;
+  backdrop-filter: blur(1.2px);
+  mix-blend-mode: normal;
+}
+
 .scrollbar-none {
   scrollbar-width: none;             /* Firefox */
   -ms-overflow-style: none;          /* IE/Edge */

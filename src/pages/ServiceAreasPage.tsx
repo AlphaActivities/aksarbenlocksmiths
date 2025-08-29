@@ -109,8 +109,9 @@ export default function ServiceAreasPage() {
         className="fixed inset-0 w-full h-full object-cover opacity-45 z-0"
         src="/videos/wallpaper.mp4"
       />
-      <div className="sa-animated-bg" />
-      <div className="sa-glass-effect" />
+      <div className="sa-dim" />
+      <div className="sa2-animated-bg" />
+      <div className="sa2-glass-effect" />
       <div className="animated-footer-bg" />
       <div className="footer-glass-effect" />
 
