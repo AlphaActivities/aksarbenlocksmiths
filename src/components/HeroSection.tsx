@@ -8,7 +8,7 @@ const HeroSection: React.FC = () => {
 
         <div className="bg-black/80 backdrop-blur rounded-2xl px-6 py-10 shadow-xl max-w-5xl mx-auto text-center space-y-8 mb-4 lg:mb-[30px]">
           <h1 className="text-4xl md:text-6xl font-extrabold text-white drop-shadow-md">
-            Locked Out? <span className="text-red-500">Your Local Omaha Locksmith is Here to Help</span>
+            Get back inside! <span className="text-red-500">Omaha's Trusted Locksmith Is Here</span>
           </h1>
           <p className="text-sm md:text-base text-white/70 font-medium [text-shadow:0_0_6px_rgba(255,255,255,0.8)]">
           </p>
