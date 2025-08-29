@@ -58,7 +58,7 @@ const AboutSection: React.FC = () => {
                   {[
                     { icon: <Shield className="h-5 w-5 text-red-500" />, text: "Licensed, bonded, and insured for your peace of mind" },
                     { icon: <Award className="h-5 w-5 text-red-500" />, text: "Certified by the Associated Locksmiths of America (ALOA)" },
-                    { icon: <Clock className="h-5 w-5 text-red-500" />, text: "Trusted emergency locksmith service open 24/7" },
+                    { icon: <Clock className="h-5 w-5 text-red-500" />, text: "Trusted emergency locksmith service available twenty four seven in Omaha" },
                     { icon: <CheckCircle className="h-5 w-5 text-red-500" />, text: "100% satisfaction guarantee on all services" }
                   ].map((item, i) => (
                     <div key={i} className="flex items-start">
