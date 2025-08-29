@@ -162,7 +162,7 @@ const Footer: React.FC = () => (
           {/* COLUMN 4 — CONTACT */}
           <div>
             <h3 className="font-bold text-white text-lg mb-10">Contact Us</h3>
-            <ul className="text-white/70 space-y-4">
+            <ul className="space-y-8 text-white/70">
               <li className="flex items-center space-x-5">
                 <Phone className="w-6 h-6 text-red-500" />
                 <a 
@@ -198,17 +198,6 @@ const Footer: React.FC = () => (
                 </span>
               </li>
             </ul>
-            <div className="flex justify-center mt-4">
-              <Link
-                to="/service-areas"
-                state={{ openAtTop: true }}
-                onClick={() => { sessionStorage.setItem("lastScrollY", String(window.scrollY)); }}
-                aria-label="View complete service area coverage"
-                className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm shadow-[0_8px_30px_rgba(0,0,0,0.25)] hover:bg-white/10 hover:scale-105 transition-all text-white text-sm"
-              >
-                <span className="font-semibold tracking-wide">Service Areas</span>
-              </Link>
-            </div>
           </div>
 
         </div>
