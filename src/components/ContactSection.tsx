@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { Phone, MapPin, Mail, Clock } from 'lucide-react';
 import PillBadge from './ui/PillBadge';
 import { trackFormEvent, trackClick, trackEvent } from '../utils/analytics';
@@ -179,8 +180,25 @@ const ContactSection: React.FC = () => {
               </div>
             </div>
             
-            <div className="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 h-64">
-              <div className="w-full h-64 bg-[url('/images/Services%20Thumbnails/map-service-area.png')] bg-cover bg-[center_bottom_20%] rounded-2xl shadow-xl border border-white/20"></div>
+            <div className="map-container relative bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 h-64">
+              <div className="pointer-events-none w-full h-64 bg-[url('/images/Services%20Thumbnails/map-service-area.png')] bg-cover bg-[center_bottom_20%] rounded-2xl shadow-xl border border-white/20"></div>
+
+              {/* Pill overlay, bottom center */}
+              <Link
+                to="/service-areas"
+                aria-label="View Service Areas coverage"
+                onClick={(e) =>
+                  trackClick('service_areas_pill_click', e.currentTarget, {
+                    source: 'map_card',
+                    page_section: 'contact',
+                    destination: '/service-areas'
+                  })
+                }
+                className="absolute left-1/2 bottom-4 -translate-x-1/2 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-700/90 text-white border border-red-800/30 transition-all duration-200 hover:scale-110 hover:shadow-[0_0_12px_4px_rgba(239,68,68,0.6)] hover:duration-100 focus:outline-none focus:ring-2 focus:ring-red-500/60 focus:ring-offset-2 focus:ring-offset-black/20"
+              >
+                <MapPin className="h-4 w-4" />
+                <span className="font-medium">Service Areas</span>
+              </Link>
             </div>
           </div>
           
