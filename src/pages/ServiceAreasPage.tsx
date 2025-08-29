@@ -94,7 +94,7 @@ export default function ServiceAreasPage() {
   ];
 
   return (
-    <div className="relative min-h-screen text-white overflow-hidden">
+    <div className="relative min-h-screen text-white overflow-hidden sa-theme">
       <Helmet>
         <title>Service Areas - South Florida Pressure Washing</title>
         <meta name="description" content="We provide professional pressure washing services throughout South Florida, including Boca Raton, Delray Beach, Boynton Beach, and surrounding communities." />
@@ -138,13 +138,13 @@ export default function ServiceAreasPage() {
         </p>
 
         {/* Main Areas */}
-        <section className="mb-12 rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6">
+        <section className="mb-12 rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6 sa-section">
           <h2 className="text-white text-2xl font-bold mb-4 text-center">Main Areas</h2>
           <div className="flex flex-wrap gap-3 justify-center">
             {mainAreas.map(area => (
               <span
                 key={area}
-                className="rounded-full px-4 py-2 bg-white/5 border border-white/15 hover:bg-white/10 hover:scale-105 transition-all text-sm font-medium"
+                className="rounded-full px-4 py-2 bg-white/5 border border-white/15 hover:bg-white/10 hover:scale-105 transition-all text-sm font-medium sa-chip"
               >
                 {area}
               </span>
@@ -153,13 +153,13 @@ export default function ServiceAreasPage() {
         </section>
 
         {/* Surrounding Communities */}
-        <section className="mb-12 rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6">
+        <section className="mb-12 rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6 sa-section">
           <h2 className="text-white text-2xl font-bold mb-4 text-center">Surrounding Communities</h2>
           <div className="flex flex-wrap gap-3 justify-center">
             {otherAreas.map(area => (
               <span
                 key={area}
-                className="rounded-full px-4 py-2 bg-white/5 border border-white/15 hover:bg-white/10 hover:scale-105 transition-all text-sm font-medium"
+                className="rounded-full px-4 py-2 bg-white/5 border border-white/15 hover:bg-white/10 hover:scale-105 transition-all text-sm font-medium sa-chip"
               >
                 {area}
               </span>
