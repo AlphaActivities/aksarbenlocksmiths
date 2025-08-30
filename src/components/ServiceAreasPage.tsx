@@ -22,12 +22,52 @@ export default function ServiceAreasPage() {
   const description =
     "Aksarben Locksmiths provides residential, automotive, and commercial locksmith services across Omaha and nearby cities, including Bellevue, Papillion, La Vista, Gretna, Elkhorn, and more. Call for fast, professional help.";
 
+  // Build JSON LD objects
+  const businessSchema = {
+    "@context": "https://schema.org",
+    "@type": "Locksmith",
+    "name": "Aksarben Locksmiths",
+    "url": "https://aksarbenlocksmiths.com/",
+    "telephone": "+14025566715",
+    "image": "https://aksarbenlocksmiths.com/images/Services%20Thumbnails/map-service-area.png",
+    "areaServed": areas.map((city) => ({
+      "@type": "City",
+      "name": `${city}, NE`
+    })),
+    "servesCuisine": undefined // keeps JSON stringify clean in some bundlers
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://aksarbenlocksmiths.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Service Areas",
+        "item": "https://aksarbenlocksmiths.com/service-areas"
+      }
+    ]
+  };
+
   return (
     <main className="min-h-screen w-full">
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={description} />
         <link rel="canonical" href="https://aksarbenlocksmiths.com/service-areas" />
+        <script type="application/ld+json">
+          {JSON.stringify(businessSchema)}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify(breadcrumbSchema)}
+        </script>
       </Helmet>
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
