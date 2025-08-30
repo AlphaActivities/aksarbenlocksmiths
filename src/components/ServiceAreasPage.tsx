@@ -2,7 +2,7 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 
 export default function ServiceAreasPage() {
-  // Omaha metro, Nebraska and nearby Iowa
+  // Omaha metro, Nebraska and nearby Iowa, full list
   const areas = [
     // Nebraska
     "Omaha",
