@@ -2,7 +2,7 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 
 export default function ServiceAreasPage() {
-  const mainAreas = [
+  const areas = [
     "Omaha",
     "Bellevue",
     "Papillion",
@@ -11,110 +11,65 @@ export default function ServiceAreasPage() {
     "Elkhorn",
     "Bennington",
     "Ralston",
-    "Waterloo",
     "Springfield",
-    "Ashland",
-    "Blair",
-    "Plattsmouth",
+    "Valley",
+    "Waterloo",
     "Council Bluffs",
-    "Carter Lake",
-    "Offutt AFB"
+    "Carter Lake"
   ];
 
-  const otherAreas = [
-    "Valley","Boys Town","Chalco","Fort Calhoun","Arlington","Yutan","Mead","Wahoo",
-    "Louisville","Weeping Water","Cedar Creek","Eagle","Murray","Union","Greenwood",
-    "South Bend","Elmwood","Nehawka","Kennard","Herman","Cedar Bluffs",
-    "Crescent","Underwood","Treynor","Neola","Avoca","Walnut","Carson","Oakland",
-    "Minden","Macedonia","Hancock","Silver City","Mineola","Pacific Junction",
-    "Glenwood","Missouri Valley","Woodbine"
-  ];
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "Aksarben Locksmiths",
-    "url": "https://aksarbenlocksmiths.com/service-areas",
-    "image": "https://aksarbenlocksmiths.com/images/logo.png",
-    "telephone": "+1-402-556-6715",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Omaha",
-      "addressRegion": "NE",
-      "addressCountry": "US"
-    },
-    "areaServed": [...mainAreas, ...otherAreas].map(name => ({ "@type": "City", name }))
-  };
+  const title = "Service Areas, Aksarben Locksmiths, Omaha and Nearby Cities";
+  const description =
+    "Aksarben Locksmiths provides residential, automotive, and commercial locksmith services across Omaha and nearby cities, including Bellevue, Papillion, La Vista, Gretna, Elkhorn, and more. Call for fast, professional help.";
 
   return (
-    <div className="relative min-h-screen text-white">
+    <main className="min-h-screen w-full">
       <Helmet>
-        <title>Locksmith Service Areas in the Omaha Metro | Aksarben Locksmiths</title>
-        <meta
-          name="description"
-          content="Aksarben Locksmiths provides professional mobile locksmith service throughout Omaha and the surrounding metro communities in Nebraska and Iowa."
-        />
-        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href="https://aksarbenlocksmiths.com/service-areas" />
       </Helmet>
 
-      {/* looping video background to match DynamicServicePage */}
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="fixed inset-0 w-full h-full object-cover opacity-45 z-0"
-        src="/videos/wallpaper.mp4"
-      />
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <header className="mb-8">
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+            Service Areas
+          </h1>
+          <p className="mt-3 text-white/80">
+            We come to you in Omaha and surrounding communities. Explore our coverage below,
+            and if your city is nearby, we probably serve you too.
+          </p>
+        </header>
 
-      {/* page shell, mirror DynamicServicePage tokens */}
-      <div className="relative z-10 min-h-screen bg-gradient-to-br backdrop-blur-sm px-6 py-12 pt-16">
-        <div className="flex justify-center mb-8">
-          <div className="inline-block px-6 py-3 rounded-xl backdrop-blur-sm border border-white/10 shadow-lg">
-            <h1 className="text-white text-3xl sm:text-4xl font-extrabold tracking-wide text-center">
-              Locksmith Service Areas in the Omaha Metro
-            </h1>
-          </div>
+        <div className="space-y-8">
+          <section>
+            <h2 className="text-xl font-semibold mb-4">
+              Omaha Metro Coverage
+            </h2>
+
+            <ul className="flex flex-wrap gap-3">
+              {areas.map((city) => (
+                <li key={city}>
+                  <span
+                    className="inline-flex items-center px-4 py-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all"
+                  >
+                    {city}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="prose prose-invert max-w-none">
+            <h3>Locksmith services available</h3>
+            <p>
+              Residential rekey and lock replacement, automotive lockouts and key help,
+              and commercial security support. Our mobile technicians bring professional
+              tools directly to your location for fast, reliable service.
+            </p>
+          </section>
         </div>
-
-        <p className="text-white/90 text-lg text-center mb-10">
-          We provide professional mobile locksmith service across Omaha and nearby communities. Response times vary by distance and traffic.
-        </p>
-
-        {/* Main Areas */}
-        <div className="mb-12">
-          <h2 className="text-white text-2xl font-bold mb-4 text-center">Main Areas</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {mainAreas.map(area => (
-              <a
-                key={area}
-                id={area.toLowerCase().replace(/\s+/g, "-")}
-                href={"#"+area.toLowerCase().replace(/\s+/g, "-")}
-                className="block rounded-lg border border-white/10 bg-white/5 px-4 py-3 hover:bg-white/10 transition"
-              >
-                <span className="font-semibold">{area}</span>
-              </a>
-            ))}
-          </div>
-        </div>
-
-        {/* Surrounding Communities */}
-        <div>
-          <h2 className="text-white text-2xl font-bold mb-4 text-center">Surrounding Communities</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {otherAreas.map(area => (
-              <a
-                key={area}
-                id={area.toLowerCase().replace(/\s+/g, "-")}
-                href={"#"+area.toLowerCase().replace(/\s+/g, "-")}
-                className="block rounded-lg border border-white/10 bg-white/5 px-4 py-3 hover:bg-white/10 transition"
-              >
-                <span className="font-semibold">{area}</span>
-              </a>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }
