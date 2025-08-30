@@ -2,25 +2,38 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 
 export default function ServiceAreasPage() {
+  // Omaha metro, Nebraska and nearby Iowa
   const areas = [
+    // Nebraska
     "Omaha",
     "Bellevue",
     "Papillion",
     "La Vista",
+    "Ralston",
     "Gretna",
     "Elkhorn",
     "Bennington",
-    "Ralston",
+    "Boys Town",
     "Springfield",
     "Valley",
     "Waterloo",
+    "Fort Calhoun",
+    "Blair",
+    "Fremont",
+    "Ashland",
+    "Plattsmouth",
+    "Offutt AFB",
+    "Chalco",
+    // Iowa
     "Council Bluffs",
-    "Carter Lake"
+    "Carter Lake",
+    "Crescent",
+    "Glenwood"
   ];
 
   const title = "Service Areas, Aksarben Locksmiths, Omaha and Nearby Cities";
   const description =
-    "Aksarben Locksmiths provides residential, automotive, and commercial locksmith services across Omaha and nearby cities, including Bellevue, Papillion, La Vista, Gretna, Elkhorn, and more. Call for fast, professional help.";
+    "Aksarben Locksmiths serves Omaha and the surrounding metro, including Bellevue, Papillion, La Vista, Gretna, Elkhorn, Council Bluffs, and more. Residential, automotive, and commercial service that comes to you.";
 
   return (
     <main className="min-h-screen w-full">
@@ -30,16 +43,14 @@ export default function ServiceAreasPage() {
         <link rel="canonical" href="https://aksarbenlocksmiths.com/service-areas" />
       </Helmet>
 
-      {/* Page shell, styled to match site cards and sections */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Hero card */}
-        <div className="bg-gradient-to-br from-[#0f1f4c] via-[#1e3267] to-[#0a112e] bg-opacity-40 backdrop-blur-lg rounded-3xl p-8 border border-white/10 shadow-2xl ring-1 ring-white/20 transition-all duration-500 hover:scale-[1.01] hover:shadow-3xl">
+        {/* Hero card, branded look */}
+        <div className="bg-gradient-to-br from-[#7b1414] via-[#4e0e2f] to-[#2c0727] bg-opacity-40 backdrop-blur-lg rounded-3xl p-8 border border-white/10 shadow-2xl ring-1 ring-white/20 transition-all duration-500 hover:scale-[1.01] hover:shadow-3xl">
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
             Service Areas
           </h1>
           <p className="mt-3 text-white/80">
-            We come to you in Omaha and surrounding communities. Explore our coverage below.
-            If your city is nearby, we probably serve you too.
+            We come to you across the Omaha metro. If your city is nearby, we probably serve you too.
           </p>
         </div>
 
@@ -57,7 +68,7 @@ export default function ServiceAreasPage() {
           </ul>
         </div>
 
-        {/* Copy block, same page vibe as other sections */}
+        {/* Copy block, same vibe as other sections */}
         <div className="mt-8 prose prose-invert max-w-none">
           <h3>Locksmith services available</h3>
           <p>
