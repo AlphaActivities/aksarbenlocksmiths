@@ -1,7 +1,8 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { trackClick } from "../utils/analytics";
 
 export default function ServiceAreasPage() {
   // Full list mirrored from your original AreasSection.tsx
@@ -24,14 +25,6 @@ export default function ServiceAreasPage() {
     "Aksarben Locksmiths serves Omaha, the core metro, and surrounding communities with fast, professional mobile locksmith service.";
 
   const navigate = useNavigate();
-  const goBack = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      navigate("/");
-    }
-  };
 
   return (
     <main className="min-h-screen w-full relative bg-black">
@@ -48,21 +41,19 @@ export default function ServiceAreasPage() {
       </div>
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Back button */}
-        <div className="mb-4">
-          <button
-            onClick={goBack}
-            aria-label="Go back"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-white border border-white/20 transition-all duration-200 hover:scale-105 hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-blue-400/60 focus:ring-offset-2 focus:ring-offset-black/20"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            <span className="font-medium">Back</span>
-          </button>
-          <span className="sr-only">
-            If the back action is unavailable, use this link:
-          </span>
-          <Link to="/" className="sr-only">Home</Link>
-        </div>
+        <button
+          onClick={(e) => {
+            navigate("/", { state: { scrollTo: "services", restorePosition: true } });
+            trackClick("back_to_services", e.currentTarget, {
+              source_page: "service_areas",
+              page_section: "service_areas_page"
+            });
+          }}
+          className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out mb-6"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Services
+        </button>
 
         {/* Hero card */}
         <div className="bg-gradient-to-br from-[#7b1414] via-[#4e0e2f] to-[#2c0727] bg-opacity-40 backdrop-blur-lg rounded-3xl p-8 border border-white/10 shadow-2xl ring-1 ring-white/20">
