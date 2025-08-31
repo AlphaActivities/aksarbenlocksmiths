@@ -37,6 +37,8 @@ export default function ServiceAreasPage() {
     "Glenwood"
   ];
 
+  const SURROUNDING = ALL_CITIES.filter((c) => !CORE_CITIES.includes(c));
+
   const CITY_STATE: Record<string, "NE" | "IA"> = {
     "Council Bluffs": "IA",
     "Carter Lake": "IA",
