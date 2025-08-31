@@ -18,12 +18,32 @@ export default function ServiceAreasPage() {
     "Omaha", "Ralston", "Papillion", "La Vista", "Council Bluffs", "Bellevue"
   ];
 
-  const SURROUNDING = ALL_CITIES.filter(c => !CORE_CITIES.includes(c));
 
-  const CITY_STATE: Record<string, "NE" | "IA"> = {
-    "Council Bluffs": "IA",
-    "Carter Lake": "IA"
-  };
+    // Nebraska
+    "Omaha",
+    "Bellevue",
+    "Papillion",
+    "La Vista",
+    "Ralston",
+    "Gretna",
+    "Elkhorn",
+    "Bennington",
+    "Boys Town",
+    "Springfield",
+    "Valley",
+    "Waterloo",
+    "Fort Calhoun",
+    "Blair",
+    "Fremont",
+    "Ashland",
+    "Plattsmouth",
+    "Offutt AFB",
+    "Chalco",
+    // Iowa
+    "Council Bluffs",
+    "Carter Lake",
+    "Crescent",
+    "Glenwood"
 
   const title = "Service Areas, Aksarben Locksmiths, Omaha and Nearby Cities";
   const description =
