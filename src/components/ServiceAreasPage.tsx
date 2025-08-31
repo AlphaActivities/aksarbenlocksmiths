@@ -12,10 +12,10 @@ export default function ServiceAreasPage() {
   useEffect(() => {
     const state = location?.state as any;
     if (state?.restorePosition) {
-      // skip, let App.tsx handle restoring
+      // Coming back to Home soon, let App.tsx restore. Do nothing here.
       return;
     }
-    try { sessionStorage.removeItem("lastScrollY"); } catch {}
+    // Fresh entry to Service Areas, scroll to top. Do NOT clear lastScrollY here.
     window.scrollTo({ top: 0, behavior: "auto" });
   }, [location]);
 
