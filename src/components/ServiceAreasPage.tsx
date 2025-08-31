@@ -6,7 +6,6 @@ import { ArrowLeft } from "lucide-react";
 import { trackClick } from "../utils/analytics";
 
 export default function ServiceAreasPage() {
-  const location = useLocation();
 
   const location = useLocation();
 
