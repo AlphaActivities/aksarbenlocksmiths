@@ -8,10 +8,14 @@ import { trackClick } from "../utils/analytics";
 export default function ServiceAreasPage() {
   const location = useLocation();
 
+  const location = useLocation();
+
   useEffect(() => {
-    // Only force top scroll if not coming back with restorePosition
-    const state = (location as any)?.state;
-    if (state?.restorePosition) return;
+    const state = location?.state as any;
+    if (state?.restorePosition) {
+      // skip, let App.tsx handle restoring
+      return;
+    }
     try { sessionStorage.removeItem("lastScrollY"); } catch {}
     window.scrollTo({ top: 0, behavior: "auto" });
   }, [location]);
