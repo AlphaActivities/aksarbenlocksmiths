@@ -371,11 +371,16 @@ html {
 html::-webkit-scrollbar {
   width: 12px;
 }
+
 html::-webkit-scrollbar-track {
   background: #000000; /* Pure Black Track */
 }
+
 html::-webkit-scrollbar-thumb {
   background-color: #b91c1c; /* Deep Red Thumb */
+}
+
+/* Keyframes must NOT be nested inside a selector */
 @keyframes call-bounce {
   0% {
     transform: translateY(0);
