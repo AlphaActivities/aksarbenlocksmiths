@@ -523,22 +523,8 @@ video:fullscreen {
   100% {
     transform: translateX(100%) skewX(-15deg);
     opacity: 0.2;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .animated-footer-bg {
-    animation: none !important;
-  }
-  .footer-glass-effect::before,
-  .footer-glass-effect::after {
-    animation: none !important;
-  }
-  .anim-glow-pulse {
-    animation: none !important;
-  }
-}
-
 @keyframes glowPulse {
   0%, 100% {
     box-shadow: 0 0 18px rgba(255,255,255,0.35);
