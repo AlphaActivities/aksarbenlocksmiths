@@ -25,14 +25,24 @@ function App() {
       if (location?.state?.restorePosition && lastY) {
         const y = parseInt(lastY, 10);
         if (!isNaN(y)) {
-          let attempts = 0;
+          let attempts = 0; // keep attempts in scope of scroll()
+
           const scroll = () => {
             window.scrollTo({ top: y, behavior: "smooth" });
             attempts++;
-            if (attempts < 5) setTimeout(scroll, 300);
+
+            // Stop early if we are basically at target to avoid extra jank
+            const closeEnough = Math.abs(window.scrollY - y) < 2;
+
+            if (!closeEnough && attempts < 10) {
+              setTimeout(scroll, 300); // increased retries for late layout shifts
+            } else {
+              try { sessionStorage.removeItem("lastScrollY"); } catch {}
+            }
           };
+
           scroll();
-          sessionStorage.removeItem("lastScrollY");
+          return;
         }
       } else if (location?.state?.scrollTo === "services") {
         const el = document.querySelector("#services");
@@ -40,7 +50,6 @@ function App() {
           el.scrollIntoView({ behavior: "smooth", block: "start" });
         }
       }
-      if (attempts < 10) setTimeout(scroll, 300);
     };
 
     restorePosition();
