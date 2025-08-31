@@ -20,6 +20,11 @@ export default function ServiceAreasPage() {
 
   const SURROUNDING = ALL_CITIES.filter(c => !CORE_CITIES.includes(c));
 
+  const CITY_STATE: Record<string, "NE" | "IA"> = {
+    "Council Bluffs": "IA",
+    "Carter Lake": "IA"
+  };
+
   const title = "Service Areas, Aksarben Locksmiths, Omaha and Nearby Cities";
   const description =
     "Aksarben Locksmiths serves Omaha, the core metro, and surrounding communities with fast, professional mobile locksmith service.";
@@ -32,6 +37,30 @@ export default function ServiceAreasPage() {
         <title>{title}</title>
         <meta name="description" content={description} />
         <link rel="canonical" href="https://aksarbenlocksmiths.com/service-areas" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Locksmith",
+            "name": "Aksarben Locksmiths",
+            "url": "https://aksarbenlocksmiths.com/",
+            "telephone": "+14025566715",
+            "image": "https://aksarbenlocksmiths.com/images/Services%20Thumbnails/map-service-area.png",
+            "areaServed": ALL_CITIES.map((city) => ({
+              "@type": "City",
+              "name": `${city}, ${CITY_STATE[city] ?? "NE"}`
+            }))
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aksarbenlocksmiths.com/" },
+              { "@type": "ListItem", "position": 2, "name": "Service Areas", "item": "https://aksarbenlocksmiths.com/service-areas" }
+            ]
+          })}
+        </script>
       </Helmet>
 
       {/* Animated wallpaper, same vibe as AreasSection */}
