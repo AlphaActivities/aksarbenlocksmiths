@@ -114,7 +114,7 @@ export default function ServiceAreasPage() {
       {/* Contrast overlay, adjust opacity as needed */}
       <div className="absolute inset-0 z-[3] pointer-events-none bg-black/25 md:bg-black/10"></div>
 
-      <div className="relative z-10">
+      <div className="relative z-10 text-white">
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <button
           onClick={(e) => {
@@ -149,7 +149,7 @@ export default function ServiceAreasPage() {
                 <button
                   type="button"
                   onClick={onCityClick(city, "core")}
-                  className="inline-flex items-center px-4 py-2 rounded-full border border-white/15 bg-gradient-to-br from-blue-500 via-blue-600 to-teal-500 text-white drop-shadow-glow ring-1 ring-blue-400/30 transition-all hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
+                  className="inline-flex items-center px-4 py-2 rounded-full border border-white/15 bg-gradient-to-br from-blue-500 via-blue-600 to-teal-500 text-white drop-shadow-glow ring-1 ring-blue-400/30 transition-all hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20 [text-shadow:0_0_6px_rgba(255,255,255,0.4)]"
                   aria-label={`City chip, ${city}`}
                 >
                   {city}
@@ -168,7 +168,7 @@ export default function ServiceAreasPage() {
                 <button
                   type="button"
                   onClick={onCityClick(city, "surrounding")}
-                  className="inline-flex items-center px-4 py-2 rounded-full border border-white/15 text-white/90 bg-white/10 sm:bg-white/5 hover:bg-white/10 transition-all drop-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
+                  className="inline-flex items-center px-4 py-2 rounded-full border border-blue-300/30 text-white bg-blue-500/10 sm:bg-blue-500/5 hover:bg-blue-500/10 transition-all drop-shadow ring-1 ring-blue-400/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20 [text-shadow:0_0_6px_rgba(255,255,255,0.4)]"
                   aria-label={`City chip, ${city}`}
                 >
                   {city}
@@ -179,7 +179,7 @@ export default function ServiceAreasPage() {
         </div>
 
         {/* Crawlable copy block */}
-        <div className="mt-8 prose prose-invert max-w-none">
+        <div className="mt-8 prose prose-invert max-w-none prose-headings:text-white prose-p:text-white/90">
           <h3>Locksmith services available</h3>
           <p>
             Residential rekey and lock replacement, automotive lockouts and key help,
