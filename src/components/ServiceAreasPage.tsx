@@ -189,7 +189,7 @@ export default function ServiceAreasPage() {
         </div>
       </section>
       </div>
-      </main>
+    </main>
     </main>
   );
 }
