@@ -23,11 +23,6 @@ function App() {
     const restorePosition = () => {
       const lastY = sessionStorage.getItem("lastScrollY");
       
-      if (!location?.state?.restorePosition && !location?.state?.scrollTo) {
-        window.scrollTo({ top: 0, behavior: "auto" });
-        return;
-      }
-      
       if (location?.state?.restorePosition && lastY) {
         const y = parseInt(lastY, 10);
         if (!isNaN(y)) {
