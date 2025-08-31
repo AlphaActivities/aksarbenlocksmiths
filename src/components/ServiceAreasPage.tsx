@@ -99,6 +99,8 @@ export default function ServiceAreasPage() {
         muted
         loop
         playsInline
+        aria-hidden="true"
+        poster="/images/Services Thumbnails/Residential-Service-Photo.webp"
         className="fixed inset-0 w-full h-full object-cover opacity-45 z-0"
         src="/videos/wallpaper.mp4"
       />
@@ -108,6 +110,9 @@ export default function ServiceAreasPage() {
         <div className="animated-footer-bg" />
         <div className="footer-glass-effect absolute inset-0" />
       </div>
+
+      {/* Contrast overlay, adjust opacity as needed */}
+      <div className="absolute inset-0 z-[3] pointer-events-none bg-black/20 md:bg-black/10"></div>
 
       <div className="relative z-10">
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -137,7 +142,7 @@ export default function ServiceAreasPage() {
 
         {/* Main cities, blue gradient chips */}
         <div className="mt-8 bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 shadow-2xl ring-1 ring-white/10">
-          <h2 className="text-xl font-semibold mb-4">Main Cities We Cover</h2>
+          <h2 className="text-xl font-semibold mb-4" style={{ textShadow: "0 1px 2px rgba(0,0,0,.5)" }}>Main Cities We Cover</h2>
           <ul className="flex flex-wrap gap-3">
             {CORE_CITIES.map((city) => (
               <li key={city}>
@@ -156,7 +161,7 @@ export default function ServiceAreasPage() {
 
         {/* Surrounding communities, subtle chips */}
         <div className="mt-8 bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 shadow-2xl ring-1 ring-white/10">
-          <h2 className="text-xl font-semibold mb-4">Surrounding Communities</h2>
+          <h2 className="text-xl font-semibold mb-4" style={{ textShadow: "0 1px 2px rgba(0,0,0,.5)" }}>Surrounding Communities</h2>
           <ul className="flex flex-wrap gap-3">
             {SURROUNDING.map((city) => (
               <li key={city}>
