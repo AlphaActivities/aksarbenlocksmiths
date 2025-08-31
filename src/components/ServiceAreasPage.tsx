@@ -18,6 +18,14 @@ export default function ServiceAreasPage() {
     "Omaha", "Ralston", "Papillion", "La Vista", "Council Bluffs", "Bellevue"
   ];
 
+  const onCityClick = (city: string, group: "core" | "surrounding") => (e: React.MouseEvent) => {
+    trackClick("city_chip_click", e.currentTarget, {
+      city,
+      group,
+      source_page: "service_areas"
+    });
+  };
+
 
     // Nebraska
     "Omaha",
@@ -120,9 +128,14 @@ export default function ServiceAreasPage() {
           <ul className="flex flex-wrap gap-3">
             {CORE_CITIES.map((city) => (
               <li key={city}>
-                <span className="inline-flex items-center px-4 py-2 rounded-full border border-white/15 bg-gradient-to-br from-blue-500 via-blue-600 to-teal-500 text-white drop-shadow-glow ring-1 ring-blue-400/30 transition-all hover:scale-105">
+                <button
+                  type="button"
+                  onClick={onCityClick(city, "core")}
+                  className="inline-flex items-center px-4 py-2 rounded-full border border-white/15 bg-gradient-to-br from-blue-500 via-blue-600 to-teal-500 text-white drop-shadow-glow ring-1 ring-blue-400/30 transition-all hover:scale-105"
+                  aria-label={`City chip, ${city}`}
+                >
                   {city}
-                </span>
+                </button>
               </li>
             ))}
           </ul>
@@ -134,9 +147,14 @@ export default function ServiceAreasPage() {
           <ul className="flex flex-wrap gap-3">
             {SURROUNDING.map((city) => (
               <li key={city}>
-                <span className="inline-flex items-center px-4 py-2 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 transition-all">
+                <button
+                  type="button"
+                  onClick={onCityClick(city, "surrounding")}
+                  className="inline-flex items-center px-4 py-2 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 transition-all"
+                  aria-label={`City chip, ${city}`}
+                >
                   {city}
-                </span>
+                </button>
               </li>
             ))}
           </ul>
