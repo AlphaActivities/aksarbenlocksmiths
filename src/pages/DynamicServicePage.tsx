@@ -474,7 +474,7 @@ export default function DynamicServicePage() {
             }}
             className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_right,_#b91c1c,_#7c3aed)] animate-[breathScale_3s_ease-in-out_infinite] anim-breath text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
             className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_right,_#b91c1c_0%,_#b91c1c_30%,_#a855f7_50%,_#8b5cf6_60%,_#8b5cf6_100%)] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
-            aria-label="View Service Areas"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(90deg,_#b91c1c_0%,_#b91c1c_42%,_#c33acb_48%,_#bf3fd6_52%,_#b445e0_56%,_#a94beb_60%,_#9d53f1_64%,_#8f59f4_66%,_#8b5cf6_70%,_#8b5cf6_100%)] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
             title="View Service Areas"
           >
             <MapPin className="w-4 h-4" />
