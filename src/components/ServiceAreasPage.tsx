@@ -112,7 +112,7 @@ export default function ServiceAreasPage() {
       </div>
 
       {/* Contrast overlay, adjust opacity as needed */}
-      <div className="absolute inset-0 z-[3] pointer-events-none bg-black/20 md:bg-black/10"></div>
+      <div className="absolute inset-0 z-[3] pointer-events-none bg-black/25 md:bg-black/10"></div>
 
       <div className="relative z-10">
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -168,7 +168,7 @@ export default function ServiceAreasPage() {
                 <button
                   type="button"
                   onClick={onCityClick(city, "surrounding")}
-                  className="inline-flex items-center px-4 py-2 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 transition-all"
+                  className="inline-flex items-center px-4 py-2 rounded-full border border-white/15 text-white/90 bg-white/10 sm:bg-white/5 hover:bg-white/10 transition-all drop-shadow"
                   aria-label={`City chip, ${city}`}
                 >
                   {city}
