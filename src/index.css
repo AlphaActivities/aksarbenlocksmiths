@@ -376,13 +376,6 @@ html::-webkit-scrollbar-track {
 }
 html::-webkit-scrollbar-thumb {
   background-color: #b91c1c; /* Deep Red Thumb */
-  border-radius: 8px;
-  border: 2px solid #000000; /* Black border padding */
-}
-html::-webkit-scrollbar-thumb:hover {
-  background-color: #ef4444; /* Bright Red on Hover */
-}
-
 @keyframes call-bounce {
   0% {
     transform: translateY(0);
