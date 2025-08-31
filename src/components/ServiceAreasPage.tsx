@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Phone } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { trackClick, trackEvent } from "../utils/analytics";
 
 export default function ServiceAreasPage() {
@@ -116,26 +116,7 @@ export default function ServiceAreasPage() {
         </script>
       </Helmet>
 
-      <div className="fixed top-0 w-full z-50 bg-black backdrop-blur-md shadow-lg text-sm px-4 py-1 flex justify-between items-center">
-        <span className="text-white animate-pulse">24/7 Emergency Service</span>
-        <a
-          href="tel:+14025566715"
-          onClick={(e) =>
-            trackClick("header_phone_click", e.currentTarget as HTMLElement, {
-              phone_number: "+14025566715",
-              source: "service_areas_top_bar",
-              page_section: "service_areas",
-            })
-          }
-          aria-label="Call Aksarben Locksmiths emergency line at 402 556 6715"
-          className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition animate-pulse focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-black"
-        >
-          <Phone className="h-4 w-4" />
-          (402) 556-6715
-        </a>
-      </div>
-
-      <main className="min-h-screen w-full relative overflow-hidden">
+      <main className="min-h-screen w-full relative">
       <video
         autoPlay
         muted
@@ -157,7 +138,7 @@ export default function ServiceAreasPage() {
       <div className="absolute inset-0 z-[3] pointer-events-none bg-black/25 md:bg-black/10"></div>
 
       <div className="relative z-10 text-white">
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-12">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <button
           onClick={(e) => {
             navigate("/", { state: { restorePosition: true } });
