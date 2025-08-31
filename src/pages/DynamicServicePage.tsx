@@ -472,7 +472,7 @@ export default function DynamicServicePage() {
                 page_section: 'service_page'
               });
             }}
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_right,_#b91c1c,_#7c3aed)] animate-[breathScale_3s_ease-in-out_infinite] anim-breath text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
             aria-label="View Service Areas"
             title="View Service Areas"
           >

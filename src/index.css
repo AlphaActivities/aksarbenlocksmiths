@@ -534,4 +534,16 @@ video:fullscreen {
   .footer-glass-effect::after {
     animation: none !important;
   }
+  .anim-breath {
+    animation: none !important;
+  }
+}
+
+@keyframes breathScale {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
 }
