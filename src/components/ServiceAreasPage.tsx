@@ -5,17 +5,36 @@ import { ArrowLeft } from "lucide-react";
 import { trackClick } from "../utils/analytics";
 
 export default function ServiceAreasPage() {
-  // Full list mirrored from your original AreasSection.tsx
-  const ALL_CITIES = [
-    "Omaha", "Bellevue", "Papillion", "La Vista", "Ralston", "Elkhorn",
-    "Bennington", "Millard", "Gretna", "Springfield", "Ashland", "Wahoo",
-    "Blair", "Fremont", "Valley", "Waterloo", "Carter Lake", "Council Bluffs",
-    "Fort Calhoun", "Louisville"
-  ];
-
-  // Six core cities highlighted in the original build
   const CORE_CITIES = [
     "Omaha", "Ralston", "Papillion", "La Vista", "Council Bluffs", "Bellevue"
+  ];
+
+  const ALL_CITIES = [
+    // Nebraska
+    "Omaha",
+    "Bellevue",
+    "Papillion",
+    "La Vista",
+    "Ralston",
+    "Gretna",
+    "Elkhorn",
+    "Bennington",
+    "Boys Town",
+    "Springfield",
+    "Valley",
+    "Waterloo",
+    "Fort Calhoun",
+    "Blair",
+    "Fremont",
+    "Ashland",
+    "Plattsmouth",
+    "Offutt AFB",
+    "Chalco",
+    // Iowa
+    "Council Bluffs",
+    "Carter Lake",
+    "Crescent",
+    "Glenwood"
   ];
 
   const CITY_STATE: Record<string, "NE" | "IA"> = {
