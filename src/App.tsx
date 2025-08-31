@@ -39,7 +39,7 @@ function App() {
         if (el && el.getBoundingClientRect().height > 0) {
           el.scrollIntoView({ behavior: "smooth", block: "start" });
         }
-      }
+      if (attempts < 10) setTimeout(scroll, 300);
     };
 
     restorePosition();

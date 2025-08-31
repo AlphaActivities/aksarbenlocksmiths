@@ -132,7 +132,7 @@ export default function ServiceAreasPage() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <button
           onClick={(e) => {
-            navigate("/", { state: { scrollTo: "services", restorePosition: true } });
+            navigate("/", { state: { restorePosition: true } });
             trackClick("back_to_services", e.currentTarget, {
               source_page: "service_areas",
               page_section: "service_areas_page"
