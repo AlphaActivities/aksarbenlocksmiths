@@ -525,3 +525,13 @@ video:fullscreen {
     opacity: 0.2;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-footer-bg {
+    animation: none !important;
+  }
+  .footer-glass-effect::before,
+  .footer-glass-effect::after {
+    animation: none !important;
+  }
+}
