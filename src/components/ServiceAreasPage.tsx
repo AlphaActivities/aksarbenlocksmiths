@@ -93,7 +93,7 @@ export default function ServiceAreasPage() {
         </script>
       </Helmet>
 
-      {/* Global video wallpaper */}
+      <main className="min-h-screen w-full relative overflow-hidden">
       <video
         autoPlay
         muted
