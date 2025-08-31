@@ -1,15 +1,20 @@
 import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { trackClick } from "../utils/analytics";
 
 export default function ServiceAreasPage() {
+  const location = useLocation();
+
   useEffect(() => {
-    // Land at top when arriving on Service Areas
+    // Only force top scroll if not coming back with restorePosition
+    const state = (location as any)?.state;
+    if (state?.restorePosition) return;
     try { sessionStorage.removeItem("lastScrollY"); } catch {}
     window.scrollTo({ top: 0, behavior: "auto" });
-  }, []);
+  }, [location]);
 
   const CORE_CITIES = [
     "Omaha", "Ralston", "Papillion", "La Vista", "Council Bluffs", "Bellevue"
