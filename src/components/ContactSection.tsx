@@ -187,13 +187,14 @@ const ContactSection: React.FC = () => {
               <Link
                 to="/service-areas"
                 aria-label="View Service Areas coverage"
-                onClick={(e) =>
+                onClick={(e) => {
+                  try { sessionStorage.setItem("lastScrollY", String(window.scrollY)); } catch {}
                   trackClick('service_areas_pill_click', e.currentTarget, {
                     source: 'map_card',
                     page_section: 'contact',
                     destination: '/service-areas'
-                  })
-                }
+                  });
+                }}
                 className="absolute left-1/2 bottom-4 -translate-x-1/2 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-700/90 text-white border border-red-800/30 transition-all duration-200 hover:scale-110 hover:shadow-[0_0_12px_4px_rgba(239,68,68,0.6)] hover:duration-100 focus:outline-none focus:ring-2 focus:ring-red-500/60 focus:ring-offset-2 focus:ring-offset-black/20"
               >
                 <MapPin className="h-4 w-4" />
