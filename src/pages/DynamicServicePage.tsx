@@ -474,7 +474,7 @@ export default function DynamicServicePage() {
             }}
             className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_right,_#b91c1c,_#7c3aed)] animate-[breathScale_3s_ease-in-out_infinite] anim-breath text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
             className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_right,_#b91c1c_0%,_#b91c1c_30%,_#a855f7_50%,_#8b5cf6_60%,_#8b5cf6_100%)] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(90deg,_#dc2626_0%,_#b91c1c_40%,_#b91c1c_60%,_#dc2626_100%)] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(90deg,_#ef4444_0%,_#dc2626_15%,_#b91c1c_45%,_#b91c1c_55%,_#dc2626_85%,_#ef4444_100%)] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
             title="View Service Areas"
           >
             <MapPin className="w-4 h-4" />
