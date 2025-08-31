@@ -62,7 +62,7 @@ export default function ServiceAreasPage() {
   const navigate = useNavigate();
 
   return (
-    <main className="min-h-screen w-full relative bg-black">
+    <main className="min-h-screen w-full relative">
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={description} />
@@ -93,12 +93,23 @@ export default function ServiceAreasPage() {
         </script>
       </Helmet>
 
-      {/* Animated wallpaper, same vibe as AreasSection */}
-      <div className="absolute inset-0 -z-10 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-indigo-900 to-black opacity-80" />
-        <div className="absolute inset-0 animate-diagonal-stripes opacity-75 mix-blend-lighten" />
+      {/* Global video wallpaper */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="fixed inset-0 w-full h-full object-cover opacity-45 z-0"
+        src="/videos/wallpaper.mp4"
+      />
+
+      {/* Footer-style animated background layers */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="animated-footer-bg" />
+        <div className="footer-glass-effect absolute inset-0" />
       </div>
 
+      <div className="relative z-10">
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <button
           onClick={(e) => {
@@ -172,6 +183,7 @@ export default function ServiceAreasPage() {
           </p>
         </div>
       </section>
+      </div>
     </main>
   );
 }
