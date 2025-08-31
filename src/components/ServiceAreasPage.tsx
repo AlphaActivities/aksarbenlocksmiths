@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { trackClick } from "../utils/analytics";
 
 export default function ServiceAreasPage() {
+  useEffect(() => {
+    // Land at top when arriving on Service Areas
+    try { sessionStorage.removeItem("lastScrollY"); } catch {}
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, []);
+
   const CORE_CITIES = [
     "Omaha", "Ralston", "Papillion", "La Vista", "Council Bluffs", "Bellevue"
   ];
@@ -168,7 +174,7 @@ export default function ServiceAreasPage() {
                 <button
                   type="button"
                   onClick={onCityClick(city, "surrounding")}
-                  className="inline-flex items-center px-4 py-2 rounded-full border border-blue-300/30 text-white bg-blue-500/10 sm:bg-blue-500/5 hover:bg-blue-500/10 transition-all drop-shadow ring-1 ring-blue-400/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20 [text-shadow:0_0_6px_rgba(255,255,255,0.4)]"
+                  className="inline-flex items-center px-4 py-2 rounded-full border border-blue-300/30 text-white bg-blue-500/10 sm:bg-blue-500/5 hover:bg-blue-500/10 transition-all hover:scale-105 drop-shadow ring-1 ring-blue-400/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20 [text-shadow:0_0_6px_rgba(255,255,255,0.4)]"
                   aria-label={`City chip, ${city}`}
                 >
                   {city}
