@@ -534,4 +534,18 @@ video:fullscreen {
   .footer-glass-effect::after {
     animation: none !important;
   }
+  .anim-glow-pulse {
+    animation: none !important;
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 18px rgba(255,255,255,0.35);
+    filter: brightness(1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255,255,255,0.85);
+    filter: brightness(1.08);
+  }
 }
