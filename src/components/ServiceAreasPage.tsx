@@ -142,14 +142,14 @@ export default function ServiceAreasPage() {
 
         {/* Main cities, blue gradient chips */}
         <div className="mt-8 bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 shadow-2xl ring-1 ring-white/10">
-          <h2 className="text-xl font-semibold mb-4" style={{ textShadow: "0 1px 2px rgba(0,0,0,.5)" }}>Main Cities We Cover</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold mb-4" style={{ textShadow: "0 1px 2px rgba(0,0,0,.5)" }}>Main Cities We Cover</h2>
           <ul className="flex flex-wrap gap-3">
             {CORE_CITIES.map((city) => (
               <li key={city}>
                 <button
                   type="button"
                   onClick={onCityClick(city, "core")}
-                  className="inline-flex items-center px-4 py-2 rounded-full border border-white/15 bg-gradient-to-br from-blue-500 via-blue-600 to-teal-500 text-white drop-shadow-glow ring-1 ring-blue-400/30 transition-all hover:scale-105"
+                  className="inline-flex items-center px-4 py-2 rounded-full border border-white/15 bg-gradient-to-br from-blue-500 via-blue-600 to-teal-500 text-white drop-shadow-glow ring-1 ring-blue-400/30 transition-all hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
                   aria-label={`City chip, ${city}`}
                 >
                   {city}
@@ -161,14 +161,14 @@ export default function ServiceAreasPage() {
 
         {/* Surrounding communities, subtle chips */}
         <div className="mt-8 bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 shadow-2xl ring-1 ring-white/10">
-          <h2 className="text-xl font-semibold mb-4" style={{ textShadow: "0 1px 2px rgba(0,0,0,.5)" }}>Surrounding Communities</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold mb-4" style={{ textShadow: "0 1px 2px rgba(0,0,0,.5)" }}>Surrounding Communities</h2>
           <ul className="flex flex-wrap gap-3">
             {SURROUNDING.map((city) => (
               <li key={city}>
                 <button
                   type="button"
                   onClick={onCityClick(city, "surrounding")}
-                  className="inline-flex items-center px-4 py-2 rounded-full border border-white/15 text-white/90 bg-white/10 sm:bg-white/5 hover:bg-white/10 transition-all drop-shadow"
+                  className="inline-flex items-center px-4 py-2 rounded-full border border-white/15 text-white/90 bg-white/10 sm:bg-white/5 hover:bg-white/10 transition-all drop-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
                   aria-label={`City chip, ${city}`}
                 >
                   {city}
