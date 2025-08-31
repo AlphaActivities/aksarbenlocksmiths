@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Phone } from "lucide-react";
+import { ArrowLeft, Phone, MapPin } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { trackVideoEvent, trackClick } from "../utils/analytics";
 import servicesData from "../data/services.json";
@@ -443,20 +444,42 @@ export default function DynamicServicePage() {
         src="/videos/wallpaper.mp4"
       />
       <div className={`relative z-10 min-h-screen bg-gradient-to-br ${gradientClasses} backdrop-blur-sm px-6 py-12 pt-16 text-white`}>
-        <button
-          onClick={(e) => {
-            navigate("/", { state: { scrollTo: "services", restorePosition: true } });
-            trackClick('back_to_services', e.currentTarget, { 
-              from_service: data.title,
-              service_name: data.title,
-              page_section: 'service_page'
-            });
-          }}
-          className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out mb-6"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Services
-        </button>
+        <div className="mb-6 flex items-center justify-between">
+          <button
+            onClick={(e) => {
+              navigate("/", { state: { scrollTo: "services", restorePosition: true } });
+              trackClick('back_to_services', e.currentTarget, { 
+                from_service: data.title,
+                service_name: data.title,
+                page_section: 'service_page'
+              });
+            }}
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
+            aria-label="Back to Services"
+            title="Back to Services"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Services
+          </button>
+
+          <Link
+            to="/service-areas"
+            onClick={(e) => {
+              trackClick('service_areas_pill_click', e.currentTarget as unknown as HTMLElement, {
+                destination: '/service-areas',
+                from_service: data.title,
+                service_name: data.title,
+                page_section: 'service_page'
+              });
+            }}
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
+            aria-label="View Service Areas"
+            title="View Service Areas"
+          >
+            <MapPin className="w-4 h-4" />
+            Service Areas
+          </Link>
+        </div>
         
         <div className="flex justify-center mb-8">
           <div className={`inline-block px-6 py-3 rounded-xl ${titleBackground} backdrop-blur-sm border border-white/10 shadow-lg flex items-center justify-center`}>
@@ -465,10 +488,6 @@ export default function DynamicServicePage() {
             </h1>
           </div>
         </div>
-        
-        <p className="text-white text-sm opacity-80 mt-2">
-          <a href="/service-areas" className="underline hover:opacity-100">See full coverage list</a>
-        </p>
         
         <div className="relative w-full max-w-4xl mx-auto overflow-hidden rounded-2xl shadow-xl aspect-video group bg-black/80">
           {!playing && (
