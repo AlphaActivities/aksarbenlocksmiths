@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Shield, Award, Clock, CheckCircle } from 'lucide-react';
 import PillBadge from './ui/PillBadge';
 import { trackClick, trackEngagement } from '../utils/analytics';
