@@ -13,6 +13,7 @@ import EmergencyButton from './components/EmergencyButton';
 import BackToTop from './components/BackToTop';
 import DynamicServicePage from './pages/DynamicServicePage';
 import ServiceAreasPage from './components/ServiceAreasPage';
+import BlogPage from './pages/BlogPage';
 import { Helmet } from 'react-helmet-async';
 import { trackClick } from './utils/analytics';
 
@@ -183,6 +184,7 @@ function App() {
       />
       <Route path="/services/:slug" element={<DynamicServicePage />} />
       <Route path="/service-areas" element={<ServiceAreasPage />} />
+      <Route path="/blog" element={<BlogPage />} />
       <Route path="/blog" element={<BlogPage />} />
     </Routes>
   );
