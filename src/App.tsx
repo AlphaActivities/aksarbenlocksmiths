@@ -185,6 +185,7 @@ function App() {
       <Route path="/services/:slug" element={<DynamicServicePage />} />
       <Route path="/service-areas" element={<ServiceAreasPage />} />
       <Route path="/blog" element={<BlogPage />} />
+      <Route path="/blog/:slug" element={<BlogPostPage />} />
       <Route path="/blog" element={<BlogPage />} />
     </Routes>
   );
