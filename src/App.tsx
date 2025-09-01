@@ -14,6 +14,7 @@ import BackToTop from './components/BackToTop';
 import DynamicServicePage from './pages/DynamicServicePage';
 import ServiceAreasPage from './components/ServiceAreasPage';
 import BlogPage from './pages/BlogPage';
+import BlogPostPage from './pages/BlogPostPage';
 import { Helmet } from 'react-helmet-async';
 import { trackClick } from './utils/analytics';
 
