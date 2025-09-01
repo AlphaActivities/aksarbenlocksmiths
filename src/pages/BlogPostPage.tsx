@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { BLOG_POSTS, findPost } from "../data/blogPosts";
-import { trackEngagement } from "../utils/analytics";
+import { trackEngagement, trackClick } from "../utils/analytics";
+import { ArrowLeft, Phone } from "lucide-react";
 
 const BLOG_PLACEHOLDER =
   "data:image/svg+xml;utf8," +
@@ -11,6 +12,7 @@ const BLOG_PLACEHOLDER =
   );
 
 export default function BlogPostPage() {
+  const navigate = useNavigate();
   const { slug } = useParams();
   const post = useMemo(() => (slug ? findPost(slug) : undefined), [slug]);
   const articleRef = useRef<HTMLElement | null>(null);
@@ -30,15 +32,76 @@ export default function BlogPostPage() {
 
   if (!post) {
     return (
-      <main className="min-h-screen w-full px-4 py-12 md:py-16">
-        <section className="mx-auto max-w-5xl text-white">
-          <h1 className="text-2xl md:text-3xl font-bold">Post not found</h1>
-          <p className="mt-3 text-gray-300">
-            The article you are looking for is unavailable.{" "}
-            <Link to="/blog" className="text-purple-400 underline">Go back to the blog.</Link>
-          </p>
-        </section>
-      </main>
+      <>
+        <div className="fixed top-0 w-full z-50 bg-black backdrop-blur-md shadow-lg text-sm px-4 py-1 flex justify-between items-center">
+          <span className="text-white animate-pulse">24/7 Emergency Service</span>
+          <a
+            href="tel:+14025566715"
+            onClick={(e) =>
+              trackClick("top_bar_phone_click", e.currentTarget, {
+                phone_number: "+14025566715",
+                source: "top_emergency_bar",
+                page_section: "emergency_top_bar",
+              })
+            }
+            className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition animate-pulse"
+          >
+            <Phone className="h-4 w-4" />
+            (402) 556-6715
+          </a>
+        </div>
+
+        <div className="min-h-screen w-full relative">
+          <main className="min-h-screen w-full relative overflow-hidden">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              aria-hidden="true"
+              poster="/images/Services Thumbnails/Residential-Service-Photo.webp"
+              className="fixed inset-0 w-full h-full object-cover opacity-45 z-0"
+              src="/videos/wallpaper.mp4"
+            />
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="animated-footer-bg" />
+              <div className="footer-glass-effect absolute inset-0" />
+            </div>
+            <div className="absolute inset-0 z-[3] pointer-events-none bg-black/25 md:bg-black/10"></div>
+
+            <div className="relative z-10 text-white pt-12 md:pt-14">
+              <main className="min-h-screen w-full px-4 py-12 md:py-16">
+                <section className="mx-auto max-w-5xl text-white">
+                  <div className="mb-6 flex items-center justify-between">
+                    <button
+                      onClick={(e) => {
+                        navigate(-1);
+                        trackClick("back_to_home", e.currentTarget, {
+                          source_page: "blog_post",
+                          page_section: "header",
+                          destination: "/",
+                        });
+                      }}
+                      className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
+                      aria-label="Back to Home"
+                      title="Back to Home"
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                      Back to Home
+                    </button>
+                  </div>
+
+                  <h1 className="text-2xl md:text-3xl font-bold">Post not found</h1>
+                  <p className="mt-3 text-gray-300">
+                    The article you are looking for is unavailable.{" "}
+                    <Link to="/blog" className="text-purple-400 underline">Go back to the blog.</Link>
+                  </p>
+                </section>
+              </main>
+            </div>
+          </main>
+        </div>
+      </>
     );
   }
 
@@ -71,51 +134,114 @@ export default function BlogPostPage() {
   const paragraphs = post.body.split("\n\n");
 
   return (
-    <main className="min-h-screen w-full px-4 py-12 md:py-16">
-      <Helmet>
-        <title>{title}</title>
-        <meta name="description" content={description} />
-        <link rel="canonical" href={`/blog/${post.slug}`} />
-        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
-      </Helmet>
+    <>
+      <div className="fixed top-0 w-full z-50 bg-black backdrop-blur-md shadow-lg text-sm px-4 py-1 flex justify-between items-center">
+        <span className="text-white animate-pulse">24/7 Emergency Service</span>
+        <a
+          href="tel:+14025566715"
+          onClick={(e) =>
+            trackClick("top_bar_phone_click", e.currentTarget, {
+              phone_number: "+14025566715",
+              source: "top_emergency_bar",
+              page_section: "emergency_top_bar",
+            })
+          }
+          className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition animate-pulse"
+        >
+          <Phone className="h-4 w-4" />
+          (402) 556-6715
+        </a>
+      </div>
 
-      <article ref={articleRef} className="mx-auto max-w-5xl text-white">
-        <div className="aspect-[16/9] w-full bg-neutral-800 rounded-2xl overflow-hidden">
-          <img
-            src={post.coverImage}
-            alt={post.title}
-            loading="eager"
-            decoding="async"
-            onError={(e) => {
-              const img = e.currentTarget;
-              img.onerror = null;
-              img.src = BLOG_PLACEHOLDER;
-            }}
-            className="h-full w-full object-cover"
+      <div className="min-h-screen w-full relative">
+        <main className="min-h-screen w-full relative overflow-hidden">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            aria-hidden="true"
+            poster="/images/Services Thumbnails/Residential-Service-Photo.webp"
+            className="fixed inset-0 w-full h-full object-cover opacity-45 z-0"
+            src="/videos/wallpaper.mp4"
           />
-        </div>
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="animated-footer-bg" />
+            <div className="footer-glass-effect absolute inset-0" />
+          </div>
+          <div className="absolute inset-0 z-[3] pointer-events-none bg-black/25 md:bg-black/10"></div>
 
-        <div className="mt-6 text-xs text-gray-400">
-          {post.city} · {new Date(post.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "2-digit" })}
-        </div>
-        <h1 className="mt-1 text-3xl md:text-4xl font-bold tracking-tight">{post.title}</h1>
+          <div className="relative z-10 text-white pt-12 md:pt-14">
+            <Helmet>
+              <title>{title}</title>
+              <meta name="description" content={description} />
+              <link rel="canonical" href={`/blog/${post.slug}`} />
+              <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+            </Helmet>
 
-        <div className="mt-4 space-y-4 text-gray-200 leading-relaxed">
-          {paragraphs.map((p, idx) => (
-            <p key={idx}>{p}</p>
-          ))}
-        </div>
+            <div className="mx-auto max-w-5xl px-4 py-12 md:py-16">
+              {/* Back to Home button */}
+              <div className="mb-6 flex items-center justify-between">
+                <button
+                  onClick={(e) => {
+                    navigate(-1);
+                    trackClick("back_to_home", e.currentTarget, {
+                      source_page: "blog_post",
+                      page_section: "header",
+                      destination: "/",
+                      from_post: post.slug,
+                    });
+                  }}
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
+                  aria-label="Back to Home"
+                  title="Back to Home"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Back to Home
+                </button>
+              </div>
 
-        <div className="mt-10">
-          <Link
-            to="/blog"
-            className="inline-flex items-center px-4 py-2 rounded-full bg-neutral-800 hover:bg-neutral-700 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            aria-label="Back to blog index"
-          >
-            ← Back to Blog
-          </Link>
-        </div>
-      </article>
-    </main>
+              <article ref={articleRef} className="text-white">
+                <div className="aspect-[16/9] w-full bg-neutral-800 rounded-2xl overflow-hidden">
+                  <img
+                    src={post.coverImage}
+                    alt={post.title}
+                    loading="eager"
+                    decoding="async"
+                    onError={(e) => {
+                      const img = e.currentTarget;
+                      img.onerror = null;
+                      img.src = BLOG_PLACEHOLDER;
+                    }}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+
+                <div className="mt-6 text-xs text-gray-400">
+                  {post.city} · {new Date(post.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "2-digit" })}
+                </div>
+                <h1 className="mt-1 text-3xl md:text-4xl font-bold tracking-tight">{post.title}</h1>
+
+                <div className="mt-4 space-y-4 text-gray-200 leading-relaxed">
+                  {paragraphs.map((p, idx) => (
+                    <p key={idx}>{p}</p>
+                  ))}
+                </div>
+
+                <div className="mt-10">
+                  <Link
+                    to="/blog"
+                    className="inline-flex items-center px-4 py-2 rounded-full bg-neutral-800 hover:bg-neutral-700 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                    aria-label="Back to blog index"
+                  >
+                    ← Back to Blog
+                  </Link>
+                </div>
+              </article>
+            </div>
+          </div>
+        </main>
+      </div>
+    </>
   );
 }
