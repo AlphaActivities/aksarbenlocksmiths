@@ -4,6 +4,12 @@ import { Helmet } from "react-helmet-async";
 import { BLOG_POSTS, findPost } from "../data/blogPosts";
 import { trackEngagement } from "../utils/analytics";
 
+const BLOG_PLACEHOLDER =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 675'><rect fill='#111827' width='1200' height='675'/><text x='50%' y='50%' fill='#9CA3AF' font-family='system-ui, -apple-system, Segoe UI, Roboto' font-size='48' text-anchor='middle' dominant-baseline='middle'>Aksarben Blog Image</text></svg>`
+  );
+
 export default function BlogPostPage() {
   const { slug } = useParams();
   const post = useMemo(() => (slug ? findPost(slug) : undefined), [slug]);
@@ -78,8 +84,14 @@ export default function BlogPostPage() {
           <img
             src={post.coverImage}
             alt={post.title}
-            className="h-full w-full object-cover"
             loading="eager"
+            decoding="async"
+            onError={(e) => {
+              const img = e.currentTarget;
+              img.onerror = null;
+              img.src = BLOG_PLACEHOLDER;
+            }}
+            className="h-full w-full object-cover"
           />
         </div>
 

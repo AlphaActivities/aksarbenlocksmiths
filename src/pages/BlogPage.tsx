@@ -4,6 +4,12 @@ import { Helmet } from "react-helmet-async";
 import { BLOG_CATEGORIES, BLOG_POSTS, BlogCategory } from "../data/blogPosts";
 import { trackEngagement, trackClick } from "../utils/analytics";
 
+const BLOG_PLACEHOLDER =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 675'><rect fill='#111827' width='1200' height='675'/><text x='50%' y='50%' fill='#9CA3AF' font-family='system-ui, -apple-system, Segoe UI, Roboto' font-size='48' text-anchor='middle' dominant-baseline='middle'>Aksarben Blog Image</text></svg>`
+  );
+
 export default function BlogPage() {
   const [params, setParams] = useSearchParams();
   const initialCat = (params.get("cat") as BlogCategory) || "emergency";
@@ -105,12 +111,17 @@ export default function BlogPage() {
                 className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 <div className="aspect-[16/9] w-full bg-neutral-800">
-                  {/* Image placeholder, real assets can replace these paths */}
                   <img
                     src={post.coverImage}
                     alt={post.title}
-                    className="h-full w-full object-cover"
                     loading="lazy"
+                    decoding="async"
+                    onError={(e) => {
+                      const img = e.currentTarget;
+                      img.onerror = null;
+                      img.src = BLOG_PLACEHOLDER;
+                    }}
+                    className="h-full w-full object-cover"
                   />
                 </div>
                 <div className="p-4">
