@@ -79,8 +79,8 @@ export default function BlogPage() {
           <div className="absolute inset-0 z-[3] pointer-events-none bg-black/25 md:bg-black/10"></div>
 
           {/* Content */}
-          <div className="relative z-10 text-white pt-12 md:pt-14">
-            <main id="blog" className="min-h-screen w-full px-4 py-12 md:py-16">
+          <div className="relative z-10 text-white pt-8 md:pt-10">
+            <main id="blog" className="min-h-screen w-full px-6 pt-4 pb-12 md:pt-6 md:pb-16">
               <Helmet>
                 <title>Our Blog, Omaha Locksmith Tips and Guides</title>
                 <meta
@@ -92,7 +92,7 @@ export default function BlogPage() {
 
               <section className="mx-auto max-w-5xl">
                 {/* Back to Home button, matches Dynamic Service styles */}
-                <div className="mb-6 flex items-center justify-between">
+                <div className="mb-4 flex items-center justify-between">
                   <button
                     onClick={(e) => {
                       navigate(-1);
