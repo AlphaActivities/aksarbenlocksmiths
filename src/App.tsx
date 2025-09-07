@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { Phone } from 'lucide-react';
 import Navbar from './components/Navbar';
@@ -20,6 +20,30 @@ import { trackClick } from './utils/analytics';
 
 function App() {
   const location = useLocation();
+
+  const didScrollFx = useRef(false);
+
+  useEffect(() => {
+    const fx = (location?.state as any)?.scrollFx as string | undefined;
+
+    if (fx === "midThenTop" && !didScrollFx.current) {
+      didScrollFx.current = true;
+
+      requestAnimationFrame(() => {
+        try {
+          const mid = Math.max(0, Math.round(window.innerHeight * 0.5));
+          window.scrollTo({ top: mid, behavior: "auto" });
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }, 120);
+        } catch {
+          window.scrollTo({ top: 0, behavior: "auto" });
+        }
+      });
+    }
+
+    if (!fx) didScrollFx.current = false;
+  }, [location]);
 
   useEffect(() => {
     const restorePosition = () => {
