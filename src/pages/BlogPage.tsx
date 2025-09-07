@@ -130,7 +130,7 @@ export default function BlogPage() {
                   </Link>
                 </div>
 
-                <div className="bg-gradient-to-br from-red-600 via-purple-600 to-purple-900 backdrop-blur-lg rounded-3xl px-8 py-6 mt-2 mb-3 border border-white/10 shadow-2xl ring-1 ring-white/20 transition-all duration-500 hover:scale-[1.02] hover:shadow-3xl">
+                <div className="bg-gradient-to-br from-red-600 via-purple-600 to-purple-900 backdrop-blur-lg rounded-2xl px-6 py-4 mt-1 mb-2 border border-white/10 shadow-xl ring-1 ring-white/20 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
                   <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
                     Aksarben Locksmiths Blog
                   </h1>
