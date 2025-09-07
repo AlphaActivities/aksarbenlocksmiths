@@ -114,8 +114,6 @@ export default function BlogPage() {
                     to="/service-areas"
                     state={{ fromBlog: true, scrollFx: "midThenTop" }}
                     onClick={(e) => {
-                      // Match Home Contact behavior to preserve scroll restore
-                      try { sessionStorage.setItem("lastScrollY", String(window.scrollY)); } catch {}
                       trackClick("blog_service_areas_pill_click", e.currentTarget, {
                         source_page: "blog_index",
                         page_section: "header",
