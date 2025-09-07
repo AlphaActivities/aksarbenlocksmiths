@@ -159,7 +159,7 @@ export default function BlogPage() {
                           "px-4 py-2 rounded-full text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black",
                           isActive
                             ? "bg-purple-600"
-                            : "bg-neutral-800 hover:bg-neutral-700"
+                            : "bg-purple-800 hover:bg-purple-700"
                         ].join(" ")}
                         aria-pressed={isActive}
                       >
@@ -174,7 +174,7 @@ export default function BlogPage() {
                   {filtered.map((post) => (
                     <article
                       key={post.slug}
-                      className="rounded-2xl overflow-hidden bg-neutral-900 border border-neutral-800 hover:border-neutral-700 transition-colors"
+                      className="rounded-2xl overflow-hidden bg-purple-950 border border-neutral-800 hover:border-neutral-700 transition-colors"
                     >
                       <Link
                         to={`/blog/${post.slug}`}
