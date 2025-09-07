@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
@@ -6,33 +6,45 @@ import { ArrowLeft, Phone } from "lucide-react";
 import { trackClick, trackEvent } from "../utils/analytics";
 
 export default function ServiceAreasPage() {
-
   const location = useLocation();
 
   useEffect(() => {
-    const state = location?.state as any;
-    if (state?.restorePosition) {
-      // Coming back to Home soon, let App.tsx restore. Do nothing here.
-      return;
-    }
-    // Fresh entry to Service Areas, scroll to top. Do NOT clear lastScrollY here.
-    window.scrollTo({ top: 0, behavior: "auto" });
+    const state = (location?.state || {}) as any;
+
+    // If returning to Home, App restores the scroll. Do nothing here.
+    if (state.restorePosition) return;
+
+    // Do not scroll here. App.tsx handles default top and special effects.
   }, [location]);
 
-  useEffect(() => {
-    // Page view for Service Areas dynamic page
-    trackEvent("page_view", {
-      source_page: "service_areas",
-      page_section: "service_areas_page"
-    });
-  }, []);
-
   const CORE_CITIES = [
-    "Omaha", "Ralston", "Papillion", "La Vista", "Council Bluffs", "Bellevue"
+    "Omaha",
+    "Bellevue",
+    "Papillion",
+    "La Vista",
+    "Ralston",
+    "Gretna",
+    "Elkhorn",
+    "Bennington",
+    "Boys Town",
+    "Springfield",
+    "Valley",
+    "Waterloo",
+    "Fort Calhoun",
+    "Blair",
+    "Fremont",
+    "Ashland",
+    "Plattsmouth",
+    "Offutt AFB",
+    "Chalco",
+    // Iowa
+    "Council Bluffs",
+    "Carter Lake",
+    "Crescent",
+    "Glenwood"
   ];
 
   const ALL_CITIES = [
-    // Nebraska
     "Omaha",
     "Bellevue",
     "Papillion",
