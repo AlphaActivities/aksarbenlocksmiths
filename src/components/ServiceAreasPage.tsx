@@ -11,10 +11,11 @@ export default function ServiceAreasPage() {
   useEffect(() => {
     const state = (location?.state || {}) as any;
 
-    // If returning to Home, App restores the scroll. Do nothing here.
+    // If returning to Home with restore, let App.tsx handle it
     if (state.restorePosition) return;
 
-    // Do not scroll here. App.tsx handles default top and special effects.
+    // Unified arrival, always land at top like the Home path
+    window.scrollTo({ top: 0, behavior: "auto" });
   }, [location]);
 
   const CORE_CITIES = [
