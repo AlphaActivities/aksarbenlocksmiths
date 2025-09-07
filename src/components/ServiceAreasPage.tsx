@@ -10,8 +10,11 @@ export default function ServiceAreasPage() {
 
   useEffect(() => {
     const state = (location?.state || {}) as any;
+
+    // If returning to Home, App restores the scroll. Do nothing here.
     if (state.restorePosition) return;
-    // Do nothing else here — App handles default top and the special effect
+
+    // Do not scroll here. App.tsx handles default top and special effects.
   }, [location]);
 
   const CORE_CITIES = [
