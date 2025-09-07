@@ -88,23 +88,6 @@ export default function BlogPage() {
                   content="Emergency lockouts, keys and duplication, residential and commercial security for Omaha and surrounding cities."
                 />
                 <link rel="canonical" href="/blog" />
-
-                <Link
-                  to="/service-areas"
-                  onClick={(e) => {
-                    trackClick("blog_service_areas_pill_click", e.currentTarget, {
-                      source_page: "blog_index",
-                      page_section: "header",
-                      destination: "/service-areas",
-                    });
-                  }}
-                  className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(90deg,_#ef4444_0%,_#dc2626_15%,_#b91c1c_45%,_#b91c1c_55%,_#dc2626_85%,_#ef4444_100%)] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
-                  aria-label="View Service Areas"
-                  title="View Service Areas"
-                >
-                  <MapPin className="w-4 h-4" />
-                  Service Areas
-                </Link>
               </Helmet>
 
               <section className="mx-auto max-w-5xl">
@@ -126,6 +109,23 @@ export default function BlogPage() {
                     <ArrowLeft className="w-4 h-4" />
                     Back to Home
                   </button>
+
+                  <Link
+                    to="/service-areas"
+                    onClick={(e) => {
+                      trackClick("blog_service_areas_pill_click", e.currentTarget, {
+                        source_page: "blog_index",
+                        page_section: "header",
+                        destination: "/service-areas",
+                      });
+                    }}
+                    className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(90deg,_#ef4444_0%,_#dc2626_15%,_#b91c1c_45%,_#b91c1c_55%,_#dc2626_85%,_#ef4444_100%)] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
+                    aria-label="View Service Areas"
+                    title="View Service Areas"
+                  >
+                    <MapPin className="w-4 h-4" />
+                    Service Areas
+                  </Link>
                 </div>
 
                 <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
