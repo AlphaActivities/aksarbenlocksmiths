@@ -28,7 +28,7 @@ export const BLOG_POSTS: BlogPost[] = [
     city: "Omaha",
     date: "2020-02-15",
     excerpt: "Simple steps you can take during a lockout, how to stay safe, and when to call a licensed local locksmith.",
-    coverImage: "/images/blog/locked-out-omaha.webp",
+    coverImage: "/images/blog/car-lockout.webp",
     body:
       "Getting locked out happens to everyone.\n\nStay calm, confirm you have permission to access the property, and avoid risky entry attempts.\n\nCall a licensed local locksmith who can verify ownership and provide a damage free entry where possible.\n\nIn Omaha, mobile technicians can reach most neighborhoods quickly depending on traffic and current demand.",
   },
@@ -39,7 +39,7 @@ export const BLOG_POSTS: BlogPost[] = [
     city: "Bellevue",
     date: "2020-10-05",
     excerpt: "From door hardware to lighting and rekey schedules, here is how Bellevue families can boost everyday security.",
-    coverImage: "/images/blog/bellevue-home-security.webp",
+    coverImage: "/images/blog/house-lock.webp",
     body:
       "Security builds from basics first.\n\nUse quality deadbolts, strike plates with long screws, and keep door frames in good shape.\n\nRekey after moving or after key loss, and consider smart locks where appropriate.\n\nAsk a locksmith to evaluate weak points around sliding doors and garage entries.",
   },
@@ -52,7 +52,7 @@ export const BLOG_POSTS: BlogPost[] = [
     city: "Papillion",
     date: "2021-03-18",
     excerpt: "Spare keys save time and money. Learn when to duplicate and what to bring to a key appointment.",
-    coverImage: "/images/blog/spare-car-key-papillion.webp",
+    coverImage: "/images/blog/handing-new-key.webp",
     body:
       "Modern keys include chips and remotes.\n\nA spare reduces emergency costs and wait times.\n\nBring your vehicle identification number, proof of ownership, and current key if available.\n\nMobile service may be available depending on model and year.",
   },
@@ -63,7 +63,7 @@ export const BLOG_POSTS: BlogPost[] = [
     city: "La Vista",
     date: "2021-11-10",
     excerpt: "Door closer issues, worn cylinders, and key control gaps can cost time and security for local shops.",
-    coverImage: "/images/blog/la-vista-business-locks.webp",
+    coverImage: "/images/blog/office-rekey.webp",
     body:
       "Busy doors wear faster.\n\nPlan maintenance for door closers, panic hardware, and cylinders.\n\nAdopt master key systems to control access and simplify keyed entries.\n\nSchedule after hours service to reduce downtime.",
   },
@@ -76,7 +76,7 @@ export const BLOG_POSTS: BlogPost[] = [
     city: "Council Bluffs",
     date: "2022-04-07",
     excerpt: "A few easy habits to reduce after hours emergencies and keep your evening on track.",
-    coverImage: "/images/blog/council-bluffs-lockout-tips.webp",
+    coverImage: "/images/blog/locksmith-van.webp",
     body:
       "Create a key routine and a spare plan.\n\nStore a spare with a trusted person or in a secure lock box.\n\nConsider smart deadbolts for family access.\n\nIf you do get locked out, request your ETA during the call.\n\nArrival times vary based on demand, distance, and traffic.",
   },
@@ -87,7 +87,7 @@ export const BLOG_POSTS: BlogPost[] = [
     city: "Omaha",
     date: "2022-09-22",
     excerpt: "When is it smarter to rekey instead of replacing the whole lock. Cost, security, and timelines explained.",
-    coverImage: "/images/blog/rekey-vs-replace-omaha.webp",
+    coverImage: "/images/blog/keys-desk.webp",
     body:
       "Rekey keeps your existing hardware and changes which keys operate it.\n\nReplace when hardware is damaged or outdated.\n\nAfter a move or lost keys, rekey is usually the quickest path to restore control.",
   },
@@ -100,7 +100,7 @@ export const BLOG_POSTS: BlogPost[] = [
     city: "Omaha",
     date: "2023-02-12",
     excerpt: "What programming involves, which models can be done mobile, and what information you should have ready.",
-    coverImage: "/images/blog/car-key-programming-omaha.webp",
+    coverImage: "/images/blog/car-key-programming.webp",
     body:
       "Programming depends on vehicle year and system.\n\nSome models require specialized equipment or PIN codes.\n\nMobile service coverage varies. Call to check current options for your vehicle.",
   },
@@ -111,7 +111,7 @@ export const BLOG_POSTS: BlogPost[] = [
     city: "Gretna",
     date: "2023-08-30",
     excerpt: "Improve access control while keeping daily operations simple. A quick overview for small teams.",
-    coverImage: "/images/blog/gretna-master-key.webp",
+    coverImage: "/images/blog/key-cutting.webp",
     body:
       "Master systems give managers higher level keys while employees carry limited access keys.\n\nThey reduce key duplication sprawl and improve accountability.\n\nWork with a locksmith to design a system that can grow with your business.",
   },
@@ -124,7 +124,7 @@ export const BLOG_POSTS: BlogPost[] = [
     city: "Omaha",
     date: "2024-11-15",
     excerpt: "Separating fact from fiction so you know what to expect when you call for help.",
-    coverImage: "/images/blog/omaha-locksmith-myths.webp",
+    coverImage: "/images/blog/locksmith-tools.webp",
     body:
       "Not every lock needs drilling.\n\nLicensed techs can often open doors without damage depending on the hardware.\n\nAsk questions, request your ETA during the call, and expect transparent pricing.",
   },
@@ -135,7 +135,7 @@ export const BLOG_POSTS: BlogPost[] = [
     city: "Omaha",
     date: "2025-03-20",
     excerpt: "What drives pricing, how quotes work, and why transparency matters for trust.",
-    coverImage: "/images/blog/transparent-pricing-omaha.webp",
+    coverImage: "/images/blog/happy-customer.webp",
     body:
       "Quotes consider distance, time, hardware, and complexity.\n\nClear pricing prevents surprises and builds long term relationships.\n\nAlways request a written estimate before work begins.",
   },
@@ -146,7 +146,7 @@ export const BLOG_POSTS: BlogPost[] = [
     city: "Bellevue",
     date: "2025-06-05",
     excerpt: "When mobile service makes sense and how to plan your appointment.",
-    coverImage: "/images/blog/mobile-locksmith-bellevue.webp",
+    coverImage: "/images/blog/car-ignition.webp",
     body:
       "Mobile units bring tools to you which reduces towing and downtime.\n\nAvailability depends on current demand.\n\nShare your exact location and lock or vehicle details to speed things up.",
   },
@@ -157,7 +157,7 @@ export const BLOG_POSTS: BlogPost[] = [
     city: "Omaha",
     date: "2025-08-28",
     excerpt: "A quick look at our mobile service history and commitment to local customers.",
-    coverImage: "/images/blog/omaha-decade-service.webp",
+    coverImage: "/images/blog/house-key-duplication.webp",
     body:
       "From emergency unlocks to planned rekeys, our focus is dependable help and clear communication.\n\nWe invest in training, modern key machines, and customer first service.\n\nThank you Omaha and the surrounding cities for your trust.",
   },
