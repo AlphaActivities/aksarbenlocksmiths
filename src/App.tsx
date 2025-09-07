@@ -25,7 +25,7 @@ function App() {
     const restorePosition = () => {
       const lastY = sessionStorage.getItem("lastScrollY");
       
-      if (!location?.state?.restorePosition && !location?.state?.scrollTo) {
+      if (!location?.state?.restorePosition && !location?.state?.scrollTo && !location?.state?.scrollFx) {
         window.scrollTo({ top: 0, behavior: "auto" });
         return;
       }
