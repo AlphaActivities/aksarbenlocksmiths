@@ -194,11 +194,12 @@ export default function ServiceAreasPage() {
                 call_reason: "local_dispatch",
               })
             }
-            className="bg-gradient-to-l from-red-900 via-red-600 to-red-800 text-white py-3 px-6 rounded-full shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out animate-[pulseRedGlow_3s_ease-in-out_infinite] inline-block focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            className="inline-flex items-center gap-2 bg-gradient-to-l from-red-900 via-red-600 to-red-800 text-white py-3 px-6 rounded-full shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out animate-[pulseRedGlow_3s_ease-in-out_infinite] focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             aria-label="Call Aksarben Locksmiths"
             title="Call Aksarben Locksmiths"
           >
-            In your area and ready to help, call now
+            <Phone className="h-4 w-4" />
+            <span>Call Now</span>
           </a>
         </div>
         {/* Main cities, blue gradient chips */}
