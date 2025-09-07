@@ -214,7 +214,8 @@ export default function BlogPage() {
                     aria-label="Call Aksarben Locksmiths"
                     title="Call Aksarben Locksmiths"
                   >
-                    Need a locksmith right now, call Aksarben
+                    <Phone className="h-4 w-4" />
+                    <span>Call Now</span>
                   </a>
                 </div>
             </main>
