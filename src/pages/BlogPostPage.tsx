@@ -18,10 +18,10 @@ export default function BlogPostPage() {
   const articleRef = useRef<HTMLElement | null>(null);
 
   // Schema and URL helpers
-  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://aksarbenlocksmiths.com";
+  const imageUrl = `${origin}${post?.coverImage || ""}`;
   const canonicalPath = `/blog/${post?.slug || slug}`;
   const canonicalAbs = origin + canonicalPath;
-  const imageAbs = origin + (post?.coverImage || "");
   const logoAbs = origin + "/images/shield-logo.png";
   const categoryLabel = post ? 
     ({ emergency: "Emergency and Lockouts",
@@ -125,7 +125,7 @@ export default function BlogPostPage() {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
-    image: [imageAbs],
+    image: imageUrl,
     datePublished: post.date,
     dateModified: post.date,
     url: canonicalAbs,
@@ -249,6 +249,10 @@ export default function BlogPostPage() {
                     alt={post.title}
                     loading="eager"
                     decoding="async"
+                    width={1280}
+                    height={720}
+                    srcSet={`${post.coverImage} 1280w`}
+                    sizes="100vw"
                     onError={(e) => {
                       const img = e.currentTarget;
                       img.onerror = null;
