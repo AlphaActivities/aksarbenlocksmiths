@@ -71,14 +71,14 @@ const AboutSection: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex justify-center gap-4 flex-wrap mt-4">
+            <div className="flex justify-center gap-2 sm:gap-4 flex-nowrap mt-4">
               <a 
                 href="#contact" 
                 onClick={(e) => trackClick('cta_contact_click', e.currentTarget, { 
                   source: 'about_section',
                   page_section: 'about'
                 })}
-                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full transition-colors font-medium"
+                className="bg-red-600 hover:bg-red-700 text-white px-4 sm:px-6 py-3 rounded-full transition-colors font-medium text-sm sm:text-base whitespace-nowrap"
               >
                 Contact Us
               </a>
@@ -88,9 +88,9 @@ const AboutSection: React.FC = () => {
                   source: 'about_section',
                   page_section: 'about'
                 })}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300 font-medium"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300 font-medium text-sm sm:text-base whitespace-nowrap"
               >
-                See Testimonials
+                Testimonials
               </a>
               <Link
                 to="/blog"
@@ -102,7 +102,7 @@ const AboutSection: React.FC = () => {
                     pill_label: "Our Blog",
                   })
                 }
-                className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300 font-medium"
+                className="bg-purple-600 hover:bg-purple-700 text-white px-4 sm:px-6 py-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300 font-medium text-sm sm:text-base whitespace-nowrap"
               >
                 Our Blog
               </Link>
