@@ -6,16 +6,34 @@ import { ArrowLeft, Phone } from "lucide-react";
 import { trackClick, trackEvent } from "../utils/analytics";
 
 export default function ServiceAreasPage() {
+
   const location = useLocation();
+
+  const didBlogFx = useRef(false);
 
   useEffect(() => {
     const state = (location?.state || {}) as any;
 
-    // If returning to Home with restore, let App.tsx handle it
     if (state.restorePosition) return;
 
-    // Unified arrival, always land at top like the Home path
-    window.scrollTo({ top: 0, behavior: "auto" });
+    if ((state.fromBlog || state.scrollFx === "midThenTop") && !didBlogFx.current) {
+      didBlogFx.current = true;
+
+      requestAnimationFrame(() => {
+        try {
+          const mid = Math.max(0, Math.round(window.innerHeight * 0.5));
+          window.scrollTo({ top: mid, behavior: "auto" });
+
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }, 120);
+        } catch {
+          window.scrollTo({ top: 0, behavior: "auto" });
+        }
+      });
+
+      return;
+    }
   }, [location]);
 
   const CORE_CITIES = [
