@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
@@ -6,17 +6,29 @@ import { ArrowLeft, Phone } from "lucide-react";
 import { trackClick, trackEvent } from "../utils/analytics";
 
 export default function ServiceAreasPage() {
+  const didBlogFx = useRef(false);
 
   const location = useLocation();
 
   useEffect(() => {
-    const state = location?.state as any;
+    const state = (location?.state || {}) as any;
     if (state?.restorePosition) {
       // Coming back to Home soon, let App.tsx restore. Do nothing here.
-      return;
-    }
+    if (state?.restorePosition) return;
     // Fresh entry to Service Areas, scroll to top. Do NOT clear lastScrollY here.
-    window.scrollTo({ top: 0, behavior: "auto" });
+    if ((state?.fromBlog || state?.scrollFx === "midThenTop") && !didBlogFx.current) {
+      didBlogFx.current = true;
+
+      requestAnimationFrame(() => {
+        try {
+          const mid = Math.max(0, Math.round(window.innerHeight * 0.5));
+          window.scrollTo({ top: mid, behavior: "auto" });
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }, 60);
+        } catch {}
+      });
+    }
   }, [location]);
 
   useEffect(() => {
