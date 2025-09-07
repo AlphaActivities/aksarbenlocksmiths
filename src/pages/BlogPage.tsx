@@ -135,7 +135,8 @@ export default function BlogPage() {
                     Aksarben Locksmiths Blog
                   </h1>
                   <p className="mt-3 text-base md:text-lg text-gray-200">
-                    Helpful tips and locksmith insights for Omaha, Bellevue, Council Bluffs, Papillion, La Vista, Gretna, and nearby communities.
+                    Helpful tips and locksmith insights for:<br />
+                    Omaha, Bellevue, Council Bluffs, Papillion, La Vista, Gretna, and nearby communities.
                   </p>
                 </div>
 
