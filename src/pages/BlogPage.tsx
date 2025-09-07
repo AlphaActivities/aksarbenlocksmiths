@@ -216,6 +216,7 @@ export default function BlogPage() {
                     </article>
                   ))}
                 </div>
+              </div>
               </section>
                 {/* Bottom CTA, matches Dynamic Service styling */}
                 <div className="flex justify-center mt-10">
