@@ -14,6 +14,7 @@ export default function ServiceAreasPage() {
     const state = (location?.state || {}) as any;
     if (state?.restorePosition) {
       // Coming back to Home soon, let App.tsx restore. Do nothing here.
+    }
     if (state?.restorePosition) return;
     // Fresh entry to Service Areas, scroll to top. Do NOT clear lastScrollY here.
     if ((state?.fromBlog || state?.scrollFx === "midThenTop") && !didBlogFx.current) {
