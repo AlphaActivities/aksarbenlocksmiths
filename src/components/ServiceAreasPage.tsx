@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
@@ -10,23 +10,35 @@ export default function ServiceAreasPage() {
 
   const location = useLocation();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const state = (location?.state || {}) as any;
     if (state?.restorePosition) {
       // Coming back to Home soon, let App.tsx restore. Do nothing here.
     }
+    // If returning to Home with restore, let App.tsx handle it
     if (state?.restorePosition) return;
     // Fresh entry to Service Areas, scroll to top. Do NOT clear lastScrollY here.
+    // Special entry from Blog with effect requested
     if ((state?.fromBlog || state?.scrollFx === "midThenTop") && !didBlogFx.current) {
       didBlogFx.current = true;
 
+      // Force an instant jump to mid before first paint, then restore smooth and scroll to top
+      const root = document.documentElement;
+      const prevScrollBehavior = root.style.scrollBehavior;
+
+      // Disable global smooth just for this two step sequence
+      root.style.scrollBehavior = "auto";
+      try {
+        const mid = Math.max(0, Math.round(window.innerHeight * 0.5));
+        // Immediate jump to mid, no smooth, no top flash
+        window.scrollTo({ top: mid });
+      } catch {}
+
+      // Restore any previous scroll behavior and perform the smooth top scroll on next frame
       requestAnimationFrame(() => {
+        root.style.scrollBehavior = prevScrollBehavior || "";
         try {
-          const mid = Math.max(0, Math.round(window.innerHeight * 0.5));
-          window.scrollTo({ top: mid, behavior: "auto" });
-          setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }, 60);
+          window.scrollTo({ top: 0, behavior: "smooth" });
         } catch {}
       });
     }
