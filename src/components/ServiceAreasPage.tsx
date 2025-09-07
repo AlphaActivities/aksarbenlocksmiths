@@ -34,7 +34,39 @@ export default function ServiceAreasPage() {
 
       return;
     }
+  }, [location]);
 
+  const CORE_CITIES = [
+    "Omaha",
+    "Bellevue",
+    "Papillion",
+    "La Vista",
+    "Ralston",
+    "Gretna",
+    "Elkhorn",
+    "Bennington",
+    "Boys Town",
+    "Springfield",
+    "Valley",
+    "Waterloo",
+    "Fort Calhoun",
+    "Blair",
+    "Fremont",
+    "Ashland",
+    "Plattsmouth",
+    "Offutt AFB",
+    "Chalco",
+    // Iowa
+    "Council Bluffs",
+    "Carter Lake",
+    "Crescent",
+    "Glenwood"
+  ];
+
+  const ALL_CITIES = [
+    "Omaha",
+    "Bellevue",
+    "Papillion",
     "La Vista",
     "Ralston",
     "Gretna",
