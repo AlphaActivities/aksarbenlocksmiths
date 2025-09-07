@@ -130,12 +130,14 @@ export default function BlogPage() {
                   </Link>
                 </div>
 
-                <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
-                  Aksarben Locksmiths Blog
-                </h1>
-                <p className="mt-3 text-base md:text-lg text-gray-200">
-                  Helpful tips and locksmith insights for Omaha, Bellevue, Council Bluffs, Papillion, La Vista, Gretna, and nearby communities.
-                </p>
+                <div className="bg-gradient-to-br from-purple-800 via-purple-700 to-red-700 bg-opacity-40 backdrop-blur-lg rounded-3xl p-8 border border-white/10 shadow-2xl ring-1 ring-white/20 transition-all duration-500 hover:scale-[1.02] hover:shadow-3xl">
+                  <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
+                    Aksarben Locksmiths Blog
+                  </h1>
+                  <p className="mt-3 text-base md:text-lg text-gray-200">
+                    Helpful tips and locksmith insights for Omaha, Bellevue, Council Bluffs, Papillion, La Vista, Gretna, and nearby communities.
+                  </p>
+                </div>
 
                 {/* Category filter */}
                 <div className="mt-6 flex flex-wrap items-center gap-2">
