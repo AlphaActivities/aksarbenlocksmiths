@@ -15,6 +15,7 @@ export default function ServiceAreasPage() {
     if (state.restorePosition) return;
 
     // Do not scroll here. App.tsx handles default top and special effects.
+  }, [location]);
 
   const CORE_CITIES = [
     "Omaha",
