@@ -163,6 +163,8 @@ function App() {
     };
 
     restorePosition();
+  }
+  )
 
   return (
     <Routes>
