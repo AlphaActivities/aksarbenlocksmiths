@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
@@ -9,61 +9,30 @@ export default function ServiceAreasPage() {
 
   const location = useLocation();
 
-  const didBlogFx = useRef(false);
-
   useEffect(() => {
-    const state = (location?.state || {}) as any;
-
-    if (state.restorePosition) return;
-
-    if ((state.fromBlog || state.scrollFx === "midThenTop") && !didBlogFx.current) {
-      didBlogFx.current = true;
-
-      requestAnimationFrame(() => {
-        try {
-          const mid = Math.max(0, Math.round(window.innerHeight * 0.5));
-          window.scrollTo({ top: mid, behavior: "auto" });
-
-          setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }, 120);
-        } catch {
-          window.scrollTo({ top: 0, behavior: "auto" });
-        }
-      });
-
+    const state = location?.state as any;
+    if (state?.restorePosition) {
+      // Coming back to Home soon, let App.tsx restore. Do nothing here.
       return;
     }
+    // Fresh entry to Service Areas, scroll to top. Do NOT clear lastScrollY here.
+    window.scrollTo({ top: 0, behavior: "auto" });
   }, [location]);
 
+  useEffect(() => {
+    // Page view for Service Areas dynamic page
+    trackEvent("page_view", {
+      source_page: "service_areas",
+      page_section: "service_areas_page"
+    });
+  }, []);
+
   const CORE_CITIES = [
-    "Omaha",
-    "Bellevue",
-    "Papillion",
-    "La Vista",
-    "Ralston",
-    "Gretna",
-    "Elkhorn",
-    "Bennington",
-    "Boys Town",
-    "Springfield",
-    "Valley",
-    "Waterloo",
-    "Fort Calhoun",
-    "Blair",
-    "Fremont",
-    "Ashland",
-    "Plattsmouth",
-    "Offutt AFB",
-    "Chalco",
-    // Iowa
-    "Council Bluffs",
-    "Carter Lake",
-    "Crescent",
-    "Glenwood"
+    "Omaha", "Ralston", "Papillion", "La Vista", "Council Bluffs", "Bellevue"
   ];
 
   const ALL_CITIES = [
+    // Nebraska
     "Omaha",
     "Bellevue",
     "Papillion",
