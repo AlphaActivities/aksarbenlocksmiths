@@ -158,8 +158,8 @@ export default function BlogPage() {
                         className={[
                           "px-4 py-2 rounded-full text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black",
                           isActive
-                            ? "bg-purple-600"
-                            : "bg-purple-800 hover:bg-purple-700"
+                            ? "bg-purple-600 ring-2 ring-purple-400/30 ring-offset-2 ring-offset-black"
+                            : "bg-[#120a1b] hover:bg-[#1a0f2e] border border-[#2a1a3d]"
                         ].join(" ")}
                         aria-pressed={isActive}
                       >
@@ -174,7 +174,7 @@ export default function BlogPage() {
                   {filtered.map((post) => (
                     <article
                       key={post.slug}
-                      className="rounded-2xl overflow-hidden bg-purple-950 border border-neutral-800 hover:border-neutral-700 transition-colors"
+                      className="rounded-2xl overflow-hidden bg-[#0f0a1f] border border-neutral-800 hover:border-neutral-700 transition-colors"
                     >
                       <Link
                         to={`/blog/${post.slug}`}
@@ -192,7 +192,7 @@ export default function BlogPage() {
                         }}
                         className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                       >
-                        <div className="aspect-[16/9] w-full bg-neutral-800">
+                        <div className="aspect-[16/9] w-full bg-[#1a1030]">
                           <img
                             src={post.coverImage}
                             alt={post.title}
