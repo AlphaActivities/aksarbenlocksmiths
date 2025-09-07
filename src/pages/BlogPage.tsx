@@ -112,6 +112,7 @@ export default function BlogPage() {
 
                   <Link
                     to="/service-areas"
+                    state={{ fromBlog: true }}
                     onClick={(e) => {
                       trackClick("blog_service_areas_pill_click", e.currentTarget, {
                         source_page: "blog_index",

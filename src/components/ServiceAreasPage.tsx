@@ -160,7 +160,16 @@ export default function ServiceAreasPage() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 md:pt-16 pb-12">
         <button
           onClick={(e) => {
-            navigate("/", { state: { restorePosition: true } });
+            const fromBlog = (location?.state as any)?.fromBlog;
+
+            if (fromBlog && typeof window !== "undefined" && window.history.length >= 3) {
+              // Return through history to preserve the exact Home scroll naturally
+              navigate(-2);
+            } else {
+              // Fallback, go Home and ask App.tsx to restore from sessionStorage if available
+              navigate("/", { state: { restorePosition: true } });
+            }
+
             trackClick("back_to_services", e.currentTarget, {
               source_page: "service_areas",
               page_section: "service_areas_page",
