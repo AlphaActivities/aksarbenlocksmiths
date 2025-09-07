@@ -131,6 +131,14 @@ export default function BlogPage() {
                 </div>
 
                 <div className="bg-gradient-to-br from-red-600 via-purple-600 to-purple-900 backdrop-blur-lg rounded-2xl px-6 py-4 mt-1 mb-2 border border-white/10 shadow-xl ring-1 ring-white/20 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
+                  <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
+                    Aksarben Locksmiths Blog
+                  </h1>
+                  <p className="mt-3 text-base md:text-lg text-gray-200">
+                    Helpful tips and locksmith insights for:<br />
+                    Omaha, Bellevue, Council Bluffs, Papillion, La Vista, Gretna, and nearby communities.
+                  </p>
+                </div>
 
                 {/* Category filter */}
                 <div className="mt-6 flex flex-wrap items-center gap-2">
@@ -215,7 +223,6 @@ export default function BlogPage() {
                       </Link>
                     </article>
                   ))}
-                </div>
                 </div>
               </section>
                 {/* Bottom CTA, matches Dynamic Service styling */}
