@@ -52,11 +52,10 @@ export default function BlogPage() {
               page_section: "emergency_top_bar",
             })
           }
-          className="inline-flex items-center gap-2 bg-gradient-to-l from-red-900 via-red-600 to-red-800 text-white py-3 px-6 rounded-full shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out animate-[pulseRedGlow_3s_ease-in-out_infinite] focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+          className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition animate-pulse"
         >
           <Phone className="h-4 w-4" />
-          <Phone className="h-4 w-4" />
-          <span>Call Now</span>
+          (402) 556-6715
         </a>
       </div>
 
