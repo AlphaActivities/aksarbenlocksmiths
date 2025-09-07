@@ -112,8 +112,9 @@ export default function BlogPage() {
 
                   <Link
                     to="/service-areas"
-                    state={{ fromBlog: true, scrollFx: "midThenTop" }}
+                    state={{ fromBlog: true }}
                     onClick={(e) => {
+                      try { sessionStorage.setItem("lastScrollY", String(window.scrollY)); } catch {}
                       trackClick("blog_service_areas_pill_click", e.currentTarget, {
                         source_page: "blog_index",
                         page_section: "header",
