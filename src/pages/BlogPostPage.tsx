@@ -17,6 +17,19 @@ export default function BlogPostPage() {
   const post = useMemo(() => (slug ? findPost(slug) : undefined), [slug]);
   const articleRef = useRef<HTMLElement | null>(null);
 
+  // Schema and URL helpers
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const canonicalPath = `/blog/${post?.slug || slug}`;
+  const canonicalAbs = origin + canonicalPath;
+  const imageAbs = origin + (post?.coverImage || "");
+  const logoAbs = origin + "/images/shield-logo.png";
+  const categoryLabel = post ? 
+    ({ emergency: "Emergency and Lockouts",
+       keys: "Keys and Duplication", 
+       residential: "Residential Locksmith",
+       commercial: "Commercial Locksmith" } as const)[post.category] || post.category
+    : "";
+
   useEffect(() => {
     if (post) {
       try {
@@ -105,9 +118,6 @@ export default function BlogPostPage() {
     );
   }
 
-  const origin = typeof window !== "undefined" ? window.location.origin : "";
-  const imageAbs = origin + post.coverImage;
-
   const description = post.excerpt;
   const title = `${post.title} | Aksarben Locksmiths Blog`;
 
@@ -118,17 +128,27 @@ export default function BlogPostPage() {
     image: [imageAbs],
     datePublished: post.date,
     dateModified: post.date,
-    author: {
-      "@type": "Person",
-      name: "Mike"
-    },
+    url: canonicalAbs,
+    mainEntityOfPage: { "@type": "WebPage", "@id": canonicalAbs },
+    author: { "@type": "Person", name: "Mike" },
     publisher: {
       "@type": "Organization",
-      name: "Aksarben Locksmiths LLC"
+      name: "Aksarben Locksmiths LLC",
+      logo: { "@type": "ImageObject", url: logoAbs }
     },
-    mainEntityOfPage: origin + "/blog/" + post.slug,
-    articleSection: post.category,
-    description: description,
+    articleSection: categoryLabel,
+    keywords: [categoryLabel, post.city, "Omaha locksmith", "Aksarben Locksmiths"],
+    description: post.excerpt
+  };
+
+  const breadcrumbsLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: origin + "/" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: origin + "/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: canonicalAbs }
+    ]
   };
 
   const paragraphs = post.body.split("\n\n");
@@ -175,8 +195,9 @@ export default function BlogPostPage() {
             <Helmet>
               <title>{title}</title>
               <meta name="description" content={description} />
-              <link rel="canonical" href={`/blog/${post.slug}`} />
+              <link rel="canonical" href={canonicalPath} />
               <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+              <script type="application/ld+json">{JSON.stringify(breadcrumbsLd)}</script>
             </Helmet>
 
             <div className="mx-auto max-w-5xl px-4 py-12 md:py-16">
@@ -200,6 +221,26 @@ export default function BlogPostPage() {
                   Back to Home
                 </button>
               </div>
+
+              <nav className="mb-3 text-sm text-gray-300" aria-label="Breadcrumb">
+                <ol className="flex flex-wrap items-center gap-2">
+                  <li>
+                    <Link to="/" className="hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black">
+                      Home
+                    </Link>
+                  </li>
+                  <li className="text-gray-500">›</li>
+                  <li>
+                    <Link to="/blog" className="hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black">
+                      Blog
+                    </Link>
+                  </li>
+                  <li className="text-gray-500">›</li>
+                  <li aria-current="page" className="text-gray-200">
+                    {post.title}
+                  </li>
+                </ol>
+              </nav>
 
               <article ref={articleRef} className="text-white">
                 <div className="aspect-[16/9] w-full bg-neutral-800 rounded-2xl overflow-hidden">
