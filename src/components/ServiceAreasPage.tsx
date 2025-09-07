@@ -183,6 +183,24 @@ export default function ServiceAreasPage() {
           </p>
         </div>
 
+        {/* Bottom CTA, matches Dynamic Service styling */}
+        <div className="flex justify-center mt-10">
+          <a
+            href="tel:+14025566715"
+            onClick={(e) =>
+              trackClick("cta_service_areas_call_click", e.currentTarget, {
+                source_page: "service_areas",
+                page_section: "bottom_cta",
+                call_reason: "local_dispatch",
+              })
+            }
+            className="bg-gradient-to-l from-red-900 via-red-600 to-red-800 text-white py-3 px-6 rounded-full shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out animate-[pulseRedGlow_3s_ease-in-out_infinite] inline-block focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            aria-label="Call Aksarben Locksmiths"
+            title="Call Aksarben Locksmiths"
+          >
+            In your area and ready to help, call now
+          </a>
+        </div>
         {/* Main cities, blue gradient chips */}
         <div className="mt-8 rounded-3xl p-6 backdrop-blur-md border border-white/10 ring-1 ring-blue-400/25 shadow-[0_10px_40px_-10px_rgba(59,130,246,0.35)] bg-[radial-gradient(120%_120%_at_50%_0%,rgba(59,130,246,0.18),rgba(17,24,39,0.2)_70%)]">
           <h2 className="text-xl sm:text-2xl font-semibold mb-4" style={{ textShadow: "0 1px 2px rgba(0,0,0,.5)" }}>Main Cities We Cover</h2>

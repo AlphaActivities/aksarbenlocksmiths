@@ -199,6 +199,24 @@ export default function BlogPage() {
                   ))}
                 </div>
               </section>
+                {/* Bottom CTA, matches Dynamic Service styling */}
+                <div className="flex justify-center mt-10">
+                  <a
+                    href="tel:+14025566715"
+                    onClick={(e) =>
+                      trackClick("cta_blog_call_click", e.currentTarget, {
+                        source_page: "blog_index",
+                        page_section: "bottom_cta",
+                        call_reason: "call_now",
+                      })
+                    }
+                    className="bg-gradient-to-l from-red-900 via-red-600 to-red-800 text-white py-3 px-6 rounded-full shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out animate-[pulseRedGlow_3s_ease-in-out_infinite] inline-block focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                    aria-label="Call Aksarben Locksmiths"
+                    title="Call Aksarben Locksmiths"
+                  >
+                    Need a locksmith right now, call Aksarben
+                  </a>
+                </div>
             </main>
           </div>
         </main>
