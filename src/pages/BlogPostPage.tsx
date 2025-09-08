@@ -223,6 +223,7 @@ export default function BlogPostPage() {
                 </button>
               </div>
               </div>
+            </div>
 
               <nav className="mb-3 text-sm text-gray-300" aria-label="Breadcrumb">
                 <ol className="flex flex-wrap items-center gap-2">
@@ -279,7 +280,6 @@ export default function BlogPostPage() {
                 </div>
               </article>
             </div>
-          </div>
         </main>
       </div>
     </>
