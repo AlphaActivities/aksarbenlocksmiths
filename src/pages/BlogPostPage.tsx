@@ -200,9 +200,9 @@ export default function BlogPostPage() {
               <script type="application/ld+json">{JSON.stringify(breadcrumbsLd)}</script>
             </Helmet>
 
-            <div className="mx-auto max-w-5xl px-4 py-12 md:py-16">
+            <div className="mx-auto max-w-5xl px-6 pt-4 pb-12 md:pt-6 md:pb-16">
               {/* Back to Home button */}
-              <div className="mb-6 flex items-center justify-between">
+              <div className="mb-4 flex items-center justify-between">
                 <button
                   onClick={(e) => {
                     navigate(-1);
