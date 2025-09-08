@@ -263,7 +263,7 @@ export default function BlogPostPage() {
                 </div>
 
                 {/* Post content container with semi transparent white glow */}
-                <div className="bg-white/10 backdrop-blur-2xl rounded-xl px-6 py-5 text-white/90 text-base leading-relaxed shadow-[0_0_24px_rgba(255,255,255,0.5)] max-w-5xl w-full mx-auto mt-6">
+                <div className="bg-white/10 backdrop-blur-2xl rounded-xl px-6 py-5 text-white/90 text-base leading-relaxed shadow-[0_0_24px_rgba(255,255,255,0.5)] max-w-4xl w-full mx-auto mt-6">
                   <div className="text-xs text-gray-400">
                     {post.city} · {new Date(post.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "2-digit" })}
                   </div>
