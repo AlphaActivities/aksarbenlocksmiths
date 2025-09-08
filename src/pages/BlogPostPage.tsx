@@ -201,7 +201,7 @@ export default function BlogPostPage() {
             </Helmet>
 
             <div className="w-full px-6">
-              <div className="mx-auto max-w-5xl pt-4 pb-12 md:pt-6 md:pb-16">
+              <div className="mx-auto max-w-5xl pt-4 pb-6 md:pt-6 md:pb-8">
               {/* Back to Home button */}
               <div className="mb-4 flex items-center justify-between">
                 <button
