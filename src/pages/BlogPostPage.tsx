@@ -173,7 +173,7 @@ export default function BlogPostPage() {
         </a>
       </div>
 
-      <div className="min-h-screen w-full relative pb-12 md:pb-16">
+      <div className="min-h-screen w-full relative">
         <main className="min-h-screen w-full relative overflow-hidden">
           <video
             autoPlay
@@ -225,7 +225,7 @@ export default function BlogPostPage() {
               </div>
 
             <div className="mx-auto max-w-5xl px-6">
-              <nav className="mb-2 text-sm text-gray-300" aria-label="Breadcrumb">
+              <nav className="mb-3 text-sm text-gray-300" aria-label="Breadcrumb">
                 <ol className="flex flex-wrap items-center gap-2">
                   <li>
                     <Link to="/" className="hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black">
