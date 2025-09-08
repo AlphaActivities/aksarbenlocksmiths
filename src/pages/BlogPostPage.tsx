@@ -262,25 +262,18 @@ export default function BlogPostPage() {
                   />
                 </div>
 
-                <div className="mt-6 text-xs text-gray-400">
-                  {post.city} · {new Date(post.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "2-digit" })}
-                </div>
-                <h1 className="mt-1 text-3xl md:text-4xl font-bold tracking-tight">{post.title}</h1>
+                {/* Post content container with semi transparent white glow */}
+                <div className="bg-white/10 backdrop-blur-2xl rounded-xl px-6 py-5 text-white/90 text-base leading-relaxed shadow-[0_0_24px_rgba(255,255,255,0.5)] max-w-3xl w-full mx-auto mt-6">
+                  <div className="text-xs text-gray-400">
+                    {post.city} · {new Date(post.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "2-digit" })}
+                  </div>
+                  <h1 className="mt-1 text-3xl md:text-4xl font-bold tracking-tight">{post.title}</h1>
 
-                <div className="mt-4 space-y-4 text-gray-200 leading-relaxed">
-                  {paragraphs.map((p, idx) => (
-                    <p key={idx}>{p}</p>
-                  ))}
-                </div>
-
-                <div className="mt-10">
-                  <Link
-                    to="/blog"
-                    className="inline-flex items-center px-4 py-2 rounded-full bg-neutral-800 hover:bg-neutral-700 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-                    aria-label="Back to blog index"
-                  >
-                    ← Back to Blog
-                  </Link>
+                  <div className="mt-4 space-y-4 text-gray-200 leading-relaxed">
+                    {paragraphs.map((p, idx) => (
+                      <p key={idx}>{p}</p>
+                    ))}
+                  </div>
                 </div>
               </article>
             </div>
