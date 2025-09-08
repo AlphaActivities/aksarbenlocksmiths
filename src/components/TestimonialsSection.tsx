@@ -29,7 +29,7 @@ const testimonials = [
     testimonial:
       "Only place that answered the phone at 5 AM and had a new ignition for my truck. I called every number in the locksmith search, all said 24 hour service and yet only one answered. Super friendly and they came quickly with good pricing.",
     rating: 5,
-    image: "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2", // male placeholder
+    image: "https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2", // male placeholder
     source: "Google Maps"
   },
   {
