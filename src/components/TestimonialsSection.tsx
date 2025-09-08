@@ -11,7 +11,7 @@ const testimonials = [
     testimonial:
       "Locked two sets of keys in my car, and Mike saved me. Showed up earlier than estimated and got me back in my car despite it being a foreign make and difficult to manipulate. Mike was professional, knowledgeable, and friendly. Very grateful!",
     rating: 5,
-    image: "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=512&h=512&dpr=2", // male placeholder
+    image: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2", // male placeholder
     source: "Google Maps"
   },
   {
@@ -29,7 +29,7 @@ const testimonials = [
     testimonial:
       "Only place that answered the phone at 5 AM and had a new ignition for my truck. I called every number in the locksmith search, all said 24 hour service and yet only one answered. Super friendly and they came quickly with good pricing.",
     rating: 5,
-    image: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=512&h=512&dpr=2", // male placeholder
+    image: "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2", // male placeholder
     source: "Google Maps"
   },
   {
