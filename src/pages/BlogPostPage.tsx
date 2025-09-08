@@ -191,7 +191,7 @@ export default function BlogPostPage() {
           </div>
           <div className="absolute inset-0 z-[3] pointer-events-none bg-black/25 md:bg-black/10"></div>
 
-          <div className="relative z-10 text-white pt-12 md:pt-14">
+          <div className="relative z-10 text-white pt-8 md:pt-10">
             <Helmet>
               <title>{title}</title>
               <meta name="description" content={description} />
@@ -202,7 +202,7 @@ export default function BlogPostPage() {
 
             <div className="mx-auto max-w-5xl px-6 pt-4 pb-12 md:pt-6 md:pb-16">
               {/* Back to Home button */}
-              <div className="mt-[2px] mb-4 flex items-center justify-between">
+              <div className="mb-4 flex items-center justify-between">
                 <button
                   onClick={(e) => {
                     navigate(-1);
