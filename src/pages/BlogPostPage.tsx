@@ -246,6 +246,7 @@ export default function BlogPostPage() {
 
               <article ref={articleRef} className="text-white">
                 <div className="aspect-[16/9] w-full bg-neutral-800 rounded-2xl overflow-hidden">
+              <div className="mx-auto max-w-5xl px-6">
                   <img
                     src={post.coverImage}
                     alt={post.title}
@@ -254,7 +255,7 @@ export default function BlogPostPage() {
                     width={1280}
                     height={720}
                     srcSet={`${post.coverImage} 1280w`}
-                    sizes="100vw"
+                    sizes="(min-width: 1280px) 1024px, calc(100vw - 48px)"
                     onError={(e) => {
                       const img = e.currentTarget;
                       img.onerror = null;
@@ -263,6 +264,7 @@ export default function BlogPostPage() {
                     className="h-full w-full object-cover"
                   />
                 </div>
+              </div>
 
                 {/* Post content container with semi transparent white glow */}
                 <div className="bg-white/10 backdrop-blur-2xl rounded-xl px-6 py-5 text-white/90 text-base leading-relaxed shadow-[0_0_24px_rgba(255,255,255,0.5)] max-w-4xl w-full mx-auto mt-6">
