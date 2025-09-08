@@ -85,7 +85,7 @@ export default function BlogPostPage() {
             <div className="relative z-10 text-white pt-12 md:pt-14">
               <main className="min-h-screen w-full px-4 py-12 md:py-16">
                 <section className="mx-auto max-w-5xl text-white">
-                  <div className="mb-6 -ml-[2px] flex items-center justify-between">
+                  <div className="mb-6 flex items-center justify-between">
                     <button
                       onClick={(e) => {
                         navigate(-1);
@@ -200,9 +200,10 @@ export default function BlogPostPage() {
               <script type="application/ld+json">{JSON.stringify(breadcrumbsLd)}</script>
             </Helmet>
 
-            <div className="mx-auto max-w-5xl px-6 pt-4 pb-12 md:pt-6 md:pb-16">
+            <div className="w-full px-6">
+              <div className="mx-auto max-w-5xl pt-4 pb-12 md:pt-6 md:pb-16">
               {/* Back to Home button */}
-              <div className="mb-4 -ml-[2px] flex items-center justify-between">
+              <div className="mb-4 flex items-center justify-between">
                 <button
                   onClick={(e) => {
                     navigate(-1);
@@ -220,6 +221,7 @@ export default function BlogPostPage() {
                   <ArrowLeft className="w-4 h-4" />
                   Back to Home
                 </button>
+              </div>
               </div>
 
               <nav className="mb-3 text-sm text-gray-300" aria-label="Breadcrumb">
