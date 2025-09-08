@@ -86,6 +86,7 @@ export default function BlogPostPage() {
               <main className="min-h-screen w-full px-4 py-12 md:py-16">
                 <section className="mx-auto max-w-5xl text-white">
                   <div className="mb-6 flex items-center justify-between">
+                  <div className="mb-6 -ml-[2px] flex items-center justify-between">
                     <button
                       onClick={(e) => {
                         navigate(-1);
@@ -203,7 +204,7 @@ export default function BlogPostPage() {
             <div className="mx-auto max-w-5xl px-6 pt-4 pb-12 md:pt-6 md:pb-16">
               {/* Back to Home button */}
               <div className="mb-4 -ml-[2px] flex items-center justify-between">
-                <div className="mb-4 flex items-center justify-between -translate-x-[2px]">
+                <div className="mb-4 -ml-[2px] flex items-center justify-between">
                   <button
                     onClick={(e) => {
                       navigate(-1);
