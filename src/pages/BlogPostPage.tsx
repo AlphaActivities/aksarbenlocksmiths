@@ -224,6 +224,7 @@ export default function BlogPostPage() {
               </div>
               </div>
 
+            <div className="mx-auto max-w-5xl px-6">
               <nav className="mb-3 text-sm text-gray-300" aria-label="Breadcrumb">
                 <ol className="flex flex-wrap items-center gap-2">
                   <li>
@@ -243,7 +244,9 @@ export default function BlogPostPage() {
                   </li>
                 </ol>
               </nav>
+            </div>
 
+            <div className="mx-auto max-w-5xl px-6">
               <article ref={articleRef} className="text-white">
                 <div className="aspect-[16/9] w-full bg-neutral-800 rounded-2xl overflow-hidden">
                   <img
@@ -254,7 +257,7 @@ export default function BlogPostPage() {
                     width={1280}
                     height={720}
                     srcSet={`${post.coverImage} 1280w`}
-                    sizes="100vw"
+                    sizes="(min-width: 1280px) 1024px, calc(100vw - 48px)"
                     onError={(e) => {
                       const img = e.currentTarget;
                       img.onerror = null;
@@ -278,6 +281,7 @@ export default function BlogPostPage() {
                   </div>
                 </div>
               </article>
+            </div>
             </div>
           </div>
         </main>
