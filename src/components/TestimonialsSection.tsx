@@ -3,35 +3,44 @@ import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import PillBadge from './ui/PillBadge';
 import { trackClick, trackEvent } from '../utils/analytics';
 
+// Real Google Maps reviews
 const testimonials = [
   {
-    name: "Michael Johnson",
-    position: "Homeowner",
-    testimonial: "I was locked out of my house at 11 PM and called AksarbenLocksmiths. They arrived in just 15 minutes and got me back inside without damaging my door. Fantastic service!",
+    name: "Blake Gustafson",
+    position: "Customer",
+    testimonial:
+      "Locked two sets of keys in my car, and Mike saved me. Showed up earlier than estimated and got me back in my car despite it being a foreign make and difficult to manipulate. Mike was professional, knowledgeable, and friendly. Very grateful!",
     rating: 5,
-    image: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+    image: "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=512&h=512&dpr=2", // male placeholder
+    source: "Google Maps"
   },
   {
-    name: "Sarah Williams",
-    position: "Business Owner",
-    testimonial: "We needed our entire office rekeyed after an employee left. AksarbenLocksmiths handled everything professionally and efficiently. They even provided recommendations for improving our security system.",
+    name: "Michelle Trummer",
+    position: "Customer",
+    testimonial:
+      "They were awesome and drove an hour to come help me when my purse was stolen and I could not get into my car.",
     rating: 5,
-    image: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+    image: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=512&h=512&dpr=2", // female placeholder
+    source: "Google Maps"
   },
   {
-    name: "David Thompson",
-    position: "Car Owner",
-    testimonial: "Locked my keys in my car at the grocery store. Called these guys and they were there in 20 minutes. Quick, professional, and reasonably priced. Would definitely recommend!",
+    name: "Jason",
+    position: "Local Guide",
+    testimonial:
+      "Only place that answered the phone at 5 AM and had a new ignition for my truck. I called every number in the locksmith search, all said 24 hour service and yet only one answered. Super friendly and they came quickly with good pricing.",
     rating: 5,
-    image: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+    image: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=512&h=512&dpr=2", // male placeholder
+    source: "Google Maps"
   },
   {
-    name: "Jennifer Davis",
-    position: "Property Manager",
-    testimonial: "We've been using AksarbenLocksmiths for all our properties for years. They're reliable, fast, and their work is always top-notch. Wouldn't trust anyone else with our security needs.",
+    name: "Elaine R.",
+    position: "Local Guide",
+    testimonial:
+      "Was able to get my dead bolt fixed on a Saturday afternoon. Honest and reasonable about pricing. I was surprised how quickly they got to my home and fixed the problem. I really appreciate that they are open on weekends. Thanks Mike.",
     rating: 5,
-    image: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-  },
+    image: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=512&h=512&dpr=2", // female placeholder
+    source: "Google Maps"
+  }
 ];
 
 const TestimonialsSection: React.FC = () => {
@@ -78,7 +87,8 @@ const TestimonialsSection: React.FC = () => {
           trackEvent('testimonial_view', {
             testimonial_name: currentTestimonial.name,
             testimonial_position: currentTestimonial.position,
-            testimonial_index: activeIndex
+            testimonial_index: activeIndex,
+            source: currentTestimonial.source
           });
           setHasTrackedView(true);
         }
@@ -161,6 +171,7 @@ const TestimonialsSection: React.FC = () => {
                         <div className="text-left">
                           <p className="text-white font-bold">{testimonial.name}</p>
                           <p className="text-white/70 text-sm">{testimonial.position}</p>
+                          <p className="text-white/60 text-xs">{testimonial.source} review</p>
                         </div>
                       </div>
                     </div>
