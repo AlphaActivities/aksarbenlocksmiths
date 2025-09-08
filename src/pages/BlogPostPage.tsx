@@ -86,7 +86,6 @@ export default function BlogPostPage() {
               <main className="min-h-screen w-full px-4 py-12 md:py-16">
                 <section className="mx-auto max-w-5xl text-white">
                   <div className="mb-6 flex items-center justify-between">
-                  <div className="mb-6 -ml-[2px] flex items-center justify-between">
                     <button
                       onClick={(e) => {
                         navigate(-1);
@@ -204,25 +203,23 @@ export default function BlogPostPage() {
             <div className="mx-auto max-w-5xl px-6 pt-4 pb-12 md:pt-6 md:pb-16">
               {/* Back to Home button */}
               <div className="mb-4 -ml-[2px] flex items-center justify-between">
-                <div className="mb-4 -ml-[2px] flex items-center justify-between">
-                  <button
-                    onClick={(e) => {
-                      navigate(-1);
-                      trackClick("back_to_home", e.currentTarget, {
-                        source_page: "blog_post",
-                        page_section: "header",
-                        destination: "/",
-                        from_post: post.slug,
-                      });
-                    }}
-                    className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
-                    aria-label="Back to Home"
-                    title="Back to Home"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    Back to Home
-                  </button>
-                </div>
+                <button
+                  onClick={(e) => {
+                    navigate(-1);
+                    trackClick("back_to_home", e.currentTarget, {
+                      source_page: "blog_post",
+                      page_section: "header",
+                      destination: "/",
+                      from_post: post.slug,
+                    });
+                  }}
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
+                  aria-label="Back to Home"
+                  title="Back to Home"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Back to Home
+                </button>
               </div>
 
               <nav className="mb-3 text-sm text-gray-300" aria-label="Breadcrumb">
