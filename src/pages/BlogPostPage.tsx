@@ -203,6 +203,7 @@ export default function BlogPostPage() {
             <div className="mx-auto max-w-5xl px-6 pt-4 pb-12 md:pt-6 md:pb-16">
               {/* Back to Home button */}
              <div className="mb-4 -ml-[2px] flex items-center justify-between">
+            <div className="mb-4 flex items-center justify-between -translate-x-[2px]">
                 <button
                   onClick={(e) => {
                     navigate(-1);
