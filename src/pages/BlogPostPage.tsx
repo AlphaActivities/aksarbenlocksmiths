@@ -185,11 +185,6 @@ export default function BlogPostPage() {
             className="fixed inset-0 w-full h-full object-cover opacity-45 z-0"
             src="/videos/wallpaper.mp4"
           />
-          <div className="absolute inset-0 pointer-events-none min-h-[150vh]">
-            <div className="animated-footer-bg" />
-            <div className="footer-glass-effect absolute inset-0" />
-          </div>
-          <div className="absolute inset-0 z-[3] pointer-events-none bg-black/25 md:bg-black/10"></div>
 
           <div className="relative z-10 text-white pt-8 md:pt-10">
             <Helmet>
@@ -287,6 +282,15 @@ export default function BlogPostPage() {
         </main>
         {/* Bottom breathing room spacer */}
         <div className="h-12 md:h-16 lg:h-20"></div>
+
+        {/* Footer-style animated background layers */}
+        <div className="absolute inset-0 pointer-events-none min-h-[150vh]">
+          <div className="animated-footer-bg" />
+          <div className="footer-glass-effect absolute inset-0" />
+        </div>
+
+        {/* Contrast overlay, adjust opacity as needed */}
+        <div className="absolute inset-0 z-[3] pointer-events-none bg-black/25 md:bg-black/10"></div>
       </div>
     </>
   );
