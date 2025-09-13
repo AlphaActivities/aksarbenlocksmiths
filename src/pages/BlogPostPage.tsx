@@ -285,6 +285,8 @@ export default function BlogPostPage() {
             </div>
           </div>
         </main>
+        {/* Bottom breathing room spacer */}
+        <div className="h-12 md:h-16 lg:h-20"></div>
       </div>
     </>
   );
