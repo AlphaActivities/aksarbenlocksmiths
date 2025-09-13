@@ -218,6 +218,7 @@ export default function BlogPostPage() {
                 </button>
               </div>
               </div>
+            </div>
 
             <div className="mx-auto max-w-5xl px-6">
               <nav className="mb-3 text-sm text-gray-300" aria-label="Breadcrumb">
@@ -278,16 +279,16 @@ export default function BlogPostPage() {
               </article>
             </div>
             </div>
-        </main>
-        {/* Bottom breathing room spacer */}
-        {/* Footer-style animated background layers */}
-        <div className="absolute inset-0 pointer-events-none min-h-[150vh]">
-          <div className="animated-footer-bg" />
-          <div className="footer-glass-effect absolute inset-0" />
-        </div>
 
-        {/* Contrast overlay, adjust opacity as needed */}
-        <div className="absolute inset-0 z-[3] pointer-events-none bg-black/25 md:bg-black/10"></div>
+            {/* Footer-style animated background layers */}
+            <div className="absolute inset-0 pointer-events-none min-h-[150vh]">
+              <div className="animated-footer-bg" />
+              <div className="footer-glass-effect absolute inset-0" />
+            </div>
+
+            {/* Contrast overlay, adjust opacity as needed */}
+            <div className="absolute inset-0 z-[3] pointer-events-none bg-black/25 md:bg-black/10"></div>
+        </main>
       </div>
     </>
   );
