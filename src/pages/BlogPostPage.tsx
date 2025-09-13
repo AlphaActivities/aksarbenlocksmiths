@@ -188,7 +188,7 @@ export default function BlogPostPage() {
             src="/videos/wallpaper.mp4"
           />
 
-          <div className="relative z-10 text-white pt-8 md:pt-10">
+          <div className="relative z-10 text-white pt-8 md:pt-10 pb-12 md:pb-16 lg:pb-20">
             <Helmet>
               <title>{title}</title>
               <meta name="description" content={description} />
@@ -290,6 +290,7 @@ export default function BlogPostPage() {
 
             {/* Contrast overlay, adjust opacity as needed */}
             <div className="absolute inset-0 z-[3] pointer-events-none bg-black/25 md:bg-black/10"></div>
+        </main>
         </main>
         </main>
       </div>
