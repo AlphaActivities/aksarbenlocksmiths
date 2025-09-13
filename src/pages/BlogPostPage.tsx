@@ -200,7 +200,7 @@ export default function BlogPostPage() {
             <div className="w-full px-6">
               <div className="mx-auto max-w-5xl pt-4 pb-6 md:pt-6 md:pb-8">
               {/* Back to Home button */}
-              <div className="mb-4 flex items-center justify-between">
+              <div className="mb-4 flex items-center justify-between min-h-[40px]">
                 <button
                   onClick={(e) => {
                     navigate(-1);
@@ -279,6 +279,27 @@ export default function BlogPostPage() {
                   </div>
                 </div>
               </article>
+
+              {/* Bottom CTA — matches DynamicServicePage style */}
+              <div className="flex justify-center mt-8">
+                <a
+                  href="tel:+14025566715"
+                  onClick={(e) =>
+                    trackClick("blog_post_request_service", e.currentTarget, {
+                      source_page: "blog_post",
+                      page_section: "bottom_cta",
+                      phone_number: "+14025566715",
+                      from_post: post.slug,
+                    })
+                  }
+                  className="bg-gradient-to-l from-red-900 via-red-600 to-red-800 text-white py-3 px-6 rounded-full shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out animate-[pulseRedGlow_3s_ease-in-out_infinite] inline-block"
+                  aria-label="Call now to request service"
+                  title="Call now to request service"
+                  data-cta="bottom"
+                >
+                  Request Service
+                </a>
+              </div>
             </div>
             </div>
 

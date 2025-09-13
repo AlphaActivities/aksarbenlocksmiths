@@ -92,7 +92,7 @@ export default function BlogPage() {
 
               <section className="mx-auto max-w-5xl">
                 {/* Back to Home button, matches Dynamic Service styles */}
-                <div className="mb-4 flex items-center justify-between">
+                <div className="mb-4 flex items-center justify-between min-h-[40px]">
                   <button
                     onClick={(e) => {
                       navigate(-1);
