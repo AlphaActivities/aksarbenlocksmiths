@@ -176,6 +176,7 @@ export default function BlogPostPage() {
       <div className="min-h-screen w-full relative overflow-x-hidden touch-pan-y overscroll-x-none">
         <main className="min-h-full w-full relative overflow-x-hidden">
         <main className="min-h-[calc(100vh+48px)] md:min-h-[calc(100vh+64px)] lg:min-h-[calc(100vh+80px)] w-full relative overflow-hidden">
+        <main className="min-h-[calc(100vh+48px)] md:min-h-[calc(100vh+64px)] lg:min-h-[calc(100vh+80px)] w-full relative overflow-hidden">
           <video
             autoPlay
             muted
@@ -289,6 +290,7 @@ export default function BlogPostPage() {
 
             {/* Contrast overlay, adjust opacity as needed */}
             <div className="absolute inset-0 z-[3] pointer-events-none bg-black/25 md:bg-black/10"></div>
+        </main>
         </main>
       </div>
     </>
