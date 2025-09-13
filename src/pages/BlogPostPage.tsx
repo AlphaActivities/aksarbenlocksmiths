@@ -174,7 +174,7 @@ export default function BlogPostPage() {
       </div>
 
       <div className="min-h-screen w-full relative">
-        <main className="min-h-screen w-full relative overflow-hidden">
+        <main className="min-h-full w-full relative overflow-x-hidden">
           <video
             autoPlay
             muted
