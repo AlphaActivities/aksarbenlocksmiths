@@ -87,7 +87,22 @@ export default function BlogPage() {
                   name="description"
                   content="Emergency lockouts, keys and duplication, residential and commercial security for Omaha and surrounding cities."
                 />
-                <link rel="canonical" href="/blog" />
+                {/* canonical, absolute */}
+                <link rel="canonical" href="https://aksarbenlocksmiths.com/blog" />
+                {/* JSON-LD, Blog index breadcrumb */}
+                <script
+                  type="application/ld+json"
+                  dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                      "@context": "https://schema.org",
+                      "@type": "BreadcrumbList",
+                      "itemListElement": [
+                        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aksarbenlocksmiths.com/" },
+                        { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://aksarbenlocksmiths.com/blog" }
+                      ]
+                    })
+                  }}
+                />
               </Helmet>
 
               <section className="mx-auto max-w-5xl">
@@ -102,7 +117,7 @@ export default function BlogPage() {
                         destination: "/",
                       });
                     }}
-                    className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
+                    className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                     aria-label="Back to Home"
                     title="Back to Home"
                   >
@@ -148,7 +163,14 @@ export default function BlogPage() {
                       <button
                         key={cat.slug}
                         type="button"
-                        onClick={(e) => {
+                        onClick={(e) => { 
+                          setActiveCat(cat.slug); 
+                          trackClick("blog_chip_click", e.currentTarget as unknown as HTMLElement, { 
+                            source_page: "blog_index", 
+                            page_section: "chips", 
+                            category: cat.slug 
+                          }); 
+                        }}
                           setActiveCat(cat.slug);
                           try {
                             trackClick?.("blog_category_click", e.currentTarget, {
