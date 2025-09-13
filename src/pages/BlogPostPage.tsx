@@ -185,7 +185,7 @@ export default function BlogPostPage() {
             className="fixed inset-0 w-full h-full object-cover opacity-45 z-0"
             src="/videos/wallpaper.mp4"
           />
-          <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 pointer-events-none min-h-[150vh]">
             <div className="animated-footer-bg" />
             <div className="footer-glass-effect absolute inset-0" />
           </div>
