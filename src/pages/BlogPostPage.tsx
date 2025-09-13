@@ -278,11 +278,10 @@ export default function BlogPostPage() {
               </article>
             </div>
             </div>
+            <div className="h-12 md:h-16 lg:h-20"></div>
           </div>
         </main>
         {/* Bottom breathing room spacer */}
-        <div className="h-12 md:h-16 lg:h-20"></div>
-
         {/* Footer-style animated background layers */}
         <div className="absolute inset-0 pointer-events-none min-h-[150vh]">
           <div className="animated-footer-bg" />
