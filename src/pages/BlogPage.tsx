@@ -171,15 +171,6 @@ export default function BlogPage() {
                             category: cat.slug 
                           }); 
                         }}
-                          setActiveCat(cat.slug);
-                          try {
-                            trackClick?.("blog_category_click", e.currentTarget, {
-                              source_page: "blog_index",
-                              page_section: "category_filter",
-                              category: cat.slug,
-                            });
-                          } catch {}
-                        }}
                         className={[
                           "px-4 py-2 rounded-full text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black w-full justify-center text-center",
                           isActive
