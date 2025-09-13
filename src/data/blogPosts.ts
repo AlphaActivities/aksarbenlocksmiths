@@ -13,7 +13,7 @@ export interface BlogPost {
 }
 
 export const BLOG_CATEGORIES: { slug: BlogCategory; label: string }[] = [
-  { slug: "emergency", label: "Emergency and Lockouts" },
+  { slug: "emergency", label: "Emergency & Lockouts" },
   { slug: "keys", label: "Keys and Duplication" },
   { slug: "residential", label: "Residential Locksmith" },
   { slug: "commercial", label: "Commercial Locksmith" },
