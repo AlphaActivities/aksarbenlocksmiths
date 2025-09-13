@@ -182,7 +182,7 @@ export default function ServiceAreasPage() {
       <div className="absolute inset-0 z-[3] pointer-events-none bg-black/25 md:bg-black/10"></div>
 
       <div className="relative z-10 text-white">
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 md:pt-16 pb-12">
+      <section id="service-areas" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 md:pt-16 pb-12">
         <button
           onClick={(e) => {
             const fromBlog = (location?.state as any)?.fromBlog;

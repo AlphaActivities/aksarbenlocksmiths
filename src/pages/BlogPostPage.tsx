@@ -121,6 +121,18 @@ export default function BlogPostPage() {
   const description = post.excerpt;
   const title = `${post.title} | Aksarben Locksmiths Blog`;
 
+  const paragraphs = post.body.split("\n\n");
+
+  // compute word count for schema
+  const wordCount = useMemo(() => {
+    try {
+      const text = Array.isArray(paragraphs) ? paragraphs.join(" ") : (post?.content ?? "");
+      return text.trim().split(/\s+/).filter(Boolean).length || undefined;
+    } catch { 
+      return undefined; 
+    }
+  }, [paragraphs, post?.content]);
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -138,7 +150,8 @@ export default function BlogPostPage() {
     },
     articleSection: categoryLabel,
     keywords: [categoryLabel, post.city, "Omaha locksmith", "Aksarben Locksmiths"],
-    description: post.excerpt
+    description: post.excerpt,
+    wordCount: wordCount,
   };
 
   const breadcrumbsLd = {
@@ -150,8 +163,6 @@ export default function BlogPostPage() {
       { "@type": "ListItem", position: 3, name: post.title, item: canonicalAbs }
     ]
   };
-
-  const paragraphs = post.body.split("\n\n");
 
   return (
     <>
@@ -192,7 +203,7 @@ export default function BlogPostPage() {
             <Helmet>
               <title>{title}</title>
               <meta name="description" content={description} />
-              <link rel="canonical" href={canonicalPath} />
+              <link rel="canonical" href={canonicalAbs} />
               <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
               <script type="application/ld+json">{JSON.stringify(breadcrumbsLd)}</script>
             </Helmet>
@@ -211,7 +222,7 @@ export default function BlogPostPage() {
                       from_post: post.slug,
                     });
                   }}
-                  className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                   aria-label="Back to Blog"
                   title="Back to Blog"
                 >
