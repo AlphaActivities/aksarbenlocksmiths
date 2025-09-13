@@ -141,7 +141,7 @@ export default function BlogPage() {
                 </div>
 
                 {/* Category filter */}
-                <div className="mt-6 flex flex-wrap items-center gap-2">
+                <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-2">
                   {BLOG_CATEGORIES.map((cat) => {
                     const isActive = cat.slug === activeCat;
                     return (
@@ -159,7 +159,7 @@ export default function BlogPage() {
                           } catch {}
                         }}
                         className={[
-                          "px-4 py-2 rounded-full text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black",
+                          "px-4 py-2 rounded-full text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black w-full justify-center text-center",
                           isActive
                             ? "bg-purple-600 border border-purple-600 shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:shadow-[0_0_28px_rgba(255,255,255,0.6)]"
                             : "bg-[#2a1645] hover:bg-[#4a2974] border border-[#3a1f5c] shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:shadow-[0_0_28px_rgba(255,255,255,0.6)]"
