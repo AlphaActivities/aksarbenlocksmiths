@@ -34,6 +34,7 @@ const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
 const urls = [
   { loc: `${SITE}/`, changefreq: "weekly", priority: "1.0" },
   { loc: `${SITE}/blog`, changefreq: "weekly", priority: "0.8" },
+  { loc: `${SITE}/service-areas`, changefreq: "monthly", priority: "0.8" },
   ...servicesData.services.map(s => ({
     loc: `${SITE}/services/${s.slug}`,
     changefreq: "monthly",
