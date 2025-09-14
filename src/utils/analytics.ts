@@ -38,7 +38,7 @@ export const captureAttributionFromURL = (href?: string, referrer?: string) => {
   if (typeof window === "undefined") return;
 
   const url = href || window.location.href;
-  const ref = referrer ?? document.referrer || undefined;
+  const ref = referrer ?? (document.referrer || undefined);
 
   const u = new URL(url, window.location.origin);
   const q = parseQuery(u.search);
