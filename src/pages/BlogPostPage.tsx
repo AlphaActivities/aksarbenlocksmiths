@@ -20,6 +20,7 @@ export default function BlogPostPage() {
   // Schema and URL helpers
   const origin = typeof window !== "undefined" ? window.location.origin : "https://aksarbenlocksmiths.com";
   const imageUrl = `${origin}${post?.coverImage || ""}`;
+  const imageAbs = imageUrl;
   const canonicalPath = `/blog/${post?.slug || slug}`;
   const canonicalAbs = origin + canonicalPath;
   const logoAbs = origin + "/images/shield-logo.png";
@@ -204,6 +205,19 @@ export default function BlogPostPage() {
               <title>{title}</title>
               <meta name="description" content={description} />
               <link rel="canonical" href={canonicalAbs} />
+              {/* Open Graph */}
+              <meta property="og:type" content="article" />
+              <meta property="og:title" content={title} />
+              <meta property="og:description" content={description} />
+              <meta property="og:url" content={canonicalAbs} />
+              <meta property="og:image" content={imageAbs} />
+
+              {/* Twitter */}
+              <meta name="twitter:card" content="summary_large_image" />
+              <meta name="twitter:title" content={title} />
+              <meta name="twitter:description" content={description} />
+              <meta name="twitter:image" content={imageAbs} />
+
               <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
               <script type="application/ld+json">{JSON.stringify(breadcrumbsLd)}</script>
             </Helmet>

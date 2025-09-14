@@ -89,6 +89,19 @@ export default function BlogPage() {
                 />
                 {/* canonical, absolute */}
                 <link rel="canonical" href="https://aksarbenlocksmiths.com/blog" />
+                {/* Open Graph */}
+                <meta property="og:type" content="website" />
+                <meta property="og:title" content="Our Blog, Omaha Locksmith Tips and Guides" />
+                <meta property="og:description" content="Emergency lockouts, keys and duplication, residential and commercial security for Omaha and surrounding cities." />
+                <meta property="og:url" content="https://aksarbenlocksmiths.com/blog" />
+                <meta property="og:image" content="https://aksarbenlocksmiths.com/images/shield-logo.png" />
+
+                {/* Twitter */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content="Our Blog, Omaha Locksmith Tips and Guides" />
+                <meta name="twitter:description" content="Emergency lockouts, keys and duplication, residential and commercial security for Omaha and surrounding cities." />
+                <meta name="twitter:image" content="https://aksarbenlocksmiths.com/images/shield-logo.png" />
+
                 {/* JSON-LD, Blog index breadcrumb */}
                 <script
                   type="application/ld+json"
