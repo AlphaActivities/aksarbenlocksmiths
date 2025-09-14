@@ -18,14 +18,31 @@ try {
   servicesData = { services: [] };
 }
 
+const blogTsPath = resolve(__dirname, "../src/data/blogPosts.ts");
+let blogSlugs = [];
+try {
+  const blogSrc = readFileSync(blogTsPath, "utf8");
+  const slugMatches = [...blogSrc.matchAll(/slug:\s*["'`]([^"'`]+)["'`]/g)];
+  blogSlugs = slugMatches.map(m => m[1]);
+} catch (e) {
+  console.error("Failed to read blogPosts.ts", e);
+  blogSlugs = [];
+}
+
 const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
 
 const urls = [
   { loc: `${SITE}/`, changefreq: "weekly", priority: "1.0" },
+  { loc: `${SITE}/blog`, changefreq: "weekly", priority: "0.8" },
   ...servicesData.services.map(s => ({
     loc: `${SITE}/services/${s.slug}`,
     changefreq: "monthly",
     priority: "0.8"
+  })),
+  ...blogSlugs.map(slug => ({
+    loc: `${SITE}/blog/${slug}`,
+    changefreq: "monthly",
+    priority: "0.7"
   }))
 ];
 
