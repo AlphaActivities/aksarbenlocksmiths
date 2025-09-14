@@ -89,6 +89,7 @@ export default function BlogPage() {
                 />
                 {/* canonical, absolute */}
                 <link rel="canonical" href="https://aksarbenlocksmiths.com/blog" />
+                <meta property="og:site_name" content="Aksarben Locksmiths" />
                 {/* Open Graph */}
                 <meta property="og:type" content="website" />
                 <meta property="og:title" content="Our Blog, Omaha Locksmith Tips and Guides" />
