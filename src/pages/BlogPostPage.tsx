@@ -184,8 +184,8 @@ export default function BlogPostPage() {
         </a>
       </div>
 
-      <div className="min-h-screen w-full relative overflow-x-hidden touch-pan-y overscroll-x-none">
-        <main className="min-h-[calc(100vh+48px)] md:min-h-[calc(100vh+64px)] lg:min-h-[calc(100vh+80px)] w-full relative overflow-hidden">
+      <div className="min-h-screen w-full relative overflow-x-hidden touch-pan-y overscroll-x-none overscroll-y-contain">
+        <main className="min-h-screen w-full relative overflow-visible">
           <video
             autoPlay
             muted
@@ -193,7 +193,7 @@ export default function BlogPostPage() {
             playsInline
             aria-hidden="true"
             poster="/images/Services Thumbnails/Residential-Service-Photo.webp"
-            className="fixed inset-0 w-full h-full object-cover opacity-45 z-0"
+            className="fixed inset-0 w-full h-full object-cover opacity-45 z-0 pointer-events-none"
             src="/videos/wallpaper.mp4"
           />
 
@@ -314,7 +314,7 @@ export default function BlogPostPage() {
             </div>
 
             {/* Footer-style animated background layers */}
-            <div className="absolute inset-0 pointer-events-none min-h-[150vh]">
+            <div className="absolute inset-0 pointer-events-none min-h-full">
               <div className="animated-footer-bg" />
               <div className="footer-glass-effect absolute inset-0" />
             </div>
