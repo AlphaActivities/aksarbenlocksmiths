@@ -4,6 +4,11 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Clamp iOS momentum overscroll at the root scroll container */
+html, body {
+  overscroll-behavior-y: none;
+}
+
 @tailwind components;
 @tailwind utilities;
 
@@ -534,6 +539,15 @@ video:fullscreen {
   }
   .anim-breath {
     animation: none !important;
+  }
+}
+
+/* iOS specific fallback to avoid rare Safari repaint jumps with backdrop filters */
+@supports (-webkit-touch-callout: none) {
+  .footer-glass-effect::before,
+  .footer-glass-effect::after {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 }
 

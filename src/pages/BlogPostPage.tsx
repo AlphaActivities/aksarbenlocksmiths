@@ -184,8 +184,8 @@ export default function BlogPostPage() {
         </a>
       </div>
 
-      <div className="min-h-screen w-full relative overflow-x-hidden touch-pan-y overscroll-x-none overscroll-y-contain">
-        <main className="min-h-screen w-full relative overflow-visible">
+      <div className="min-h-[100svh] w-full relative overflow-x-hidden touch-pan-y overscroll-x-none overscroll-y-contain">
+        <main className="min-h-[100svh] w-full relative overflow-visible">
           <video
             autoPlay
             muted
