@@ -18,10 +18,16 @@ import BlogPostPage from './pages/BlogPostPage';
 import NotFound from './pages/NotFound';
 import ErrorBoundary from './components/ErrorBoundary';
 import { Helmet } from 'react-helmet-async';
-import { trackClick } from './utils/analytics';
+import { trackClick, captureAttributionFromURL } from './utils/analytics';
 
 function App() {
   const location = useLocation();
+
+  useEffect(() => {
+    // capture on every route change so last touch stays fresh
+    try { captureAttributionFromURL(); } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname, location.search, location.hash]);
 
   useEffect(() => {
     const restorePosition = () => {

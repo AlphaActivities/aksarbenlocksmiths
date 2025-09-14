@@ -1,4 +1,101 @@
 // Google Analytics 4 utility functions
+
+// --- Attribution keys and storage ---
+const ATTR_LS_KEY = "attr_first_touch";
+const ATTR_SS_KEY = "attr_last_touch";
+const ATTR_KEYS = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_term",
+  "utm_content",
+  "gclid",
+  "wbraid",
+  "gbraid",
+  "msclkid",
+  "fbclid",
+];
+
+type AttrBag = Record<string, string | undefined>;
+
+// Parse query string into a simple map
+const parseQuery = (search: string): Record<string, string> => {
+  const out: Record<string, string> = {};
+  const qs = new URLSearchParams(search);
+  qs.forEach((v, k) => { out[k] = v; });
+  return out;
+};
+
+// Read and write storage safely
+const readJSON = (key: string): any => {
+  try { return JSON.parse(window.localStorage.getItem(key) || window.sessionStorage.getItem(key) || "null"); } catch { return null; }
+};
+const writeFirst = (data: any) => { try { window.localStorage.setItem(ATTR_LS_KEY, JSON.stringify(data)); } catch {} };
+const writeLast  = (data: any) => { try { window.sessionStorage.setItem(ATTR_SS_KEY, JSON.stringify(data)); } catch {} };
+
+// Build an attribution object from the current URL and referrer
+export const captureAttributionFromURL = (href?: string, referrer?: string) => {
+  if (typeof window === "undefined") return;
+
+  const url = href || window.location.href;
+  const ref = referrer ?? document.referrer || undefined;
+
+  const u = new URL(url, window.location.origin);
+  const q = parseQuery(u.search);
+
+  // collect any known keys present
+  const found: AttrBag = {};
+  let hasAny = false;
+  for (const k of ATTR_KEYS) {
+    if (q[k]) { found[k] = q[k]; hasAny = true; }
+  }
+
+  const now = new Date().toISOString();
+  const page = u.pathname + u.search + u.hash;
+
+  // Seed first touch once
+  const first = readJSON(ATTR_LS_KEY);
+  if (!first) {
+    const firstTouch = {
+      ts: now,
+      landing_page: page,
+      referrer: ref,
+      ...found,
+    };
+    writeFirst(firstTouch);
+  }
+
+  // Always update last touch if we have any campaign params or a ref change
+  const last = readJSON(ATTR_SS_KEY) || {};
+  const shouldUpdate = hasAny || (ref && ref !== last?.referrer) || !last.ts;
+  if (shouldUpdate) {
+    const lastTouch = {
+      ts: now,
+      page,
+      referrer: ref,
+      ...found,
+    };
+    writeLast(lastTouch);
+  }
+};
+
+// Merge first and last into a single payload for events
+export const getAttributionParams = (): Record<string, any> => {
+  if (typeof window === "undefined") return {};
+  const first = readJSON(ATTR_LS_KEY) || {};
+  const last  = readJSON(ATTR_SS_KEY) || {};
+  const out: Record<string, any> = {};
+
+  // expose first_ and last_ prefixes, plus landing_page and current_page
+  for (const [k, v] of Object.entries(first)) out[`first_${k}`] = v;
+  for (const [k, v] of Object.entries(last))  out[`last_${k}`]  = v;
+
+  out.landing_page = first.landing_page;
+  out.current_page = window.location.pathname + window.location.search + window.location.hash;
+
+  return out;
+};
+
 declare global {
   interface Window {
     gtag: (...args: any[]) => void;
@@ -16,6 +113,9 @@ export const configureGA4 = () => {
     }
     
     window.gtag('config', 'G-R5H0MX6FR2', config);
+    
+    // capture first route load
+    try { captureAttributionFromURL(); } catch {}
     
     // Set user properties
     window.gtag('set', 'user_properties', {
@@ -55,16 +155,18 @@ export const trackEvent = (eventName: string, parameters?: Record<string, any>) 
 export const trackClick = (eventName: string, element?: HTMLElement, additionalParams: Record<string, any> = {}) => {
   if (typeof window.gtag !== 'function') return;
 
-  // Extract element data if element is provided
   const elementData = element ? {
     element_text: element.innerText || element.textContent || '',
     target_url: element.getAttribute('href') || undefined,
     page_section: element.closest('section')?.id || element.closest('[id]')?.id || 'unknown'
   } : {};
 
+  const attribution = getAttributionParams();
+
   window.gtag('event', eventName, {
     event_category: 'click',
     ...elementData,
+    ...attribution,
     ...additionalParams,
   });
 
@@ -216,9 +318,12 @@ export const trackNavigation = (section: string, source: string = 'header') => {
 };
 
 export const trackEngagement = (action: string, element: string, additionalParams?: Record<string, any>) => {
+  const attribution = getAttributionParams();
+
   trackEvent('engagement', {
     action,
     element,
+    ...attribution,
     ...additionalParams
   });
 };
