@@ -1,10 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { trackClick } from "../utils/analytics";
 
 export default function NotFound() {
   return (
     <div className="min-h-screen w-full relative overflow-hidden text-white">
+      <Helmet>
+        <title>Page not found | Aksarben Locksmiths</title>
+        <meta name="robots" content="noindex" />
+        <link rel="canonical" href="https://aksarbenlocksmiths.com/404" />
+      </Helmet>
+      
       <div className="fixed inset-0 -z-10 opacity-40">
         <video
           autoPlay
