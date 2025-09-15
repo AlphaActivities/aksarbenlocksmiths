@@ -1,0 +1,32 @@
+{
+  "generated_at": "2025-09-15T18:45:00Z",
+  "flow": {
+    "phase_1": "Diagnostics only",
+    "phase_2": "Apply and Verify in one reply",
+    "never_mix": true,
+    "diagnostic_header": "Answer only the following questions. DO NOT apply any changes to the website code."
+  },
+  "deploy_reminder_gate": {
+    "allowed_triggers": ["Verified", "Greenlight", "Ship it", "Approved to deploy", "Ready to deploy", "Good to publish", "Looks good", "deploy"],
+    "suppress_when": ["diagnostics", "planning", "scoping", "WIP", "waiting on assets or tests", "copy edits", "still testing", "not ready", "hold", "pause", "draft", "probe", "diagnostic only"]
+  },
+  "safety_rails": {
+    "spa_router": {"browser_router_in": "src/main.tsx", "routes_in": "src/App.tsx", "one_route_per_path": true},
+    "netlify_rewrite": "/* to /index.html with status 200",
+    "case_sensitive_paths": true,
+    "accessibility": "interactive equals button or link, keyboard reachable, aria labels for non text icons",
+    "analytics_helper": "src/utils/analytics.ts",
+    "schema_rules": {"helmet_required": true, "json_ld_valid": true, "root_types_to_check": ["LocalBusiness", "BreadcrumbList"]},
+    "css_policy": {"no_silent_global_css": true, "prefer_tailwind": true},
+    "service_areas": {
+      "map_wrapper": "relative, background map pointer events none, overlay pill accessible",
+      "page_layout": "two sections, Main Cities We Cover and Surrounding Communities",
+      "city_state_logic": {"IA": ["Council Bluffs", "Carter Lake", "Glenwood", "Crescent"], "default": "NE"}
+    }
+  },
+  "style_tone": {"address": "Warrior or Josh the Man, Mike is the client", "voice": "direct, precise, upbeat, warn on risks with emoji", "avoid_dashes": true},
+  "checklists": {
+    "pre_apply": ["confirm target file", "confirm imports", "confirm wrappers and ancestors", "confirm no duplicate routes or imports", "confirm arrays and ids"],
+    "post_apply": ["render correct", "behavior correct", "class audit pasted", "isolation confirmed", "schema scripts counted and root types valid", "analytics payload confirmed", "dedupe routes and imports", "link audit"]
+  }
+}

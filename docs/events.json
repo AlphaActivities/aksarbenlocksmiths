@@ -1,0 +1,11 @@
+{
+  "generated_at": "2025-09-15T18:45:00Z",
+  "events": [
+    {"name": "floating_call_button", "location": "global UI", "notes": "primary call action"},
+    {"name": "service_areas_pill_click", "location": "ServiceAreasPage", "attrs": ["city", "group"]},
+    {"name": "city_chip_click", "location": "ServiceAreasPage", "attrs": ["city"]},
+    {"name": "back_to_services", "location": "services section", "attrs": ["source_page"]},
+    {"name": "navbar_link_click", "location": "Navbar", "attrs": ["href"]},
+    {"name": "hero_cta_click", "location": "HeroSection", "attrs": ["cta_text"]}
+  ]
+}

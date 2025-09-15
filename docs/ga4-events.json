@@ -1,0 +1,37 @@
+{
+  "generated_at": "2025-09-15T18:45:00Z",
+  "mapping": [
+    {
+      "app_event": "floating_call_button",
+      "ga4_event": "call_click",
+      "params_required": ["source_page", "page_section"],
+      "params_optional": ["phone_number"]
+    },
+    {
+      "app_event": "service_areas_pill_click",
+      "ga4_event": "service_area_select",
+      "params_required": ["source_page", "page_section", "city", "group"]
+    },
+    {
+      "app_event": "city_chip_click",
+      "ga4_event": "city_chip_click",
+      "params_required": ["source_page", "page_section", "city"]
+    },
+    {
+      "app_event": "back_to_services",
+      "ga4_event": "navigation_click",
+      "params_required": ["source_page", "page_section"],
+      "params_optional": ["destination_path"]
+    },
+    {
+      "app_event": "navbar_link_click",
+      "ga4_event": "navigation_click",
+      "params_required": ["source_page", "page_section", "href"]
+    },
+    {
+      "app_event": "hero_cta_click",
+      "ga4_event": "cta_click",
+      "params_required": ["source_page", "page_section", "cta_text"]
+    }
+  ]
+}

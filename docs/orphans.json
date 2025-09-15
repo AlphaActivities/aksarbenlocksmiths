@@ -1,0 +1,10 @@
+{
+  "generated_at": "2025-09-15T18:45:00Z",
+  "removed_assets": [
+    {"path": "public/index.html", "removed_on": "2025-09-15"},
+    {"path": "public/images/static-map.png", "removed_on": "2025-09-15"},
+    {"path": "public/images/Services Thumbnails/Lock ReKeying.webp", "removed_on": "2025-09-15"}
+  ],
+  "suspected_orphans": [],
+  "notes": "Use inventory scans to append new candidates before removal."
+}

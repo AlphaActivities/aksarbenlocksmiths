@@ -1,0 +1,30 @@
+{
+  "generated_at": "2025-09-15T18:45:00Z",
+  "pages": [
+    {
+      "path": "/",
+      "helmet": {"title": true, "meta_description": true, "canonical": true},
+      "json_ld": {"count_expected": 2, "root_types": ["LocalBusiness", "BreadcrumbList"]}
+    },
+    {
+      "path": "/services/:slug",
+      "helmet": {"title": true, "meta_description": true, "canonical": true},
+      "json_ld": {"count_expected": 2, "root_types": ["LocalBusiness", "BreadcrumbList"]}
+    },
+    {
+      "path": "/service-areas",
+      "helmet": {"title": true, "meta_description": true, "canonical": true},
+      "json_ld": {"count_expected": 2, "root_types": ["LocalBusiness", "BreadcrumbList"]}
+    },
+    {
+      "path": "/blog",
+      "helmet": {"title": true, "meta_description": true, "canonical": true},
+      "json_ld": {"count_expected": 1, "root_types": ["BreadcrumbList"]}
+    },
+    {
+      "path": "/blog/:slug",
+      "helmet": {"title": true, "meta_description": true, "canonical": true},
+      "json_ld": {"count_expected": 2, "root_types": ["Article", "BreadcrumbList"]}
+    }
+  ]
+}
