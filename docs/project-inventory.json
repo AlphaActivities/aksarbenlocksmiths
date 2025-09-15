@@ -1,0 +1,50 @@
+{
+  "generated_at": "2025-09-15T20:15:00Z",
+  "excluded": ["node_modules", ".git", ".next", ".vercel", ".netlify", ".DS_Store", "dist", "build", "coverage"],
+  "counts": {"dirs": 12, "files": 79, "total": 91},
+  "by_extension": {
+    "webp": 23,
+    "tsx": 19,
+    "mp4": 9,
+    "ts": 5,
+    "json": 5,
+    "png": 3,
+    "js": 3,
+    "html": 1,
+    "md": 2,
+    "mjs": 2,
+    "txt": 2,
+    "css": 1,
+    "gitignore": 1,
+    "ico": 1,
+    "svg": 1,
+    "toml": 1,
+    "webmanifest": 1,
+    "no_ext": 2
+  },
+  "tree": [
+    "index.html",
+    "netlify.toml",
+    "public/_redirects",
+    "public/robots.txt",
+    "public/sitemap.xml",
+    "public/favicons/",
+    "public/images/",
+    "public/videos/",
+    "scripts/generate-sitemap.mjs",
+    "src/main.tsx",
+    "src/App.tsx",
+    "src/pages/",
+    "src/components/",
+    "src/utils/analytics.ts",
+    "docs/ga4-annotations.md"
+  ],
+  "usage_public_assets": [
+    {"path": "public/images/Services Thumbnails/Lock-ReKeying.webp", "status": "USED", "referenced_by": ["src/pages/DynamicServicePage.tsx"]},
+    {"path": "public/images/static-map.png", "status": "REMOVED_IN_2025_09_15", "referenced_by": []},
+    {"path": "public/index.html", "status": "REMOVED_IN_2025_09_15", "referenced_by": []},
+    {"path": "public/images/Services Thumbnails/Lock ReKeying.webp", "status": "REMOVED_IN_2025_09_15", "referenced_by": []}
+  ],
+  "routing_summary": "Single BrowserRouter in src/main.tsx, Routes defined in src/App.tsx.",
+  "rewrites_summary": "SPA rewrite /* to /index.html present in netlify.toml and public/_redirects."
+}
