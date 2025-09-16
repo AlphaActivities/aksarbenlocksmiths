@@ -29,6 +29,7 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, location.search, location.hash]);
 
+  // Only scroll to top on real route changes, never on hash-only changes
   useEffect(() => {
     const restorePosition = () => {
       const lastY = sessionStorage.getItem("lastScrollY");
@@ -69,7 +70,7 @@ function App() {
     };
 
     restorePosition();
-  }, [location]);
+  }, [location.pathname]);
 
   return (
     <ErrorBoundary>
