@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-09-15T18:55:00Z",
+  "generated_at": "2025-09-15T19:40:00Z",
   "anchors": {
     "rulebook": "/docs/rulebook.md",
     "inventory": "/docs/project-inventory.json",
@@ -8,7 +8,8 @@
     "ga4_events": "/docs/ga4-events.json",
     "schema_map": "/docs/schema-map.json",
     "orphans": "/docs/orphans.json",
-    "deploy_log": "/docs/deploy-log.md"
+    "deploy_log": "/docs/deploy-log.md",
+    "time_config": "/docs/time-config.json"
   },
   "usage": {
     "check_anchors": "Look at everything in this file: rulebook, inventory, and all dashboards."
