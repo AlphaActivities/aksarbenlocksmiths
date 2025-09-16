@@ -1,10 +1,11 @@
 {
-  "generated_at": "2025-09-16T00:54:48.567Z",
+  "generated_at": "2025-09-16T01:13:35.730Z",
   "timezone_label": "Omaha, NE",
   "iana_timezone": "America/Chicago",
   "format": "YYYY MM DD hh:mm A Omaha, NE",
   "dst": "auto",
   "notes": "Use Intl.DateTimeFormat with timeZone America/Chicago, then reformat to match the final pattern.",
   "manual_offset_ms": -19960728564,
-  "manual_offset_source": "user_provided"
+  "manual_offset_source": "user_provided",
+  "last_central_stamp": "2025 09 15 08:13 PM Omaha, NE"
 }
