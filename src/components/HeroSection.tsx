@@ -4,49 +4,6 @@ import { trackClick } from "../utils/analytics";
 const HeroSection: React.FC = () => {
   return (
     <section id="home" className="relative min-h-screen lg:h-[140vh] w-full scroll-mt-[120px] pt-[480px] md:pt-[580px] text-white flex flex-col justify-end z-0 overflow-hidden">
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        controls={false}
-        disablePictureInPicture
-        controlsList="nodownload nofullscreen noremoteplayback"
-        aria-hidden="true"
-        className="fixed top-0 left-0 w-full h-full object-cover z-[-1] pointer-events-none"
-        onPlay={() => {
-          try {
-            const { trackEvent, getAttributionParams } = require("../utils/analytics");
-            trackEvent?.("video_play", {
-              video_url: "/videos/wallpaper.mp4",
-              page_section: "hero_bg",
-              ...(getAttributionParams?.() || {})
-            });
-          } catch {}
-        }}
-        onPause={() => {
-          try {
-            const { trackEvent, getAttributionParams } = require("../utils/analytics");
-            trackEvent?.("video_pause", {
-              video_url: "/videos/wallpaper.mp4",
-              page_section: "hero_bg",
-              ...(getAttributionParams?.() || {})
-            });
-          } catch {}
-        }}
-        onEnded={() => {
-          try {
-            const { trackEvent, getAttributionParams } = require("../utils/analytics");
-            trackEvent?.("video_complete", {
-              video_url: "/videos/wallpaper.mp4",
-              page_section: "hero_bg",
-              ...(getAttributionParams?.() || {})
-            });
-          } catch {}
-        }}
-      >
-        <source src="/videos/wallpaper.mp4" type="video/mp4" />
-      </video>
       <div className="relative z-20 max-w-7xl mx-auto px-6 md:px-12 h-full flex flex-col justify-end">
 
         <div className="bg-black/80 backdrop-blur rounded-2xl px-6 py-10 shadow-xl max-w-5xl mx-auto text-center space-y-8 mb-4 lg:mb-[30px]">
