@@ -578,7 +578,7 @@ export default function DynamicServicePage() {
                 "@type": "ListItem", 
                 "position": 2,
                 "name": "Services",
-                "item": "https://aksarbenlocksmiths.com/"
+                "item": "https://aksarbenlocksmiths.com/#services"
               },
               {
                 "@type": "ListItem",
