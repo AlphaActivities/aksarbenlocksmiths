@@ -201,8 +201,11 @@ export default function BlogPostPage() {
             <Helmet>
               <title>{title}</title>
               <meta name="description" content={description} />
+              <meta property="og:type" content="article" />
               <link rel="canonical" href={canonicalAbs} />
               <meta property="og:site_name" content="Aksarben Locksmiths" />
+              <meta name="twitter:site" content="@Aksarbenlocks" />
+              <meta name="twitter:creator" content="@Aksarbenlocks" />
               <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
               <script type="application/ld+json">{JSON.stringify(breadcrumbsLd)}</script>
             </Helmet>

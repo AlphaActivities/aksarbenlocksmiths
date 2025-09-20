@@ -212,6 +212,9 @@ export default function ServiceAreasPage() {
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
             Service Areas
           </h1>
+          <p className="text-muted-foreground">
+            We provide mobile locksmith service across Omaha and nearby cities including Bellevue, Papillion, La Vista, and Council Bluffs.
+          </p>
           <p className="mt-3 text-white/80">
             We come to you across the Omaha metro. Explore the main cities we cover and the surrounding communities we serve every day.
           </p>
