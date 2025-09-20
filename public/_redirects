@@ -1,3 +1,11 @@
+# Force HTTPS (http -> https)
+http://aksarbenlocksmiths.com/* https://aksarbenlocksmiths.com/:splat 301!
+http://www.aksarbenlocksmiths.com/* https://aksarbenlocksmiths.com/:splat 301!
+
+# Force apex (www -> apex)
+https://www.aksarbenlocksmiths.com/* https://aksarbenlocksmiths.com/:splat 301!
+
+# SPA fallback
 /sitemap.xml   /sitemap.xml   200
 /robots.txt    /robots.txt    200
 /* /index.html 200
