@@ -42,60 +42,6 @@
       "app_event": "site_search_submit",
       "ga4_event": "site_search_submit",
       "params_required": ["query", "source"]
-    },
-    {
-      "app_event": "service_tile_click",
-      "ga4_event": "service_tile_click",
-      "params_required": ["service_name","page_section"],
-      "params_optional": ["service","element_text","target_url","source_page"]
-    },
-    {
-      "app_event": "hero_feature_card_click",
-      "ga4_event": "hero_feature_card_click",
-      "params_required": ["card_title","card_index","page_section"],
-      "params_optional": ["source_page"]
-    },
-    {
-      "app_event": "testimonial_arrow_click",
-      "ga4_event": "testimonial_arrow_click",
-      "params_required": ["direction","page_section"],
-      "params_optional": ["element_text","source_page"]
-    },
-    {
-      "app_event": "pricing_cta_click",
-      "ga4_event": "pricing_cta_click",
-      "params_required": ["plan_title","button_text","page_section"],
-      "params_optional": ["is_popular","source_page"]
-    },
-    {
-      "app_event": "blog_cta_click",
-      "ga4_event": "blog_cta_click",
-      "params_required": ["source_page","page_section"],
-      "params_optional": ["pill_label"]
-    },
-    {
-      "app_event": "video_play",
-      "ga4_event": "video_play",
-      "params_required": ["video_url","page_section"],
-      "params_optional": ["video_thumbnail","source_page"]
-    },
-    {
-      "app_event": "video_pause",
-      "ga4_event": "video_pause",
-      "params_required": ["video_url","page_section"],
-      "params_optional": ["video_thumbnail","source_page"]
-    },
-    {
-      "app_event": "video_complete",
-      "ga4_event": "video_complete",
-      "params_required": ["video_url","page_section"],
-      "params_optional": ["video_thumbnail","source_page"]
-    },
-    {
-      "app_event": "scroll_depth",
-      "ga4_event": "scroll_depth",
-      "params_required": ["depth_percentage"],
-      "params_optional": ["page_type","page_section","source_page"]
     }
   ]
 }
