@@ -1,30 +1,42 @@
 {
-  "generated_at": "2025-09-15T18:45:00Z",
+  "generated_at": "2025-01-15T19:47:00Z",
   "pages": [
     {
       "path": "/",
-      "helmet": {"title": true, "meta_description": true, "canonical": true},
-      "json_ld": {"count_expected": 2, "root_types": ["LocalBusiness", "BreadcrumbList"]}
+      "helmet": { "title": true, "meta_description": true, "canonical": true },
+      "json_ld": {
+        "root_types": ["Locksmith", "WebSite", "Organization"],
+        "notes": "WebSite includes SearchAction target /search?q={search_term_string}"
+      }
     },
     {
       "path": "/services/:slug",
-      "helmet": {"title": true, "meta_description": true, "canonical": true},
-      "json_ld": {"count_expected": 2, "root_types": ["LocalBusiness", "BreadcrumbList"]}
+      "helmet": { "title": true, "meta_description": true, "canonical": true },
+      "json_ld": {
+        "root_types": ["Service", "BreadcrumbList"]
+      }
     },
     {
       "path": "/service-areas",
-      "helmet": {"title": true, "meta_description": true, "canonical": true},
-      "json_ld": {"count_expected": 2, "root_types": ["LocalBusiness", "BreadcrumbList"]}
+      "helmet": { "title": true, "meta_description": true, "canonical": true },
+      "json_ld": {
+        "root_types": [],
+        "notes": "SR-only geographic description present"
+      }
     },
     {
       "path": "/blog",
-      "helmet": {"title": true, "meta_description": true, "canonical": true},
-      "json_ld": {"count_expected": 1, "root_types": ["BreadcrumbList"]}
+      "helmet": { "title": true, "meta_description": true, "canonical": true },
+      "json_ld": {
+        "root_types": ["BreadcrumbList"]
+      }
     },
     {
       "path": "/blog/:slug",
-      "helmet": {"title": true, "meta_description": true, "canonical": true},
-      "json_ld": {"count_expected": 2, "root_types": ["Article", "BreadcrumbList"]}
+      "helmet": { "title": true, "meta_description": true, "canonical": true },
+      "json_ld": {
+        "root_types": ["BlogPosting", "BreadcrumbList"]
+      }
     }
   ]
 }

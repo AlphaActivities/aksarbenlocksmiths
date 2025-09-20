@@ -1,10 +1,11 @@
 {
-  "generated_at": "2025-09-15T18:45:00Z",
+  "generated_at": "2025-01-15T19:47:00Z",
   "removed_assets": [
-    {"path": "public/index.html", "removed_on": "2025-09-15"},
-    {"path": "public/images/static-map.png", "removed_on": "2025-09-15"},
-    {"path": "public/images/Services Thumbnails/Lock ReKeying.webp", "removed_on": "2025-09-15"}
+    { "path": "public/vite.svg", "reason": "favicon moved to /favicons/favicon.svg" },
+    { "path": "public/images/Services Thumbnails/Lock ReKeying.webp", "reason": "renamed to Lock-ReKeying.webp" },
+    { "path": "public/index.html", "removed_on": "2025-09-15" },
+    { "path": "public/images/static-map.png", "removed_on": "2025-09-15" }
   ],
   "suspected_orphans": [],
-  "notes": "Use inventory scans to append new candidates before removal."
+  "notes": "Keep case sensitivity strict; prefer Lock-ReKeying.webp."
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-09-15T18:45:00Z",
+  "generated_at": "2025-01-15T19:47:00Z",
   "mapping": [
     {
       "app_event": "floating_call_button",
@@ -32,6 +32,16 @@
       "app_event": "hero_cta_click",
       "ga4_event": "cta_click",
       "params_required": ["source_page", "page_section", "cta_text"]
+    },
+    {
+      "app_event": "site_search",
+      "ga4_event": "site_search",
+      "params_required": ["query", "results_count", "source"]
+    },
+    {
+      "app_event": "site_search_submit",
+      "ga4_event": "site_search_submit",
+      "params_required": ["query", "source"]
     }
   ]
 }
