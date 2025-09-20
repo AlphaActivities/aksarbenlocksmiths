@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { Link, useSearchParams, useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { BLOG_CATEGORIES, BLOG_POSTS, BlogCategory } from "../data/blogPosts";
+import { isValidCategory } from "../data/blogCategories";
 import { trackEngagement, trackClick } from "../utils/analytics";
 import { ArrowLeft, Phone, MapPin } from "lucide-react";
 
@@ -13,8 +14,87 @@ const BLOG_PLACEHOLDER =
 
 export default function BlogPage() {
   const navigate = useNavigate();
+  const { category: categoryParam } = useParams();
   const [params, setParams] = useSearchParams();
-  const initialCat = (params.get("cat") as BlogCategory) || "emergency";
+  
+  // If we have a category param that's invalid, show not found
+  if (categoryParam && !isValidCategory(categoryParam)) {
+    return (
+      <>
+        <div className="fixed top-0 w-full z-50 bg-black backdrop-blur-md shadow-lg text-sm px-4 py-1 flex justify-between items-center">
+          <span className="text-white animate-pulse">24/7 Emergency Service</span>
+          <a
+            href="tel:+14025566715"
+            onClick={(e) =>
+              trackClick("top_bar_phone_click", e.currentTarget, {
+                phone_number: "+14025566715",
+                source: "top_emergency_bar",
+                page_section: "emergency_top_bar",
+              })
+            }
+            className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition animate-pulse"
+          >
+            <Phone className="h-4 w-4" />
+            (402) 556-6715
+          </a>
+        </div>
+
+        <div className="min-h-screen w-full relative">
+          <main className="min-h-screen w-full relative overflow-hidden">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              aria-hidden="true"
+              poster="/images/Services Thumbnails/Residential-Service-Photo.webp"
+              className="fixed inset-0 w-full h-full object-cover opacity-45 z-0"
+              src="/videos/wallpaper.mp4"
+            />
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="animated-footer-bg" />
+              <div className="footer-glass-effect absolute inset-0" />
+            </div>
+            <div className="absolute inset-0 z-[3] pointer-events-none bg-black/25 md:bg-black/10"></div>
+
+            <div className="relative z-10 text-white pt-12 md:pt-16">
+              <main className="container mx-auto px-6 py-16">
+                <h1 className="text-3xl font-bold mb-4 text-white">Category not found</h1>
+                <div className="flex gap-3">
+                  <Link
+                    to="/"
+                    aria-label="Back to Home"
+                    onClick={(e) =>
+                      trackClick("not_found_back_home_click", e.currentTarget, {
+                        source_page: "blog_category_404",
+                        page_section: "not_found",
+                      })
+                    }
+                    className="inline-flex items-center rounded-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium transition-colors"
+                  >
+                    Back to Home
+                  </Link>
+                  
+                  <Link 
+                    className="inline-flex items-center rounded-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors" 
+                    to="/blog"
+                    onClick={(e) => trackClick('category_not_found_back_to_blog', e.currentTarget, {
+                      source_page: 'blog_category_404',
+                      page_section: 'not_found'
+                    })}
+                  >
+                    Go back to the blog
+                  </Link>
+                </div>
+              </main>
+            </div>
+          </main>
+        </div>
+      </>
+    );
+  }
+  
+  const initialCat = (categoryParam as BlogCategory) || (params.get("cat") as BlogCategory) || "emergency";
   const [activeCat, setActiveCat] = useState<BlogCategory>(initialCat);
   const listRef = useRef<HTMLDivElement | null>(null);
 
@@ -30,12 +110,19 @@ export default function BlogPage() {
   }, []);
 
   useEffect(() => {
-    setParams({ cat: activeCat }, { replace: true });
+    if (!categoryParam) {
+      setParams({ cat: activeCat }, { replace: true });
+    }
   }, [activeCat, setParams]);
 
   const filtered = useMemo(
-    () => BLOG_POSTS.filter((p) => p.category === activeCat),
-    [activeCat]
+    () => {
+      if (categoryParam) {
+        return BLOG_POSTS.filter((p) => p.category === categoryParam);
+      }
+      return BLOG_POSTS.filter((p) => p.category === activeCat);
+    },
+    [activeCat, categoryParam]
   );
 
   return (
