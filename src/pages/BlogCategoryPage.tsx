@@ -51,16 +51,32 @@ export default function BlogCategoryPage() {
             <div className="relative z-10 text-white pt-12 md:pt-16">
               <main className="container mx-auto px-6 py-16">
                 <h1 className="text-3xl font-bold mb-4 text-white">Category not found</h1>
-                <Link 
-                  className="underline text-blue-400 hover:text-blue-300" 
-                  to="/blog"
-                  onClick={(e) => trackClick('category_not_found_back_to_blog', e.currentTarget, {
-                    source_page: 'blog_category_404',
-                    page_section: 'not_found'
-                  })}
-                >
-                  Go back to the blog
-                </Link>
+                <div className="flex gap-3">
+                  <Link
+                    to="/"
+                    aria-label="Back to Home"
+                    onClick={(e) =>
+                      trackClick("not_found_back_home_click", e.currentTarget, {
+                        source_page: "blog_category_404",
+                        page_section: "not_found",
+                      })
+                    }
+                    className="inline-flex items-center rounded-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium transition-colors"
+                  >
+                    Back to Home
+                  </Link>
+                  
+                  <Link 
+                    className="inline-flex items-center rounded-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors" 
+                    to="/blog"
+                    onClick={(e) => trackClick('category_not_found_back_to_blog', e.currentTarget, {
+                      source_page: 'blog_category_404',
+                      page_section: 'not_found'
+                    })}
+                  >
+                    Go back to the blog
+                  </Link>
+                </div>
               </main>
             </div>
           </main>
