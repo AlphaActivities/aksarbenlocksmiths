@@ -75,6 +75,7 @@ const AboutSection: React.FC = () => {
                   ))}
                 </div>
               </div>
+              </div>
             </div>
 
             <div className="flex justify-center gap-2 sm:gap-4 flex-nowrap mt-4">
@@ -113,6 +114,7 @@ const AboutSection: React.FC = () => {
               >
                 Our Blog
               </Link>
+            </div>
             </div>
           </div>
           
