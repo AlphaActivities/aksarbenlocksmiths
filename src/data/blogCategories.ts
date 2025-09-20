@@ -11,7 +11,7 @@ export const BLOG_CATEGORIES: Record<BlogCategorySlug, {
     h1: 'Emergency Locksmith Guides for Omaha',
     seoDescription: 'Lockouts, urgent entry, broken keys and after-hours help in Omaha. Practical emergency locksmith guides from Aksarben Locksmiths.',
     intro:
-      'When you're locked out or a key breaks at the worst time, knowing your options saves money and stress. These articles explain what to do first, what to avoid, and how pros handle emergency calls safely and quickly in the Omaha metro.',
+      'When you\'re locked out or a key breaks at the worst time, knowing your options saves money and stress. These articles explain what to do first, what to avoid, and how pros handle emergency calls safely and quickly in the Omaha metro.',
   },
   keys: {
     title: 'Keys, Duplication & Programming | Aksarben Locksmiths Blog',
