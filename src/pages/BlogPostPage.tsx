@@ -202,6 +202,7 @@ export default function BlogPostPage() {
               <title>{title}</title>
               <meta name="description" content={description} />
               <link rel="canonical" href={canonicalAbs} />
+              <meta property="og:type" content="article" />
               <meta property="og:site_name" content="Aksarben Locksmiths" />
               <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
               <script type="application/ld+json">{JSON.stringify(breadcrumbsLd)}</script>
