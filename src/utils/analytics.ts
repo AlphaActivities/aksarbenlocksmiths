@@ -95,6 +95,7 @@ export const getAttributionParams = (): Record<string, any> => {
 
   return out;
 };
+export { getAttributionParams as __getAttr }; // non-breaking alias for future use
 
 declare global {
   interface Window {
