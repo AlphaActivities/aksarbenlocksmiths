@@ -26,7 +26,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "What To Do If You Are Locked Out In Omaha",
     category: "emergency",
     city: "Omaha",
-    date: "2020-02-15T00:00:00Z",
+    date: "2020-02-15",
     excerpt: "Simple steps you can take during a lockout, how to stay safe, and when to call a licensed local locksmith.",
     coverImage: "/images/blog/car-lockout.webp",
     body:
@@ -37,7 +37,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Five Tips To Keep Your Bellevue Home Secure",
     category: "residential",
     city: "Bellevue",
-    date: "2020-10-05T00:00:00Z",
+    date: "2020-10-05",
     excerpt: "From door hardware to lighting and rekey schedules, here is how Bellevue families can boost everyday security.",
     coverImage: "/images/blog/house-lock.webp",
     body:
@@ -50,7 +50,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Why Papillion Drivers Need A Spare Car Key",
     category: "keys",
     city: "Papillion",
-    date: "2021-03-18T00:00:00Z",
+    date: "2021-03-18",
     excerpt: "Spare keys save time and money. Learn when to duplicate and what to bring to a key appointment.",
     coverImage: "/images/blog/handing-new-key.webp",
     body:
@@ -61,7 +61,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Common Lock Problems La Vista Businesses Face",
     category: "commercial",
     city: "La Vista",
-    date: "2021-11-10T00:00:00Z",
+    date: "2021-11-10",
     excerpt: "Door closer issues, worn cylinders, and key control gaps can cost time and security for local shops.",
     coverImage: "/images/blog/office-rekey.webp",
     body:
@@ -74,7 +74,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "How To Avoid Late Night Lockouts In Council Bluffs",
     category: "emergency",
     city: "Council Bluffs",
-    date: "2022-04-07T00:00:00Z",
+    date: "2022-04-07",
     excerpt: "A few easy habits to reduce after hours emergencies and keep your evening on track.",
     coverImage: "/images/blog/locksmith-van.webp",
     body:
@@ -85,7 +85,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Rekey Versus Replace, Omaha Homeowner Guide",
     category: "residential",
     city: "Omaha",
-    date: "2022-09-22T00:00:00Z",
+    date: "2022-09-22",
     excerpt: "When is it smarter to rekey instead of replacing the whole lock. Cost, security, and timelines explained.",
     coverImage: "/images/blog/keys-desk.webp",
     body:
@@ -98,7 +98,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Car Key Programming, Omaha Driver Guide",
     category: "keys",
     city: "Omaha",
-    date: "2023-02-12T00:00:00Z",
+    date: "2023-02-12",
     excerpt: "What programming involves, which models can be done mobile, and what information you should have ready.",
     coverImage: "/images/blog/car-key-programming.webp",
     body:
@@ -109,7 +109,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Master Key Systems For Gretna Shops",
     category: "commercial",
     city: "Gretna",
-    date: "2023-08-30T00:00:00Z",
+    date: "2023-08-30",
     excerpt: "Improve access control while keeping daily operations simple. A quick overview for small teams.",
     coverImage: "/images/blog/key-cutting.webp",
     body:
@@ -122,7 +122,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Top Five Emergency Locksmith Myths In Omaha",
     category: "emergency",
     city: "Omaha",
-    date: "2024-11-15T00:00:00Z",
+    date: "2024-11-15",
     excerpt: "Separating fact from fiction so you know what to expect when you call for help.",
     coverImage: "/images/blog/locksmith-tools.webp",
     body:
@@ -133,7 +133,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Transparent Locksmith Pricing In Omaha",
     category: "residential",
     city: "Omaha",
-    date: "2025-03-20T00:00:00Z",
+    date: "2025-03-20",
     excerpt: "What drives pricing, how quotes work, and why transparency matters for trust.",
     coverImage: "/images/blog/happy-customer.webp",
     body:
@@ -144,7 +144,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Mobile Locksmith In Bellevue, A Real Time Saver",
     category: "emergency",
     city: "Bellevue",
-    date: "2025-06-05T00:00:00Z",
+    date: "2025-06-05",
     excerpt: "When mobile service makes sense and how to plan your appointment.",
     coverImage: "/images/blog/car-ignition.webp",
     body:
@@ -155,7 +155,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "How Aksarben Locksmiths Has Served Omaha For Over A Decade",
     category: "commercial",
     city: "Omaha",
-    date: "2025-08-28T00:00:00Z",
+    date: "2025-08-28",
     excerpt: "A quick look at our mobile service history and commitment to local customers.",
     coverImage: "/images/blog/house-key-duplication.webp",
     body:
