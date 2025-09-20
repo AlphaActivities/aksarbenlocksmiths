@@ -4,23 +4,6 @@ import { trackClick } from "../utils/analytics";
 const HeroSection: React.FC = () => {
   return (
     <section id="home" className="relative min-h-screen lg:h-[140vh] w-full scroll-mt-[120px] pt-[480px] md:pt-[580px] text-white flex flex-col justify-end z-0 overflow-hidden">
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        controls={false}
-        disablePictureInPicture
-        controlsList="nodownload nofullscreen noremoteplayback"
-        aria-hidden="true"
-        poster="/images/poster.png"
-        className="fixed top-0 left-0 w-full h-full object-cover z-[-1] pointer-events-none"
-      >
-        <source src="/videos/wallpaper.mp4" type="video/mp4" />
-      </video>
-      <noscript>
-        <img src="/images/poster.png" alt="Professional locksmith tools in action" />
-      </noscript>
       <div className="relative z-20 max-w-7xl mx-auto px-6 md:px-12 h-full flex flex-col justify-end">
 
         <div className="bg-black/80 backdrop-blur rounded-2xl px-6 py-10 shadow-xl max-w-5xl mx-auto text-center space-y-8 mb-4 lg:mb-[30px]">

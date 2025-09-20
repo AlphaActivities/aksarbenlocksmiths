@@ -16,7 +16,6 @@ import ServiceAreasPage from './components/ServiceAreasPage';
 import BlogPage from './pages/BlogPage';
 import BlogPostPage from './pages/BlogPostPage';
 import NotFound from './pages/NotFound';
-import SearchPage from './pages/SearchPage';
 import ErrorBoundary from './components/ErrorBoundary';
 import { Helmet } from 'react-helmet-async';
 import { trackClick, captureAttributionFromURL } from './utils/analytics';
@@ -198,7 +197,6 @@ function App() {
         <Route path="/service-areas" element={<ServiceAreasPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
-        <Route path="/search" element={<SearchPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </ErrorBoundary>

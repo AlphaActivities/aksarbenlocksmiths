@@ -80,7 +80,7 @@ const ContactSection: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-24 scroll-mt-[38px] mix-blend-normal">
+    <section id="contact" className="py-24 scroll-mt-[38px]">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="text-center mb-16">
           <PillBadge variant="contact">Contact Us</PillBadge>

@@ -17,7 +17,7 @@ const PillBadge: React.FC<PillBadgeProps> = ({ children, variant = "services" })
 
   return (
     <div className={clsx(
-      "inline-block px-6 py-2 rounded-full font-semibold text-white text-lg mb-6 shadow-lg mix-blend-normal",
+      "inline-block px-6 py-2 rounded-full font-semibold text-white text-lg mb-6 shadow-lg",
       "bg-gradient-to-r animate-gradient-slide bg-[length:200%_auto] bg-[position:0%_50%]",
       gradientMap[variant]
     )}>
