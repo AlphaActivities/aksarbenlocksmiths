@@ -163,6 +163,55 @@ export default function BlogPage() {
                   <h1 className="text-2xl md:text-4xl font-bold tracking-tight">
                     AksarbenLocksmiths Blog
                   </h1>
+                  <nav className="mb-6 flex flex-wrap gap-2 text-sm">
+                    <Link 
+                      className="text-blue-400 hover:text-blue-300 underline" 
+                      to="/blog/emergency"
+                      onClick={(e) => trackClick('blog_nav_category_click', e.currentTarget, {
+                        source_page: 'blog_index',
+                        page_section: 'category_nav',
+                        category: 'emergency'
+                      })}
+                    >
+                      Emergency
+                    </Link>
+                    <span className="text-white/50" aria-hidden="true">·</span>
+                    <Link 
+                      className="text-blue-400 hover:text-blue-300 underline" 
+                      to="/blog/keys"
+                      onClick={(e) => trackClick('blog_nav_category_click', e.currentTarget, {
+                        source_page: 'blog_index',
+                        page_section: 'category_nav',
+                        category: 'keys'
+                      })}
+                    >
+                      Keys
+                    </Link>
+                    <span className="text-white/50" aria-hidden="true">·</span>
+                    <Link 
+                      className="text-blue-400 hover:text-blue-300 underline" 
+                      to="/blog/residential"
+                      onClick={(e) => trackClick('blog_nav_category_click', e.currentTarget, {
+                        source_page: 'blog_index',
+                        page_section: 'category_nav',
+                        category: 'residential'
+                      })}
+                    >
+                      Residential
+                    </Link>
+                    <span className="text-white/50" aria-hidden="true">·</span>
+                    <Link 
+                      className="text-blue-400 hover:text-blue-300 underline" 
+                      to="/blog/commercial"
+                      onClick={(e) => trackClick('blog_nav_category_click', e.currentTarget, {
+                        source_page: 'blog_index',
+                        page_section: 'category_nav',
+                        category: 'commercial'
+                      })}
+                    >
+                      Commercial
+                    </Link>
+                  </nav>
                   <p className="mt-3 text-base md:text-lg text-gray-200">
                     Helpful tips and locksmith insights for:<br />
                     Omaha, Bellevue, Council Bluffs, Papillion, La Vista, Gretna, and nearby communities.

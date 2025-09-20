@@ -29,6 +29,8 @@ try {
   blogSlugs = [];
 }
 
+const categorySlugs = ['emergency','keys','residential','commercial'];
+
 const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
 
 const urls = [
@@ -39,6 +41,11 @@ const urls = [
     loc: `${SITE}/services/${s.slug}`,
     changefreq: "monthly",
     priority: "0.8"
+  })),
+  ...categorySlugs.map(cat => ({
+    loc: `${SITE}/blog/${cat}`,
+    changefreq: "weekly", 
+    priority: "0.7"
   })),
   ...blogSlugs.map(slug => ({
     loc: `${SITE}/blog/${slug}`,

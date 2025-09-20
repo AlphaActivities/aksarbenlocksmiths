@@ -15,6 +15,7 @@ import DynamicServicePage from './pages/DynamicServicePage';
 import ServiceAreasPage from './components/ServiceAreasPage';
 import BlogPage from './pages/BlogPage';
 import BlogPostPage from './pages/BlogPostPage';
+import BlogCategoryPage from './pages/BlogCategoryPage';
 import SearchPage from './pages/SearchPage';
 import NotFound from './pages/NotFound';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -197,6 +198,7 @@ function App() {
         <Route path="/services/:slug" element={<DynamicServicePage />} />
         <Route path="/service-areas" element={<ServiceAreasPage />} />
         <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:category" element={<BlogCategoryPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="*" element={<NotFound />} />
