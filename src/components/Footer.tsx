@@ -126,7 +126,6 @@ const Footer: React.FC = () => (
                 trackNavigation('contact', 'footer');
                 trackClick('footer_nav_click', e.currentTarget, { page_section: 'footer' });
               }} className="hover:text-red-500 transition-colors">Contact</a></li>
-              <li><Link to="/search" className="hover:text-red-500 transition-colors">Search</Link></li>
             </ul>
           </div>
 

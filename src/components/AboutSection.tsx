@@ -46,13 +46,7 @@ const AboutSection: React.FC = () => {
             <div className="relative overflow-hidden bg-black/80 backdrop-blur-md p-5 pt-3 pb-3 rounded-2xl shadow-xl ring-1 ring-white/10 shadow-inner backdrop-saturate-150 max-w-2xl mx-auto mt-[10px] mb-[32px] transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] animate-luxury-fade-up">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-black to-blue-900 opacity-40 animate-luxury-horizontal-shimmer z-0"></div>
               <div className="relative z-10">
-              <div className="relative z-10 mix-blend-normal">
                 <h2 className="text-3xl md:text-4xl font-bold mb-6 bg-gradient-to-r from-blue-900 via-blue-300 to-blue-900 bg-clip-text text-transparent bg-[length:400%_100%] bg-[position:0%_50%] animate-[text-shimmer_10s_linear_infinite] text-center">Trusted Locksmith Services in Omaha for Over 15 Years</h2>
-                <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white text-center">
-                  <span className="bg-gradient-to-r from-blue-900 via-blue-300 to-blue-900 bg-clip-text text-transparent bg-[length:400%_100%] bg-[position:0%_50%] animate-[text-shimmer_10s_linear_infinite]">
-                    Trusted Locksmith Services in Omaha for Over 15 Years
-                  </span>
-                </h2>
                 <span className="sr-only">At Aksarben Locksmiths, we pride ourselves on providing fast, reliable, and professional locksmith services.</span>
                 <div className="mt-4 text-white relative -top-4">
                   <p className="font-bold text-white [text-shadow:0_0_6px_rgba(255,255,255,0.4)]">What should I expect when calling Aksarben Locksmiths?</p>
@@ -75,11 +69,9 @@ const AboutSection: React.FC = () => {
                   ))}
                 </div>
               </div>
-              </div>
             </div>
 
             <div className="flex justify-center gap-2 sm:gap-4 flex-nowrap mt-4">
-            <div className="flex justify-center gap-2 sm:gap-4 flex-nowrap mt-4 mix-blend-normal">
               <a 
                 href="#contact" 
                 onClick={(e) => trackClick('cta_contact_click', e.currentTarget, { 
@@ -114,7 +106,6 @@ const AboutSection: React.FC = () => {
               >
                 Our Blog
               </Link>
-            </div>
             </div>
           </div>
           
