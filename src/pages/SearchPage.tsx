@@ -3,6 +3,7 @@ import { useSearchParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { BLOG_POSTS } from "../data/blogPosts";
 import servicesData from "../data/services.json";
+import { trackClick, trackEvent, getAttributionParams } from "../utils/analytics";
 
 function norm(x: any) {
   return String(x ?? "").toLowerCase().trim();
@@ -11,6 +12,7 @@ function norm(x: any) {
 export default function SearchPage() {
   const [params] = useSearchParams();
   const q = norm(params.get("q"));
+  const pageSection = "search_results";
 
   const serviceResults =
     q.length < 2
@@ -32,6 +34,32 @@ export default function SearchPage() {
 
   const resultsCount = serviceResults.length + blogResults.length;
 
+  // Fire site_search when results are known
+  React.useEffect(() => {
+    if (q && q.length >= 2) {
+      const attr = getAttributionParams?.() || {};
+      trackEvent("site_search", {
+        query: q,
+        results_count: resultsCount,
+        source: "onsite",
+        page_section: pageSection,
+        ...attr,
+      });
+    }
+  }, [q, resultsCount]);
+
+  // Form submit → site_search_submit
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const attr = getAttributionParams?.() || {};
+    const form = e.currentTarget as HTMLFormElement;
+    const val = (form.querySelector("#q") as HTMLInputElement)?.value || "";
+    trackEvent("site_search_submit", {
+      query: val,
+      source: "onsite",
+      page_section: pageSection,
+      ...attr,
+    });
+  };
   return (
     <>
       <Helmet>
@@ -57,7 +85,7 @@ export default function SearchPage() {
         <h1 className="sr-only">Site Search</h1>
 
         {/* Hidden form is optional; we keep the endpoint clean for SEO without adding visible UI */}
-        <form action="/search" method="get" hidden>
+        <form action="/search" method="get" hidden onSubmit={onSubmit}>
           <input id="q" name="q" defaultValue={params.get("q") || ""} />
         </form>
 
