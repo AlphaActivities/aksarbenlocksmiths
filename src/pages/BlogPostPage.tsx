@@ -109,6 +109,36 @@ export default function BlogPostPage() {
                     The article you are looking for is unavailable.{" "}
                     <Link to="/blog" className="text-purple-400 underline">Go back to the blog.</Link>
                   </p>
+
+                  <div className="mt-4 flex gap-3">
+                    <Link
+                      to="/"
+                      aria-label="Back to Home"
+                      onClick={(e) =>
+                        trackClick("not_found_back_home_click", e.currentTarget, {
+                          source_page: "blog_post_404",
+                          page_section: "not_found",
+                        })
+                      }
+                      className="inline-flex items-center rounded-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium transition-colors"
+                    >
+                      Back to Home
+                    </Link>
+
+                    <Link
+                      to="/blog"
+                      aria-label="Back to the blog"
+                      onClick={(e) =>
+                        trackClick("not_found_back_blog_click", e.currentTarget, {
+                          source_page: "blog_post_404",
+                          page_section: "not_found",
+                        })
+                      }
+                      className="inline-flex items-center rounded-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors"
+                    >
+                      Go back to the blog
+                    </Link>
+                  </div>
                 </section>
               </main>
             </div>
