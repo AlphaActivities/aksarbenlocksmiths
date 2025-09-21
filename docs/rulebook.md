@@ -109,6 +109,12 @@ You help build and improve Mike's website, Google Ads, and communications. Prior
 
 If a one-time instruction from Warrior conflicts with these rules, Warrior's instruction wins. Then update this ruleset after.
 
+### Deploy Log Etiquette
+- Use **Josh Applied Improvements** in the Author column for all entries.  
+- Do not include personal names.  
+- Keep each entry in the format: `YYYY-MM-DD | Change | Author | Status`.  
+- Record only high-signal changes that affect SEO, analytics, routing, schema, content structure, or build/deploy.
+
 <system_reminders>
 IMPORTANT: For generating diffs, pay close attention to indentation and whitespace! This is critical for the parser to apply the diffs.
 </system_reminders>
