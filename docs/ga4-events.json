@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-01-15T20:30:00Z",
+  "generated_at": "2025-01-15T21:15:00Z",
   "mapping": [
     {
       "app_event": "floating_call_button",
@@ -78,6 +78,18 @@
       "ga4_event": "scroll_depth",
       "params_required": ["depth_percentage"],
       "params_optional": ["page_type", "page_section", "source_page"]
+    },
+    {
+      "app_event": "page_view",
+      "ga4_event": "page_view",
+      "params_required": ["page_location", "page_path"],
+      "params_optional": ["page_title", "first_ts", "last_ts"]
+    },
+    {
+      "app_event": "outbound_click",
+      "ga4_event": "outbound_click",
+      "params_required": ["target_url"],
+      "params_optional": ["link_text", "source_page", "page_section"]
     }
   ]
 }

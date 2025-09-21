@@ -105,7 +105,11 @@ declare global {
 // Configure GA4 with debug user ID in development
 export const configureGA4 = () => {
   if (typeof window !== 'undefined' && window.gtag) {
-    const config: Record<string, any> = {};
+    const config: Record<string, any> = {
+      // privacy hardening
+      anonymize_ip: true,        // hide last octet in GA4 processing
+      allow_google_signals: false
+    };
     
     // Add debug user ID only in development
     if (import.meta.env.DEV) {
@@ -144,6 +148,47 @@ export const configureGA4 = () => {
       });
     }
   }
+};
+
+// ---- Page Views (for SPA route changes) ----
+export const trackPageView = (extra: Record<string, any> = {}) => {
+  if (typeof window === 'undefined' || !window.gtag) return;
+  const page_location = window.location.href;
+  const page_path = window.location.pathname + window.location.search + window.location.hash;
+  const page_title = document?.title || undefined;
+  const attr = getAttributionParams?.() || {};
+  window.gtag('event', 'page_view', {
+    page_location,
+    page_path,
+    page_title,
+    ...attr,
+    ...extra,
+  });
+};
+
+// ---- Outbound link tracking (one-time document listener) ----
+let __outboundHooked = false;
+export const initOutboundLinkTracking = () => {
+  if (typeof window === 'undefined' || __outboundHooked) return;
+  __outboundHooked = true;
+  document.addEventListener('click', (e) => {
+    const el = (e.target as HTMLElement)?.closest?.('a[href]');
+    if (!el) return;
+    const href = el.getAttribute('href') || '';
+    try {
+      const url = new URL(href, window.location.origin);
+      const isExternal = url.origin !== window.location.origin;
+      if (isExternal && window.gtag) {
+        const attr = getAttributionParams?.() || {};
+        window.gtag('event', 'outbound_click', {
+          event_category: 'navigation',
+          target_url: url.href,
+          link_text: el.textContent || '',
+          ...attr,
+        });
+      }
+    } catch { /* noop for invalid hrefs */ }
+  }, { capture: true });
 };
 
 export const trackEvent = (eventName: string, parameters?: Record<string, any>) => {
@@ -411,3 +456,6 @@ export const initializeSectionDwellTracking = () => {
     }
   });
 };
+
+// non-breaking alias for future imports
+export { getAttributionParams as __getAttr };

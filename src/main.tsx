@@ -4,10 +4,11 @@ import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import App from './App.tsx';
 import './index.css';
-import { configureGA4, initializeScrollDepthTracking, initializeSectionDwellTracking } from './utils/analytics';
+import { configureGA4, initializeScrollDepthTracking, initializeSectionDwellTracking, initOutboundLinkTracking } from './utils/analytics';
 
 // Configure GA4 with debug settings
 configureGA4();
+initOutboundLinkTracking();
 
 // Initialize advanced tracking
 document.addEventListener('DOMContentLoaded', () => {

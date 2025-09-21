@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { Phone } from 'lucide-react';
+import { trackPageView } from './utils/analytics';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import ServicesSection from './components/ServicesSection';
@@ -21,6 +22,15 @@ import NotFound from './pages/NotFound';
 import ErrorBoundary from './components/ErrorBoundary';
 import { Helmet } from 'react-helmet-async';
 import { trackClick, captureAttributionFromURL } from './utils/analytics';
+
+function PageViewTracker() {
+  const loc = useLocation();
+  React.useEffect(() => {
+    // fire a virtual page_view on every route change
+    trackPageView();
+  }, [loc.pathname, loc.search, loc.hash]);
+  return null;
+}
 
 function App() {
   const location = useLocation();
@@ -76,6 +86,7 @@ function App() {
 
   return (
     <ErrorBoundary>
+      <PageViewTracker />
       <Routes>
         <Route
           path="/"

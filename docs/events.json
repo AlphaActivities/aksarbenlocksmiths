@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-01-15T20:30:00Z",
+  "generated_at": "2025-01-15T21:15:00Z",
   "events": [
     {"name": "floating_call_button", "location": "EmergencyButton", "attrs": ["phone_number", "source", "page_section"]},
     {"name": "navbar_link_click", "location": "Navbar", "attrs": ["href", "page_section", "source_page"]},
@@ -27,6 +27,8 @@
     {"name": "blog_card_click", "location": "BlogPage", "attrs": ["slug", "category", "page_section"]},
     {"name": "blog_category_post_click", "location": "BlogCategoryPage", "attrs": ["post_slug", "category", "page_section"]},
     {"name": "site_search", "location": "SearchPage", "attrs": ["query", "results_count", "source", "page_section"]},
-    {"name": "site_search_submit", "location": "SearchPage", "attrs": ["query", "source", "page_section"]}
+    {"name": "site_search_submit", "location": "SearchPage", "attrs": ["query", "source", "page_section"]},
+    {"name": "page_view", "location": "App (route change)", "attrs": ["page_location", "page_path", "page_title"]},
+    {"name": "outbound_click", "location": "Global document listener", "attrs": ["target_url", "link_text", "page_section"]}
   ]
 }
