@@ -2,7 +2,7 @@
 # Deploy Log
 Date | Change | Author | Status
 ---- | ------ | ------ | ------
-2025-09-15 | Initial cleanup of unused assets and creation of docs dashboards | Warrior | Deployed
+2025-09-15 | Initial cleanup of unused assets and creation of docs dashboards | Josh Applied Improvements | Deployed
 2025-09-20 | SEO hardening recap + hidden site search + anchors refresh | Josh Applied Improvements | Deployed
 - Canonicals/Meta/JSON-LD (LocalBusiness, WebSite+SearchAction, Organization)
 - Video preload/poster, breadcrumb fix, ISO dates, HTTPS/apex redirects
