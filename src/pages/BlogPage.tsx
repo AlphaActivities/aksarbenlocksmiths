@@ -183,12 +183,16 @@ export default function BlogPage() {
                 <meta property="og:description" content="Emergency lockouts, keys and duplication, residential and commercial security for Omaha and surrounding cities." />
                 <meta property="og:url" content="https://aksarbenlocksmiths.com/blog" />
                 <meta property="og:image" content="https://aksarbenlocksmiths.com/images/shield-logo.png" />
+                <meta property="og:image:width" content="1080" />
+                <meta property="og:image:height" content="1080" />
 
                 {/* Twitter */}
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:title" content="Our Blog, Omaha Locksmith Tips and Guides" />
                 <meta name="twitter:description" content="Emergency lockouts, keys and duplication, residential and commercial security for Omaha and surrounding cities." />
                 <meta name="twitter:image" content="https://aksarbenlocksmiths.com/images/shield-logo.png" />
+                <meta name="twitter:image:width" content="1080" />
+                <meta name="twitter:image:height" content="1080" />
 
                 {/* JSON-LD, Blog index breadcrumb */}
                 <script
