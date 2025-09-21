@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-01-15T19:47:00Z",
+  "generated_at": "2025-01-21T06:15:00Z",
   "excluded": ["node_modules", ".git", ".next", ".vercel", ".netlify", ".DS_Store", "dist", "build", "coverage"],
   "counts": {"dirs": 12, "files": 82, "total": 94},
   "by_extension": {
@@ -47,15 +47,18 @@
     {"path": "public/index.html", "status": "REMOVED_IN_2025_09_15", "referenced_by": []}
   ],
   "key_files_present": {
-    "public/index.html": false,
+    "index.html": true,
     "public/_redirects": true,
     "src/pages/SearchPage.tsx": true,
     "src/pages/BlogPostPage.tsx": true,
     "src/pages/DynamicServicePage.tsx": true,
     "src/components/HeroSection.tsx": true,
     "src/components/ServiceAreasPage.tsx": true,
-    "src/data/blogPosts.ts": true,
-    "scripts/generate-sitemap.mjs": true
+    "src/utils/analytics.ts": true,
+    "scripts/generate-sitemap.mjs": true,
+    "src/pages/BlogPage.tsx": true,
+    "src/pages/BlogCategoryPage.tsx": true,
+    "src/data/blogPosts.ts": true
   },
   "routing_summary": "Single BrowserRouter in src/main.tsx, Routes defined in src/App.tsx including /search route.",
   "rewrites_summary": "SPA rewrite /* to /index.html present in netlify.toml and public/_redirects with HTTPS/apex canonicalization."

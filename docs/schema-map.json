@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-01-15T19:47:00Z",
+  "generated_at": "2025-01-21T06:15:00Z",
   "pages": [
     {
       "path": "/",
@@ -36,6 +36,14 @@
       "helmet": { "title": true, "meta_description": true, "canonical": true },
       "json_ld": {
         "root_types": ["BlogPosting", "BreadcrumbList"]
+      }
+    },
+    {
+      "path": "/blog/:category",
+      "helmet": { "title": true, "meta_description": true, "canonical": true },
+      "json_ld": {
+        "root_types": ["BreadcrumbList"],
+        "notes": "Category landing page (filtered blog list). Canonical points to pretty category URL."
       }
     }
   ]

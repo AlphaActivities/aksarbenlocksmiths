@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-01-15T21:15:00Z",
+  "generated_at": "2025-01-21T06:15:00Z",
   "mapping": [
     {
       "app_event": "floating_call_button",
@@ -90,6 +90,36 @@
       "ga4_event": "outbound_click",
       "params_required": ["target_url"],
       "params_optional": ["link_text", "source_page", "page_section"]
+    },
+    {
+      "app_event": "navigation_click",
+      "ga4_event": "navigation_click",
+      "params_required": ["section", "source"],
+      "params_optional": ["href", "destination_path", "page_section", "source_page"]
+    },
+    {
+      "app_event": "floating_call_button",
+      "ga4_event": "call_click",
+      "params_required": ["source_page", "page_section"],
+      "params_optional": ["phone_number"]
+    },
+    {
+      "app_event": "back_to_services",
+      "ga4_event": "navigation_click",
+      "params_required": ["page_section"],
+      "params_optional": ["from_service", "service_name", "source_page", "destination_path"]
+    },
+    {
+      "app_event": "service_page_request_service",
+      "ga4_event": "service_page_request_service",
+      "params_required": ["service_name", "page_section"],
+      "params_optional": ["service", "phone_number", "source_page"]
+    },
+    {
+      "app_event": "testimonial_dot_click",
+      "ga4_event": "testimonial_dot_click",
+      "params_required": ["testimonial_index", "page_section"],
+      "params_optional": ["testimonial_name", "source_page"]
     }
   ]
 }
