@@ -10,3 +10,13 @@ Date | Change | Author | Status
 2025-09-20 | Analytics: search events only, removed hero-video tracking; docs synced | Warrior & GPT | Deployed
 - Wired site_search & site_search_submit (hidden search)
 - Removed video analytics from hero to avoid any visual interference
+2025-09-20 | GA4 SPA page_view + outbound link tracking; privacy hardening | Warrior & GPT | Deployed
+- Added SPA page_view tracker (no UI)
+- Added outbound link tracking (no UI)
+- Enabled anonymize_ip and disabled Google Signals in config
+- Docs synced: ga4-events.json, events.json
+2025-09-20 | Anchors parity sync for "check anchors" | Warrior & GPT | Deployed
+- Refreshed timestamps (anchors, inventory, schema map, GA4 docs)
+- Added BlogPage & BlogCategoryPage to key_files_present
+- Documented /blog/:category in schema-map
+- Added missing GA4 mappings (navigation_click, floating_call_button, back_to_services, service_page_request_service, testimonial_dot_click)
