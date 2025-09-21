@@ -7,3 +7,7 @@ Date | Change | Author | Status
 - Video preload/poster, breadcrumb fix, ISO dates, HTTPS/apex redirects
 - Added /search route (noindex, follow), no visible UI changes
 - Updated anchors, inventory, schema map, GA4 events, orphans
+2025-09-20 | Analytics: search events only, removed hero-video tracking; docs synced | Warrior & GPT | Deployed
+- Wired site_search & site_search_submit (hidden search)
+- Removed video analytics from hero to avoid any visual interference
+- Updated docs (ga4-events.json, events.json); no UI changes
