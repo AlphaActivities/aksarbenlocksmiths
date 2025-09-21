@@ -1,5 +1,8 @@
 // Google Analytics 4 utility functions
 
+export const DEBUG_ANALYTICS = import.meta.env.DEV && !!localStorage.getItem('DEBUG_ANALYTICS');
+const dbg = (...args: any[]) => { if (DEBUG_ANALYTICS) console.log('[ANALYTICS]', ...args); };
+
 // --- Attribution keys and storage ---
 const ATTR_LS_KEY = "attr_first_touch";
 const ATTR_SS_KEY = "attr_last_touch";
@@ -116,6 +119,8 @@ export const configureGA4 = () => {
       config.user_id = 'debug-user-josh';
     }
     
+    dbg('config', config);
+    
     window.gtag('config', 'G-R5H0MX6FR2', config);
     
     // capture first route load
@@ -171,23 +176,37 @@ let __outboundHooked = false;
 export const initOutboundLinkTracking = () => {
   if (typeof window === 'undefined' || __outboundHooked) return;
   __outboundHooked = true;
+
   document.addEventListener('click', (e) => {
     const el = (e.target as HTMLElement)?.closest?.('a[href]');
     if (!el) return;
+
     const href = el.getAttribute('href') || '';
+
+    // Ignore phone, email, and in-page anchors
+    if (href.startsWith('tel:') || href.startsWith('mailto:') || href.startsWith('#')) return;
+
+    let url: URL;
     try {
-      const url = new URL(href, window.location.origin);
-      const isExternal = url.origin !== window.location.origin;
-      if (isExternal && window.gtag) {
-        const attr = getAttributionParams?.() || {};
-        window.gtag('event', 'outbound_click', {
-          event_category: 'navigation',
-          target_url: url.href,
-          link_text: el.textContent || '',
-          ...attr,
-        });
-      }
-    } catch { /* noop for invalid hrefs */ }
+      url = new URL(href, window.location.origin);
+    } catch {
+      return;
+    }
+
+    const isExternal = url.origin !== window.location.origin;
+    if (!isExternal) return;
+
+    dbg('outbound_click', url.href, el.textContent || '');
+
+    if (window.gtag) {
+      const attr = (typeof getAttributionParams === 'function' ? getAttributionParams() : {}) || {};
+      window.gtag('event', 'outbound_click', {
+        event_category: 'navigation',
+        target_url: url.href,
+        link_text: el.textContent || '',
+        ...attr,
+      });
+    }
   }, { capture: true });
 };
 

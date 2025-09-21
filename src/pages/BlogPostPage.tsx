@@ -235,6 +235,12 @@ export default function BlogPostPage() {
               <meta property="og:type" content="article" />
               <meta property="og:site_name" content="Aksarben Locksmiths" />
               <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+              <meta property="og:image" content={imageUrl} />
+              <meta property="og:image:width" content="1200" />
+              <meta property="og:image:height" content="630" />
+              <meta name="twitter:image" content={imageUrl} />
+              <meta name="twitter:image:width" content="1200" />
+              <meta name="twitter:image:height" content="630" />
               <script type="application/ld+json">{JSON.stringify(breadcrumbsLd)}</script>
             </Helmet>
 

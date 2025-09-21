@@ -35,7 +35,8 @@ export default function SearchPage() {
   const resultsCount = serviceResults.length + blogResults.length;
 
   React.useEffect(() => {
-    if (q && q.length >= 2) {
+    if (!q || q.length < 2) return;
+    const t = window.setTimeout(() => {
       const attr = (typeof getAttributionParams === "function" ? getAttributionParams() : {}) || {};
       trackEvent("site_search", {
         query: q,
@@ -44,7 +45,8 @@ export default function SearchPage() {
         page_section: pageSection,
         ...attr,
       });
-    }
+    }, 400); // debounce
+    return () => window.clearTimeout(t);
   }, [q, resultsCount]);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {

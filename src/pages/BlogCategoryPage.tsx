@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { BLOG_POSTS } from '../data/blogPosts';
 import { BLOG_CATEGORIES, isValidCategory } from '../data/blogCategories';
@@ -8,6 +8,8 @@ import { trackClick } from '../utils/analytics';
 
 export default function BlogCategoryPage() {
   const { category = '' } = useParams();
+  const [params] = useSearchParams();
+  const PER_PAGE = 10;
   
   if (!isValidCategory(category)) {
     return (
@@ -86,8 +88,15 @@ export default function BlogCategoryPage() {
   }
 
   const meta = BLOG_CATEGORIES[category];
-  const canonical = `https://aksarbenlocksmiths.com/blog/${category}`;
-  const posts = BLOG_POSTS.filter((p) => p.category === category);
+  const page = Math.max(1, parseInt(params.get("page") || "1", 10));
+  const baseCanonical = `https://aksarbenlocksmiths.com/blog/${category}`;
+  const canonical = page > 1 ? `${baseCanonical}?page=${page}` : baseCanonical;
+  
+  const all = BLOG_POSTS.filter((p) => p.category === category);
+  const total = all.length;
+  const start = (page - 1) * PER_PAGE;
+  const end = Math.min(start + PER_PAGE, total);
+  const paged = all.slice(start, end);
 
   // Breadcrumbs JSON-LD
   const breadcrumbsLd = {
@@ -156,6 +165,14 @@ export default function BlogCategoryPage() {
               <meta property="og:title" content={meta.h1 + ' | Aksarben Locksmiths'} />
               <meta property="og:description" content={meta.seoDescription} />
               <meta property="og:url" content={canonical} />
+              <meta property="og:image" content="https://aksarbenlocksmiths.com/images/shield-logo.png" />
+              <meta property="og:image:width" content="1080" />
+              <meta property="og:image:height" content="1080" />
+              <meta property="twitter:image" content="https://aksarbenlocksmiths.com/images/shield-logo.png" />
+              <meta name="twitter:image:width" content="1080" />
+              <meta name="twitter:image:height" content="1080" />
+              {page > 1 && <link rel="prev" href={`${baseCanonical}?page=${page - 1}`} />}
+              {end < total && <link rel="next" href={`${baseCanonical}?page=${page + 1}`} />}
               <script type="application/ld+json">{JSON.stringify(breadcrumbsLd)}</script>
               <script type="application/ld+json">{JSON.stringify(collectionLd)}</script>
             </Helmet>
@@ -179,11 +196,11 @@ export default function BlogCategoryPage() {
               <h1 className="text-3xl md:text-4xl font-bold mb-3">{meta.h1}</h1>
               <p className="text-base text-white/80 max-w-3xl mb-8">{meta.intro}</p>
 
-              {posts.length === 0 ? (
+              {paged.length === 0 ? (
                 <p className="text-white/70">No articles yet in this category. Check back soon.</p>
               ) : (
                 <ul className="space-y-4">
-                  {posts.map((p) => (
+                  {paged.map((p) => (
                     <li key={p.slug} className="p-4 rounded-xl bg-black/70 ring-1 ring-white/10 hover:bg-black/80 transition-colors">
                       <Link 
                         className="text-xl font-semibold text-blue-400 hover:text-blue-300 underline" 
@@ -205,6 +222,24 @@ export default function BlogCategoryPage() {
                   ))}
                 </ul>
               )}
+              
+              <div className="mt-10 flex items-center justify-between">
+                <div>
+                  Page {page} of {Math.max(1, Math.ceil(total / PER_PAGE))}
+                </div>
+                <div className="flex gap-3">
+                  {page > 1 && (
+                    <a className="px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-50" href={`?page=${page - 1}`} aria-label="Previous page">
+                      Previous
+                    </a>
+                  )}
+                  {end < total && (
+                    <a className="px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-50" href={`?page=${page + 1}`} aria-label="Next page">
+                      Next
+                    </a>
+                  )}
+                </div>
+              </div>
             </main>
           </div>
         </main>
