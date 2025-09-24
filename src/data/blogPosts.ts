@@ -50,7 +50,6 @@ export const BLOG_POSTS: BlogPost[] = [
     body:
       "Getting locked out happens to everyone.\n\nStay calm, confirm you have permission to access the property, and avoid risky entry attempts.\n\nCall a licensed local locksmith who can verify ownership and provide a damage free entry where possible.\n\nIn Omaha, mobile technicians can reach most neighborhoods quickly depending on traffic and current demand.",
     keywords: ["Omaha lockout", "emergency locksmith Omaha", "locked out Omaha", "24 hour locksmith Omaha", "Aksarben Locksmiths"]
-    keywords: ["Omaha lockout", "emergency locksmith Omaha", "locked out Omaha", "24 hour locksmith Omaha", "Aksarben Locksmiths"]
   },
   {
     slug: "5-tips-to-keep-your-bellevue-home-secure",
@@ -63,7 +62,6 @@ export const BLOG_POSTS: BlogPost[] = [
     altText: "Secure deadbolt lock on Bellevue home front door",
     body:
       "Security builds from basics first.\n\nUse quality deadbolts, strike plates with long screws, and keep door frames in good shape.\n\nRekey after moving or after key loss, and consider smart locks where appropriate.\n\nAsk a locksmith to evaluate weak points around sliding doors and garage entries.",
-    keywords: ["Bellevue home security", "residential locksmith Bellevue", "home locks Bellevue", "rekey locks Bellevue", "Aksarben Locksmiths"]
     keywords: ["Bellevue home security", "residential locksmith Bellevue", "home locks Bellevue", "rekey locks Bellevue", "Aksarben Locksmiths"]
   },
 
@@ -80,7 +78,6 @@ export const BLOG_POSTS: BlogPost[] = [
     body:
       "Busy doors wear faster.\n\nPlan maintenance for door closers, panic hardware, and cylinders.\n\nAdopt master key systems to control access and simplify keyed entries.\n\nSchedule after hours service to reduce downtime.",
     keywords: ["La Vista commercial locksmith", "business locks La Vista", "commercial door repair La Vista", "master key systems La Vista", "Aksarben Locksmiths"]
-    keywords: ["La Vista commercial locksmith", "business locks La Vista", "commercial door repair La Vista", "master key systems La Vista", "Aksarben Locksmiths"]
   },
 
   // Year 3, three years ago
@@ -96,7 +93,6 @@ export const BLOG_POSTS: BlogPost[] = [
     body:
       "Create a key routine and a spare plan.\n\nStore a spare with a trusted person or in a secure lock box.\n\nConsider smart deadbolts for family access.\n\nIf you do get locked out, request your ETA during the call.\n\nArrival times vary based on demand, distance, and traffic.",
     keywords: ["Council Bluffs emergency locksmith", "late night lockout Council Bluffs", "24 hour locksmith Council Bluffs", "lockout prevention Council Bluffs", "Aksarben Locksmiths"]
-    keywords: ["Council Bluffs emergency locksmith", "late night lockout Council Bluffs", "24 hour locksmith Council Bluffs", "lockout prevention Council Bluffs", "Aksarben Locksmiths"]
   },
   {
     slug: "rekey-vs-replace-omaha",
@@ -110,7 +106,6 @@ export const BLOG_POSTS: BlogPost[] = [
     body:
       "Rekey keeps your existing hardware and changes which keys operate it.\n\nReplace when hardware is damaged or outdated.\n\nAfter a move or lost keys, rekey is usually the quickest path to restore control.",
     keywords: ["Omaha rekey locks", "rekey vs replace Omaha", "residential locksmith Omaha", "lock rekeying Omaha", "Aksarben Locksmiths"]
-    keywords: ["Omaha rekey locks", "rekey vs replace Omaha", "residential locksmith Omaha", "lock rekeying Omaha", "Aksarben Locksmiths"]
   },
 
   // Year 4, two years ago
@@ -122,6 +117,7 @@ export const BLOG_POSTS: BlogPost[] = [
     date: "2023-02-12T00:00:00Z",
     excerpt: "What programming involves, which models can be done mobile, and what information you should have ready.",
     coverImage: "/images/blog/car-key-programming.webp",
+    altText: "Mobile locksmith programming car key fob for Omaha driver",
     body: "If your key fob stops working in Omaha, you usually need programming, pairing, or a fresh fob coded to your vehicle. This quick guide shows what to bring and how a professional locksmith gets you moving again.\n\nWhat to bring to your appointment:\n• Photo ID and proof you own or are authorized to use the vehicle\n• Your vehicle make, model, year, and VIN (visible through the windshield)\n• Any existing keys or fobs, even if they only partly work\n• If possible, the exact key blade or remote part number\n\nHow key fob programming works:\nA mobile locksmith connects a diagnostic tool to your vehicle, verifies ownership, and places the car in programming mode. The new fob is then coded to your vehicle's immobilizer or remote system. Most sessions take only a few minutes once we have the correct fob and security access.\n\nOEM vs aftermarket fobs:\nBoth can work, but compatibility matters. A quality aftermarket unit can be a good choice when the original is unavailable. Your locksmith can advise which options are reliable for your specific make and model.\n\nCommon issues we solve every week:\n• Lost or stolen fobs that require erasing old profiles for security\n• Spare fob additions for families sharing the same car\n• Remote start and proximity (push-to-start) pairing\n• Battery, range, or intermittent signal problems\n\nSecurity and verification:\nLicensed locksmiths will confirm ownership before programming and may erase missing fobs so they can no longer start your vehicle. This protects you if a lost fob turns up later.\n\nWhen to call a pro vs the dealer:\nDealers are great for warranty work. For out-of-warranty or urgent situations, a mobile locksmith can come to you in Omaha and nearby cities, saving the tow and the wait.\n\nNext step — get help now:\nIf you need a working fob today, a mobile technician can come to your location, verify ownership, and program a new unit so you can get back on the road.\n\nPro tip:\nAsk for the newly programmed fob's details so you can order a spare later without guesswork."
     keywords: ["Omaha car key programming", "car key fob programming Omaha", "mobile locksmith Omaha", "car locksmith Omaha", "Aksarben Locksmiths"]
   },
@@ -136,7 +132,6 @@ export const BLOG_POSTS: BlogPost[] = [
     altText: "Locksmith cutting master keys for Gretna business access control system",
     body:
       "Master systems give managers higher level keys while employees carry limited access keys.\n\nThey reduce key duplication sprawl and improve accountability.\n\nWork with a locksmith to design a system that can grow with your business.",
-    keywords: ["Gretna master key systems", "commercial locksmith Gretna", "business access control Gretna", "master keys Gretna", "Aksarben Locksmiths"]
     keywords: ["Gretna master key systems", "commercial locksmith Gretna", "business access control Gretna", "master keys Gretna", "Aksarben Locksmiths"]
   },
 
@@ -153,7 +148,6 @@ export const BLOG_POSTS: BlogPost[] = [
     body:
       "Not every lock needs drilling.\n\nLicensed techs can often open doors without damage depending on the hardware.\n\nAsk questions, request your ETA during the call, and expect transparent pricing.",
     keywords: ["Omaha locksmith myths", "emergency locksmith facts Omaha", "locksmith misconceptions Omaha", "professional locksmith Omaha", "Aksarben Locksmiths"]
-    keywords: ["Omaha locksmith myths", "emergency locksmith facts Omaha", "locksmith misconceptions Omaha", "professional locksmith Omaha", "Aksarben Locksmiths"]
   },
   {
     slug: "transparent-locksmith-pricing-omaha",
@@ -166,7 +160,6 @@ export const BLOG_POSTS: BlogPost[] = [
     altText: "Happy Omaha customer receiving transparent pricing quote from professional locksmith",
     body:
       "Quotes consider distance, time, hardware, and complexity.\n\nClear pricing prevents surprises and builds long term relationships.\n\nAlways request a written estimate before work begins.",
-    keywords: ["Omaha locksmith pricing", "transparent locksmith costs Omaha", "locksmith quotes Omaha", "fair pricing locksmith Omaha", "Aksarben Locksmiths"]
     keywords: ["Omaha locksmith pricing", "transparent locksmith costs Omaha", "locksmith quotes Omaha", "fair pricing locksmith Omaha", "Aksarben Locksmiths"]
   },
   {
@@ -181,7 +174,6 @@ export const BLOG_POSTS: BlogPost[] = [
     body:
       "Mobile units bring tools to you which reduces towing and downtime.\n\nAvailability depends on current demand.\n\nShare your exact location and lock or vehicle details to speed things up.",
     keywords: ["Bellevue mobile locksmith", "mobile locksmith service Bellevue", "car locksmith Bellevue", "emergency locksmith Bellevue", "Aksarben Locksmiths"]
-    keywords: ["Bellevue mobile locksmith", "mobile locksmith service Bellevue", "car locksmith Bellevue", "emergency locksmith Bellevue", "Aksarben Locksmiths"]
   },
   {
     slug: "serving-omaha-for-over-a-decade",
@@ -194,7 +186,6 @@ export const BLOG_POSTS: BlogPost[] = [
     altText: "Aksarben Locksmiths providing house key duplication service in Omaha for over a decade",
     body:
       "From emergency unlocks to planned rekeys, our focus is dependable help and clear communication.\n\nWe invest in training, modern key machines, and customer first service.\n\nThank you Omaha and the surrounding cities for your trust.",
-    keywords: ["Omaha locksmith decade service", "established locksmith Omaha", "trusted locksmith Omaha", "local locksmith Omaha", "Aksarben Locksmiths"]
     keywords: ["Omaha locksmith decade service", "established locksmith Omaha", "trusted locksmith Omaha", "local locksmith Omaha", "Aksarben Locksmiths"]
   },
 ];
