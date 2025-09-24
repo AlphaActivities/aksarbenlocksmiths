@@ -118,9 +118,9 @@ export default function BlogPage() {
   const filtered = useMemo(
     () => {
       if (categoryParam) {
-        return BLOG_POSTS.filter((p) => p.category === categoryParam);
+        return BLOG_POSTS.filter((p) => p.category === categoryParam).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
       }
-      return BLOG_POSTS.filter((p) => p.category === activeCat);
+      return BLOG_POSTS.filter((p) => p.category === activeCat).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     },
     [activeCat, categoryParam]
   );
@@ -316,7 +316,7 @@ export default function BlogPage() {
                         <div className="aspect-[16/9] w-full bg-[#1a1030]">
                           <img
                             src={post.coverImage}
-                            alt={post.title}
+                            alt={post.altText || post.title}
                             loading="lazy"
                             decoding="async"
                             width={1280}

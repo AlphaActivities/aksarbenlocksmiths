@@ -93,10 +93,11 @@ export default function BlogCategoryPage() {
   const canonical = page > 1 ? `${baseCanonical}?page=${page}` : baseCanonical;
   
   const all = BLOG_POSTS.filter((p) => p.category === category);
+  const sorted = all.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   const total = all.length;
   const start = (page - 1) * PER_PAGE;
   const end = Math.min(start + PER_PAGE, total);
-  const paged = all.slice(start, end);
+  const paged = sorted.slice(start, end);
 
   // Breadcrumbs JSON-LD
   const breadcrumbsLd = {

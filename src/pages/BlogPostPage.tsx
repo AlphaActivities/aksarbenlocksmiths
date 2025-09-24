@@ -179,7 +179,7 @@ export default function BlogPostPage() {
       logo: { "@type": "ImageObject", url: logoAbs }
     },
     articleSection: categoryLabel,
-    keywords: [categoryLabel, post.city, "Omaha locksmith", "Aksarben Locksmiths"],
+    keywords: post.keywords && post.keywords.length > 0 ? post.keywords : [categoryLabel, post.city, "Aksarben Locksmiths"],
     description: post.excerpt,
     wordCount: wordCount,
   };
@@ -296,7 +296,7 @@ export default function BlogPostPage() {
                 <div className="aspect-[16/9] w-full bg-neutral-800 rounded-2xl overflow-hidden">
                   <img
                     src={post.coverImage}
-                    alt={post.title}
+                    alt={post.altText || post.title}
                     loading="eager"
                     decoding="async"
                     width={1280}
