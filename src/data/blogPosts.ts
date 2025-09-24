@@ -1,305 +1,188 @@
-/* src/data/blogPosts.ts
-   Aksarben Locksmiths — Blog data (typed)
-   Notes:
-   - All bodies are plain text with \n\n between paragraphs, no markdown headers
-   - Use commas in prose rather than dashes
-   - Each object ends with keywords and a closing brace
-*/
-
+// Blog data, categories, and types. Backdated across five years with a recent ramp.
 export type BlogCategory = "emergency" | "keys" | "residential" | "commercial";
 
 export interface BlogPost {
   slug: string;
   title: string;
-  date: string;        // ISO string, e.g. "2025-09-21T00:00:00Z"
   category: BlogCategory;
   city: string;
+  date: string; // ISO format, local business timezone America/Chicago
   excerpt: string;
-  coverImage: string;
-  altText: string;
-  body: string;        // paragraphs separated by \n\n
-  keywords: string[];
+  coverImage: string; // public path under /images/blog
+  altText: string; // Descriptive alt text for the blog's cover image
+  body: string; // plain text paragraphs separated by \n\n
+  keywords: string[]; // SEO keywords array for schema
 }
 
+export const BLOG_CATEGORIES: { slug: BlogCategory; label: string }[] = [
+  { slug: "emergency", label: "Emergency & Lockouts" },
+  { slug: "keys", label: "Keys and Duplication" },
+  { slug: "residential", label: "Residential Locksmith" },
+  { slug: "commercial", label: "Commercial Locksmith" },
+];
+
 export const BLOG_POSTS: BlogPost[] = [
+  // New post - Spare Car Key
   {
     slug: "why-papillion-drivers-need-a-spare-car-key",
     title: "Why Every Papillion Driver Should Have a Spare Car Key",
-    date: "2021-03-17T00:00:00Z",
     category: "keys",
     city: "Papillion",
-    excerpt:
-      "Papillion drivers can avoid lockouts, delays, and costly dealership visits by keeping a spare car key ready. Learn why a backup key saves time and money, and how Aksarben Locksmiths can help.",
+    date: "2021-03-17T00:00:00Z",
+    excerpt: "Spare keys save time and money. Learn when to duplicate and what to bring to a key appointment.",
     coverImage: "/images/blog/handing-new-key.webp",
-    altText: "Locksmith handing a new spare car key to a Papillion driver",
-    body:
-      "Getting locked out or losing your only car key can quickly turn into a major problem, and it never seems to happen at a convenient time. For Papillion drivers, having a spare car key on hand means faster solutions, lower costs, and less stress. A spare key helps you avoid emergency lockouts, expensive dealership replacements, and wasted time waiting for help.\n\n" +
-      "Avoiding emergency lockouts is the biggest benefit. With a spare, you can skip the emergency call, avoid towing, and get back on the road with help from a family member or trusted friend. If a fob is failing or a key blade is worn, a ready backup keeps your day moving.\n\n" +
-      "Saving money long term is another reason to plan ahead. Replacing one lost fob can be more expensive than cutting and coding a spare while you still have a working key. When at least one working key is available, programming a new spare is usually faster, simpler, and more affordable.\n\n" +
-      "Families often share vehicles, and a spare prevents schedule conflicts. You will not need to constantly trade keys, and everyone can keep their own copy with clearly labeled tags. If you frequently use remote start or proximity features, a second fob adds convenience while reducing wear on the original.\n\n" +
-      "When trouble strikes, a locksmith in the Papillion area can usually arrive quickly and program a new spare once the correct key option is confirmed. Typical arrival windows are about fifteen to thirty minutes depending on time of day and traffic. Cutting and coding are completed with diagnostic tools that confirm ownership, verify security, and pair the new key correctly.\n\n" +
-      "Store your spare in a safe place at home, never inside the vehicle. A coded lockbox, a safe, or a trusted person can keep it available without putting your car at risk. If your situation changes after a theft or a security concern, ask about clearing profiles or reprogramming so only your current keys will start the vehicle.\n\n" +
-      "If you do not have a backup yet, now is the best time to make one. Aksarben Locksmiths serves Papillion and the surrounding Omaha metro with mobile key cutting and programming, clear pricing, and friendly, professional service.",
-    keywords: [
-      "Papillion spare car key",
-      "Papillion locksmith",
-      "car key replacement Papillion",
-      "key fob programming Papillion",
-      "Aksarben Locksmiths"
-    ]
+    altText: "Locksmith handing new spare car key to Papillion driver",
+    body: "Getting locked out or losing your only car key can quickly turn into a major problem. For Papillion drivers, having a spare car key on hand means faster solutions, lower costs, and less stress. A spare key helps you avoid emergency lockouts, expensive dealership replacements, and wasted time waiting for help. Whether it's for your daily commute, family vehicle, or backup security, a spare key is one of the smartest ways Papillion drivers can stay prepared.\n\nAvoiding Emergency Lockouts\nWith a spare, you can skip the emergency call, tow, or overnight wait. Keep one at home or with a trusted family member for peace of mind.\n\nSaving Money Long Term\nProgramming or replacing one lost fob is often more expensive than cutting and coding a second spare while you still have a working key.\n\nConvenience for Families\nMultiple drivers for the same car? Spares prevent schedule conflicts and make sharing easier without constantly trading keys.\n\nFaster Service When Trouble Strikes\nLocksmiths in Omaha can program new spares much quicker if at least one working key is available. Without it, the process may require dealer codes or longer wait times.\n\nTips for Storing Your Spare Safely\nNever hide your spare inside the vehicle. Instead, keep it in a safe place at home, give one to a spouse, or use a coded lockbox for quick retrieval.\n\nFAQ Block:\nDo I need proof of ownership for a spare key? Yes, locksmiths and dealers require ID and registration or title.\nCan aftermarket keys work? Many do, but compatibility depends on your make and model. Ask before ordering.\nShould I program more than one spare? If you can, yes, it's cheaper to do multiple at once.\nHow long does it take? With the right equipment and a working key, usually less than 30 minutes.\nDo locksmiths erase old fobs? Only if requested for security reasons, such as after a theft.\n\nClosing CTA:\nDon't wait until you're stranded. Call Aksarben Locksmiths today to cut and program your spare key, so you're always prepared.",
+How long does it take? With the right equipment and a working key, typically within 15–30 minutes.\nDo locksmiths erase old fobs? Only if requested for security reasons, such as after a theft.\n\nClosing CTA:\nDon't wait until you\'re stranded. Call Aksarben Locksmiths today to cut and program your spare key, so you're always prepared.",
+    keywords: ["Papillion spare car key", "Papillion locksmith", "car key replacement Papillion", "emergency locksmith Papillion", "Aksarben Locksmiths"]
   },
 
+  // Year 1, five years ago
   {
     slug: "what-to-do-if-youre-locked-out-in-omaha",
     title: "What To Do If You Are Locked Out In Omaha",
-    date: "2020-02-15T00:00:00Z",
     category: "emergency",
     city: "Omaha",
-    excerpt:
-      "Locked out of your car, home, or business in Omaha? Learn what to do first, who to call, and how Aksarben Locksmiths provides fast, affordable emergency lockout service.",
+    date: "2020-02-15T00:00:00Z",
+    excerpt: "Locked out of your car or home in Omaha? Learn step-by-step what to do, who to call, and how Aksarben Locksmiths provides fast, affordable emergency lockout service.",
     coverImage: "/images/blog/car-lockout.webp",
-    altText: "Omaha locksmith assisting a driver during an emergency car lockout",
-    body:
-      "Getting locked out in Omaha can happen to anyone, whether it is your vehicle, your home, or your business. Knowing what to do immediately will save time, money, and stress. Start by taking a breath and looking around safely.\n\n" +
-      "Stay calm and assess the situation. Double check doors and windows before assuming you are fully locked out. For vehicles, try each door, the trunk, and the hatch. For homes, confirm that another family member is not already on the way with a key.\n\n" +
-      "Know your options in the Omaha metro. Car lockouts are solved with specialized tools that protect weatherstripping and door mechanisms. Home lockouts rely on non destructive entry techniques so frames and hardware are not damaged. Business lockouts may involve commercial cylinders and access control, which require additional experience and decoding tools.\n\n" +
-      "Avoid costly mistakes. Breaking a window or forcing a door leads to repairs that cost far more than a professional lockout service. Call a licensed locksmith who can reach you quickly and unlock your door safely.\n\n" +
-      "How emergency service works in Omaha is straightforward. A dispatcher confirms your location, vehicle or door type, and a safe meetup spot if needed. A technician typically arrives within fifteen to thirty minutes depending on traffic and time of day, then uses the correct tools to unlock the door with care.\n\n" +
-      "Prevent future lockouts by making a spare key, keeping a copy with a trusted person, and considering keyless entry options for vehicles and homes. Small changes now will save a lot of frustration later.\n\n" +
-      "Frequently asked questions include timing, damage, and cost. Arrival windows are usually fifteen to thirty minutes in the Omaha area. Modern entry tools protect your car, door, and lock hardware. Pricing depends on the lock type, location, and time, but a proper unlock is less costly than repairing a broken door or window.\n\n" +
-      "Do not stay stranded longer than you need to. Aksarben Locksmiths has helped Omaha residents, drivers, and businesses for over a decade with prompt, respectful service and clear communication.",
-    keywords: [
-      "Omaha lockout service",
-      "emergency locksmith Omaha",
-      "car lockout Omaha",
-      "home lockout Omaha",
-      "Aksarben Locksmiths"
-    ]
+    altText: "Omaha locksmith helping driver during emergency car lockout",
+    body: "Getting locked out in Omaha can happen to anyone, whether it's your car, your home, or your business. Knowing what to do immediately can save you time, money, and stress.\n\nStay Calm and Assess the Situation\nPanic is natural, but staying calm helps you think clearly. Double-check all doors and windows before assuming you're fully locked out. For vehicles, check every door including the trunk.\n\nKnow Your Options in Omaha\nCar lockouts: Professional locksmiths can unlock your car without damaging the vehicle.\nHome lockouts: Locksmiths use tools to gain entry without breaking locks or frames.\nBusiness lockouts: Commercial locks often require specialized picks and decoding tools.\n\nAvoid Costly Mistakes\nAvoid breaking windows or forcing doors, these repairs cost far more than a locksmith call. Calling Aksarben Locksmiths ensures fast, affordable help across Omaha.\n\nHow Emergency Locksmiths Work in Omaha\nA licensed locksmith can usually arrive within 20–30 minutes. Using professional-grade tools, they can unlock most vehicles and residential locks within minutes, without damage.\n\nPrevent Future Lockouts\nMake a spare key today.\nStore a backup with a trusted friend or family member.\nAsk about keyless entry or smart lock upgrades for long-term solutions.\n\nFAQ: Emergency Lockouts in Omaha\nHow fast can a locksmith get here? Typically within 20–30 minutes in the Omaha metro.\nWill my car or door be damaged? No. Aksarben Locksmiths use non-destructive tools.\nCan locksmiths help at night? Yes. 24/7 emergency service is available.\nHow much does it cost? Pricing depends on lock type and time, but emergency lockout service is far cheaper than repairing broken windows or doors.\n\nCall Aksarben Locksmiths Now\nDon't waste time stranded outside. Aksarben Locksmiths has served Omaha drivers, residents, and businesses for over a decade. Call now for 24/7 emergency lockout service and get back inside safely and quickly.",
+A licensed locksmith can usually arrive within 15–30 minutes. Using professional-grade tools, they can unlock most vehicles and residential locks within minutes, without damage.\n\nPrevent Future Lockouts\nMake a spare key today.\nStore a backup with a trusted friend or family member.\nAsk about keyless entry or smart lock upgrades for long-term solutions.\n\nFAQ: Emergency Lockouts in Omaha\nHow fast can a locksmith get here? Typically within 15–30 minutes in the Omaha metro.\nWill my car or door be damaged? No. Aksarben Locksmiths use non-destructive tools.\nCan locksmiths help at night? Yes. 24/7 emergency service is available.\nHow much does it cost? Pricing depends on lock type and time, but emergency lockout service is far cheaper than repairing broken windows or doors.\n\nCall Aksarben Locksmiths Now\nDon't waste time stranded outside. Aksarben Locksmiths has served Omaha drivers, residents, and businesses for over a decade. Call now for 24/7 emergency lockout service and get back inside safely and quickly.",
+    body: "Getting locked out in Omaha can happen to anyone, whether it's your car, your home, or your business. Knowing what to do immediately can save you time, money, and stress.\n\nStay Calm and Assess the Situation\nPanic is natural, but staying calm helps you think clearly. Double-check all doors and windows before assuming you're fully locked out. For vehicles, check every door including the trunk.\n\nKnow Your Options in Omaha\nCar lockouts: Professional locksmiths can unlock your car without damaging the vehicle.\nHome lockouts: Locksmiths use tools to gain entry without breaking locks or frames.\nBusiness lockouts: Commercial locks often require specialized picks and decoding tools.\n\nAvoid Costly Mistakes\nAvoid breaking windows or forcing doors, these repairs cost far more than a locksmith call. Calling Aksarben Locksmiths ensures fast, affordable help across Omaha.\n\nHow Emergency Locksmiths Work in Omaha\nA licensed locksmith can usually arrive within 15–30 minutes. Using professional-grade tools, they can unlock most vehicles and residential locks within minutes, without damage.\n\nPrevent Future Lockouts\nMake a spare key today.\nStore a backup with a trusted friend or family member.\nAsk about keyless entry or smart lock upgrades for long-term solutions.\n\nFAQ: Emergency Lockouts in Omaha\nHow fast can a locksmith get here? Typically within 15–30 minutes in the Omaha metro.\nWill my car or door be damaged? No. Aksarben Locksmiths use non-destructive tools.\nCan locksmiths help at night? Yes. 24/7 emergency service is available.\nHow much does it cost? Pricing depends on lock type and time, but emergency lockout service is far cheaper than repairing broken windows or doors.\n\nCall Aksarben Locksmiths Now\nDon't waste time stranded outside. Aksarben Locksmiths has served Omaha drivers, residents, and businesses for over a decade. Call now for 24/7 emergency lockout service and get back inside safely and quickly.",
+    keywords: ["Omaha lockout service", "emergency locksmith Omaha", "car lockout Omaha", "home lockout Omaha", "Aksarben Locksmiths"]
   },
-
   {
     slug: "5-tips-to-keep-your-bellevue-home-secure",
     title: "Five Tips To Keep Your Bellevue Home Secure",
-    date: "2020-10-05T00:00:00Z",
     category: "residential",
     city: "Bellevue",
-    excerpt:
-      "Five proven ways Bellevue homeowners can improve security, from reinforced doors and strike plates to smart locks and timely rekeying. Protect your family with expert tips from Aksarben Locksmiths.",
+    date: "2020-10-05T00:00:00Z",
+    excerpt: "Discover five proven ways Bellevue homeowners can keep their homes secure. From reinforced doors and strike plates to smart locks and rekeying, Aksarben Locksmiths shares expert strategies to prevent break-ins and keep your family safe.",
     coverImage: "/images/blog/house-lock.webp",
-    altText: "Residential locksmith reinforcing a front door lock at a Bellevue home",
-    body:
-      "Home security in Bellevue starts with simple steps that make a big difference. A thoughtful plan, dependable hardware, and good habits will deter intruders, reduce risk, and give you peace of mind.\n\n" +
-      "Reinforce doors and frames first, because exterior doors are a primary entry point. Use a quality deadbolt with a one inch throw, upgrade the strike plate to a heavy duty model, and secure it with long screws that anchor into the wall stud. A solid core or metal door adds strength, and hinge screws that bite into framing keep the door aligned under stress.\n\n" +
-      "Rekey after moving or after a key goes missing. Rekeying keeps your existing hardware while changing the pins inside the cylinder so old keys no longer work. It is faster and more affordable than full replacement, and it lets you put all door keys on a single keyway so your set is easier to manage.\n\n" +
-      "Consider smart locks and keyless entry for convenience and control. A keypad or smart deadbolt lets you create temporary codes for guests or deliveries, and you can change codes any time without cutting new keys. Many families enjoy app based features, audit trails, and notifications that confirm doors were locked at night.\n\n" +
-      "Do not forget windows and garage entries. Add quality window locks, use auxiliary pins for sliding windows, and make sure the overhead door is balanced and closes fully. An interior deadbolt on the door between the garage and the house adds another layer of protection.\n\n" +
-      "Use lighting, cameras, and simple deterrents. Motion lighting reduces hiding places, visible cameras encourage good behavior, and trimmed landscaping helps neighbors keep an eye out. A clearly visible house number helps responders find you quickly when you call for help.\n\n" +
-      "Save money with smart choices. Long screws cost very little, rekeying preserves good hardware, and annual checkups catch small issues before they cause problems. If a lock is sticking, address it early rather than forcing the key and damaging the cylinder.\n\n" +
-      "Common questions include whether to rekey or replace, what a typical rekey costs, and whether smart locks are reliable. In many cases a rekey is the best first step, typical costs are reasonable compared to hardware replacement, and modern smart locks from trusted brands are dependable when installed correctly.\n\n" +
-      "When you are ready to improve security, Aksarben Locksmiths provides residential service throughout Bellevue and the Omaha metro with clear options, friendly technicians, and reliable results.",
-    keywords: [
-      "Bellevue home security",
-      "Bellevue locksmith",
-      "residential locksmith Bellevue",
-      "rekey locks Bellevue",
-      "smart locks Bellevue",
-      "Aksarben Locksmiths"
-    ]
+    altText: "Bellevue locksmith reinforcing front door for better home security",
+    body: "Home security in Bellevue starts with understanding your vulnerabilities and taking proactive steps to address them. Whether you're a new homeowner or have lived in your house for years, these five proven strategies will help protect your family and property from break-ins and unauthorized entry.\n\nTip 1, Reinforce Doors and Frames\nYour front door is your first line of defense, but many Bellevue homes have weak points that burglars can exploit. Start with quality deadbolts that extend at least one inch into the door frame. Upgrade your strike plates to heavy-duty versions with 3-inch screws that anchor deep into the wall studs, not just the door frame. Check that your door itself is solid wood or metal, hollow core doors offer little resistance to forced entry. For sliding doors, add a security bar or pin lock to prevent lifting and sliding.\n\nTip 2, Rekey After Moving or Key Loss\nWhen you move into a new Bellevue home, you never know who might have copies of your keys. Previous owners, contractors, real estate agents, or maintenance workers could still have access. Rekeying changes the internal pins so old keys no longer work, while keeping your existing hardware. This costs much less than replacing all your locks and can usually be done the same day. Also rekey immediately if you lose keys or after a break-in attempt.\n\nTip 3, Smart Locks and Keyless Entry\nSmart locks offer convenience and security benefits for Bellevue families. You can grant temporary access to service providers, monitor who enters and when, and never worry about lost keys again. Look for models with backup key access in case of battery failure or technical issues. Many smart locks integrate with home security systems and can send alerts to your phone when doors are opened. Choose reputable brands with strong encryption and regular security updates.\n\nTip 4, Windows and Garage Entry Points\nBurglars often target easier entry points when front doors are well secured. Check all ground floor windows for secure locks and consider adding window security film or bars for high-risk areas. Your garage door is another common weak point, ensure the door from your garage into your house has the same security as your front door. Install motion sensor lights around all entry points and keep bushes trimmed so they can't provide hiding spots.\n\nTip 5, Neighborhood Awareness\nVisible security measures deter opportunistic burglars who prefer easy targets. Install outdoor lighting with motion sensors around all entry points and dark corners of your property. Security cameras, even basic models, make your home less attractive to criminals. Get to know your neighbors and establish a informal watch system where you look out for each other's properties. Post security system signs and stickers even if you don't have a full system, the deterrent effect still works.\n\nCost-Saving Security Improvements\nYou don't need to spend thousands to improve your Bellevue home's security. Simple upgrades like longer screws in strike plates cost under $10 but significantly increase door strength. Rekeying existing locks costs much less than replacement and provides the same security benefit. Door reinforcement kits, motion sensor lights, and window locks are all affordable improvements that make a real difference.\n\nCommon Security Mistakes Bellevue Homeowners Make\nMany homeowners unknowingly create security vulnerabilities. Never hide spare keys under doormats, fake rocks, or planters, these are the first places burglars check. Don't leave garage door openers in unlocked cars, this gives criminals easy access to your home. Avoid posting vacation photos on social media until after you return, advertising an empty house invites trouble. Keep valuable items away from windows where they're visible from the street.\n\nFrequently Asked Questions\nShould I rekey or replace locks after moving? Rekeying is usually the better choice for new homeowners. It's faster, cheaper, and provides the same security benefit as replacement. Only replace locks if they're damaged, outdated, or you want to upgrade to smart locks.\n\nHow much does a Bellevue locksmith cost for rekeying? Rekeying typically costs $20 to $50 per lock, much less than replacement. Most locksmiths offer discounts for multiple locks done at the same time. The investment pays for itself in peace of mind and security.\n\nAre smart locks worth it for home security? Smart locks offer convenience and monitoring features that traditional locks can't match. They're especially valuable for families with children, frequent guests, or service providers who need access. Choose models with strong encryption and backup key access for the best security.\n\nProtect Your Bellevue Home Today\nProtect your Bellevue home today with Aksarben Locksmiths. Our residential locksmiths provide fast, affordable solutions so you can feel safe and secure.",
+    body: "Home security in Bellevue starts with understanding your vulnerabilities and taking proactive steps to address them. Whether you're a new homeowner or have lived in your house for years, these five proven strategies will help protect your family and property from break-ins and unauthorized entry.\n\nTip 1, Reinforce Doors and Frames\nYour front door is your first line of defense, but many Bellevue homes have weak points that burglars can exploit. Start with quality deadbolts that extend at least one inch into the door frame. Upgrade your strike plates to heavy-duty versions with 3-inch screws that anchor deep into the wall studs, not just the door frame. Check that your door itself is solid wood or metal, hollow core doors offer little resistance to forced entry. For sliding doors, add a security bar or pin lock to prevent lifting and sliding.\n\nTip 2, Rekey After Moving or Key Loss\nWhen you move into a new Bellevue home, you never know who might have copies of your keys. Previous owners, contractors, real estate agents, or maintenance workers could still have access. Rekeying changes the internal pins so old keys no longer work, while keeping your existing hardware. This costs much less than replacing all your locks and can usually be done the same day. Also rekey immediately if you lose keys or after a break-in attempt.\n\nTip 3, Smart Locks and Keyless Entry\nSmart locks offer convenience and security benefits for Bellevue families. You can grant temporary access to service providers, monitor who enters and when, and never worry about lost keys again. Look for models with backup key access in case of battery failure or technical issues. Many smart locks integrate with home security systems and can send alerts to your phone when doors are opened. Choose reputable brands with strong encryption and regular security updates.\n\nTip 4, Windows and Garage Entry Points\nBurglars often target easier entry points when front doors are well secured. Check all ground floor windows for secure locks and consider adding window security film or bars for high-risk areas. Your garage door is another common weak point, ensure the door from your garage into your house has the same security as your front door. Install motion sensor lights around all entry points and keep bushes trimmed so they can't provide hiding spots.\n\nTip 5, Neighborhood Awareness\nVisible security measures deter opportunistic burglars who prefer easy targets. Install outdoor lighting with motion sensors around all entry points and dark corners of your property. Security cameras, even basic models, make your home less attractive to criminals. Get to know your neighbors and establish a informal watch system where you look out for each other's properties. Post security system signs and stickers even if you don't have a full system, the deterrent effect still works.\n\nCost-Saving Security Improvements\nYou don't need to spend thousands to improve your Bellevue home's security. Simple upgrades like longer screws in strike plates cost under $10 but significantly increase door strength. Rekeying existing locks costs much less than replacement and provides the same security benefit. Door reinforcement kits, motion sensor lights, and window locks are all affordable improvements that make a real difference.\n\nCommon Security Mistakes Bellevue Homeowners Make\nMany homeowners unknowingly create security vulnerabilities. Never hide spare keys under doormats, fake rocks, or planters, these are the first places burglars check. Don't leave garage door openers in unlocked cars, this gives criminals easy access to your home. Avoid posting vacation photos on social media until after you return, advertising an empty house invites trouble. Keep valuable items away from windows where they're visible from the street.\n\nFrequently Asked Questions\nShould I rekey or replace locks after moving? Rekeying is usually the better choice for new homeowners. It's faster, cheaper, and provides the same security benefit as replacement. Only replace locks if they're damaged, outdated, or you want to upgrade to smart locks.\n\nHow much does a Bellevue locksmith cost for rekeying? Rekeying typically costs $20 to $50 per lock, much less than replacement. Most locksmiths offer discounts for multiple locks done at the same time. The investment pays for itself in peace of mind and security.\n\nAre smart locks worth it for home security? Smart locks offer convenience and monitoring features that traditional locks can't match. They're especially valuable for families with children, frequent guests, or service providers who need access. Choose models with strong encryption and backup key access for the best security.\n\nProtect Your Bellevue Home Today\nProtect your Bellevue home today with Aksarben Locksmiths. Our residential locksmiths provide fast, affordable solutions so you can feel safe and secure.",
+    keywords: ["Bellevue home security", "Bellevue locksmith", "residential locksmith Bellevue", "rekey locks Bellevue", "smart locks Bellevue", "Aksarben Locksmiths"]
   },
 
+  // Year 2, four years ago
   {
     slug: "common-lock-problems-la-vista-businesses-face",
     title: "Common Lock Problems La Vista Businesses Face",
-    date: "2021-11-10T00:00:00Z",
     category: "commercial",
     city: "La Vista",
-    excerpt:
-      "From worn cylinders to door alignment issues, learn the most common lock problems La Vista businesses face and how a commercial locksmith can keep your storefront secure.",
+    date: "2021-11-10T00:00:00Z",
+    excerpt: "Door closer issues, worn cylinders, and key control gaps can cost time and security for local shops.",
     coverImage: "/images/blog/office-rekey.webp",
-    altText: "Commercial door lock being serviced at a La Vista business",
-    body:
-      "Busy storefronts and offices in La Vista see constant use, and that wear shows up in the locks and door hardware. When a key becomes hard to turn or a latch no longer lines up, daily operations slow down and security suffers.\n\n" +
-      "The most common issues include worn cylinders, bent or duplicated keys of unknown origin, and doors that have shifted out of alignment. Weather, heavy traffic, and past repairs all contribute. A professional can rekey cylinders, code keys correctly, and realign frames and strikes so latching is smooth.\n\n" +
-      "If a key control policy is not in place, consider it. Master key systems, restricted keyways, and clear sign out procedures reduce loss and confusion. When staff changes occur, a quick rekey restores confidence without replacing good hardware.\n\n" +
-      "Door closers, panic bars, and hinges should be inspected regularly. A small adjustment or lubrication service prevents damage and extends hardware life. When parts do need replacement, modern options improve safety and compliance while keeping the look of your entry consistent.\n\n" +
-      "Aksarben Locksmiths supports La Vista businesses with scheduled service and fast response when doors do not open or close correctly. Clear communication and clean workmanship keep downtime minimal.",
-    keywords: [
-      "La Vista commercial locksmith",
-      "storefront lock repair La Vista",
-      "business rekey La Vista",
-      "master key system La Vista",
-      "Aksarben Locksmiths"
-    ]
+    altText: "Commercial locksmith rekeying office locks in La Vista business",
+    body: "Busy doors wear faster.\n\nPlan maintenance for door closers, panic hardware, and cylinders.\n\nAdopt master key systems to control access and simplify keyed entries.\n\nSchedule after hours service to reduce downtime.",
+    keywords: ["La Vista commercial locksmith", "business locks La Vista", "commercial door repair La Vista", "master key systems La Vista", "Aksarben Locksmiths"]
   },
 
+  // Year 3, three years ago
   {
     slug: "avoid-late-night-lockouts-in-council-bluffs",
     title: "How To Avoid Late Night Lockouts In Council Bluffs",
-    date: "2022-04-07T00:00:00Z",
     category: "emergency",
     city: "Council Bluffs",
-    excerpt:
-      "Late night lockouts are stressful. Learn practical steps Council Bluffs drivers and residents can take to prevent lockouts and prepare a backup plan.",
+    date: "2022-04-07T00:00:00Z",
+    excerpt: "A few easy habits to reduce after hours emergencies and keep your evening on track.",
     coverImage: "/images/blog/locksmith-van.webp",
-    altText: "Locksmith service van parked during a late night call in Council Bluffs",
-    body:
-      "Lockouts after dark are frustrating, and they can also feel less safe. A simple plan reduces risk and shortens delays when something goes wrong.\n\n" +
-      "Carry a spare key or fob and keep a copy in a safe place at home. If you prefer not to carry it daily, leave it with a trusted person who can meet you quickly. Many drivers choose a small coded lockbox at home for quick access.\n\n" +
-      "Build good habits. Before you step out of the car, touch your keys, confirm the fob is in your pocket or bag, and check that the lights are off. At home, confirm keys are on a hook near the door rather than left in the lock.\n\n" +
-      "If a lockout happens, move to a safe, well lit area and call a licensed locksmith. Typical arrival windows are fifteen to thirty minutes in the metro, and the unlock is handled with non destructive tools that protect your doors and hardware.\n\n" +
-      "Aksarben Locksmiths helps Council Bluffs residents and drivers with friendly, dependable service whenever you need it.",
-    keywords: [
-      "Council Bluffs lockout",
-      "emergency locksmith Council Bluffs",
-      "car lockout Council Bluffs",
-      "home lockout Council Bluffs",
-      "Aksarben Locksmiths"
-    ]
+    altText: "Emergency locksmith van responding to late night call in Council Bluffs",
+    body: "Create a key routine and a spare plan.\n\nStore a spare with a trusted person or in a secure lock box.\n\nConsider smart deadbolts for family access.\n\nIf you do get locked out, request your ETA during the call.\n\nArrival times vary based on demand, distance, and traffic.",
+    keywords: ["Council Bluffs emergency locksmith", "late night lockout Council Bluffs", "24 hour locksmith Council Bluffs", "lockout prevention Council Bluffs", "Aksarben Locksmiths"]
   },
-
   {
     slug: "rekey-vs-replace-omaha",
     title: "Rekey Versus Replace, Omaha Homeowner Guide",
-    date: "2022-09-22T00:00:00Z",
     category: "residential",
     city: "Omaha",
-    excerpt:
-      "Not sure whether to rekey or replace your locks in Omaha? Learn when each option makes sense, how costs compare, and what improves home security.",
+    date: "2022-09-22T00:00:00Z",
+    excerpt: "When is it smarter to rekey instead of replacing the whole lock. Cost, security, and timelines explained.",
     coverImage: "/images/blog/keys-desk.webp",
-    altText: "House keys and lock hardware laid out for a rekey service in Omaha",
-    body:
-      "When you move into a new home in Omaha or lose track of a key, security questions come up fast. Rekeying changes the working key for your existing locks, while replacement swaps hardware entirely. The right choice depends on condition, features, and your budget.\n\n" +
-      "Rekeying is fast and affordable. A technician changes the pins inside the cylinder so old keys no longer work, then provides a new matched set. It is ideal when hardware is in good condition and you simply need control of access.\n\n" +
-      "Replacement makes sense when locks are worn, mismatched, or when you want upgraded features such as smart access or higher security grades. If a finish is peeling or the latch is sticking, a new set will improve looks and function.\n\n" +
-      "Many homeowners choose a hybrid approach, rekeying most doors while replacing one or two problem points. Your locksmith can standardize keyways so one key works across the home, which simplifies daily life.\n\n" +
-      "Discuss goals, timelines, and budget, then choose the right mix. Aksarben Locksmiths will explain options clearly and complete the work cleanly.",
-    keywords: [
-      "rekey locks Omaha",
-      "lock replacement Omaha",
-      "residential locksmith Omaha",
-      "smart locks Omaha",
-      "Aksarben Locksmiths"
-    ]
+    altText: "House keys on desk showing rekey versus replace options for Omaha homeowners",
+    body: "Rekey keeps your existing hardware and changes which keys operate it.\n\nReplace when hardware is damaged or outdated.\n\nAfter a move or lost keys, rekey is usually the quickest path to restore control.",
+    keywords: ["Omaha rekey locks", "rekey vs replace Omaha", "residential locksmith Omaha", "lock rekeying Omaha", "Aksarben Locksmiths"]
   },
 
+  // Year 4, two years ago
+  {
+    slug: "car-key-programming-omaha-guide",
+    title: "Car Key Programming, Omaha Driver Guide",
+    category: "keys",
+    city: "Omaha",
+    date: "2023-02-12T00:00:00Z",
+    excerpt: "What programming involves, which models can be done mobile, and what information you should have ready.",
+    coverImage: "/images/blog/car-key-programming.webp",
+    altText: "Mobile locksmith programming car key fob for Omaha driver",
+    body: "If your key fob stops working in Omaha, you usually need programming, pairing, or a fresh fob coded to your vehicle. This quick guide shows what to bring and how a professional locksmith gets you moving again.\n\nWhat to bring to your appointment:\nPhoto ID and proof you own or are authorized to use the vehicle\nYour vehicle make, model, year, and VIN (visible through the windshield)\nAny existing keys or fobs, even if they only partly work\nIf possible, the exact key blade or remote part number\n\nHow key fob programming works:\nA mobile locksmith connects a diagnostic tool to your vehicle, verifies ownership, and places the car in programming mode. The new fob is then coded to your vehicle's immobilizer or remote system. Most sessions take only a few minutes once we have the correct fob and security access.\n\nOEM vs aftermarket fobs:\nBoth can work, but compatibility matters. A quality aftermarket unit can be a good choice when the original is unavailable. Your locksmith can advise which options are reliable for your specific make and model.\n\nCommon issues we solve every week:\nLost or stolen fobs that require erasing old profiles for security\nSpare fob additions for families sharing the same car\nRemote start and proximity (push-to-start) pairing\nBattery, range, or intermittent signal problems\n\nSecurity and verification:\nLicensed locksmiths will confirm ownership before programming and may erase missing fobs so they can no longer start your vehicle. This protects you if a lost fob turns up later.\n\nWhen to call a pro vs the dealer:\nDealers are great for warranty work. For out-of-warranty or urgent situations, a mobile locksmith can come to you in Omaha and nearby cities, saving the tow and the wait.\n\nNext step, get help now:\nIf you need a working fob today, a mobile technician can come to your location, verify ownership, and program a new unit so you can get back on the road.\n\nPro tip:\nAsk for the newly programmed fob's details so you can order a spare later without guesswork.",
+    keywords: ["Omaha car key programming", "car key fob programming Omaha", "mobile locksmith Omaha", "car locksmith Omaha", "Aksarben Locksmiths"]
+  },
   {
     slug: "master-key-systems-for-gretna-shops",
     title: "Master Key Systems For Gretna Shops",
-    date: "2023-08-30T00:00:00Z",
     category: "commercial",
     city: "Gretna",
-    excerpt:
-      "Control access without a pocket full of keys. Learn how master key systems help Gretna shops assign the right access to the right people.",
+    date: "2023-08-30T00:00:00Z",
+    excerpt: "Improve access control while keeping daily operations simple. A quick overview for small teams.",
     coverImage: "/images/blog/key-cutting.webp",
-    altText: "Key cutting machine preparing a set of master keys for a Gretna shop",
-    body:
-      "A master key system organizes access so staff have the keys they need and nothing more. Gretna retailers and service businesses use this approach to simplify operations and tighten control.\n\n" +
-      "Planning begins with a basic key chart that maps which doors each role can open. From there, cylinders are keyed to levels that create logical groups. Managers may carry a master, supervisors a sub master, and team members a single change key.\n\n" +
-      "Key control improves when restricted keyways are used, because blanks are not available at big box stores and duplication is limited to authorized providers. This reduces risk and provides an audit trail for copies you request.\n\n" +
-      "When your layout changes, a locksmith can rekey cylinders to match the new chart without replacing good hardware. That keeps costs down and minimizes downtime.\n\n" +
-      "Aksarben Locksmiths designs, installs, and maintains master key systems for Gretna businesses, providing documentation and clear labeling so your team always knows what to carry.",
-    keywords: [
-      "master key system Gretna",
-      "commercial locksmith Gretna",
-      "restricted keyway Gretna",
-      "business rekey Gretna",
-      "Aksarben Locksmiths"
-    ]
+    altText: "Locksmith cutting master keys for Gretna business access control system",
+    body: "Master systems give managers higher level keys while employees carry limited access keys.\n\nThey reduce key duplication sprawl and improve accountability.\n\nWork with a locksmith to design a system that can grow with your business.",
+    keywords: ["Gretna master key systems", "commercial locksmith Gretna", "business access control Gretna", "master keys Gretna", "Aksarben Locksmiths"]
   },
 
+  // Year 5, recent ramp
   {
     slug: "top-5-emergency-locksmith-myths-omaha",
     title: "Top Five Emergency Locksmith Myths In Omaha",
-    date: "2024-11-15T00:00:00Z",
     category: "emergency",
     city: "Omaha",
-    excerpt:
-      "From damage fears to pricing rumors, we debunk the most common emergency locksmith myths in Omaha so you know what to expect when you need help fast.",
+    date: "2024-11-15T00:00:00Z",
+    excerpt: "Separating fact from fiction so you know what to expect when you call for help.",
     coverImage: "/images/blog/locksmith-tools.webp",
-    altText: "Emergency locksmith tools neatly organized for a call in Omaha",
-    body:
-      "When you need help right away, misinformation adds stress. Let us clear up five common myths we hear in Omaha so you can call with confidence.\n\n" +
-      "Myth one says every unlock damages the door or vehicle. In reality, professional tools and training protect your hardware, and damage is rare. Myth two claims arrival always takes hours, however typical arrival windows are about fifteen to thirty minutes depending on traffic and time.\n\n" +
-      "Myth three is that dealership service is the only way to solve key problems. Mobile locksmiths cut and program many keys and fobs on site, which saves towing and time. Myth four is that pricing is unpredictable, yet clear quotes and itemized invoices are standard practice when you work with a reputable company.\n\n" +
-      "Myth five suggests locksmiths cannot help outside normal business hours. Emergency service covers nights and weekends so you can get back inside safely.\n\n" +
-      "If you have questions about a specific situation, just ask. Aksarben Locksmiths provides straight answers and dependable service throughout the Omaha metro.",
-    keywords: [
-      "emergency locksmith Omaha",
-      "locksmith myths Omaha",
-      "car lockout Omaha",
-      "key programming Omaha",
-      "Aksarben Locksmiths"
-    ]
+    altText: "Professional locksmith tools dispelling common myths about emergency locksmith services in Omaha",
+    body: "Not every lock needs drilling.\n\nLicensed techs can often open doors without damage depending on the hardware.\n\nAsk questions, request your ETA during the call, and expect transparent pricing.",
+    keywords: ["Omaha locksmith myths", "emergency locksmith facts Omaha", "locksmith misconceptions Omaha", "professional locksmith Omaha", "Aksarben Locksmiths"]
   },
-
   {
     slug: "transparent-locksmith-pricing-omaha",
     title: "Transparent Locksmith Pricing In Omaha",
-    date: "2025-03-20T00:00:00Z",
     category: "residential",
     city: "Omaha",
-    excerpt:
-      "Understand how locksmith pricing works in Omaha. Learn what affects cost, what a clear quote looks like, and how Aksarben Locksmiths keeps billing simple.",
+    date: "2025-03-20T00:00:00Z",
+    excerpt: "What drives pricing, how quotes work, and why transparency matters for trust.",
     coverImage: "/images/blog/happy-customer.webp",
-    altText: "Smiling Omaha customer after a clearly explained locksmith service",
-    body:
-      "Clear pricing helps you make good decisions quickly. In Omaha, most locksmith jobs are priced by service type, complexity, parts required, travel distance, and time of day. A transparent quote explains what is included and what happens if the scope changes.\n\n" +
-      "Before work begins, your technician will confirm the goal and the steps required. If parts are needed, you will see the options and the warranty details. For emergency work, arrival windows are communicated up front and typical ranges are fifteen to thirty minutes depending on traffic.\n\n" +
-      "Invoices should show labor, parts, and any taxes or fees. When everything is clear, there are no surprises and you feel confident calling us again.\n\n" +
-      "Aksarben Locksmiths believes straightforward communication builds trust. If you ever have a question about pricing, ask and we will walk through it with you.",
-    keywords: [
-      "locksmith pricing Omaha",
-      "affordable locksmith Omaha",
-      "residential locksmith Omaha",
-      "transparent locksmith Omaha",
-      "Aksarben Locksmiths"
-    ]
+    altText: "Happy Omaha customer receiving transparent pricing quote from professional locksmith",
+    body: "Quotes consider distance, time, hardware, and complexity.\n\nClear pricing prevents surprises and builds long term relationships.\n\nAlways request a written estimate before work begins.",
+    keywords: ["Omaha locksmith pricing", "transparent locksmith costs Omaha", "locksmith quotes Omaha", "fair pricing locksmith Omaha", "Aksarben Locksmiths"]
   },
-
   {
     slug: "mobile-locksmith-bellevue-time-saver",
     title: "Mobile Locksmith In Bellevue, A Real Time Saver",
-    date: "2025-06-05T00:00:00Z",
     category: "emergency",
     city: "Bellevue",
-    excerpt:
-      "Mobile locksmith service comes to you in Bellevue, saving time and hassle. Learn what we can do on site, from unlocks and rekeys to new keys and fobs.",
+    date: "2025-06-05T00:00:00Z",
+    excerpt: "When mobile service makes sense and how to plan your appointment.",
     coverImage: "/images/blog/car-ignition.webp",
-    altText: "Mobile locksmith working at a Bellevue driveway ignition service",
-    body:
-      "With mobile service, the shop comes to you. That convenience matters when you are locked out, when a key breaks, or when a schedule is packed. In Bellevue, our vans carry the tools and key stock to solve most problems on site.\n\n" +
-      "Typical requests include vehicle unlocks, home and business rekeys, and cutting new keys from code or from worn examples. Many fobs can be programmed at the curb after we confirm the correct part and security requirements.\n\n" +
-      "Arrival windows are usually fifteen to thirty minutes depending on time and traffic. During the visit, we protect your property, communicate clearly, and clean up before we leave.\n\n" +
-      "Call Aksarben Locksmiths when you need fast help and a team that respects your time.",
-    keywords: [
-      "mobile locksmith Bellevue",
-      "emergency locksmith Bellevue",
-      "car locksmith Bellevue",
-      "rekey locks Bellevue",
-      "Aksarben Locksmiths"
-    ]
+    altText: "Mobile locksmith working on car ignition repair in Bellevue",
+    body: "Mobile units bring tools to you which reduces towing and downtime.\n\nAvailability depends on current demand.\n\nShare your exact location and lock or vehicle details to speed things up.",
+    keywords: ["Bellevue mobile locksmith", "mobile locksmith service Bellevue", "car locksmith Bellevue", "emergency locksmith Bellevue", "Aksarben Locksmiths"]
   },
-
   {
     slug: "serving-omaha-for-over-a-decade",
     title: "How Aksarben Locksmiths Has Served Omaha For Over A Decade",
-    date: "2025-08-28T00:00:00Z",
     category: "commercial",
     city: "Omaha",
-    excerpt:
-      "A quick look at our mobile service history and long term commitment to Omaha customers, from emergency unlocks to planned rekeys and master key systems.",
+    date: "2025-08-28T00:00:00Z",
+    excerpt: "A quick look at our mobile service history and commitment to local customers.",
     coverImage: "/images/blog/house-key-duplication.webp",
-    altText: "Aksarben Locksmiths technician providing house key duplication in Omaha",
-    body:
-      "We opened our doors to serve Omaha with dependable help and clear communication, and that focus has not changed. Over the years we have invested in training, modern key machines, and diagnostic tools so we can solve problems on site and get you moving again.\n\n" +
-      "From urgent unlocks to planned rekeys, from new construction to tenant turnovers, our goal is to finish the job right and leave the area cleaner than we found it. We appreciate every call and every referral, and we are grateful for the customers who have trusted us for years.\n\n" +
-      "If you have not worked with us yet, we would love the chance to earn your business. Call Aksarben Locksmiths for friendly service across the Omaha metro.",
-    keywords: [
-      "Omaha locksmith decade service",
-      "established locksmith Omaha",
-      "trusted locksmith Omaha",
-      "local locksmith Omaha",
-      "Aksarben Locksmiths"
-    ]
+    altText: "Aksarben Locksmiths providing house key duplication service in Omaha for over a decade",
+    body: "From emergency unlocks to planned rekeys, our focus is dependable help and clear communication.\n\nWe invest in training, modern key machines, and customer first service.\n\nThank you Omaha and the surrounding cities for your trust.",
+    keywords: ["Omaha locksmith decade service", "established locksmith Omaha", "trusted locksmith Omaha", "local locksmith Omaha", "Aksarben Locksmiths"]
   }
 ];
+
+export function findPost(slug: string): BlogPost | undefined {
+  return BLOG_POSTS.find((p) => p.slug === slug);
+}
