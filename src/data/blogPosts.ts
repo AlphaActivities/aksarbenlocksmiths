@@ -22,13 +22,13 @@ export const BLOG_CATEGORIES: { slug: BlogCategory; label: string }[] = [
 export const BLOG_POSTS: BlogPost[] = [
   // New post - Spare Car Key
   {
-    slug: "why-every-omaha-driver-should-have-a-spare-car-key",
-    title: "Why Every Omaha Driver Should Have a Spare Car Key",
+    slug: "why-papillion-drivers-need-a-spare-car-key",
+    title: "Why Papillion Drivers Need A Spare Car Key",
     category: "keys",
-    city: "Omaha",
+    city: "Papillion",
     date: "2025-09-21T00:00:00Z",
-    excerpt: "Learn why having a spare car key in Omaha can save you time, stress, and money. From lockouts to lost keys, a backup key keeps you moving without the headache.",
-    coverImage: "/images/blog/spare-car-key-omaha.webp",
+    excerpt: "Spare keys save time and money. Learn when to duplicate and what to bring to a key appointment.",
+    coverImage: "/images/blog/handing-new-key.webp",
     body: "Getting locked out or losing your only car key can turn a normal day into a crisis. Having a spare key in Omaha means less stress, faster solutions, and lower costs when problems strike. Here's why every driver should plan ahead.\n\nAvoiding Emergency Lockouts\nWith a spare, you can skip the emergency call, tow, or overnight wait. Keep one at home or with a trusted family member for peace of mind.\n\nSaving Money Long Term\nProgramming or replacing one lost fob is often more expensive than cutting and coding a second spare while you still have a working key.\n\nConvenience for Families\nMultiple drivers for the same car? Spares prevent schedule conflicts and make sharing easier without constantly trading keys.\n\nFaster Service When Trouble Strikes\nLocksmiths in Omaha can program new spares much quicker if at least one working key is available. Without it, the process may require dealer codes or longer wait times.\n\nTips for Storing Your Spare Safely\nNever hide your spare inside the vehicle. Instead, keep it in a safe place at home, give one to a spouse, or use a coded lockbox for quick retrieval.\n\nFAQ Block:\n- Do I need proof of ownership for a spare key? Yes, locksmiths and dealers require ID and registration or title.\n- Can aftermarket keys work? Many do, but compatibility depends on your make and model. Ask before ordering.\n- Should I program more than one spare? If you can, yes — it's cheaper to do multiple at once.\n- How long does it take? With the right equipment and a working key, usually less than 30 minutes.\n- Do locksmiths erase old fobs? Only if requested for security reasons, such as after a theft.\n\nClosing CTA:\nDon't wait until you're stranded. Call Aksarben Locksmiths today to cut and program your spare key, so you're always prepared."
   },
 
@@ -57,17 +57,6 @@ export const BLOG_POSTS: BlogPost[] = [
   },
 
   // Year 2, four years ago
-  {
-    slug: "why-papillion-drivers-need-a-spare-car-key",
-    title: "Why Papillion Drivers Need A Spare Car Key",
-    category: "keys",
-    city: "Papillion",
-    date: "2021-03-18T00:00:00Z",
-    excerpt: "Spare keys save time and money. Learn when to duplicate and what to bring to a key appointment.",
-    coverImage: "/images/blog/handing-new-key.webp",
-    body:
-      "Modern keys include chips and remotes.\n\nA spare reduces emergency costs and wait times.\n\nBring your vehicle identification number, proof of ownership, and current key if available.\n\nMobile service may be available depending on model and year.",
-  },
   {
     slug: "common-lock-problems-la-vista-businesses-face",
     title: "Common Lock Problems La Vista Businesses Face",
