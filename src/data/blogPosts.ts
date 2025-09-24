@@ -32,7 +32,8 @@ export const BLOG_POSTS: BlogPost[] = [
     excerpt: "Spare keys save time and money. Learn when to duplicate and what to bring to a key appointment.",
     coverImage: "/images/blog/handing-new-key.webp",
     altText: "Locksmith handing new spare car key to Papillion driver",
-    body: `Getting locked out or losing your only car key can quickly turn into a major problem, and it never seems to happen at a convenient time. For Papillion drivers, having a spare car key on hand means faster solutions, lower costs, and less stress. A spare key helps you avoid emergency lockouts, expensive dealership replacements, and wasted time waiting for help.
+    body: `
+Getting locked out or losing your only car key can quickly turn into a major problem, and it never seems to happen at a convenient time. For Papillion drivers, having a spare car key on hand means faster solutions, lower costs, and less stress. A spare key helps you avoid emergency lockouts, expensive dealership replacements, and wasted time waiting for help.
 
 Avoiding emergency lockouts is the biggest benefit. With a spare, you can skip the emergency call, avoid towing, and get back on the road with help from a family member or trusted friend. If a fob is failing or a key blade is worn, a ready backup keeps your day moving.
 
@@ -44,7 +45,8 @@ When trouble strikes, a locksmith in the Papillion area can usually arrive quick
 
 Store your spare in a safe place at home, never inside the vehicle. A coded lockbox, a safe, or a trusted person can keep it available without putting your car at risk. If your situation changes after a theft or a security concern, ask about clearing profiles or reprogramming so only your current keys will start the vehicle.
 
-If you do not have a backup yet, now is the best time to make one. Aksarben Locksmiths serves Papillion and the surrounding Omaha metro with mobile key cutting and programming, clear pricing, and friendly, professional service.`,
+If you do not have a backup yet, now is the best time to make one. Aksarben Locksmiths serves Papillion and the surrounding Omaha metro with mobile key cutting and programming, clear pricing, and friendly, professional service.
+`,
     keywords: ["Papillion spare car key", "Papillion locksmith", "car key replacement Papillion", "emergency locksmith Papillion", "Aksarben Locksmiths"]
   },
 
@@ -58,7 +60,8 @@ If you do not have a backup yet, now is the best time to make one. Aksarben Lock
     excerpt: "Locked out of your car or home in Omaha? Learn step-by-step what to do, who to call, and how Aksarben Locksmiths provides fast, affordable emergency lockout service.",
     coverImage: "/images/blog/car-lockout.webp",
     altText: "Omaha locksmith helping driver during emergency car lockout",
-    body: `Getting locked out in Omaha can happen to anyone, whether it's your car, your home, or your business. Knowing what to do immediately can save you time, money, and stress.
+    body: `
+Getting locked out in Omaha can happen to anyone, whether it's your car, your home, or your business. Knowing what to do immediately can save you time, money, and stress.
 
 Stay Calm and Assess the Situation
 Panic is natural, but staying calm helps you think clearly. Double-check all doors and windows before assuming you're fully locked out. For vehicles, check every door including the trunk.
@@ -86,7 +89,8 @@ Can locksmiths help at night? Yes. 24/7 emergency service is available.
 How much does it cost? Pricing depends on lock type and time, but emergency lockout service is far cheaper than repairing broken windows or doors.
 
 Call Aksarben Locksmiths Now
-Don't waste time stranded outside. Aksarben Locksmiths has served Omaha drivers, residents, and businesses for over a decade. Call now for 24/7 emergency lockout service and get back inside safely and quickly.`,
+Don't waste time stranded outside. Aksarben Locksmiths has served Omaha drivers, residents, and businesses for over a decade. Call now for 24/7 emergency lockout service and get back inside safely and quickly.
+`,
     keywords: ["Omaha lockout service", "emergency locksmith Omaha", "car lockout Omaha", "home lockout Omaha", "Aksarben Locksmiths"]
   },
   {
@@ -99,3 +103,5 @@ Don't waste time stranded outside. Aksarben Locksmiths has served Omaha drivers,
     coverImage: "/images/blog/house-lock.webp",
     altText: "Bellevue locksmith reinforcing front door for better home security",
     body: "Home security in Bellevue starts with understanding your vulnerabilities and taking proactive steps to address them. Whether you're a new homeowner or have lived in your house for years, these five proven strategies will help protect your family and property from break-ins and unauthorized entry.\n\nTip 1, Reinforce Doors and Frames\nYour front door is your first line of defense, but many Bellevue homes have weak points that burglars can exploit. Start with quality deadbolts that extend at least one inch into the door frame. Upgrade your strike plates to heavy-duty versions with 3-inch screws that anchor deep into the wall studs, not just the door frame. Check that your door itself is solid wood or metal, hollow core doors offer little resistance to forced entry. For sliding doors, add a security bar or pin lock to prevent lifting and sliding.\n\nTip 2, Rekey After Moving or Key Loss\nWhen you move into a new Bellevue home, you never know who might have copies of your keys. Previous owners, contractors, real estate agents, or maintenance workers could still have access. Rekeying changes the internal pins so old keys no longer work, while keeping your existing hardware. This costs much less than replacing all your locks and can usually be done the same day. Also rekey immediately if you lose keys or after a break-in attempt.\n\nTip 3, Smart Locks and Keyless Entry\nSmart locks offer convenience and security benefits for Bellevue families. You can grant temporary access to service providers, monitor who enters and when, and never worry about lost keys again. Look for models with backup key access in case of battery failure or technical issues. Many smart locks integrate with home security systems and can send alerts to your phone when doors are opened. Choose reputable brands with strong encryption and regular security updates.\n\nTip 4, Windows and Garage Entry Points\nBurglars often target easier entry points when front doors are well secured. Check all ground floor windows for secure locks and consider adding window security film or bars for high-risk areas. Your garage door is another common weak point, ensure the door from your garage into your house has the same security as your front door. Install motion sensor lights around all entry points and keep bushes trimmed so they can't provide hiding spots.\n\nTip 5, Neighborhood Awareness\nVisible security measures deter opportunistic burglars who prefer easy targets. Install outdoor lighting with motion sensors around all entry points and dark corners of your property. Security cameras, even basic models, make your home less attractive to criminals. Get to know your neighbors and establish a informal watch system where you look out for each other's properties. Post security system signs and stickers even if you don't have a full system, the deterrent effect still works.\n\nCost-Saving Security Improvements\nYou don't need to spend thousands to improve your Bellevue home's security. Simple upgrades like longer screws in strike plates cost under $10 but significantly increase door strength. Rekeying existing locks costs much less than replacement and provides the same security benefit. Door reinforcement kits, motion sensor lights, and window locks are all affordable improvements that make a real difference.\n\nCommon Security Mistakes Bellevue Homeowners Make\nMany homeowners unknowingly create security vulnerabilities. Never hide spare keys under doormats, fake rocks, or planters, these are the first places burglars check. Don't leave garage door openers in unlocked cars, this gives criminals easy access to your home. Avoid posting vacation photos on social media until after you return, advertising an empty house invites trouble. Keep valuable items away from windows where they're visible from the street.\n\nFrequently Asked Questions\nShould I rekey or replace locks after moving? Rekeying is usually the better choice for new homeowners. It's faster, cheaper, and provides the same security benefit as replacement. Only replace locks if they're damaged, outdated, or you want to upgrade to smart locks.\n\nHow much does a Bellevue locksmith cost for rekeying? Rekeying typically costs $20 to $50 per lock, much less than replacement. Most locksmiths offer discounts for multiple locks done at the same time. The investment pays for itself in peace of mind and security.\n\nAre smart locks worth it for home security? Smart locks offer convenience and monitoring features that traditional locks can
+  }
+]
