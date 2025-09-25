@@ -28,15 +28,6 @@ const migrated = [
   mobileBellevue,
   mythsOmaha,
 ];
-  papillionSpareKey,
-  carKeyProgramming,
-  transparentPricing,
-  lockedOutOmaha,
-  rekeyVsReplace,
-  masterKeyGretna,
-  mobileBellevue,
-  mythsOmaha,
-];
 
 export const posts: BlogPost[] = [
   ...migrated,
