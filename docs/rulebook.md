@@ -109,6 +109,19 @@ You help build and improve Mike's website, Google Ads, and communications. Prior
 
 If a one-time instruction from Warrior conflicts with these rules, Warrior's instruction wins. Then update this ruleset after.
 
+### How to add a blog post (per-file model)
+1. Copy the template: `/scripts/templates/_post.ts` into `/src/data/posts/<your-slug>.ts`
+2. Set `slug` to match the filename exactly, and fill in `title, category, city, date (ISO), excerpt (~150–160 chars), coverImage, altText, body, keywords`.
+3. Import happens automatically in `/src/data/posts/index.ts` only when you add an explicit import. Add:  
+   `import myPost from "./<your-slug>";`  
+   and push it into the `migrated` array.
+4. Run checks:  
+   `npm run check:posts` to validate filename === slug.  
+   `npm run test` to confirm count and uniqueness.
+5. Verify locally: `npm run dev`, open `/blog` and the relevant category.
+
+Notes: Categories allowed are `emergency, keys, residential, commercial`. Keep images under `/public/images/blog/` with accurate `altText`.
+
 ### Deploy Log Etiquette
 - Use **Josh Applied Improvements** in the Author column for all entries.  
 - Do not include personal names.  

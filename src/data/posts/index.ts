@@ -36,6 +36,22 @@ const migrated = [
 
 export const posts: BlogPost[] = migrated;
 
+// Dev-only sanity log
+if (import.meta.env.DEV) {
+  const counts = posts.reduce<Record<string, number>>((acc, p) => {
+    acc[p.category] = (acc[p.category] || 0) + 1;
+    return acc;
+  }, {});
+  const slugs = posts.map(p => p.slug);
+  const dupes = slugs.filter((s, i) => slugs.indexOf(s) !== i);
+  if (dupes.length) {
+    // eslint-disable-next-line no-console
+    console.error("[Blog posts] Duplicate slugs detected:", Array.from(new Set(dupes)));
+  }
+  // eslint-disable-next-line no-console
+  console.log(`[Blog posts] Loaded ${posts.length} posts by category:`, counts);
+}
+
 export function findPost(slug: string) {
   return posts.find(p => p.slug === slug);
 }
