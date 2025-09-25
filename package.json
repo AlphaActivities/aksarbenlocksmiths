@@ -9,7 +9,7 @@
     "postbuild": "node scripts/generate-sitemap.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
-    "check:posts": "node scripts/check-post-filenames.ts"
+    "check:posts": "node scripts/check-post-filenames.js"
   },
   "dependencies": {
     "clsx": "^2.0.0",
