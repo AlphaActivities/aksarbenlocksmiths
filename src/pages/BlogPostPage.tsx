@@ -318,6 +318,9 @@ export default function BlogPostPage() {
                     {post.city} · {new Date(post.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "2-digit" })}
                   </div>
                   <h1 className="mt-1 text-3xl md:text-4xl font-bold tracking-tight">{post.title}</h1>
+                  {post.keywords?.length ? (
+                    <span className="sr-only">{post.keywords.join(", ")}</span>
+                  ) : null}
 
                   <div className="mt-4 space-y-4 text-gray-200 leading-relaxed">
                     {paragraphs.map((p, idx) => (
