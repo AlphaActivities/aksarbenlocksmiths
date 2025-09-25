@@ -337,7 +337,7 @@ export default function BlogPage() {
                             {post.city} · {new Date(post.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "2-digit" })}
                           </div>
                           <h2 className="mt-1 text-lg font-semibold">{post.title}</h2>
-                          <p className="mt-2 text-sm text-gray-300 line-clamp-3">{post.excerpt}</p>
+                          <p className="mt-2 text-sm text-gray-300 line-clamp-3">{post.excerpt || (post.body ? post.body.split("\n\n")[0].slice(0, 160) + "…" : "")}</p>
                         </div>
                       </Link>
                     </article>
