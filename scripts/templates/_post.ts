@@ -9,3 +9,4 @@
 +// 4) Save as /src/data/posts/<slug>.ts (filename must match slug exactly)
 
  const post: BlogPost = {
+ }
