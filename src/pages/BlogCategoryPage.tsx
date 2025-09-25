@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { BLOG_POSTS } from '../data/blogPosts';
+import { posts as BLOG_POSTS } from '../data/posts';
 import { BLOG_CATEGORIES, isValidCategory } from '../data/blogCategories';
 import { Phone, ArrowLeft } from 'lucide-react';
 import { trackClick } from '../utils/analytics';

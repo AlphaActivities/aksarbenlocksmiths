@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams, useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { BLOG_CATEGORIES, BLOG_POSTS, BlogCategory } from "../data/blogPosts";
+import { BLOG_CATEGORIES } from "../data/blogPosts"; // keep categories as-is
+import { posts as BLOG_POSTS } from "../data/posts";
 import { isValidCategory } from "../data/blogCategories";
 import { trackEngagement, trackClick } from "../utils/analytics";
 import { ArrowLeft, Phone, MapPin } from "lucide-react";

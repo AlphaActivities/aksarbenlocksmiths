@@ -1,7 +1,7 @@
 import React from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { BLOG_POSTS } from "../data/blogPosts";
+import { posts as BLOG_POSTS } from "../data/posts";
 import servicesData from "../data/services.json";
 import { trackEvent, getAttributionParams } from "../utils/analytics";
 
