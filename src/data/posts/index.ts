@@ -1,8 +1,23 @@
-import type { BlogPost, BlogCategory } from "../blogPosts";
+// Explicit imports for migrated posts
+import type { BlogPost } from "./types";
+import papillionSpareKey from "./why-papillion-drivers-need-a-spare-car-key";
+import carKeyProgramming from "./car-key-programming-omaha-guide";
+import transparentPricing from "./transparent-locksmith-pricing-omaha";
 
-// Stage 1, proxy: keep using the legacy BLOG_POSTS array so nothing breaks.
-// We will replace this proxy with explicit imports as we migrate posts.
-export { BLOG_POSTS as posts, findPost } from "../blogPosts";
+// For all remaining posts not yet migrated, continue to rely on the legacy array.
+import { BLOG_POSTS as LEGACY_BLOG_POSTS } from "../blogPosts";
 
-// Re-export types so per-file modules can import from "@/data/posts"
-export type { BlogPost, BlogCategory };
+// Build the combined list: migrated posts first, then any legacy posts that are not duplicates
+const migrated = [papillionSpareKey, carKeyProgramming, transparentPricing];
+
+export const posts: BlogPost[] = [
+  ...migrated,
+  ...LEGACY_BLOG_POSTS.filter(p => !migrated.some(m => m.slug === p.slug)),
+];
+
+export function findPost(slug: string) {
+  return posts.find(p => p.slug === slug);
+}
+
+// Re-export types for convenience
+export type { BlogPost, BlogCategory } from "./types";
