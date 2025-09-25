@@ -1,87 +1,371 @@
-// Blog data, categories, and types. Backdated across five years with a recent ramp.
-export type BlogCategory = "emergency" | "keys" | "residential" | "commercial";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useSearchParams, useNavigate, useParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import { BLOG_CATEGORIES, BLOG_POSTS, BlogCategory } from "../data/blogPosts";
+import { isValidCategory } from "../data/blogCategories";
+import { trackEngagement, trackClick } from "../utils/analytics";
+import { ArrowLeft, Phone, MapPin } from "lucide-react";
 
-export interface BlogPost {
-  slug: string;
-  title: string;
-  category: BlogCategory;
-  city: string;
-  date: string; // ISO format, local business timezone America/Chicago
-  excerpt: string;
-  coverImage: string; // public path under /images/blog
-  altText: string; // Descriptive alt text for the blog's cover image
-  body: string; // plain text paragraphs separated by \n\n
-  keywords: string[]; // SEO keywords array for schema
+const BLOG_PLACEHOLDER =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 675'><rect fill='#111827' width='1200' height='675'/><text x='50%' y='50%' fill='#9CA3AF' font-family='system-ui, -apple-system, Segoe UI, Roboto' font-size='48' text-anchor='middle' dominant-baseline='middle'>Aksarben Blog Image</text></svg>`
+  );
+
+export default function BlogPage() {
+  const navigate = useNavigate();
+  const { category: categoryParam } = useParams();
+  const [params, setParams] = useSearchParams();
+  
+  // If we have a category param that's invalid, show not found
+  if (categoryParam && !isValidCategory(categoryParam)) {
+    return (
+      <>
+        <div className="fixed top-0 w-full z-50 bg-black backdrop-blur-md shadow-lg text-sm px-4 py-1 flex justify-between items-center">
+          <span className="text-white animate-pulse">24/7 Emergency Service</span>
+          <a
+            href="tel:+14025566715"
+            onClick={(e) =>
+              trackClick("top_bar_phone_click", e.currentTarget, {
+                phone_number: "+14025566715",
+                source: "top_emergency_bar",
+                page_section: "emergency_top_bar",
+              })
+            }
+            className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition animate-pulse"
+          >
+            <Phone className="h-4 w-4" />
+            (402) 556-6715
+          </a>
+        </div>
+
+        <div className="min-h-screen w-full relative">
+          <main className="min-h-screen w-full relative overflow-hidden">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              aria-hidden="true"
+              poster="/images/Services Thumbnails/Residential-Service-Photo.webp"
+              className="fixed inset-0 w-full h-full object-cover opacity-45 z-0"
+              src="/videos/wallpaper.mp4"
+            />
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="animated-footer-bg" />
+              <div className="footer-glass-effect absolute inset-0" />
+            </div>
+            <div className="absolute inset-0 z-[3] pointer-events-none bg-black/25 md:bg-black/10"></div>
+
+            <div className="relative z-10 text-white pt-12 md:pt-16">
+              <main className="container mx-auto px-6 py-16">
+                <h1 className="text-3xl font-bold mb-4 text-white">Category not found</h1>
+                <div className="flex gap-3">
+                  <Link
+                    to="/"
+                    aria-label="Back to Home"
+                    onClick={(e) =>
+                      trackClick("not_found_back_home_click", e.currentTarget, {
+                        source_page: "blog_category_404",
+                        page_section: "not_found",
+                      })
+                    }
+                    className="inline-flex items-center rounded-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium transition-colors"
+                  >
+                    Back to Home
+                  </Link>
+                  
+                  <Link 
+                    className="inline-flex items-center rounded-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors" 
+                    to="/blog"
+                    onClick={(e) => trackClick('category_not_found_back_to_blog', e.currentTarget, {
+                      source_page: 'blog_category_404',
+                      page_section: 'not_found'
+                    })}
+                  >
+                    Go back to the blog
+                  </Link>
+                </div>
+              </main>
+            </div>
+          </main>
+        </div>
+      </>
+    );
+  }
+  
+  const initialCat = (categoryParam as BlogCategory) || (params.get("cat") as BlogCategory) || "emergency";
+  const [activeCat, setActiveCat] = useState<BlogCategory>(initialCat);
+  const listRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    // Impression event for the list view
+    try {
+      trackEngagement?.(
+        "blog_list_impression",
+        listRef.current,
+        { source_page: "blog_index", page_section: "list", item_count: BLOG_POSTS.length }
+      );
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    if (!categoryParam) {
+      setParams({ cat: activeCat }, { replace: true });
+    }
+  }, [activeCat, setParams]);
+
+  const filtered = useMemo(
+    () => {
+      if (categoryParam) {
+        return BLOG_POSTS.filter((p) => p.category === categoryParam).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      }
+      return BLOG_POSTS.filter((p) => p.category === activeCat).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    },
+    [activeCat, categoryParam]
+  );
+
+  return (
+    <>
+      {/* Fixed black emergency bar */}
+      <div className="fixed top-0 w-full z-50 bg-black backdrop-blur-md shadow-lg text-sm px-4 py-1 flex justify-between items-center">
+        <span className="text-white animate-pulse">24/7 Emergency Service</span>
+        <a
+          href="tel:+14025566715"
+          onClick={(e) =>
+            trackClick("top_bar_phone_click", e.currentTarget, {
+              phone_number: "+14025566715",
+              source: "top_emergency_bar",
+              page_section: "emergency_top_bar",
+            })
+          }
+          className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition animate-pulse"
+        >
+          <Phone className="h-4 w-4" />
+          (402) 556-6715
+        </a>
+      </div>
+
+      {/* Service Areas style wallpaper and overlays */}
+      <div className="min-h-screen w-full relative">
+        <main className="min-h-screen w-full relative overflow-hidden">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            aria-hidden="true"
+            poster="/images/Services Thumbnails/Residential-Service-Photo.webp"
+            className="fixed inset-0 w-full h-full object-cover opacity-45 z-0"
+            src="/videos/wallpaper.mp4"
+          />
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="animated-footer-bg" />
+            <div className="footer-glass-effect absolute inset-0" />
+          </div>
+          <div className="absolute inset-0 z-[3] pointer-events-none bg-black/25 md:bg-black/10"></div>
+
+          {/* Content */}
+          <div className="relative z-10 text-white pt-8 md:pt-10">
+            <main id="blog" className="min-h-screen w-full px-6 pt-4 pb-12 md:pt-6 md:pb-16">
+              <Helmet>
+                <title>Our Blog, Omaha Locksmith Tips and Guides</title>
+                <meta
+                  name="description"
+                  content="Emergency lockouts, keys and duplication, residential and commercial security for Omaha and surrounding cities."
+                />
+                {/* canonical, absolute */}
+                <link rel="canonical" href="https://aksarbenlocksmiths.com/blog" />
+                <meta property="og:site_name" content="Aksarben Locksmiths" />
+                {/* Open Graph */}
+                <meta property="og:type" content="website" />
+                <meta property="og:title" content="Our Blog, Omaha Locksmith Tips and Guides" />
+                <meta property="og:description" content="Emergency lockouts, keys and duplication, residential and commercial security for Omaha and surrounding cities." />
+                <meta property="og:url" content="https://aksarbenlocksmiths.com/blog" />
+                <meta property="og:image" content="https://aksarbenlocksmiths.com/images/shield-logo.png" />
+                <meta property="og:image:width" content="1080" />
+                <meta property="og:image:height" content="1080" />
+
+                {/* Twitter */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content="Our Blog, Omaha Locksmith Tips and Guides" />
+                <meta name="twitter:description" content="Emergency lockouts, keys and duplication, residential and commercial security for Omaha and surrounding cities." />
+                <meta name="twitter:image" content="https://aksarbenlocksmiths.com/images/shield-logo.png" />
+                <meta name="twitter:image:width" content="1080" />
+                <meta name="twitter:image:height" content="1080" />
+
+                {/* JSON-LD, Blog index breadcrumb */}
+                <script
+                  type="application/ld+json"
+                  dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                      "@context": "https://schema.org",
+                      "@type": "BreadcrumbList",
+                      "itemListElement": [
+                        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aksarbenlocksmiths.com/" },
+                        { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://aksarbenlocksmiths.com/blog" }
+                      ]
+                    })
+                  }}
+                />
+              </Helmet>
+
+              <section className="mx-auto max-w-5xl">
+                {/* Back to Home button, matches Dynamic Service styles */}
+                <div className="mb-4 flex items-center justify-between min-h-[40px]">
+                  <button
+                    onClick={(e) => {
+                      navigate(-1);
+                      trackClick("back_to_home", e.currentTarget, {
+                        source_page: "blog_index",
+                        page_section: "header",
+                        destination: "/",
+                      });
+                    }}
+                    className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                    aria-label="Back to Home"
+                    title="Back to Home"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    Back to Home
+                  </button>
+
+                  <Link
+                    to="/service-areas"
+                    state={{ fromBlog: true, scrollFx: "midThenTop" }}
+                    onClick={(e) => {
+                      try { sessionStorage.setItem("lastScrollY", String(window.scrollY)); } catch {}
+                      trackClick("blog_service_areas_pill_click", e.currentTarget, {
+                        source_page: "blog_index",
+                        page_section: "header",
+                        destination: "/service-areas",
+                      });
+                    }}
+                    className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(90deg,_#ef4444_0%,_#dc2626_15%,_#b91c1c_45%,_#b91c1c_55%,_#dc2626_85%,_#ef4444_100%)] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
+                    aria-label="View Service Areas"
+                    title="View Service Areas"
+                  >
+                    <MapPin className="w-4 h-4" />
+                    Service Areas
+                  </Link>
+                </div>
+
+                <div className="bg-gradient-to-br from-red-800 via-purple-900 to-purple-950 backdrop-blur-lg rounded-2xl px-6 py-4 mt-8 mb-2 border border-white/10 shadow-xl ring-1 ring-white/20 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
+                  <h1 className="text-2xl md:text-4xl font-bold tracking-tight">
+                    AksarbenLocksmiths Blog
+                  </h1>
+                  <p className="mt-3 text-base md:text-lg text-gray-200">
+                    Helpful tips and locksmith insights for:<br />
+                    Omaha, Bellevue, Council Bluffs, Papillion, La Vista, Gretna, and nearby communities.
+                  </p>
+                </div>
+
+                {/* Category filter */}
+                <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-2">
+                  {BLOG_CATEGORIES.map((cat) => {
+                    const isActive = cat.slug === activeCat;
+                    return (
+                      <button
+                        key={cat.slug}
+                        type="button"
+                        onClick={(e) => { 
+                          setActiveCat(cat.slug); 
+                          trackClick("blog_chip_click", e.currentTarget as unknown as HTMLElement, { 
+                            source_page: "blog_index", 
+                            page_section: "chips", 
+                            category: cat.slug 
+                          }); 
+                        }}
+                        className={[
+                          "px-4 py-2 rounded-full text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black w-full justify-center text-center",
+                          isActive
+                            ? "bg-purple-600 border border-purple-600 shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:shadow-[0_0_28px_rgba(255,255,255,0.6)]"
+                            : "bg-[#2a1645] hover:bg-[#4a2974] border border-[#3a1f5c] shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:shadow-[0_0_28px_rgba(255,255,255,0.6)]"
+                        ].join(" ")}
+                        aria-pressed={isActive}
+                      >
+                        {cat.label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Cards */}
+                <div ref={listRef} className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {filtered.map((post) => (
+                    <article
+                      key={post.slug}
+                      className="rounded-2xl overflow-hidden bg-[#0f0a1f] border border-neutral-800 hover:border-neutral-700 transition-colors"
+                    >
+                      <Link
+                        to={`/blog/${post.slug}`}
+                        aria-label={`Read post: ${post.title}`}
+                        onClick={(e) => {
+                          try {
+                            trackClick?.("blog_card_click", e.currentTarget, {
+                              source_page: "blog_index",
+                              page_section: "card_grid",
+                              slug: post.slug,
+                              category: post.category,
+                              city: post.city,
+                            });
+                          } catch {}
+                        }}
+                        className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                      >
+                        <div className="aspect-[16/9] w-full bg-[#1a1030]">
+                          <img
+                            src={post.coverImage}
+                            alt={post.altText || post.title}
+                            loading="lazy"
+                            decoding="async"
+                            width={1280}
+                            height={720}
+                            srcSet={`${post.coverImage} 1280w`}
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            onError={(e) => {
+                              const img = e.currentTarget;
+                              img.onerror = null;
+                              img.src = BLOG_PLACEHOLDER;
+                            }}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                        <div className="p-4">
+                          <div className="text-xs text-gray-400">
+                            {post.city} · {new Date(post.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "2-digit" })}
+                          </div>
+                          <h2 className="mt-1 text-lg font-semibold">{post.title}</h2>
+                          <p className="mt-2 text-sm text-gray-300 line-clamp-3">{post.excerpt}</p>
+                        </div>
+                      </Link>
+                    </article>
+                  ))}
+                </div>
+                {/* Bottom CTA, matches Dynamic Service styling */}
+                <div className="flex justify-center mt-10">
+                  <a
+                    href="tel:+14025566715"
+                    onClick={(e) =>
+                      trackClick("cta_blog_call_click", e.currentTarget, {
+                        source_page: "blog_index",
+                        page_section: "bottom_cta",
+                        call_reason: "call_now",
+                      })
+                    }
+                    className="inline-flex items-center gap-2 bg-gradient-to-l from-red-900 via-red-600 to-red-800 text-white py-3 px-6 rounded-full shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out animate-[pulseRedGlow_3s_ease-in-out_infinite] whitespace-nowrap leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                    aria-label="Call Aksarben Locksmiths"
+                    title="Call Aksarben Locksmiths"
+                  >
+                    <Phone className="h-4 w-4 shrink-0" />
+                    <span className="leading-none">Call Now</span>
+                  </a>
+                </div>
+              </section>
+            </main>
+          </div>
+        </main>
+      </div>
+    </>
+  );
 }
-
-export const BLOG_CATEGORIES: { slug: BlogCategory; label: string }[] = [
-  { slug: "emergency", label: "Emergency & Lockouts" },
-  { slug: "keys", label: "Keys and Duplication" },
-  { slug: "residential", label: "Residential Locksmith" },
-  { slug: "commercial", label: "Commercial Locksmith" },
-];
-
-export const BLOG_POSTS: BlogPost[] = [
-  // New post - Spare Car Key
-  {
-    slug: "why-papillion-drivers-need-a-spare-car-key",
-    title: "Why Every Papillion Driver Should Have a Spare Car Key",
-    category: "keys",
-    city: "Papillion",
-    date: "2021-03-17T00:00:00Z",
-    excerpt: "Spare keys save time and money. Learn when to duplicate and what to bring to a key appointment.",
-    coverImage: "/images/blog/handing-new-key.webp",
-    altText: "Locksmith handing new spare car key to Papillion driver",
-    body: "Getting locked out or losing your only car key can quickly turn into a major problem. For Papillion drivers, having a spare car key on hand means faster solutions, lower costs, and less stress. A spare key helps you avoid emergency lockouts, expensive dealership replacements, and wasted time waiting for help. Whether it's for your daily commute, family vehicle, or backup security, a spare key is one of the smartest ways Papillion drivers can stay prepared.\n\nAvoiding Emergency Lockouts\nWith a spare, you can skip the emergency call, tow, or overnight wait. Keep one at home or with a trusted family member for peace of mind.\n\nSaving Money Long Term\nProgramming or replacing one lost fob is often more expensive than cutting and coding a second spare while you still have a working key.\n\nConvenience for Families\nMultiple drivers for the same car? Spares prevent schedule conflicts and make sharing easier without constantly trading keys.\n\nFaster Service When Trouble Strikes\nLocksmiths in Omaha can program new spares much quicker if at least one working key is available. Without it, the process may require dealer codes or longer wait times.\n\nTips for Storing Your Spare Safely\nNever hide your spare inside the vehicle. Instead, keep it in a safe place at home, give one to a spouse, or use a coded lockbox for quick retrieval.\n\nFAQ Block:\nDo I need proof of ownership for a spare key? Yes, locksmiths and dealers require ID and registration or title.\nCan aftermarket keys work? Many do, but compatibility depends on your make and model. Ask before ordering.\nShould I program more than one spare? If you can, yes, it's cheaper to do multiple at once.\nHow long does it take? With the right equipment and a working key, typically within 15–30 minutes.\nDo locksmiths erase old fobs? Only if requested for security reasons, such as after a theft.\n\nClosing CTA:\nDon't wait until you're stranded. Call Aksarben Locksmiths today to cut and program your spare key, so you're always prepared.",
-    keywords: ["Papillion spare car key", "Papillion locksmith", "car key replacement Papillion", "emergency locksmith Papillion", "Aksarben Locksmiths"]
-  },
-
-  // Year 1, five years ago
-  {
-    slug: "what-to-do-if-youre-locked-out-in-omaha",
-    title: "What To Do If You Are Locked Out In Omaha",
-    category: "emergency",
-    city: "Omaha",
-    date: "2020-02-15T00:00:00Z",
-    excerpt: "Locked out of your car or home in Omaha? Learn step-by-step what to do, who to call, and how Aksarben Locksmiths provides fast, affordable emergency lockout service.",
-    coverImage: "/images/blog/car-lockout.webp",
-    altText: "Omaha locksmith helping driver during emergency car lockout",
-    body: "Getting locked out in Omaha can happen to anyone, whether it's your car, your home, or your business. Knowing what to do immediately can save you time, money, and stress.\n\nStay Calm and Assess the Situation\nPanic is natural, but staying calm helps you think clearly. Double-check all doors and windows before assuming you're fully locked out. For vehicles, check every door including the trunk.\n\nKnow Your Options in Omaha\nCar lockouts: Professional locksmiths can unlock your car without damaging the vehicle.\nHome lockouts: Locksmiths use tools to gain entry without breaking locks or frames.\nBusiness lockouts: Commercial locks often require specialized picks and decoding tools.\n\nAvoid Costly Mistakes\nAvoid breaking windows or forcing doors, these repairs cost far more than a locksmith call. Calling Aksarben Locksmiths ensures fast, affordable help across Omaha.\n\nHow Emergency Locksmiths Work in Omaha\nA licensed locksmith can usually arrive within 15–30 minutes. Using professional-grade tools, they can unlock most vehicles and residential locks within minutes, without damage.\n\nPrevent Future Lockouts\nMake a spare key today.\nStore a backup with a trusted friend or family member.\nAsk about keyless entry or smart lock upgrades for long-term solutions.\n\nFAQ: Emergency Lockouts in Omaha\nHow fast can a locksmith get here? Typically within 15–30 minutes in the Omaha metro.\nWill my car or door be damaged? No. Aksarben Locksmiths use non-destructive tools.\nCan locksmiths help at night? Yes. 24/7 emergency service is available.\nHow much does it cost? Pricing depends on lock type and time, but emergency lockout service is far cheaper than repairing broken windows or doors.\n\nCall Aksarben Locksmiths Now\nDon't waste time stranded outside. Aksarben Locksmiths has served Omaha drivers, residents, and businesses for over a decade. Call now for 24/7 emergency lockout service and get back inside safely and quickly.",
-    keywords: ["Omaha lockout service", "emergency locksmith Omaha", "car lockout Omaha", "home lockout Omaha", "Aksarben Locksmiths"]
-  },
-  {
-    slug: "5-tips-to-keep-your-bellevue-home-secure",
-    title: "Five Tips To Keep Your Bellevue Home Secure",
-    category: "residential",
-    city: "Bellevue",
-    date: "2020-10-05T00:00:00Z",
-    excerpt: "Discover five proven ways Bellevue homeowners can keep their homes secure. From reinforced doors and strike plates to smart locks and rekeying, Aksarben Locksmiths shares expert strategies to prevent break-ins and keep your family safe.",
-    coverImage: "/images/blog/house-lock.webp",
-    altText: "Bellevue locksmith reinforcing front door for better home security",
-    body: `Home security in Bellevue starts with understanding your vulnerabilities and taking proactive steps to address them. Whether you're a new homeowner or have lived in your house for years, these five proven strategies will help protect your family and property from break-ins and unauthorized entry.
-
-Tip 1, Reinforce Doors and Frames
-Your front door is your first line of defense, but many Bellevue homes have weak points that burglars can exploit. Start with quality deadbolts that extend at least one inch into the door frame. Upgrade your strike plates to heavy-duty versions with 3-inch screws that anchor deep into the wall studs, not just the door frame. Check that your door itself is solid wood or metal, hollow core doors offer little resistance to forced entry. For sliding doors, add a security bar or pin lock to prevent lifting and sliding.
-
-Tip 2, Rekey After Moving or Key Loss
-When you move into a new Bellevue home, you never know who might have copies of your keys. Previous owners, contractors, real estate agents, or maintenance workers could still have access. Rekeying changes the internal pins so old keys no longer work, while keeping your existing hardware. This costs much less than replacing all your locks and can usually be done the same day. Also rekey immediately if you lose keys or after a break-in attempt.
-
-Tip 3, Smart Locks and Keyless Entry
-Smart locks offer convenience and security benefits for Bellevue families. You can grant temporary access to service providers, monitor who enters and when, and never worry about lost keys again. Look for models with backup key access in case of battery failure or technical issues. Many smart locks integrate with home security systems and can send alerts to your phone when doors are opened. Choose reputable brands with strong encryption and regular security updates.
-
-Tip 4, Windows and Garage Entry Points
-Burglars often target easier entry points when front doors are well secured. Check all ground floor windows for secure locks and consider adding window security film or bars for high-risk areas. Your garage door is another common weak point, ensure the door from your garage into your house has the same security as your front door. Install motion sensor lights around all entry points and keep bushes trimmed so they can't provide hiding spots.
-
-Tip 5, Neighborhood Awareness
-Visible security measures deter opportunistic burglars who prefer easy targets. Install outdoor lighting with motion sensors around all entry points and dark corners of your property. Security cameras, even basic models, make your home less attractive to criminals. Get to know your neighbors and establish a informal watch system where you look out for each other's properties. Post security system signs and stickers even if you don't have a full system, the deterrent effect still works.
-
-Cost-Saving Security Improvements
-You don't need to spend thousands to improve your Bellevue home's security. Simple upgrades like longer screws in strike plates cost under $10 but significantly increase door strength. Rekeying existing locks costs much less than replacement and provides the same security benefit. Door reinforcement kits,
-  }
-]
-  }
-]
-  }
-]
-  }
-]
