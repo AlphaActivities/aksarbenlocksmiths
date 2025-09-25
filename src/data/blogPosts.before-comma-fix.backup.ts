@@ -75,7 +75,7 @@ If a key is lost or a lock is sticking, call before it fails completely. A profe
 Next Steps
 If you want fast, friendly help in Bellevue, Aksarben Locksmiths offers clear pricing and mobile service. We can rekey, repair hardware, or recommend targeted upgrades to strengthen the points that matter most.
 `,
-  },
+  }
   {
     slug: "avoid-late-night-lockouts-in-council-bluffs",
     title: "How To Avoid Late Night Lockouts In Council Bluffs",
@@ -175,7 +175,7 @@ If you want fast, friendly help in Bellevue, Aksarben Locksmiths offers clear pr
     altText: "Aksarben Locksmiths providing house key duplication service in Omaha for over a decade",
     body: "From emergency unlocks to planned rekeys, our focus is dependable help and clear communication.\n\nWe invest in training, modern key machines, and customer first service.\n\nThank you Omaha and the surrounding cities for your trust.",
     keywords: ["Omaha locksmith decade service", "established locksmith Omaha", "trusted locksmith Omaha", "local locksmith Omaha", "Aksarben Locksmiths"]
-  },
+  }
 ];
 
 export function findPost(slug: string): BlogPost | undefined {
