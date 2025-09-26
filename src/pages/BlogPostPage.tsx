@@ -169,7 +169,7 @@ export default function BlogPostPage() {
     headline: post.title,
     image: imageUrl,
     datePublished: post.date,
-    dateModified: post.date,
+    dateModified: post.updatedAt || post.date,
     url: canonicalAbs,
     mainEntityOfPage: { "@type": "WebPage", "@id": canonicalAbs },
     author: { "@type": "Person", name: "Mike" },
