@@ -15,6 +15,3 @@ const post: BlogPost = {
 };
 
 export default post;
-};
-
-export default post;
