@@ -6,11 +6,12 @@ const post: BlogPost = {
   category: "emergency",
   city: "Council Bluffs",
   date: "2022-04-07T00:00:00Z",
-  excerpt: "A few easy habits to reduce after hours emergencies and keep your evening on track.",
+  excerpt: "Late-night lockouts in Council Bluffs are stressful, but you have options. Learn quick steps to stay safe, what to try before calling, and when a mobile locksmith is the fastest fix.",
   coverImage: "/images/blog/locksmith-van.webp",
   altText: "Emergency locksmith van responding to late night call in Council Bluffs",
-  body: "Create a key routine and a spare plan.\n\nStore a spare with a trusted person or in a secure lock box.\n\nConsider smart deadbolts for family access.\n\nIf you do get locked out, request your ETA during the call.\n\nArrival times vary based on demand, distance, and traffic.",
-  keywords: ["Council Bluffs emergency locksmith", "late night lockout Council Bluffs", "24 hour locksmith Council Bluffs", "lockout prevention Council Bluffs", "Aksarben Locksmiths"]
+  updatedAt: "2025-09-25T18:00:00Z",
+  body: "Create a key routine and a spare plan.\n\nStore a spare with a trusted person or in a secure lock box.\n\nConsider smart deadbolts for family access.\n\nIf you do get locked out, request your ETA during the call.\n\nArrival times vary based on demand, distance, and traffic.\n\nIf you're locked out after hours, move to a well-lit spot and verify your address details for the dispatcher. A mobile tech can meet you curbside, confirm ownership, and open most vehicles and residential locks without damage. For prevention, keep a spare key in a safe place and consider a keypad deadbolt so family members can get in without carrying keys.\n\nHelpful links: /services/lockout-service • Related tips: /blog/what-to-do-if-youre-locked-out-in-omaha",
+  keywords: ["Council Bluffs emergency locksmith", "late night lockout Council Bluffs", "24 hour locksmith Council Bluffs", "mobile locksmith Council Bluffs", "car lockout Council Bluffs", "home lockout Council Bluffs", "Aksarben Locksmiths"]
 };
 
 export default post;

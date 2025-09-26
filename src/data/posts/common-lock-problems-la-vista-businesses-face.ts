@@ -6,11 +6,12 @@ const post: BlogPost = {
   category: "commercial",
   city: "La Vista",
   date: "2021-11-10T00:00:00Z",
-  excerpt: "Door closer issues, worn cylinders, and key control gaps can cost time and security for local shops.",
+  excerpt: "La Vista businesses often face sticky cylinders, misaligned latches, and worn keys. See the common causes, simple fixes you can try, and when to call a commercial locksmith for lasting repairs.",
   coverImage: "/images/blog/office-rekey.webp",
   altText: "Commercial locksmith rekeying office locks in La Vista business",
-  body: "Busy doors wear faster.\n\nPlan maintenance for door closers, panic hardware, and cylinders.\n\nAdopt master key systems to control access and simplify keyed entries.\n\nSchedule after hours service to reduce downtime.",
-  keywords: ["La Vista commercial locksmith", "business locks La Vista", "commercial door repair La Vista", "master key systems La Vista", "Aksarben Locksmiths"]
+  updatedAt: "2025-09-25T18:00:00Z",
+  body: "Busy doors wear faster.\n\nPlan maintenance for door closers, panic hardware, and cylinders.\n\nAdopt master key systems to control access and simplify keyed entries.\n\nSchedule after hours service to reduce downtime.\n\nStart with basics: check door alignment, tighten hinge screws, and lubricate the latch with a graphite or dry PTFE product. If keys are duplicating poorly or cylinders feel gritty, a rekey and fresh key set often solves recurring issues. Multi-tenant sites benefit from master key systems to control access cleanly across suites.\n\nLearn more: /blog/master-key-systems-for-gretna-shops • Commercial services: /services",
+  keywords: ["La Vista commercial locksmith", "business locks La Vista", "commercial door repair La Vista", "master key systems La Vista", "commercial rekey La Vista", "panic bar repair La Vista", "Aksarben Locksmiths"]
 };
 
 export default post;
