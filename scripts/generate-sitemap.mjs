@@ -3,55 +3,65 @@ import path from "node:path";
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
+import { posts as BLOG_POSTS } from "../src/data/posts/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const SITE = "https://aksarbenlocksmiths.com";
-const servicesJsonPath = resolve(__dirname, "../src/data/services.json");
-let servicesData = { services: [] };
-try {
-  const raw = readFileSync(servicesJsonPath, "utf8");
-  servicesData = JSON.parse(raw);
-} catch (e) {
-  console.error("Failed to read services.json", e);
-  servicesData = { services: [] };
-}
 
-const blogTsPath = resolve(__dirname, "../src/data/blogPosts.ts");
-let blogSlugs = [];
-try {
-  const blogSrc = readFileSync(blogTsPath, "utf8");
-  const slugMatches = [...blogSrc.matchAll(/slug:\s*["'`]([^"'`]+)["'`]/g)];
-  blogSlugs = slugMatches.map(m => m[1]);
-} catch (e) {
-  console.error("Failed to read blogPosts.ts", e);
-  blogSlugs = [];
-}
+// Build blog entries with real lastmod dates
+const blogEntries = BLOG_POSTS.map(p => ({
+  loc: `${SITE}/blog/${p.slug}`,
+  lastmod: (p.updatedAt || p.date || "").slice(0, 10),
+  changefreq: "monthly",
+  priority: "0.7",
+}));
 
-const categorySlugs = ['emergency','keys','residential','commercial'];
+// Service pages with static lastmod for now
+const servicePages = [
+  { path: "residential", lastmod: "2025-09-25" },
+  { path: "automotive", lastmod: "2025-09-25" },
+  { path: "extraction", lastmod: "2025-09-25" },
+  { path: "duplication", lastmod: "2025-09-25" },
+  { path: "rekeying", lastmod: "2025-09-25" },
+  { path: "consultation", lastmod: "2025-09-25" },
+  { path: "emergency", lastmod: "2025-09-25" },
+  { path: "lock-repair", lastmod: "2025-09-25" },
+].map(x => ({
+  loc: `${SITE}/services/${x.path}`,
+  lastmod: x.lastmod,
+  changefreq: "monthly",
+  priority: "0.8",
+}));
 
-const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+// Category pages with newest post date in each category
+const categories = ["emergency", "keys", "residential", "commercial"];
+const byCat = Object.fromEntries(categories.map(c => [c, BLOG_POSTS.filter(p => p.category === c)]));
+const maxDate = arr => (arr.length ? arr.map(p => p.updatedAt || p.date).filter(Boolean).sort().at(-1).slice(0, 10) : "2025-01-15");
 
+const categoryUrls = categories.map(c => ({
+  loc: `${SITE}/blog/${c}`,
+  lastmod: maxDate(byCat[c]),
+  changefreq: "weekly",
+  priority: "0.7",
+}));
+
+const blogIndex = [{
+  loc: `${SITE}/blog`,
+  lastmod: maxDate(BLOG_POSTS),
+  changefreq: "weekly",
+  priority: "0.8",
+}];
+
+// Compose final URL list
 const urls = [
-  { loc: `${SITE}/`, changefreq: "weekly", priority: "1.0" },
-  { loc: `${SITE}/blog`, changefreq: "weekly", priority: "0.8" },
-  { loc: `${SITE}/service-areas`, changefreq: "monthly", priority: "0.8" },
-  ...servicesData.services.map(s => ({
-    loc: `${SITE}/services/${s.slug}`,
-    changefreq: "monthly",
-    priority: "0.8"
-  })),
-  ...categorySlugs.map(cat => ({
-    loc: `${SITE}/blog/${cat}`,
-    changefreq: "weekly", 
-    priority: "0.7"
-  })),
-  ...blogSlugs.map(slug => ({
-    loc: `${SITE}/blog/${slug}`,
-    changefreq: "monthly",
-    priority: "0.7"
-  }))
+  { loc: `${SITE}/`, lastmod: maxDate(BLOG_POSTS), changefreq: "weekly", priority: "1.0" },
+  { loc: `${SITE}/service-areas`, lastmod: "2025-01-15", changefreq: "monthly", priority: "0.8" },
+  ...blogIndex,
+  ...categoryUrls,
+  ...servicePages,
+  ...blogEntries,
 ];
 
 const xml =
@@ -60,7 +70,7 @@ const xml =
   urls.map(u => {
     return `  <url>
     <loc>${u.loc}</loc>
-    <lastmod>${today}</lastmod>
+    <lastmod>${u.lastmod}</lastmod>
     <changefreq>${u.changefreq}</changefreq>
     <priority>${u.priority}</priority>
   </url>`;

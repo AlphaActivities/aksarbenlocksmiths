@@ -126,6 +126,14 @@ export default function BlogPage() {
     [activeCat, categoryParam]
   );
 
+  // Blog JSON-LD
+  const blogLd = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "Aksarben Locksmiths Blog",
+    "url": "https://aksarbenlocksmiths.com/blog",
+    "description": "Local locksmith tips, pricing clarity, and security guidance for Omaha area drivers, homeowners, and businesses."
+  };
   return (
     <>
       {/* Fixed black emergency bar */}
@@ -209,6 +217,7 @@ export default function BlogPage() {
                     })
                   }}
                 />
+                <script type="application/ld+json">{JSON.stringify(blogLd)}</script>
               </Helmet>
 
               <section className="mx-auto max-w-5xl">

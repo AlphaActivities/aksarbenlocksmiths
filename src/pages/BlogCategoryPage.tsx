@@ -99,6 +99,26 @@ export default function BlogCategoryPage() {
   const end = Math.min(start + PER_PAGE, total);
   const paged = sorted.slice(start, end);
 
+  // CollectionPage + ItemList JSON-LD for currently visible posts
+  const items = paged.map((p, idx) => ({
+    "@type": "ListItem",
+    "position": idx + 1,
+    "url": `https://aksarbenlocksmiths.com/blog/${p.slug}`,
+    "name": p.title
+  }));
+  
+  const collectionLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": `Aksarben Locksmiths Blog – ${meta.h1}`,
+    "url": `https://aksarbenlocksmiths.com/blog/${category}`,
+    "isPartOf": "https://aksarbenlocksmiths.com/blog",
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": items
+    }
+  };
+
   // Breadcrumbs JSON-LD
   const breadcrumbsLd = {
     '@context': 'https://schema.org',
@@ -108,15 +128,6 @@ export default function BlogCategoryPage() {
       { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://aksarbenlocksmiths.com/blog' },
       { '@type': 'ListItem', position: 3, name: meta.h1, item: canonical },
     ],
-  };
-
-  // CollectionPage JSON-LD (category listing)
-  const collectionLd = {
-    '@context': 'https://schema.org',
-    '@type': 'CollectionPage',
-    name: meta.h1,
-    description: meta.seoDescription,
-    url: canonical,
   };
 
   return (
