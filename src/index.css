@@ -573,3 +573,25 @@ video:fullscreen {
     transform: scale(1.02);
   }
 }
+
+/* Respect reduced motion for all custom animations */
+@media (prefers-reduced-motion: reduce) {
+  /* Disable any long-running or decorative animations when user prefers less motion */
+  .reduce-motion *,
+  .reduce-motion *::before,
+  .reduce-motion *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Only run decorative animations when motion is OK */
+@media (prefers-reduced-motion: no-preference) {
+  /* If you use utility classes like .shimmer or .gradient-animate, keep them inside this block */
+  .shimmer {
+    /* existing shimmer animation declaration stays here */
+  }
+  .gradient-animate {
+    /* existing gradient animation declaration stays here */
+  }
+}
