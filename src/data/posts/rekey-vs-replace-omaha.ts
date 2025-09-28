@@ -6,7 +6,7 @@ const post: BlogPost = {
   category: "residential",
   city: "Omaha",
   date: "2022-09-22T00:00:00Z",
-  excerpt: "Rekeying changes the pins inside your locks so old keys stop working; replacing swaps the entire hardware. Learn when to rekey for savings—and when a full upgrade is smarter.",
+  excerpt: "Rekeying changes the pins inside your locks so old keys stop working; replacing swaps the entire hardware. Learn when to rekey for savings, and when a full upgrade is smarter.",
   coverImage: "/images/blog/keys-desk.webp",
   altText: "House keys on desk showing rekey versus replace options for Omaha homeowners",
   updatedAt: "2025-09-25T18:30:00Z",

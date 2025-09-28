@@ -6,7 +6,7 @@ const post: BlogPost = {
   category: "emergency",
   city: "Council Bluffs",
   date: "2022-04-07T00:00:00Z",
-  excerpt: "Late-night lockouts happen to everyone. Try these simple habits to avoid emergencies and cut wait times in Council Bluffs—and know who to call for quick, damage-free entry.",
+  excerpt: "Late-night lockouts happen to everyone. Try these simple habits to avoid emergencies and cut wait times in Council Bluffs, and know who to call for quick, damage-free entry.",
   coverImage: "/images/blog/locksmith-van.webp",
   altText: "Emergency locksmith van responding to late night call in Council Bluffs",
   updatedAt: "2025-09-25T18:00:00Z",

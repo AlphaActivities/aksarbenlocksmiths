@@ -6,7 +6,7 @@ const post: BlogPost = {
   category: "emergency",
   city: "Omaha",
   date: "2020-02-15T00:00:00Z",
-  excerpt: "Locked out of your car, home, or business in Omaha? Stay calm, check every door, and call a licensed locksmith for fast, damage-free entry. Here's what to do—step by step.",
+  excerpt: "Locked out of your car, home, or business in Omaha? Stay calm, check every door, and call a licensed locksmith for fast, damage-free entry. Here's what to do step by step.",
   coverImage: "/images/blog/car-lockout.webp",
   altText: "Omaha locksmith helping driver during emergency car lockout",
   updatedAt: "2025-09-25T18:45:00Z",
