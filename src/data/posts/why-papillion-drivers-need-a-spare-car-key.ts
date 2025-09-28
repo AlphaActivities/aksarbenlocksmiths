@@ -16,8 +16,9 @@ Spare keys are not just for emergencies; they make everyday life easier. If you 
 What to bring for a smooth appointment: your current working key, vehicle year/make/model, and proof of ownership. For newer vehicles, the key may need to be cut and programmed. A quick call before you arrive helps confirm chip type and availability so the visit goes faster.
 
 If your last key is lost, mobile service can often create and program a replacement on site. Availability depends on the vehicle and the situation, but starting the process promptly reduces overall time and cost.
+
+Planning ahead with a spare key saves money, avoids towing, and keeps you on schedule. When you are ready, we can duplicate most standard keys and many transponder or push-to-start keys in one visit.`,
   keywords: ["Papillion spare car key", "Papillion locksmith", "car key replacement Papillion", "emergency locksmith Papillion", "Aksarben Locksmiths", "spare key cost Papillion", "mobile key programming Papillion"]
 };
 
 export default post;
-}
