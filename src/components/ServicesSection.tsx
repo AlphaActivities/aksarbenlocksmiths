@@ -114,6 +114,8 @@ const ServicesSection: React.FC = () => {
                   decoding="async"
                   width={1280}
                   height={720}
+                  width={1280}
+                  height={720}
                 />
               </div>
               <div className="p-6">
