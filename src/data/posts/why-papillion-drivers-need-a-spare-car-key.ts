@@ -6,7 +6,7 @@ const post: BlogPost = {
   category: "keys",
   city: "Papillion",
   date: "2021-03-17T00:00:00Z",
-  excerpt: "Papillion drivers save time and stress by keeping a spare car key ready. Avoid late-night lockouts, towing delays, and dealer waits, and see when a mobile locksmith is the smarter move.",
+  excerpt: "A spare key saves time and towing costs when the unexpected happens. See when to duplicate, what to bring to an appointment, and how mobile programming helps Papillion drivers.",
   coverImage: "/images/blog/handing-new-key.webp",
   altText: "Locksmith handing new spare car key to Papillion driver",
   updatedAt: "2025-09-25T18:30:00Z",

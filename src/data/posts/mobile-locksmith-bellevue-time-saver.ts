@@ -6,7 +6,7 @@ const post: BlogPost = {
   category: "emergency",
   city: "Bellevue",
   date: "2025-06-05T00:00:00Z",
-  excerpt: "Mobile locksmiths in Bellevue come to you, saving time on lockouts, lost keys, and quick fixes. Learn when a mobile tech is the fastest, most cost-effective option in the metro.",
+  excerpt: "Mobile locksmiths bring tools to you, saving towing and downtime in Bellevue. See when mobile service makes sense, availability tips, and how to speed up your appointment.",
   updatedAt: "2025-09-25T17:30:00Z",
   coverImage: "/images/blog/car-ignition.webp",
   altText: "Mobile locksmith working on car ignition repair in Bellevue",

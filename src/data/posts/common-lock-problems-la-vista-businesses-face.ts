@@ -6,7 +6,7 @@ const post: BlogPost = {
   category: "commercial",
   city: "La Vista",
   date: "2021-11-10T00:00:00Z",
-  excerpt: "La Vista businesses often face sticky cylinders, misaligned latches, and worn keys. See the common causes, simple fixes you can try, and when to call a commercial locksmith for lasting repairs.",
+  excerpt: "From worn cylinders to door alignment issues, small lock problems slow down La Vista businesses. Learn common causes, quick checks to try first, and when to call a pro for repairs.",
   coverImage: "/images/blog/office-rekey.webp",
   altText: "Commercial locksmith rekeying office locks in La Vista business",
   updatedAt: "2025-09-25T18:00:00Z",

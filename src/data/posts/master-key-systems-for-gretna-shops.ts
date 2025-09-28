@@ -6,7 +6,7 @@ const post: BlogPost = {
   category: "commercial",
   city: "Gretna",
   date: "2023-08-30T00:00:00Z",
-  excerpt: "Master key systems give Gretna shop owners efficient, secure access control. Learn how hierarchies work, where they save time, and best practices for keys, audits, and growth.",
+  excerpt: "Master key systems let owners access every door while employees carry a single key for the areas they need. Improve access control, reduce key clutter, and plan for growth.",
   coverImage: "/images/blog/key-cutting.webp",
   altText: "Locksmith cutting master keys for Gretna business access control system",
   updatedAt: "2025-09-25T18:00:00Z",
