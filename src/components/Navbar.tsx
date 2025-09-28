@@ -92,7 +92,7 @@ const Navbar: React.FC = () => {
               className="w-14 h-14 sm:w-16 sm:h-16 object-contain key-tilt-strong" 
             />
             <span 
-              className="animated-gradient font-extrabold text-xl sm:text-2xl tracking-wide whitespace-nowrap drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-center xl:text-left flex-1"
+              className="gradient-animate font-extrabold text-xl sm:text-2xl tracking-wide whitespace-nowrap drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-center xl:text-left flex-1"
               style={{ transform: 'translateX(-4px)' }}
             >
               Aksarben Locksmiths
