@@ -21,3 +21,9 @@ Date | Change | Author | Status
 - Added BlogPage & BlogCategoryPage to key_files_present
 - Documented /blog/:category in schema-map
 - Added missing GA4 mappings (navigation_click, floating_call_button, back_to_services, service_page_request_service, testimonial_dot_click)
+2025-09-28 | Phase 3 SEO Hardening | Josh Applied Improvements | Deployed
+- Sitemap now uses updatedAt/date for lastmod, category & blog index dates reflect newest post
+- Added Blog + CollectionPage/ItemList JSON-LD
+- Added FAQPage JSON-LD on service pages (no UI change)
+- Added SEO guard scripts (check:seo, sitemap assert)
+- Fixed duplicate className, cleaned build warnings

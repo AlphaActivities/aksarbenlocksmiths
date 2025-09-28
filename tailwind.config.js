@@ -2,10 +2,7 @@
 module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   safelist: [
-    {
-      pattern: /animate-\[text-shimmer.*\]/,
-      variants: ['responsive'],
-    },
+    // Removed unused animate-[text-shimmer.*] pattern to silence warnings
     'text-shimmer',
     'gradientSlide',
     'animate-gradient-slide',

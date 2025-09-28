@@ -39,11 +39,25 @@
       }
     },
     {
+      "path": "/blog",
+      "helmet": { "title": true, "meta_description": true, "canonical": true },
+      "json_ld": {
+        "root_types": ["Blog", "BreadcrumbList"]
+      }
+    },
+    {
       "path": "/blog/:category",
       "helmet": { "title": true, "meta_description": true, "canonical": true },
       "json_ld": {
-        "root_types": ["BreadcrumbList"],
+        "root_types": ["CollectionPage", "ItemList", "BreadcrumbList"],
         "notes": "Category landing page (filtered blog list). Canonical points to pretty category URL."
+      }
+    },
+    {
+      "path": "/services/:service",
+      "helmet": { "title": true, "meta_description": true, "canonical": true },
+      "json_ld": {
+        "root_types": ["Service", "FAQPage", "BreadcrumbList"]
       }
     }
   ]
