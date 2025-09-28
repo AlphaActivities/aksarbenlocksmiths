@@ -576,10 +576,9 @@ video:fullscreen {
 
 /* Respect reduced motion for all custom animations */
 @media (prefers-reduced-motion: reduce) {
-  /* Disable any long-running or decorative animations when user prefers less motion */
-  .reduce-motion *,
-  .reduce-motion *::before,
-  .reduce-motion *::after {
+  *,
+  *::before,
+  *::after {
     animation: none !important;
     transition: none !important;
   }
