@@ -134,6 +134,7 @@ export default function BlogPage() {
     "url": "https://aksarbenlocksmiths.com/blog",
     "description": "Local locksmith tips, pricing clarity, and security guidance for Omaha area drivers, homeowners, and businesses."
   };
+
   return (
     <>
       {/* Fixed black emergency bar */}
