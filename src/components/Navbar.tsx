@@ -119,6 +119,7 @@ const Navbar: React.FC = () => {
                         nav_item: item.toLowerCase()
                       });
                     }}
+                    aria-current={window.location.hash === `#${item.toLowerCase()}` ? "page" : undefined}
                     className="px-4 py-1 rounded-full bg-[length:400%_100%] bg-gradient-to-r from-blue-900 via-blue-700 to-blue-900 animate-heatwave backdrop-blur-md border border-blue-800/30 text-white transition-all duration-200 hover:scale-110 hover:shadow-[0_0_12px_4px_rgba(59,130,246,0.6)] hover:duration-100"
                   >
                     {item}

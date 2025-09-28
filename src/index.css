@@ -1,5 +1,19 @@
 @tailwind base;
 
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-reduce: block;
+    --motion-safe: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    --motion-reduce: none;
+    --motion-safe: block;
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }

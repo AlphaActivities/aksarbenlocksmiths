@@ -107,10 +107,22 @@ function App() {
                 disablePictureInPicture
                 controlsList="nodownload nofullscreen noremoteplayback"
                 aria-hidden="true"
+                poster="/images/Services Thumbnails/Residential-Service-Photo.webp"
                 className="fixed top-0 left-0 w-full h-full object-cover z-[-1] pointer-events-none"
+                style={{
+                  display: 'var(--motion-safe, block)'
+                }}
               >
                 <source src="/videos/wallpaper.mp4" type="video/mp4" />
               </video>
+              <div 
+                className="fixed top-0 left-0 w-full h-full object-cover z-[-1] pointer-events-none bg-cover bg-center"
+                style={{
+                  backgroundImage: 'url(/images/Services Thumbnails/Residential-Service-Photo.webp)',
+                  display: 'var(--motion-reduce, none)'
+                }}
+                aria-hidden="true"
+              />
               <div className="fixed top-0 w-full z-50 bg-black backdrop-blur-md shadow-lg text-sm px-4 py-1 flex justify-between items-center">
                 <span className="text-white animate-pulse">24/7 Emergency Service</span>
                 <a
