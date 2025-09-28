@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, Phone, MapPin } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { trackVideoEvent, trackClick } from "../utils/analytics";
+import { SERVICE_FAQS } from "../data/service-faqs";
 import servicesData from "../data/services.json";
 
 const allServices = servicesData.services;
@@ -143,6 +144,18 @@ export default function DynamicServicePage() {
   const gradientClasses = gradientMap[slug as keyof typeof gradientMap] || "from-gray-900 to-black";
   const titleBackground = titleBackgroundMap[slug as keyof typeof titleBackgroundMap] || "bg-black/60";
 
+  // Build FAQ JSON-LD if available for this service
+  const faqs = SERVICE_FAQS[slug as string] || [];
+  const faqLd = faqs.length ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    }))
+  } : null;
+
   // Generate JSON-LD schema for the service
   const jsonLdSchema = {
     "@context": "https://schema.org",
@@ -192,6 +205,12 @@ export default function DynamicServicePage() {
         <script type="application/ld+json">
           {JSON.stringify(jsonLdSchema)}
         </script>
+        
+        {faqLd && (
+          <script type="application/ld+json">
+            {JSON.stringify(faqLd)}
+          </script>
+        )}
         
         {slug === 'residential' && (
           <script type="application/ld+json">
