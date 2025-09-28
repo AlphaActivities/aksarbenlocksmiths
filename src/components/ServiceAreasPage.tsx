@@ -142,7 +142,7 @@ export default function ServiceAreasPage() {
       </Helmet>
 
       <div className="fixed top-0 w-full z-50 bg-black backdrop-blur-md shadow-lg text-sm px-4 py-1 flex justify-between items-center">
-        <span className="text-white animate-pulse">24/7 Emergency Service</span>
+        <span className="text-white motion-safe:animate-pulse">24/7 Emergency Service</span>
         <a
           href="tel:+14025566715"
           onClick={(e) =>
@@ -153,7 +153,7 @@ export default function ServiceAreasPage() {
             })
           }
           aria-label="Call Aksarben Locksmiths emergency line at 402 556 6715"
-          className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition animate-pulse focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-black"
+          className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition motion-safe:animate-pulse focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-black"
         >
           <Phone className="h-4 w-4" />
           (402) 556-6715

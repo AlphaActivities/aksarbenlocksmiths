@@ -12,7 +12,15 @@
     "check:posts": "node scripts/check-post-filenames.js",
     "check:seo": "node scripts/check-seo-posts.mjs",
     "build:ci": "vite build && node scripts/generate-sitemap.mjs && npm run check:seo && node scripts/assert-sitemap.mjs",
-    "fix:dashes": "node scripts/normalize-dashes.mjs"
+    "fix:dashes": "node scripts/normalize-dashes.mjs",
+    "preview": "vite preview",
+    "lh:home": "lighthouse http://localhost:4173 --only-categories=performance,accessibility,best-practices,seo --preset=desktop --quiet --output=json --output-path=docs/lh-home.json",
+    "lh:blog": "lighthouse http://localhost:4173/blog/serving-omaha-for-over-a-decade --only-categories=performance,accessibility,best-practices,seo --preset=desktop --quiet --output=json --output-path=docs/lh-blog.json",
+    "lh:service": "lighthouse http://localhost:4173/services/rekeying --only-categories=performance,accessibility,best-practices,seo --preset=desktop --quiet --output=json --output-path=docs/lh-service.json",
+    "axe:home": "npx @axe-core/cli http://localhost:4173 --save docs/axe-home.json",
+    "axe:blog": "npx @axe-core/cli http://localhost:4173/blog/serving-omaha-for-over-a-decade --save docs/axe-blog.json",
+    "axe:service": "npx @axe-core/cli http://localhost:4173/services/rekeying --save docs/axe-service.json",
+    "qa:all": "npm run lh:home && npm run lh:blog && npm run lh:service && npm run axe:home && npm run axe:blog && npm run axe:service"
   },
   "dependencies": {
     "clsx": "^2.0.0",

@@ -154,7 +154,7 @@ const Navbar: React.FC = () => {
             aria-label="Toggle Menu"
           >
             {menuOpen ? (
-              <X className="w-6 h-6 text-white animate-safe-chaos" />
+              <X className="w-6 h-6 text-white motion-safe:animate-safe-chaos" />
             ) : (
               <Menu className="w-6 h-6 text-white transition-all duration-300" />
             )}

@@ -28,7 +28,7 @@ const EmergencyButton: React.FC = () => {
       })}
       className={`fixed bottom-6 right-6 z-40 flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full transition-colors ${
         isVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
-      } animate-call-bounce`}
+      } motion-safe:animate-call-bounce`}
     >
       <Phone className="h-5 w-5" />
       <span className="font-medium">Call Now</span>
