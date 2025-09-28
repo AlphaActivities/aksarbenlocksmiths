@@ -333,7 +333,7 @@ export default function BlogPage() {
                             width={1280}
                             height={720}
                             srcSet={`${post.coverImage} 1280w`}
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                             onError={(e) => {
                               const img = e.currentTarget;
                               img.onerror = null;

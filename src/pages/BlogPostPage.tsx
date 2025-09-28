@@ -293,6 +293,15 @@ export default function BlogPostPage() {
 
             <div className="mx-auto max-w-5xl px-6">
               <article ref={articleRef} className="text-white">
+                <Helmet>
+                  <link
+                    rel="preload"
+                    as="image"
+                    href={post.coverImage}
+                    imagesizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1024px"
+                  />
+                </Helmet>
+                
                 <div className="aspect-[16/9] w-full bg-neutral-800 rounded-2xl overflow-hidden">
                   <img
                     src={post.coverImage}
@@ -302,7 +311,7 @@ export default function BlogPostPage() {
                     width={1280}
                     height={720}
                     srcSet={`${post.coverImage} 1280w`}
-                    sizes="(min-width: 1280px) 1024px, calc(100vw - 48px)"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1024px"
                     onError={(e) => {
                       const img = e.currentTarget;
                       img.onerror = null;
