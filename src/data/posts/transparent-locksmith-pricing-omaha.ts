@@ -10,7 +10,7 @@ const post: BlogPost = {
   updatedAt: "2025-09-25T17:30:00Z",
   coverImage: "/images/blog/happy-customer.webp",
   altText: "Happy Omaha customer receiving transparent pricing quote from professional locksmith",
-  body: "Quotes consider distance, time, hardware, and complexity.\n\nClear pricing prevents surprises and builds long term relationships.\n\nAlways request a written estimate before work begins.\n\nRelated guide: /blog/rekey-vs-replace-omaha\nBook a service: /services",
+  body: "Quotes consider distance, time, hardware, and complexity.\n\nClear pricing prevents surprises and builds long term relationships.\n\nAlways request a written estimate before work begins.",
   keywords: ["Omaha locksmith pricing", "transparent locksmith costs Omaha", "locksmith quotes Omaha", "fair pricing locksmith Omaha", "Aksarben Locksmiths", "locksmith quote Omaha", "no hidden fees locksmith"]
 };
 
