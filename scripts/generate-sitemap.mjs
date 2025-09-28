@@ -1,82 +1,111 @@
 import fs from "node:fs";
 import path from "node:path";
-import { readFileSync, writeFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import { dirname, resolve } from "node:path";
-import { posts as BLOG_POSTS } from "../src/data/posts/index.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 const SITE = "https://aksarbenlocksmiths.com";
+const postsDir = path.resolve(process.cwd(), "src/data/posts");
 
-// Build blog entries with real lastmod dates
-const blogEntries = BLOG_POSTS.map(p => ({
-  loc: `${SITE}/blog/${p.slug}`,
-  lastmod: (p.updatedAt || p.date || "").slice(0, 10),
-  changefreq: "monthly",
-  priority: "0.7",
-}));
+// helper: read all .ts post files (exclude index.ts, types.ts, templates, tests)
+function listPostFiles() {
+  const files = fs.readdirSync(postsDir, { withFileTypes: true });
+  return files
+    .filter(f => f.isFile())
+    .map(f => f.name)
+    .filter(n =>
+      n.endsWith(".ts") &&
+      n !== "index.ts" &&
+      n !== "types.ts" &&
+      !n.startsWith("_") &&
+      n !== "_TEMPLATE_COPY_ME.ts"
+    );
+}
 
-// Service pages with static lastmod for now
-const servicePages = [
-  { path: "residential", lastmod: "2025-09-25" },
-  { path: "automotive", lastmod: "2025-09-25" },
-  { path: "extraction", lastmod: "2025-09-25" },
-  { path: "duplication", lastmod: "2025-09-25" },
-  { path: "rekeying", lastmod: "2025-09-25" },
-  { path: "consultation", lastmod: "2025-09-25" },
-  { path: "emergency", lastmod: "2025-09-25" },
-  { path: "lock-repair", lastmod: "2025-09-25" },
-].map(x => ({
-  loc: `${SITE}/services/${x.path}`,
-  lastmod: x.lastmod,
-  changefreq: "monthly",
-  priority: "0.8",
-}));
+// helper: extract slug, updatedAt, date from a TS file
+function extractMeta(tsPath) {
+  const raw = fs.readFileSync(tsPath, "utf8");
+  const get = (re) => {
+    const m = raw.match(re);
+    return m ? m[1] : "";
+  };
+  const slug = get(/slug:\s*["']([^"']+)["']/);
+  const updatedAt = get(/updatedAt:\s*["']([^"']+)["']/);
+  const date = get(/date:\s*["']([^"']+)["']/);
+  return { slug, updatedAt, date };
+}
 
-// Category pages with newest post date in each category
-const categories = ["emergency", "keys", "residential", "commercial"];
-const byCat = Object.fromEntries(categories.map(c => [c, BLOG_POSTS.filter(p => p.category === c)]));
-const maxDate = arr => (arr.length ? arr.map(p => p.updatedAt || p.date).filter(Boolean).sort().at(-1).slice(0, 10) : "2025-01-15");
+function ymd(s) {
+  return (s || "").slice(0, 10) || "";
+}
 
-const categoryUrls = categories.map(c => ({
-  loc: `${SITE}/blog/${c}`,
-  lastmod: maxDate(byCat[c]),
-  changefreq: "weekly",
-  priority: "0.7",
-}));
+// load posts
+const postFiles = listPostFiles();
+const posts = postFiles.map(fn => extractMeta(path.join(postsDir, fn))).filter(p => p.slug);
 
-const blogIndex = [{
-  loc: `${SITE}/blog`,
-  lastmod: maxDate(BLOG_POSTS),
-  changefreq: "weekly",
-  priority: "0.8",
-}];
+// categories helper for /blog/* lastmod
+function maxDate(dates) {
+  const arr = dates.filter(Boolean).sort();
+  return arr.length ? arr.at(-1).slice(0, 10) : "2025-01-15";
+}
 
-// Compose final URL list
-const urls = [
-  { loc: `${SITE}/`, lastmod: maxDate(BLOG_POSTS), changefreq: "weekly", priority: "1.0" },
-  { loc: `${SITE}/service-areas`, lastmod: "2025-01-15", changefreq: "monthly", priority: "0.8" },
-  ...blogIndex,
-  ...categoryUrls,
-  ...servicePages,
-  ...blogEntries,
+const byCat = {};
+for (const p of posts) {
+  // read category too if present
+  const raw = fs.readFileSync(path.join(postsDir, `${p.slug}.ts`), "utf8");
+  const cat = (raw.match(/category:\s*["']([^"']+)["']/) || [,""])[1];
+  if (!byCat[cat]) byCat[cat] = [];
+  byCat[cat].push(p);
+}
+
+// assemble URLs
+const urls = [];
+
+// home
+urls.push({ loc: `${SITE}/`, lastmod: maxDate(posts.map(p => p.updatedAt || p.date)), changefreq: "weekly", priority: "1.0" });
+
+// blog index
+urls.push({ loc: `${SITE}/blog`, lastmod: maxDate(posts.map(p => p.updatedAt || p.date)), changefreq: "weekly", priority: "0.8" });
+
+// blog categories
+for (const cat of Object.keys(byCat)) {
+  urls.push({ loc: `${SITE}/blog/${cat}`, lastmod: maxDate(byCat[cat].map(p => p.updatedAt || p.date)), changefreq: "weekly", priority: "0.7" });
+}
+
+// services (static dates OK, adjust if you update a service)
+const services = [
+  "residential",
+  "automotive",
+  "extraction",
+  "duplication",
+  "rekeying",
+  "consultation",
+  "emergency",
+  "lock-repair",
 ];
+for (const s of services) {
+  urls.push({ loc: `${SITE}/services/${s}`, lastmod: "2025-09-25", changefreq: "monthly", priority: "0.8" });
+}
 
-const xml =
-  `<?xml version="1.0" encoding="UTF-8"?>\n` +
-  `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
-  urls.map(u => {
-    return `  <url>
+// blog posts (use updatedAt || date)
+for (const p of posts) {
+  urls.push({ loc: `${SITE}/blog/${p.slug}`, lastmod: ymd(p.updatedAt || p.date) || "2025-01-15", changefreq: "monthly", priority: "0.7" });
+}
+
+// write XML
+function toXml(u) {
+  return `  <url>
     <loc>${u.loc}</loc>
     <lastmod>${u.lastmod}</lastmod>
     <changefreq>${u.changefreq}</changefreq>
     <priority>${u.priority}</priority>
   </url>`;
-  }).join("\n") +
-  `\n</urlset>\n`;
+}
 
-const outPath = resolve(__dirname, "../dist/sitemap.xml");
-writeFileSync(outPath, xml, "utf8");
-console.log("Sitemap written to", outPath);
+const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls.map(toXml).join("\n")}
+</urlset>
+`;
+
+const out = path.resolve(process.cwd(), "dist", "sitemap.xml");
+fs.mkdirSync(path.dirname(out), { recursive: true });
+fs.writeFileSync(out, xml, "utf8");
+console.log("Sitemap written to", out);
