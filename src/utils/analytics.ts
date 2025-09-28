@@ -409,9 +409,19 @@ export const initializeScrollDepthTracking = () => {
     milestones.forEach(milestone => {
       if (scrollPercentage >= milestone && !scrollDepthTracked.has(milestone)) {
         scrollDepthTracked.add(milestone);
+        
+        const path = window.location.pathname;
+        let pageType: string = 'other';
+        
+        if (path === '/') pageType = 'homepage';
+        else if (path.startsWith('/services')) pageType = 'service_page';
+        else if (path === '/blog') pageType = 'blog_index';
+        else if (path.startsWith('/blog/') && path.split('/').length === 3) pageType = 'blog_post';
+        else if (path.startsWith('/blog/')) pageType = 'blog_category';
+        
         trackEvent('scroll_depth', {
           depth_percentage: milestone,
-          page_type: window.location.pathname === '/' ? 'homepage' : 'service_page'
+          page_type: pageType
         });
       }
     });
@@ -446,9 +456,20 @@ export const initializeSectionDwellTracking = () => {
           const timer = setTimeout(() => {
             if (!sectionDwellTracked.has(sectionId)) {
               sectionDwellTracked.add(sectionId);
+              
+              const path = window.location.pathname;
+              let pageType: string = 'other';
+              
+              if (path === '/') pageType = 'homepage';
+              else if (path.startsWith('/services')) pageType = 'service_page';
+              else if (path === '/blog') pageType = 'blog_index';
+              else if (path.startsWith('/blog/') && path.split('/').length === 3) pageType = 'blog_post';
+              else if (path.startsWith('/blog/')) pageType = 'blog_category';
+              
               trackEvent('section_dwell_time', {
                 section_name: sectionId,
-                dwell_seconds: 3
+                dwell_seconds: 3,
+                page_type: pageType
               });
             }
           }, 3000); // 3 seconds

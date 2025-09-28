@@ -87,6 +87,12 @@ function App() {
   return (
     <ErrorBoundary>
       <PageViewTracker />
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[1000] focus:bg-black focus:text-white focus:px-4 focus:py-2 focus:rounded-lg"
+      >
+        Skip to content
+      </a>
       <Routes>
         <Route
           path="/"
@@ -121,7 +127,7 @@ function App() {
                 </a>
               </div>
               <Navbar />
-              <main>
+              <main id="main-content" role="main">
                 <HeroSection />
                 <ServicesSection />
                 <AboutSection />

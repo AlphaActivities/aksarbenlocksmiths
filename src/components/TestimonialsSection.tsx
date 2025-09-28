@@ -201,6 +201,7 @@ const TestimonialsSection: React.FC = () => {
         <div className="flex justify-center mt-8">
           {testimonials.map((_, index) => (
             <button
+              type="button"
               key={index}
               onClick={(e) => {
                 setAutoplay(false);
