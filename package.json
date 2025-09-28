@@ -20,7 +20,8 @@
     "axe:home": "npx @axe-core/cli http://localhost:4173 --save docs/axe-home.json",
     "axe:blog": "npx @axe-core/cli http://localhost:4173/blog/serving-omaha-for-over-a-decade --save docs/axe-blog.json",
     "axe:service": "npx @axe-core/cli http://localhost:4173/services/rekeying --save docs/axe-service.json",
-    "qa:all": "npm run lh:home && npm run lh:blog && npm run lh:service && npm run axe:home && npm run axe:blog && npm run axe:service"
+    "qa:all": "npm run lh:home && npm run lh:blog && npm run lh:service && npm run axe:home && npm run axe:blog && npm run axe:service",
+    "qa:summary": "node scripts/summarize-qa.mjs"
   },
   "dependencies": {
     "clsx": "^2.0.0",
