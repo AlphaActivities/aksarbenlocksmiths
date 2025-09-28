@@ -10,7 +10,7 @@ const post: BlogPost = {
   coverImage: "/images/blog/locksmith-van.webp",
 Even with preparation, accidents still happen. That's why our mobile team is available for Council Bluffs emergencies. We can unlock vehicles, rekey homes, or get you back into your business quickly without damage. Pricing is explained before work begins so you understand the process.
 
-When prevention isn't enough, knowing who to call makes all the difference. Save our number in your phone now so you don't have to search under pressure.",
+When prevention isn't enough, knowing who to call makes all the difference. Save our number in your phone now so you don\'t have to search under pressure.",
   keywords: ["Council Bluffs emergency locksmith", "late night lockout Council Bluffs", "24 hour locksmith Council Bluffs", "mobile locksmith Council Bluffs", "car lockout Council Bluffs", "home lockout Council Bluffs", "Aksarben Locksmiths"]
 };
 
