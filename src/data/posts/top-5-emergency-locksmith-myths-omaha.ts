@@ -10,7 +10,7 @@ const post: BlogPost = {
   coverImage: "/images/blog/locksmith-tools.webp",
   altText: "Professional locksmith tools dispelling common myths about emergency locksmith services in Omaha",
   updatedAt: "2025-09-25T18:45:00Z",
-  body: "Not every lock needs drilling.\n\nLicensed techs can often open doors without damage depending on the hardware.\n\nAsk questions, request your ETA during the call, and expect transparent pricing.\n\nGet the facts: /blog/what-to-do-if-youre-locked-out-in-omaha • Pricing clarity: /blog/transparent-locksmith-pricing-omaha",
+  body: "Not every lock needs drilling.\n\nLicensed techs can often open doors without damage depending on the hardware.\n\nAsk questions, request your ETA during the call, and expect transparent pricing.",
   keywords: ["Omaha locksmith myths", "emergency locksmith facts Omaha", "locksmith misconceptions Omaha", "professional locksmith Omaha", "Aksarben Locksmiths", "fast locksmith Omaha", "non-destructive entry Omaha"]
 };
 
