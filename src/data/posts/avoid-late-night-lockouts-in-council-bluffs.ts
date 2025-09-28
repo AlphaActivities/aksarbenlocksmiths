@@ -8,9 +8,16 @@ const post: BlogPost = {
   date: "2022-04-07T00:00:00Z",
   excerpt: "Late-night lockouts happen to everyone. Try these simple habits to avoid emergencies and cut wait times in Council Bluffs, and know who to call for quick, damage-free entry.",
   coverImage: "/images/blog/locksmith-van.webp",
+  altText: "Mobile locksmith van providing late night emergency service in Council Bluffs",
+  body: `Late-night lockouts happen to everyone, but simple habits can help you avoid emergencies and reduce wait times when you do need help in Council Bluffs.
+
+Prevention tips: Keep a spare key in a secure lockbox, share keys with trusted family members, and check that doors aren't set to auto-lock before stepping outside. For vehicles, make it a habit to check for keys before closing the door.
+
+If you do get locked out, stay calm and call a professional locksmith rather than trying to force entry. Damage from DIY attempts often costs more than professional service.
+
 Even with preparation, accidents still happen. That's why our mobile team is available for Council Bluffs emergencies. We can unlock vehicles, rekey homes, or get you back into your business quickly without damage. Pricing is explained before work begins so you understand the process.
 
-When prevention isn't enough, knowing who to call makes all the difference. Save our number in your phone now so you don\'t have to search under pressure.",
+When prevention isn't enough, knowing who to call makes all the difference. Save our number in your phone now so you don't have to search under pressure.`,
   keywords: ["Council Bluffs emergency locksmith", "late night lockout Council Bluffs", "24 hour locksmith Council Bluffs", "mobile locksmith Council Bluffs", "car lockout Council Bluffs", "home lockout Council Bluffs", "Aksarben Locksmiths"]
 };
 

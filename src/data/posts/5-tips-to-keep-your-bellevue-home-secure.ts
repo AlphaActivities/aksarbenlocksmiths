@@ -8,7 +8,10 @@ const post: BlogPost = {
   date: "2020-10-05T00:00:00Z",
   excerpt: "Simple upgrades like rekeying locks, reinforcing doors, and using smart deadbolts make Bellevue homes safer without a big budget. Try these quick wins to improve everyday security.",
   coverImage: "/images/blog/house-lock.webp",
-Pro tip: Keep an eye out for wear and tear on doors or locks. A dragging door or loose cylinder is a signal for maintenance before it turns into a failure.",
+  altText: "Secure home lock installation in Bellevue residential property",
+  body: `Simple upgrades like rekeying locks, reinforcing doors, and using smart deadbolts make Bellevue homes safer without a big budget. Try these quick wins to improve everyday security.
+
+Pro tip: Keep an eye out for wear and tear on doors or locks. A dragging door or loose cylinder is a signal for maintenance before it turns into a failure.`,
   keywords: ["Bellevue home security", "Bellevue locksmith", "residential locksmith Bellevue", "rekey locks Bellevue", "smart locks Bellevue", "door reinforcement Bellevue", "Aksarben Locksmiths"]
 };
 
