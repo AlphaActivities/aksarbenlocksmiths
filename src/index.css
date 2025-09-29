@@ -594,3 +594,22 @@ video:fullscreen {
     /* existing gradient animation declaration stays here */
   }
 }
+
+/* Hero background media utilities */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Default: show video, hide poster <img> */
+.hero-video { display: block; }
+.hero-poster { display: none; }
+
+/* If the user prefers reduced motion, hide the video and show the poster image */
+@media (prefers-reduced-motion: reduce) {
+  .hero-video { display: none !important; }
+  .hero-poster { display: block !important; }
+}
