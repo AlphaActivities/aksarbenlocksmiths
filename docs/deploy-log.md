@@ -27,3 +27,7 @@ Date | Change | Author | Status
 - Added FAQPage JSON-LD on service pages (no UI change)
 - Added SEO guard scripts (check:seo, sitemap assert)
 - Fixed duplicate className, cleaned build warnings
+2025-09-29 | Hero Poster Flicker Fix + Viewport Lock | Josh Applied Improvements | Deployed
+- Unified hero poster to /images/poster.png with preload
+- Eliminated random mid-video frame flicker
+- Locked hero video/poster to viewport with CSS fixed positioning
