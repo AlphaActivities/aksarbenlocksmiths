@@ -165,7 +165,7 @@ export default function BlogPage() {
             loop
             playsInline
             aria-hidden="true"
-            poster="/images/Services Thumbnails/Residential-Service-Photo.webp"
+            poster="/images/services-thumbnails/Residential-Service-Photo.webp"
             className="fixed inset-0 w-full h-full object-cover opacity-45 z-0"
             src="/videos/wallpaper.mp4"
           />

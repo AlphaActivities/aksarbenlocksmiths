@@ -14,49 +14,49 @@ const serviceData = {
     title: "Residential Lockouts",
     description: "Locked out of your home? Our expert technicians are available 24/7 to help you regain access to your property quickly and safely. We use specialized tools and techniques to ensure no damage to your locks or doors. Our professional locksmiths are fully licensed, insured, and background-checked for your peace of mind.",
     video: "/videos/ResidentialLockoutVideo.mp4",
-    thumbnail: "/images/Services Thumbnails/Residential-Service-Photo.webp",
+    thumbnail: "/images/services-thumbnails/Residential-Service-Photo.webp",
   },
   automotive: {
     title: "Automotive Lockouts",
     description: "Car key lost or locked inside? Our automotive locksmith specialists can help with any vehicle make and model. We provide quick, damage-free car unlocking services, key cutting, transponder key programming, and ignition repair. Available 24/7 for emergency roadside assistance throughout Omaha.",
     video: "/videos/AutomotiveLockoutsVideo.mp4",
-    thumbnail: "/images/Services Thumbnails/Automotive-Lockout.webp",
+    thumbnail: "/images/services-thumbnails/Automotive-Lockout.webp",
   },
   extraction: {
     title: "Broken Key Extraction",
     description: "Dealing with a broken key? Our skilled technicians can safely extract broken keys from any lock without causing damage. We'll remove the broken piece and can create a new key on the spot. We handle all types of locks including door locks, car locks, padlocks, and more.",
     video: "/videos/KeyExtractionVideo.mp4",
-    thumbnail: "/images/Services Thumbnails/Broken-Key-Extraction.webp",
+    thumbnail: "/images/services-thumbnails/Broken-Key-Extraction.webp",
   },
   duplication: {
     title: "Key Duplication",
     description: "Need spare keys? We offer fast and accurate key duplication services for all types of keys, including high-security and transponder keys. Our state-of-the-art key cutting equipment ensures precise duplicates every time. We can also create new keys from scratch if you've lost all copies.",
     video: "/videos/DuplicationVideo.mp4",
-    thumbnail: "/images/Services Thumbnails/Key-Duplication.webp",
+    thumbnail: "/images/services-thumbnails/Key-Duplication.webp",
   },
   rekeying: {
     title: "Lock Rekeying",
     description: "Want to keep your existing locks but need new keys? Our lock rekeying service is the perfect solution. We'll modify your current locks to work with new keys, effectively invalidating any old keys that might be floating around. This is a cost-effective way to secure your property.",
     video: "/videos/LockReKeying.mp4",
-    thumbnail: "/images/Services Thumbnails/Lock-ReKeying.webp",
+    thumbnail: "/images/services-thumbnails/Lock-ReKeying.webp",
   },
   consultation: {
     title: "Security Consultation",
     description: "Looking to upgrade your security? Our expert consultants will assess your property's current door locks and provide detailed recommendations for improvements. We'll help you choose the right locks, to keep your property safe.",
     video: "/videos/SecurityConsultation.mp4",
-    thumbnail: "/images/Services Thumbnails/Security-Consultation.webp",
+    thumbnail: "/images/services-thumbnails/Security-Consultation.webp",
   },
   emergency: {
     title: "Emergency Locksmith Services",
     description: "24/7 emergency locksmith services for urgent lockouts and security situations. Our rapid response team is available around the clock to help you regain access to your property safely and quickly.",
     video: "/videos/EmergencyLocksmithVideo.mp4",
-    thumbnail: "/images/Services Thumbnails/Emergency-Service-Photo.webp",
+    thumbnail: "/images/services-thumbnails/Emergency-Service-Photo.webp",
   },
   "lock-repair": {
     title: "Lock Repair Services", 
     description: "Professional lock repair services for damaged, worn, or malfunctioning locks. We repair all types of locks including deadbolts, door handles, and high-security systems to restore your property's security.",
     video: "/videos/LockRepairVideo.mp4",
-    thumbnail: "/images/Services Thumbnails/Lock-Repair-Photo.webp",
+    thumbnail: "/images/services-thumbnails/Lock-Repair-Photo.webp",
   }
 };
 

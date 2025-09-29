@@ -181,7 +181,7 @@ const ContactSection: React.FC = () => {
             </div>
             
             <div className="map-container relative bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 h-64">
-              <div className="pointer-events-none w-full h-64 bg-[url('/images/Services%20Thumbnails/map-service-area.png')] bg-cover bg-[center_bottom_20%] rounded-2xl shadow-xl border border-white/20"></div>
+              <div className="pointer-events-none w-full h-64 bg-[url('/images/services-thumbnails/map-service-area.png')] bg-cover bg-[center_bottom_20%] rounded-2xl shadow-xl border border-white/20"></div>
 
               {/* Pill overlay, bottom center */}
               <Link
