@@ -597,11 +597,12 @@ video:fullscreen {
 
 /* Hero background media utilities */
 .hero-bg {
-  position: absolute;
+  position: fixed;         /* lock to viewport */
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  pointer-events: none;     /* already in JSX, fine to have here too */
 }
 
 /* DEFAULT: show poster, HIDE video to prevent first-paint flicker */
