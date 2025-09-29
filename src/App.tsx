@@ -105,7 +105,7 @@ function App() {
                 - Both use the SAME poster image to ensure visual parity
               */}
               {(() => {
-                const heroPoster = "/images/Services Thumbnails/Residential-Service-Photo.webp";
+                const heroPoster = "/images/poster.png";
 
                 return (
                   <>
@@ -194,6 +194,7 @@ function App() {
               
               <Helmet>
                 <script type="application/ld+json">{`
+                <link rel="preload" as="image" href="/images/poster.png" imagesrcset="/images/poster.png" />
                   {
                     "@context": "https://schema.org",
                     "@type": "FAQPage",
