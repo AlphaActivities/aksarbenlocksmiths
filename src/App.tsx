@@ -123,6 +123,7 @@ function App() {
                         so the file is NOT fetched when user prefers reduced motion. */}
                     <video
                       className="hero-video hero-bg fixed top-0 left-0 z-[-1] pointer-events-none"
+                      style={{ display: 'none' }}
                       poster={heroPoster}
                       autoPlay
                       muted

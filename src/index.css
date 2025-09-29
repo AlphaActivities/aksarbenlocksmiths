@@ -604,12 +604,18 @@ video:fullscreen {
   object-fit: cover;
 }
 
-/* Default: show video, hide poster <img> */
-.hero-video { display: block; }
-.hero-poster { display: none; }
+/* DEFAULT: show poster, HIDE video to prevent first-paint flicker */
+.hero-video { display: none; }
+.hero-poster { display: block; }
 
-/* If the user prefers reduced motion, hide the video and show the poster image */
+/* If the user prefers REDUCED motion, keep video hidden, show poster */
 @media (prefers-reduced-motion: reduce) {
   .hero-video { display: none !important; }
   .hero-poster { display: block !important; }
+}
+
+/* If the user allows motion, SWAP: show video, hide poster */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-video { display: block !important; }
+  .hero-poster { display: none !important; }
 }
