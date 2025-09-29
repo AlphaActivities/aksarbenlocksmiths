@@ -98,31 +98,52 @@ function App() {
           path="/"
           element={
             <div className="text-white">
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                controls={false}
-                disablePictureInPicture
-                controlsList="nodownload nofullscreen noremoteplayback"
-                aria-hidden="true"
-                poster="/images/Services Thumbnails/Residential-Service-Photo.webp"
-                className="fixed top-0 left-0 w-full h-full object-cover z-[-1] pointer-events-none"
-                style={{
-                  display: 'var(--motion-safe, block)'
-                }}
-              >
-                <source src="/videos/wallpaper.mp4" type="video/mp4" />
-              </video>
-              <div 
-                className="fixed top-0 left-0 w-full h-full object-cover z-[-1] pointer-events-none bg-cover bg-center"
-                style={{
-                  backgroundImage: 'url(/images/Services Thumbnails/Residential-Service-Photo.webp)',
-                  display: 'var(--motion-reduce, none)'
-                }}
-                aria-hidden="true"
-              />
+              {/*
+                HERO background media:
+                - <img className="hero-poster hero-bg"> shows when prefers-reduced-motion: reduce
+                - <video className="hero-video hero-bg"> shows otherwise
+                - Both use the SAME poster image to ensure visual parity
+              */}
+              {(() => {
+                const heroPoster = "/images/Services Thumbnails/Residential-Service-Photo.webp";
+
+                return (
+                  <>
+                    {/* Poster image fallback for reduced-motion and pre-playback */}
+                    <img
+                      src={heroPoster}
+                      alt=""
+                      aria-hidden="true"
+                      className="hero-poster hero-bg fixed top-0 left-0 z-[-1] pointer-events-none select-none"
+                      loading="eager"
+                      decoding="async"
+                    />
+
+                    {/* Video wallpaper. We keep poster attr and use a <source> with media query
+                        so the file is NOT fetched when user prefers reduced motion. */}
+                    <video
+                      className="hero-video hero-bg fixed top-0 left-0 z-[-1] pointer-events-none"
+                      poster={heroPoster}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      controls={false}
+                      disablePictureInPicture
+                      controlsList="nodownload nofullscreen noremoteplayback"
+                      aria-hidden="true"
+                      preload="metadata"
+                    >
+                      {/* The media attribute prevents loading when reduced motion is on */}
+                      <source
+                        src="/videos/wallpaper.mp4"
+                        type="video/mp4"
+                        media="(prefers-reduced-motion: no-preference)"
+                      />
+                    </video>
+                  </>
+                );
+              })()}
               <div className="fixed top-0 w-full z-50 bg-black backdrop-blur-md shadow-lg text-sm px-4 py-1 flex justify-between items-center">
                 <span className="text-white animate-pulse">24/7 Emergency Service</span>
                 <a
