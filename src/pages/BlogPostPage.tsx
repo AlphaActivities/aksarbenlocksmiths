@@ -22,7 +22,7 @@ export default function BlogPostPage() {
   const imageUrl = `${origin}${post?.coverImage || ""}`;
   const canonicalPath = `/blog/${post?.slug || slug}`;
   const canonicalAbs = origin + canonicalPath;
-  const logoAbs = origin + "/images/shield-logo.png";
+  const logoAbs = origin + "/images/shield-logo.webp";
   const categoryLabel = post ? 
     ({ emergency: "Emergency and Lockouts",
        keys: "Keys and Duplication", 

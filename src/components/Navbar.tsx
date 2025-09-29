@@ -87,7 +87,7 @@ const Navbar: React.FC = () => {
             className="flex items-center gap-2 flex-1 xl:flex-initial relative ml-[-2px]"
           >
             <img
-              src="/images/shield-logo.png"
+              src="/images/shield-logo.webp"
               alt="Aksarben Locksmiths Logo"
               className="w-14 h-14 sm:w-16 sm:h-16 object-contain key-tilt-strong" 
             />

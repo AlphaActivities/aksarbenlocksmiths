@@ -26,7 +26,7 @@ const Footer: React.FC = () => (
               <div className="relative flex items-center space-x-2 -translate-x-[12px] lg:-translate-x-[14px] ml-[-2px]">
                 <div className="absolute w-12 h-12 rounded-full bg-blue-500/10 blur-xl animate-pulse" />
                 <img
-                  src="/images/shield-logo.png"
+                  src="/images/shield-logo.webp"
                   alt="Aksarben Locksmiths"
                   className="w-12 h-12 sm:w-14 sm:h-14 object-contain key-tilt-strong"
                 />

@@ -177,10 +177,10 @@ export default function BlogCategoryPage() {
               <meta property="og:title" content={meta.h1 + ' | Aksarben Locksmiths'} />
               <meta property="og:description" content={meta.seoDescription} />
               <meta property="og:url" content={canonical} />
-              <meta property="og:image" content="https://aksarbenlocksmiths.com/images/shield-logo.png" />
+              <meta property="og:image" content="https://aksarbenlocksmiths.com/images/shield-logo.webp" />
               <meta property="og:image:width" content="1080" />
               <meta property="og:image:height" content="1080" />
-              <meta property="twitter:image" content="https://aksarbenlocksmiths.com/images/shield-logo.png" />
+              <meta property="twitter:image" content="https://aksarbenlocksmiths.com/images/shield-logo.webp" />
               <meta name="twitter:image:width" content="1080" />
               <meta name="twitter:image:height" content="1080" />
               {page > 1 && <link rel="prev" href={`${baseCanonical}?page=${page - 1}`} />}

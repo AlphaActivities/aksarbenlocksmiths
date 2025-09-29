@@ -105,7 +105,7 @@ function App() {
                 - Both use the SAME poster image to ensure visual parity
               */}
               {(() => {
-                const heroPoster = "/images/poster.png";
+                const heroPoster = "/images/poster.webp";
 
                 return (
                   <>
