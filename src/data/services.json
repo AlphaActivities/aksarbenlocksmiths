@@ -5,8 +5,6 @@
     { "slug": "extraction", "title": "Broken Key Extraction" },
     { "slug": "duplication", "title": "Key Duplication" },
     { "slug": "rekeying", "title": "Lock Rekeying" },
-    { "slug": "consultation", "title": "Security Consultation" },
-    { "slug": "emergency", "title": "Emergency Locksmith Services" },
-    { "slug": "lock-repair", "title": "Lock Repair Services" }
+    { "slug": "consultation", "title": "Security Consultation" }
   ]
 }

@@ -45,18 +45,6 @@ const serviceData = {
     description: "Looking to upgrade your security? Our expert consultants will assess your property's current door locks and provide detailed recommendations for improvements. We'll help you choose the right locks, to keep your property safe.",
     video: "/videos/SecurityConsultation.mp4",
     thumbnail: "/images/services-thumbnails/Security-Consultation.webp",
-  },
-  emergency: {
-    title: "Emergency Locksmith Services",
-    description: "24/7 emergency locksmith services for urgent lockouts and security situations. Our rapid response team is available around the clock to help you regain access to your property safely and quickly.",
-    video: "/videos/EmergencyLocksmithVideo.mp4",
-    thumbnail: "/images/services-thumbnails/Emergency-Service-Photo.webp",
-  },
-  "lock-repair": {
-    title: "Lock Repair Services", 
-    description: "Professional lock repair services for damaged, worn, or malfunctioning locks. We repair all types of locks including deadbolts, door handles, and high-security systems to restore your property's security.",
-    video: "/videos/LockRepairVideo.mp4",
-    thumbnail: "/images/services-thumbnails/Lock-Repair-Photo.webp",
   }
 };
 
@@ -347,9 +335,7 @@ export default function DynamicServicePage() {
              slug === 'extraction' ? 'Learn our professional method for removing broken keys from any lock.' :
              slug === 'duplication' ? 'Observe the precision key cutting process for perfect duplicates.' :
              slug === 'rekeying' ? 'View the lock rekeying process that gives you new keys instantly.' :
-             slug === 'consultation' ? 'Discover how we assess and upgrade your property\'s security systems.' :
-             slug === 'emergency' ? 'See our rapid response emergency locksmith service in action.' :
-             'Professional lock repair techniques demonstrated by our certified technicians.'}
+             'Discover how we assess and upgrade your property\'s security systems.'}
           </p>
         </div>
         
@@ -419,12 +405,12 @@ export default function DynamicServicePage() {
         </div>
         
         <div className="sr-only">
-          {slug === 'residential' ? 'residential locksmith omaha, emergency locksmith omaha, 24 hour locksmith omaha, locksmith near me omaha, omaha locksmith residential services, mobile locksmith omaha' : 
+          {slug === 'residential' ? 'residential locksmith omaha, emergency locksmith omaha, 24 hour locksmith omaha, locksmith near me omaha, omaha locksmith residential services, mobile locksmith omaha' :
            slug === 'automotive' ? 'car locksmith omaha, auto locksmith omaha, emergency locksmith omaha, 24 hour locksmith omaha, locksmith near me omaha, mobile locksmith omaha' :
            slug === 'extraction' ? 'emergency locksmith omaha, mobile locksmith omaha, 24 hour locksmith omaha, locksmith near me omaha, omaha locksmith emergency services' :
            slug === 'duplication' ? 'key duplication omaha, mobile locksmith omaha, omaha locksmith, locksmith near me omaha, 24 hour locksmith omaha' :
            slug === 'rekeying' ? 'rekeying locks omaha, omaha locksmith, mobile locksmith omaha, locksmith near me omaha, 24 hour locksmith omaha' :
-           'commercial locksmith omaha, emergency locksmith omaha, 24 hour locksmith omaha, locksmith near me omaha, omaha locksmith commercial services, mobile locksmith omaha'}
+           'security consultation omaha, locksmith consultation, omaha locksmith, locksmith near me omaha, mobile locksmith omaha'}
         </div>
       </div>
     </div>
