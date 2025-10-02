@@ -193,8 +193,8 @@ function App() {
               </section>
               
               <Helmet>
+                <link rel="preload" as="image" href="/images/poster.webp" imagesrcset="/images/poster.webp" />
                 <script type="application/ld+json">{`
-                <link rel="preload" as="image" href="/images/poster.png" imagesrcset="/images/poster.png" />
                   {
                     "@context": "https://schema.org",
                     "@type": "FAQPage",

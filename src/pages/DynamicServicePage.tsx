@@ -167,7 +167,7 @@ export default function DynamicServicePage() {
     "provider": {
       "@type": "LocalBusiness",
       "name": "Aksarben Locksmiths",
-      "image": "https://aksarbenlocksmiths.com/images/shield-logo.png",
+      "image": "https://aksarbenlocksmiths.com/images/shield-logo.webp",
       "url": "https://aksarbenlocksmiths.com",
       "telephone": "+14025566715",
       "address": {

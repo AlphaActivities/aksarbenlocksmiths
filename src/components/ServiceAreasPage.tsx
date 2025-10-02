@@ -122,7 +122,7 @@ export default function ServiceAreasPage() {
             "name": "Aksarben Locksmiths",
             "url": "https://aksarbenlocksmiths.com/",
             "telephone": "+14025566715",
-            "image": "https://aksarbenlocksmiths.com/images/Services%20Thumbnails/map-service-area.png",
+            "image": "https://aksarbenlocksmiths.com/images/services-thumbnails/map-service-area.png",
             "areaServed": ALL_CITIES.map((city) => ({
               "@type": "City",
               "name": `${city}, ${CITY_STATE[city] ?? "NE"}`
