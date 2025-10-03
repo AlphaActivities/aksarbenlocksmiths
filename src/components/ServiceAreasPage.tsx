@@ -361,7 +361,10 @@ export default function ServiceAreasPage() {
               Businesses across Omaha rely on us for commercial locksmith solutions, including master key systems and lock repair.
             </p>
             <p>
-              Wherever you are in the metro, our mobile locksmith technicians arrive with professional tools and clear pricing. Call now for dependable service.
+              Wherever you are in the metro, our mobile locksmith technicians arrive with professional tools and clear pricing.
+            </p>
+            <p>
+              Call now for dependable service.
             </p>
           </div>
         </div>
