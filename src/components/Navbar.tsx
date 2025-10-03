@@ -180,16 +180,15 @@ const Navbar: React.FC = () => {
                   key={item.href}
                   href={item.href}
                   onClick={(e) => {
-                    setMenuOpen(false);
-                    trackNavigation(item.href.replace('#', ''), 'mobile_menu');
-                    trackClick('mobile_nav_click', e.currentTarget, {
-                      page_section: 'mobile_menu',
-                      nav_item: item.href.replace('#', '')
-                    });
-
                     const isEmergencyItem = item.label?.includes('Emergency') && item.href === '#home';
-                    if (isEmergencyItem && window.scrollY === 0) {
+                    const isAtTop = window.scrollY === 0;
+
+                    if (isEmergencyItem && isAtTop) {
                       e.preventDefault();
+                      trackClick('mobile_nav_click', e.currentTarget, {
+                        page_section: 'mobile_menu',
+                        nav_item: 'emergency'
+                      });
                       trackClick('mobile_emergency_call', e.currentTarget, {
                         page_section: 'mobile_menu',
                         nav_item: 'emergency_call',
@@ -197,7 +196,15 @@ const Navbar: React.FC = () => {
                       });
                       trackNavigation('emergency_call', 'mobile_menu');
                       window.location.href = 'tel:+14025566715';
+                      return;
                     }
+
+                    setMenuOpen(false);
+                    trackNavigation(item.href.replace('#', ''), 'mobile_menu');
+                    trackClick('mobile_nav_click', e.currentTarget, {
+                      page_section: 'mobile_menu',
+                      nav_item: item.href.replace('#', '')
+                    });
                   }}
                   role="menuitem"
                   aria-label={item.label}
