@@ -349,7 +349,9 @@ export default function ServiceAreasPage() {
         <div className="bg-white/10 backdrop-blur-2xl rounded-xl px-6 py-5 text-white/90 text-base leading-relaxed shadow-[0_0_24px_rgba(255,255,255,0.5)] max-w-4xl w-full mx-auto mt-8 border border-white/10 ring-1 ring-white/10">
           <div className="space-y-3 text-base leading-relaxed text-gray-200">
             <p>
-              Locksmith Services Available in Omaha and Nearby Cities
+              <strong className="text-white">
+                Locksmith Services Available in Omaha and Nearby Cities
+              </strong>
             </p>
             <p>
               Our team provides residential rekeying, lock replacement, and home security upgrades to keep your property secure.
