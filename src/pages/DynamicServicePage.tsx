@@ -9,6 +9,48 @@ import servicesData from "../data/services.json";
 
 const allServices = servicesData.services;
 
+const SERVICE_META: Record<string, { title: string; description: string; serviceType: string; }> = {
+  residential: {
+    title: "Residential Lockouts in Omaha, 24/7 | Aksarben Locksmiths",
+    description: "Fast, damage-free home lockout help, rekeying, and keying-alike options. Call (402) 556-6715 for immediate residential service across the Omaha metro.",
+    serviceType: "Residential Lockouts"
+  },
+  automotive: {
+    title: "Automotive Lockouts & Car Key Help | Aksarben Locksmiths Omaha",
+    description: "Quick, non-destructive vehicle entry, key cutting, and transponder/smart-fob programming. Mobile techs across Omaha, Bellevue, Papillion.",
+    serviceType: "Automotive Lockouts"
+  },
+  extraction: {
+    title: "Broken Key Extraction, Fast & Careful | Aksarben Locksmiths",
+    description: "We remove snapped keys from locks and ignitions, inspect damage, and cut precise replacements. Mobile service throughout Omaha.",
+    serviceType: "Broken Key Extraction"
+  },
+  duplication: {
+    title: "Key Duplication, High-Security & Transponder | Aksarben Locksmiths",
+    description: "Accurate duplicates for house, office, and vehicle keys, including high-security and transponder. Quality-checked cuts that work smoothly.",
+    serviceType: "Key Duplication"
+  },
+  rekeying: {
+    title: "Lock Rekeying, Same-Day Service | Aksarben Locksmiths Omaha",
+    description: "Change who has access without replacing hardware. Key-alike options so one key opens multiple doors. Fast, affordable, secure.",
+    serviceType: "Lock Rekeying"
+  },
+  consultation: {
+    title: "Security Consultation for Homes & Businesses | Aksarben Locksmiths",
+    description: "Professional lock and door hardware assessment with clear upgrade recommendations tailored to your property and budget.",
+    serviceType: "Security Consultation"
+  }
+};
+
+const SERVICE_CITIES = [
+  { "@type": "City", "name": "Omaha" },
+  { "@type": "City", "name": "Bellevue" },
+  { "@type": "City", "name": "Papillion" },
+  { "@type": "City", "name": "La Vista" },
+  { "@type": "City", "name": "Ralston" },
+  { "@type": "City", "name": "Council Bluffs" }
+];
+
 const serviceData = {
   residential: {
     title: "Residential Lockouts",
@@ -136,11 +178,13 @@ export default function DynamicServicePage() {
   const faqs = SERVICE_FAQS[slug as string] || [];
   const canonicalPath = `/services/${slug}`;
   const origin = typeof window !== "undefined" ? window.location.origin : "https://aksarbenlocksmiths.com";
+  const canonicalUrl = `${origin}${canonicalPath}`;
+
   const faqLd = faqs.length ? {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "@id": `${origin}${canonicalPath}#faq`,
-    "url": `${origin}${canonicalPath}`,
+    "@id": `${canonicalUrl}#faq`,
+    "url": canonicalUrl,
     "mainEntity": faqs.map(item => ({
       "@type": "Question",
       "name": item.q,
@@ -148,74 +192,62 @@ export default function DynamicServicePage() {
     }))
   } : null;
 
-  // Generate JSON-LD schema for the service
-  const jsonLdSchema = {
+  const meta = SERVICE_META[slug as string];
+  const ogImage = data?.thumbnail ? `${origin}${data.thumbnail}` : `${origin}/images/shield-logo.webp`;
+
+  const serviceLd = meta ? {
     "@context": "https://schema.org",
     "@type": "Service",
-    "@id": `https://aksarbenlocksmiths.com/services/${slug}#service`,
-    "name": `${data.title} - ${slug === 'residential' ? 'Residential Locksmith Omaha' : slug === 'automotive' ? 'Car Locksmith Omaha - Auto Locksmith Omaha' : slug === 'extraction' ? 'Emergency Locksmith Omaha - Mobile Locksmith Omaha' : slug === 'duplication' ? 'Key Duplication Omaha' : slug === 'rekeying' ? 'Rekeying Locks Omaha' : 'Commercial Locksmith Omaha'}`,
-    "description": `${data.description} Professional ${slug === 'residential' ? 'residential locksmith omaha' : slug === 'automotive' ? 'car locksmith omaha and auto locksmith omaha' : slug === 'extraction' ? 'emergency locksmith omaha and mobile locksmith omaha' : slug === 'duplication' ? 'key duplication omaha' : slug === 'rekeying' ? 'rekeying locks omaha' : 'commercial locksmith omaha'} services available 24/7. Trusted omaha locksmith for all your security needs.`,
-    "serviceType": slug === 'residential' ? 'Residential Locksmith Omaha Services' : slug === 'automotive' ? 'Car Locksmith Omaha - Auto Locksmith Services' : slug === 'extraction' ? 'Emergency Locksmith Omaha - 24 Hour Locksmith Omaha' : slug === 'duplication' ? 'Key Duplication Omaha Services' : slug === 'rekeying' ? 'Rekeying Locks Omaha Services' : 'Commercial Locksmith Omaha Services',
+    "@id": `${canonicalUrl}#service`,
+    "serviceType": meta.serviceType,
+    "name": meta.serviceType,
+    "areaServed": SERVICE_CITIES,
     "provider": {
       "@type": "LocalBusiness",
       "name": "Aksarben Locksmiths",
-      "image": "https://aksarbenlocksmiths.com/images/shield-logo.webp",
-      "url": "https://aksarbenlocksmiths.com",
+      "image": `${origin}/images/shield-logo.webp`,
       "telephone": "+14025566715",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Mobile Locksmith Service – No Walk-Ins",
-        "addressLocality": "Omaha",
-        "addressRegion": "NE",
-        "postalCode": "68144",
-        "addressCountry": "US"
-      }
+      "url": origin
     },
-    "areaServed": {
-      "@type": "Place",
-      "name": "Omaha, NE"
+    "offers": {
+      "@type": "Offer",
+      "url": canonicalUrl,
+      "priceCurrency": "USD",
+      "priceSpecification": { "@type": "PriceSpecification", "price": 0, "priceCurrency": "USD" },
+      "availability": "https://schema.org/InStock"
     },
-    "availableChannel": {
-      "@type": "ServiceChannel",
-      "serviceUrl": `https://aksarbenlocksmiths.com/services/${slug}`
-    }
-  };
+    "url": canonicalUrl
+  } : null;
 
   return (
     <div className="relative min-h-screen overflow-hidden">
       <Helmet>
-        <title>{slug === 'residential' ? 'Residential Locksmith Omaha - 24 Hour Emergency Home Lockout Services' : slug === 'automotive' ? 'Car Locksmith Omaha - 24 Hour Auto Locksmith Services | Emergency Vehicle Lockouts' : slug === 'extraction' ? 'Emergency Locksmith Omaha - 24 Hour Mobile Locksmith | Broken Key Extraction' : slug === 'duplication' ? 'Key Duplication Omaha - Mobile Locksmith Services | 24 Hour Key Cutting' : slug === 'rekeying' ? 'Rekeying Locks Omaha - 24 Hour Locksmith Services | Lock Rekeying' : 'Commercial Locksmith Omaha - 24 Hour Business Locksmith Services'}</title>
-        <meta name="description" content={`${slug === 'residential' ? 'Residential locksmith omaha providing 24 hour emergency home lockout services. Trusted omaha locksmith' : slug === 'automotive' ? 'Car locksmith omaha and auto locksmith omaha services. 24 hour locksmith omaha for vehicle lockouts' : slug === 'extraction' ? 'Emergency locksmith omaha and mobile locksmith omaha for broken key extraction. 24 hour locksmith omaha' : slug === 'duplication' ? 'Key duplication omaha services by mobile locksmith omaha. Professional omaha locksmith' : slug === 'rekeying' ? 'Rekeying locks omaha services. 24 hour locksmith omaha for lock rekeying' : 'Commercial locksmith omaha for business security. Professional omaha locksmith'}. Call (402) 556-6715 for fast, professional locksmith near me omaha services.`} />
-        <meta property="og:type" content="service" />
-        <meta property="og:title" content={`${data.title} - Aksarben Locksmiths`} />
-        <meta property="og:description" content={data.description} />
-        <meta property="og:image" content={`https://aksarbenlocksmiths.com${data.thumbnail}`} />
-        <meta property="og:url" content={`https://aksarbenlocksmiths.com/services/${slug}`} />
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:image" content={`https://aksarbenlocksmiths.com${data.thumbnail}`} />
-        <link rel="canonical" href={`https://aksarbenlocksmiths.com/services/${slug}`} />
-        <script type="application/ld+json">
-          {JSON.stringify(jsonLdSchema)}
-        </script>
-        
+        {meta && <title>{meta.title}</title>}
+        {meta && <meta name="description" content={meta.description} />}
+        <link rel="canonical" href={canonicalUrl} />
+
+        {meta && <meta property="og:title" content={meta.title} />}
+        {meta && <meta property="og:description" content={meta.description} />}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:image" content={ogImage} />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        {meta && <meta name="twitter:title" content={meta.title} />}
+        {meta && <meta name="twitter:description" content={meta.description} />}
+        <meta name="twitter:image" content={ogImage} />
+
+        {serviceLd && (
+          <script type="application/ld+json">
+            {JSON.stringify(serviceLd)}
+          </script>
+        )}
+
         {faqLd && (
           <script type="application/ld+json">
             {JSON.stringify(faqLd)}
           </script>
         )}
-        
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "name": `${data.title}`,
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "4.9",
-              "reviewCount": "225"
-            }
-          })}
-        </script>
       </Helmet>
       
       {/* Black Top Bar */}
