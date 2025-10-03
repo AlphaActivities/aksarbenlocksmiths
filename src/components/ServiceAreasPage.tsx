@@ -349,19 +349,19 @@ export default function ServiceAreasPage() {
         <div className="bg-white/10 backdrop-blur-2xl rounded-xl px-6 py-5 text-white/90 text-base leading-relaxed shadow-[0_0_24px_rgba(255,255,255,0.5)] max-w-4xl w-full mx-auto mt-8 border border-white/10 ring-1 ring-white/10">
           <div className="space-y-3 text-base leading-relaxed text-gray-200">
             <p>
-              <strong className="text-white">Locksmith Services Available in Omaha and Nearby Cities</strong>
+              Locksmith Services Available in Omaha and Nearby Cities
             </p>
             <p>
-              Our team provides <span className="font-medium">residential rekeying, lock replacement, and home security upgrades</span> to keep your property secure.
+              Our team provides residential rekeying, lock replacement, and home security upgrades to keep your property secure.
             </p>
             <p>
-              If you are locked out of your vehicle, we offer <span className="font-medium">automotive lockout service, key cutting, and ignition help</span> at your location.
+              If you are locked out of your vehicle, we offer automotive lockout service, key cutting, and ignition help at your location.
             </p>
             <p>
-              Businesses across Omaha rely on us for <span className="font-medium">commercial locksmith solutions</span>, including master key systems and lock repair.
+              Businesses across Omaha rely on us for commercial locksmith solutions, including master key systems and lock repair.
             </p>
             <p>
-              Wherever you are in the metro, our <span className="font-medium">mobile locksmith technicians</span> arrive with professional tools and clear pricing. Call now for dependable service.
+              Wherever you are in the metro, our mobile locksmith technicians arrive with professional tools and clear pricing. Call now for dependable service.
             </p>
           </div>
         </div>
