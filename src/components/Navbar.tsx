@@ -186,8 +186,21 @@ const Navbar: React.FC = () => {
                       page_section: 'mobile_menu',
                       nav_item: item.href.replace('#', '')
                     });
+
+                    const isEmergencyItem = item.label?.includes('Emergency') && item.href === '#home';
+                    if (isEmergencyItem && window.scrollY === 0) {
+                      e.preventDefault();
+                      try {
+                        trackClick('mobile_emergency_call', e.currentTarget, {
+                          page_section: 'mobile_menu',
+                          phone_number: '+14025566715'
+                        });
+                      } catch {}
+                      window.location.href = 'tel:+14025566715';
+                    }
                   }}
                   role="menuitem"
+                  aria-label={item.label}
                   style={{ animationDelay: `${idx * 0.12}s` }}
                   className="block w-full px-6 py-3 rounded-full bg-gradient-to-r from-red-600 to-red-500 text-white font-bold text-center shadow-lg hover:brightness-110 transition-all animate-fade-in-up"
                 >
