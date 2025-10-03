@@ -22,6 +22,7 @@ import NotFound from './pages/NotFound';
 import ErrorBoundary from './components/ErrorBoundary';
 import { Helmet } from 'react-helmet-async';
 import { trackClick, captureAttributionFromURL } from './utils/analytics';
+import GlobalBackgroundVideo from './components/GlobalBackgroundVideo';
 
 function PageViewTracker() {
   const loc = useLocation();
@@ -87,6 +88,7 @@ function App() {
   return (
     <ErrorBoundary>
       <PageViewTracker />
+      <GlobalBackgroundVideo />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[1000] focus:bg-black focus:text-white focus:px-4 focus:py-2 focus:rounded-lg"
@@ -98,53 +100,6 @@ function App() {
           path="/"
           element={
             <div className="text-white">
-              {/*
-                HERO background media:
-                - <img className="hero-poster hero-bg"> shows when prefers-reduced-motion: reduce
-                - <video className="hero-video hero-bg"> shows otherwise
-                - Both use the SAME poster image to ensure visual parity
-              */}
-              {(() => {
-                const heroPoster = "/images/poster.webp";
-
-                return (
-                  <>
-                    {/* Poster image fallback for reduced-motion and pre-playback */}
-                    <img
-                      src={heroPoster}
-                      alt=""
-                      aria-hidden="true"
-                      className="hero-poster hero-bg fixed top-0 left-0 z-[-1] pointer-events-none select-none"
-                      loading="eager"
-                      decoding="async"
-                    />
-
-                    {/* Video wallpaper. We keep poster attr and use a <source> with media query
-                        so the file is NOT fetched when user prefers reduced motion. */}
-                    <video
-                      className="hero-video hero-bg fixed top-0 left-0 z-[-1] pointer-events-none"
-                      style={{ display: 'none' }}
-                      poster={heroPoster}
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      controls={false}
-                      disablePictureInPicture
-                      controlsList="nodownload nofullscreen noremoteplayback"
-                      aria-hidden="true"
-                      preload="metadata"
-                    >
-                      {/* The media attribute prevents loading when reduced motion is on */}
-                      <source
-                        src="/videos/wallpaper.mp4"
-                        type="video/mp4"
-                        media="(prefers-reduced-motion: no-preference)"
-                      />
-                    </video>
-                  </>
-                );
-              })()}
               <div className="fixed top-0 w-full z-50 bg-black backdrop-blur-md shadow-lg text-sm px-4 py-1 flex justify-between items-center">
                 <span className="text-white animate-pulse">24/7 Emergency Service</span>
                 <a
