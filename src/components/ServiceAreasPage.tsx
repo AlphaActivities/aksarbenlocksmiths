@@ -346,7 +346,7 @@ export default function ServiceAreasPage() {
         </div>
 
         {/* Crawlable copy block */}
-        <div className="bg-white/10 backdrop-blur-2xl rounded-xl px-6 py-5 text-white/90 text-base leading-relaxed shadow-[0_0_24px_rgba(255,255,255,0.5)] max-w-3xl w-full mx-auto mt-8 border border-white/10 ring-1 ring-white/10">
+        <div className="bg-white/10 backdrop-blur-2xl rounded-xl px-6 py-5 text-white/90 text-base leading-relaxed shadow-[0_0_24px_rgba(255,255,255,0.5)] max-w-4xl w-full mx-auto mt-8 border border-white/10 ring-1 ring-white/10">
           <h3>Locksmith services available</h3>
           <div className="space-y-3 text-base leading-relaxed text-gray-200">
             <p>
