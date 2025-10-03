@@ -190,12 +190,12 @@ const Navbar: React.FC = () => {
                     const isEmergencyItem = item.label?.includes('Emergency') && item.href === '#home';
                     if (isEmergencyItem && window.scrollY === 0) {
                       e.preventDefault();
-                      try {
-                        trackClick('mobile_emergency_call', e.currentTarget, {
-                          page_section: 'mobile_menu',
-                          phone_number: '+14025566715'
-                        });
-                      } catch {}
+                      trackClick('mobile_emergency_call', e.currentTarget, {
+                        page_section: 'mobile_menu',
+                        nav_item: 'emergency_call',
+                        phone_number: '+14025566715'
+                      });
+                      trackNavigation('emergency_call', 'mobile_menu');
                       window.location.href = 'tel:+14025566715';
                     }
                   }}
