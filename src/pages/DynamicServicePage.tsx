@@ -9,36 +9,42 @@ import servicesData from "../data/services.json";
 
 const allServices = servicesData.services;
 
-const SERVICE_META: Record<string, { title: string; description: string; serviceType: string; }> = {
+const SERVICE_META: Record<string, { title: string; metaDescription: string; description: string; serviceType: string; }> = {
   residential: {
     title: "Residential Lockouts in Omaha, 24/7 | Aksarben Locksmiths",
-    description: "Fast, damage-free home lockout help, rekeying, and keying-alike options. Call (402) 556-6715 for immediate residential service across the Omaha metro.",
-    serviceType: "Residential Lockouts"
+    metaDescription: "Locked out of your house or need your home locks rekeyed? Fast, damage-free entry and professional rekeying trusted across Omaha.",
+    serviceType: "Residential Lockouts",
+    description: "Locked out of your house or need your home locks rekeyed? Our residential locksmith services keep your family safe and secure.\n\nWe handle fast, damage-free lockouts, rekeying for new homeowners or tenants, and upgrading your hardware to high-security locks.\n\nOne call gets you a mobile locksmith at your door ready to restore access, match multiple locks to one key, or advise on affordable security improvements.\n\nOur team is trusted across Omaha for clear pricing, dependable service, and professional workmanship."
   },
   automotive: {
     title: "Automotive Lockouts & Car Key Help | Aksarben Locksmiths Omaha",
-    description: "Quick, non-destructive vehicle entry, key cutting, and transponder/smart-fob programming. Mobile techs across Omaha, Bellevue, Papillion.",
-    serviceType: "Automotive Lockouts"
+    metaDescription: "Quick, non-destructive car entry plus key cutting and transponder/fob programming for most makes and models.",
+    serviceType: "Automotive Lockouts",
+    description: "Car lockouts and key problems can happen anytime, anywhere. Our automotive locksmiths provide quick, non-destructive vehicle entry so you can get back on the road.\n\nWe cut and program car keys, fobs, and transponders on-site for most makes and models, even if you've lost all keys.\n\nWhether you're locked out, have a broken key in the ignition, or need a spare remote, our mobile team arrives with the tools to solve the problem right away.\n\nDrivers across Omaha count on us for speed, skill, and fair prices."
   },
   extraction: {
     title: "Broken Key Extraction, Fast & Careful | Aksarben Locksmiths",
-    description: "We remove snapped keys from locks and ignitions, inspect damage, and cut precise replacements. Mobile service throughout Omaha.",
-    serviceType: "Broken Key Extraction"
+    metaDescription: "Professional broken key extraction for doors and ignitions, plus on-site key replacement to restore full function.",
+    serviceType: "Broken Key Extraction",
+    description: "Snapped a key inside your lock or ignition? Don't risk damage with DIY tricks. Our locksmiths specialize in careful broken key extraction using professional tools that protect your hardware.\n\nOnce the fragment is removed, we cut and test a replacement key on-site to restore full use of your lock or ignition.\n\nBroken keys are stressful, but we make the process fast and straightforward.\n\nFrom house doors to commercial locks and car ignitions, our extraction service saves time, money, and avoids costly repairs."
   },
   duplication: {
     title: "Key Duplication, High-Security & Transponder | Aksarben Locksmiths",
-    description: "Accurate duplicates for house, office, and vehicle keys, including high-security and transponder. Quality-checked cuts that work smoothly.",
-    serviceType: "Key Duplication"
+    metaDescription: "Precise key duplication for home, office, and vehicle keys, including high-security and modern transponders.",
+    serviceType: "Key Duplication",
+    description: "Need a spare key that works the first time? Our locksmiths provide accurate key duplication for homes, offices, and vehicles, including high-security keys and modern transponders.\n\nEvery duplicate is cut and tested to ensure smooth operation.\n\nWe also offer restricted key systems for businesses that require extra security and control.\n\nHaving a spare on hand saves stress during lockouts, and our mobile locksmiths can duplicate keys on-site when it's most convenient.\n\nTrust us for reliable key duplication done right."
   },
   rekeying: {
     title: "Lock Rekeying, Same-Day Service | Aksarben Locksmiths Omaha",
-    description: "Change who has access without replacing hardware. Key-alike options so one key opens multiple doors. Fast, affordable, secure.",
-    serviceType: "Lock Rekeying"
+    metaDescription: "Change who has access without replacing hardware. Key-alike options and fast turnaround for homes and businesses.",
+    serviceType: "Lock Rekeying",
+    description: "Rekeying is the smart way to change access without replacing your entire lock. Whether you've moved into a new property, lost a key, or need to restrict former access, our locksmiths re-pin your cylinders to work with new keys.\n\nWe can also key-alike multiple locks so one key controls your whole home or office.\n\nThis service is quick, affordable, and boosts peace of mind.\n\nOmaha residents and businesses rely on our rekeying to keep their spaces secure while avoiding the cost of new hardware."
   },
   consultation: {
     title: "Security Consultation for Homes & Businesses | Aksarben Locksmiths",
-    description: "Professional lock and door hardware assessment with clear upgrade recommendations tailored to your property and budget.",
-    serviceType: "Security Consultation"
+    metaDescription: "Professional lock and door hardware assessment with clear, cost-effective upgrade recommendations.",
+    serviceType: "Security Consultation",
+    description: "Every property has unique security needs. Our consultation service gives you professional locksmith advice tailored to your home or business.\n\nWe assess your doors, locks, and entry points, then recommend upgrades such as high-security cylinders, master key systems, or keyless entry options.\n\nConsultations ensure you make smart, cost-effective improvements with a clear plan.\n\nFrom residential safety upgrades to commercial access control, our locksmith experts provide honest guidance backed by years of hands-on experience in Omaha."
   }
 };
 
@@ -223,18 +229,18 @@ export default function DynamicServicePage() {
     <div className="relative min-h-screen overflow-hidden">
       <Helmet>
         {meta && <title>{meta.title}</title>}
-        {meta && <meta name="description" content={meta.description} />}
+        {meta && <meta name="description" content={meta.metaDescription || meta.description?.replace(/\s+/g, ' ').trim().slice(0, 155)} />}
         <link rel="canonical" href={canonicalUrl} />
 
         {meta && <meta property="og:title" content={meta.title} />}
-        {meta && <meta property="og:description" content={meta.description} />}
+        {meta && <meta property="og:description" content={meta.metaDescription || meta.description?.replace(/\s+/g, ' ').trim().slice(0, 155)} />}
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:image" content={ogImage} />
 
         <meta name="twitter:card" content="summary_large_image" />
         {meta && <meta name="twitter:title" content={meta.title} />}
-        {meta && <meta name="twitter:description" content={meta.description} />}
+        {meta && <meta name="twitter:description" content={meta.metaDescription || meta.description?.replace(/\s+/g, ' ').trim().slice(0, 155)} />}
         <meta name="twitter:image" content={ogImage} />
 
         {serviceLd && (
@@ -355,9 +361,9 @@ export default function DynamicServicePage() {
           )}
         </div>
         <div className="bg-white/10 backdrop-blur-2xl rounded-xl px-6 py-5 text-white/90 text-base leading-relaxed shadow-[0_0_24px_rgba(255,255,255,0.5)] max-w-3xl w-full mx-auto mt-6">
-          <p className="font-semibold">
-            {data.description}
-          </p>
+          {(meta?.description || "").split(/\n{2,}/).map((para, i) => (
+            <p key={i} className="leading-relaxed mb-4 last:mb-0">{para}</p>
+          ))}
         </div>
         
         <div className="text-center mt-4 max-w-3xl mx-auto">
