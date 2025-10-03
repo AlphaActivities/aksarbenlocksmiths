@@ -355,38 +355,21 @@ export default function ServiceAreasPage() {
           </p>
         </div>
 
-        {/* FAQ Section */}
-        <div className="mt-12 bg-white/90 rounded-2xl shadow-lg p-6">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">Service Areas FAQ</h2>
-          <div className="space-y-4">
-            <details className="group border rounded-lg p-4 bg-white">
-              <summary className="cursor-pointer font-semibold text-gray-800 group-open:text-blue-700">
-                Which areas around Omaha do you service?
-              </summary>
-              <p className="mt-2 text-gray-600">
-                We cover Omaha, Bellevue, Papillion, La Vista, Council Bluffs, Gretna, Elkhorn,
-                Bennington, and many other surrounding communities. You can view the full list on this page.
-              </p>
-            </details>
-            <details className="group border rounded-lg p-4 bg-white">
-              <summary className="cursor-pointer font-semibold text-gray-800 group-open:text-blue-700">
-                Do you provide locksmith service in Council Bluffs and other Iowa cities?
-              </summary>
-              <p className="mt-2 text-gray-600">
-                Yes, we also serve Council Bluffs, Carter Lake, Glenwood, and Crescent in Iowa,
-                in addition to Nebraska cities in the metro area.
-              </p>
-            </details>
-            <details className="group border rounded-lg p-4 bg-white">
-              <summary className="cursor-pointer font-semibold text-gray-800 group-open:text-blue-700">
-                Is there an extra fee for service outside of Omaha?
-              </summary>
-              <p className="mt-2 text-gray-600">
-                No hidden fees. Pricing is transparent, but arrival times and availability may
-                vary by distance and traffic conditions.
-              </p>
-            </details>
-          </div>
+        {/* Hidden FAQ Section (schema remains in <Helmet>, but block invisible) */}
+        <div className="hidden">
+          <h2>Service Areas FAQ</h2>
+          <details>
+            <summary>Which areas around Omaha do you service?</summary>
+            <p>We cover Omaha, Bellevue, Papillion, La Vista, Council Bluffs, Gretna, Elkhorn, Bennington, and more.</p>
+          </details>
+          <details>
+            <summary>Do you provide locksmith service in Council Bluffs and other Iowa cities?</summary>
+            <p>Yes, we also serve Council Bluffs, Carter Lake, Glenwood, and Crescent in Iowa, in addition to Nebraska cities.</p>
+          </details>
+          <details>
+            <summary>Is there an extra fee for service outside of Omaha?</summary>
+            <p>No hidden fees. Pricing is transparent, but arrival times and availability may vary by distance and traffic.</p>
+          </details>
         </div>
       </section>
       </div>
