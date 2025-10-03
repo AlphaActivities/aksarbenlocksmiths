@@ -115,6 +115,76 @@ export default function ServiceAreasPage() {
         <title>{title}</title>
         <meta name="description" content={description} />
         <link rel="canonical" href="https://aksarbenlocksmiths.com/service-areas" />
+
+        {/* LocalBusiness + Service JSON-LD */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "@id": "https://aksarbenlocksmiths.com/#localbusiness",
+            "name": "Aksarben Locksmiths",
+            "url": "https://aksarbenlocksmiths.com",
+            "telephone": "+14025566715",
+            "image": "https://aksarbenlocksmiths.com/images/services-thumbnails/map-service-area.png",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Omaha",
+              "addressRegion": "NE",
+              "addressCountry": "US"
+            }
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "serviceType": "Locksmith Services",
+            "provider": { "@id": "https://aksarbenlocksmiths.com/#localbusiness" },
+            "areaServed": [
+              { "@type": "City", "name": "Omaha, NE" },
+              { "@type": "City", "name": "Bellevue, NE" },
+              { "@type": "City", "name": "Papillion, NE" },
+              { "@type": "City", "name": "La Vista, NE" },
+              { "@type": "City", "name": "Ralston, NE" },
+              { "@type": "City", "name": "Council Bluffs, IA" }
+            ]
+          })}
+        </script>
+
+        {/* FAQPage JSON-LD */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Which areas around Omaha do you service?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "We cover Omaha, Bellevue, Papillion, La Vista, Council Bluffs, Gretna, Elkhorn, Bennington, and many other surrounding communities. You can view the full list on this page."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Do you provide locksmith service in Council Bluffs and other Iowa cities?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, we also serve Council Bluffs, Carter Lake, Glenwood, and Crescent in Iowa, in addition to Nebraska cities in the metro area."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is there an extra fee for service outside of Omaha?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No hidden fees. Pricing is transparent, but arrival times and availability may vary by distance and traffic conditions."
+                }
+              }
+            ]
+          })}
+        </script>
+
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
@@ -283,6 +353,40 @@ export default function ServiceAreasPage() {
             and commercial security support. Our mobile technicians bring professional
             tools directly to your location for fast, reliable service.
           </p>
+        </div>
+
+        {/* FAQ Section */}
+        <div className="mt-12 bg-white/90 rounded-2xl shadow-lg p-6">
+          <h2 className="text-2xl font-bold mb-6 text-gray-800">Service Areas FAQ</h2>
+          <div className="space-y-4">
+            <details className="group border rounded-lg p-4 bg-white">
+              <summary className="cursor-pointer font-semibold text-gray-800 group-open:text-blue-700">
+                Which areas around Omaha do you service?
+              </summary>
+              <p className="mt-2 text-gray-600">
+                We cover Omaha, Bellevue, Papillion, La Vista, Council Bluffs, Gretna, Elkhorn,
+                Bennington, and many other surrounding communities. You can view the full list on this page.
+              </p>
+            </details>
+            <details className="group border rounded-lg p-4 bg-white">
+              <summary className="cursor-pointer font-semibold text-gray-800 group-open:text-blue-700">
+                Do you provide locksmith service in Council Bluffs and other Iowa cities?
+              </summary>
+              <p className="mt-2 text-gray-600">
+                Yes, we also serve Council Bluffs, Carter Lake, Glenwood, and Crescent in Iowa,
+                in addition to Nebraska cities in the metro area.
+              </p>
+            </details>
+            <details className="group border rounded-lg p-4 bg-white">
+              <summary className="cursor-pointer font-semibold text-gray-800 group-open:text-blue-700">
+                Is there an extra fee for service outside of Omaha?
+              </summary>
+              <p className="mt-2 text-gray-600">
+                No hidden fees. Pricing is transparent, but arrival times and availability may
+                vary by distance and traffic conditions.
+              </p>
+            </details>
+          </div>
         </div>
       </section>
       </div>
