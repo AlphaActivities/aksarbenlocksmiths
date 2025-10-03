@@ -361,8 +361,7 @@ export default function ServiceAreasPage() {
               Businesses across Omaha rely on us for <span className="font-medium">commercial locksmith solutions</span>, including master key systems and lock repair.
             </p>
             <p>
-              Wherever you are in the metro, our <span className="font-medium">mobile locksmith technicians</span> arrive with professional tools and clear pricing.
-              <a href="tel:+14025566715" className="underline decoration-dotted hover:no-underline"> Call now</a> for dependable service.
+              Wherever you are in the metro, our <span className="font-medium">mobile locksmith technicians</span> arrive with professional tools and clear pricing. Call now for dependable service.
             </p>
           </div>
         </div>
