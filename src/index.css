@@ -605,20 +605,14 @@ video:fullscreen {
   pointer-events: none;     /* already in JSX, fine to have here too */
 }
 
-/* DEFAULT: show poster, HIDE video to prevent first-paint flicker */
-.hero-video { display: none; }
-.hero-poster { display: block; }
+/* Wallpaper video visible by default */
+.hero-video { display: block; }
+.hero-poster { display: none; }
 
-/* If the user prefers REDUCED motion, keep video hidden, show poster */
+/* Respect reduced motion by hiding video and showing poster */
 @media (prefers-reduced-motion: reduce) {
   .hero-video { display: none !important; }
   .hero-poster { display: block !important; }
-}
-
-/* If the user allows motion, SWAP: show video, hide poster */
-@media (prefers-reduced-motion: no-preference) {
-  .hero-video { display: block !important; }
-  .hero-poster { display: none !important; }
 }
 
 html, body {

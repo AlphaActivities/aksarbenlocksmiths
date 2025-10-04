@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Phone, MapPin } from "lucide-react";
@@ -97,6 +97,7 @@ const serviceData = {
 };
 
 export default function DynamicServicePage() {
+  const location = useLocation();
   const { slug } = useParams();
   const navigate = useNavigate();
   const [playing, setPlaying] = useState(false);
@@ -124,14 +125,32 @@ export default function DynamicServicePage() {
   };
 
   useEffect(() => {
-    // Scroll to bottom after slight delay to allow full rendering
-    setTimeout(() => {
-      window.scrollTo({ 
-        top: document.documentElement.scrollHeight, 
-        behavior: "smooth" 
+    // Only run the luxury effect when explicitly requested by state
+    if ((location.state as any)?.scrollFx === "midThenBottom") {
+      // Step 1, place at center instantly to avoid jank on first paint
+      const total = document.documentElement.scrollHeight;
+      const mid = Math.max(0, (total - window.innerHeight) / 2);
+      window.scrollTo({ top: mid, behavior: "auto" });
+
+      // Step 2, on next frame then slight delay, glide to bottom
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: "smooth"
+          });
+        }, 120);
       });
-    }, 100);
-  }, []);
+    } else {
+      // Preserve previous behavior for direct visits
+      setTimeout(() => {
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: "smooth"
+        });
+      }, 100);
+    }
+  }, [slug, location.state]);
 
   // Video event handlers
   const handleVideoPlay = () => {
@@ -451,6 +470,7 @@ export default function DynamicServicePage() {
                 <li key={service.slug}>
                   <Link
                     to={`/services/${service.slug}`}
+                    state={{ scrollFx: "midThenBottom" }}
                     onClick={(e) => trackClick('internal_service_link', e.currentTarget, {
                       from_service: data.title,
                       to_service: service.title,
