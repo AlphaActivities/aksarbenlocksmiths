@@ -124,10 +124,12 @@ export default function DynamicServicePage() {
   };
 
   useEffect(() => {
-    const wantsBottomThenTop = (location.state as any)?.scrollFx === "bottomThenTop";
+    const wantsMidThenTop = (location.state as any)?.scrollFx === "midThenTop";
 
-    if (wantsBottomThenTop) {
-      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "auto" });
+    if (wantsMidThenTop) {
+      const total = document.documentElement.scrollHeight;
+      const mid = Math.max(0, Math.round((total - window.innerHeight) / 2));
+      window.scrollTo({ top: mid, behavior: "auto" });
 
       requestAnimationFrame(() => {
         setTimeout(() => {
@@ -462,7 +464,7 @@ export default function DynamicServicePage() {
                 <li key={service.slug}>
                   <Link
                     to={`/services/${service.slug}`}
-                    state={{ scrollFx: "bottomThenTop" }}
+                    state={{ scrollFx: "midThenTop" }}
                     onClick={(e) => trackClick('internal_service_link', e.currentTarget as unknown as HTMLElement, {
                       from_service: data.title,
                       to_service: service.title,

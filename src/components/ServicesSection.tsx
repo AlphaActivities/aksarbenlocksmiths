@@ -83,7 +83,7 @@ const ServicesSection: React.FC = () => {
             <Link
               key={index}
               to={`/services/${service.slug}`}
-              state={{ scrollFx: "bottomThenTop" }}
+              state={{ scrollFx: "midThenTop" }}
               onClick={(e) => {
                 sessionStorage.setItem("lastScrollY", window.scrollY.toString());
                 trackEvent('service_tile_click', {

@@ -137,7 +137,7 @@ const Footer: React.FC = () => (
                 <li key={service.slug}>
                   <Link
                     to={`/services/${service.slug}`}
-                    state={{ scrollFx: "bottomThenTop" }}
+                    state={{ scrollFx: "midThenTop" }}
                     onClick={(e) => {
                       sessionStorage.setItem("lastScrollY", window.scrollY.toString());
                       trackEvent('service_tile_click', {
