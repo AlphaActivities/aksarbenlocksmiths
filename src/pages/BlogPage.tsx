@@ -1,11 +1,13 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams, useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { BLOG_CATEGORIES } from "../data/blogPosts"; // keep categories as-is
+import { BLOG_CATEGORIES as BLOG_CATEGORY_LIST } from "../data/blogPosts";
+import { BLOG_CATEGORIES } from "../data/blogCategories";
 import { posts as BLOG_POSTS } from "../data/posts";
 import { isValidCategory } from "../data/blogCategories";
 import { trackEngagement, trackClick } from "../utils/analytics";
 import { ArrowLeft, Phone, MapPin } from "lucide-react";
+import type { BlogCategory } from "../data/posts";
 
 const BLOG_PLACEHOLDER =
   "data:image/svg+xml;utf8," +
@@ -126,14 +128,32 @@ export default function BlogPage() {
     [activeCat, categoryParam]
   );
 
-  // Blog JSON-LD
-  const blogLd = {
-    "@context": "https://schema.org",
-    "@type": "Blog",
-    "name": "Aksarben Locksmiths Blog",
-    "url": "https://aksarbenlocksmiths.com/blog",
-    "description": "Local locksmith tips, pricing clarity, and security guidance for Omaha area drivers, homeowners, and businesses."
-  };
+  const activeCatForSEO = (categoryParam || activeCat) as BlogCategory | null;
+  const activeCatMeta = activeCatForSEO && isValidCategory(activeCatForSEO) ? activeCatForSEO : null;
+
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://aksarbenlocksmiths.com";
+  const canonicalUrl = activeCatMeta
+    ? `${origin}/blog?cat=${activeCatMeta}`
+    : `${origin}/blog`;
+
+  const defaultTitle = "Our Blog, Omaha Locksmith Tips and Guides";
+  const defaultDesc = "Emergency lockouts, keys and duplication, residential and commercial security for Omaha and surrounding cities.";
+
+  const metaCat = activeCatMeta ? BLOG_CATEGORIES[activeCatMeta] : null;
+  const pageTitle = metaCat?.title || defaultTitle;
+  const pageDesc = metaCat?.seoDescription || defaultDesc;
+  const ogTitle = pageTitle;
+  const ogDesc = pageDesc;
+  const ogUrl = canonicalUrl;
+
+  const itemListElements = activeCatMeta
+    ? filtered.map((p, idx) => ({
+        "@type": "ListItem",
+        position: idx + 1,
+        url: `${origin}/blog/${p.slug}`,
+        name: p.title
+      }))
+    : [];
 
   return (
     <>
@@ -179,46 +199,69 @@ export default function BlogPage() {
           <div className="relative z-10 text-white pt-8 md:pt-10">
             <main id="blog" className="min-h-screen w-full px-6 pt-4 pb-12 md:pt-6 md:pb-16">
               <Helmet>
-                <title>Our Blog, Omaha Locksmith Tips and Guides</title>
-                <meta
-                  name="description"
-                  content="Emergency lockouts, keys and duplication, residential and commercial security for Omaha and surrounding cities."
-                />
-                {/* canonical, absolute */}
-                <link rel="canonical" href="https://aksarbenlocksmiths.com/blog" />
+                <title>{pageTitle}</title>
+                <meta name="description" content={pageDesc} />
+                <link rel="canonical" href={canonicalUrl} />
                 <meta property="og:site_name" content="Aksarben Locksmiths" />
-                {/* Open Graph */}
+
                 <meta property="og:type" content="website" />
-                <meta property="og:title" content="Our Blog, Omaha Locksmith Tips and Guides" />
-                <meta property="og:description" content="Emergency lockouts, keys and duplication, residential and commercial security for Omaha and surrounding cities." />
-                <meta property="og:url" content="https://aksarbenlocksmiths.com/blog" />
+                <meta property="og:title" content={ogTitle} />
+                <meta property="og:description" content={ogDesc} />
+                <meta property="og:url" content={ogUrl} />
                 <meta property="og:image" content="https://aksarbenlocksmiths.com/images/shield-logo.webp" />
                 <meta property="og:image:width" content="1080" />
                 <meta property="og:image:height" content="1080" />
 
-                {/* Twitter */}
                 <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content="Our Blog, Omaha Locksmith Tips and Guides" />
-                <meta name="twitter:description" content="Emergency lockouts, keys and duplication, residential and commercial security for Omaha and surrounding cities." />
+                <meta name="twitter:title" content={ogTitle} />
+                <meta name="twitter:description" content={ogDesc} />
                 <meta name="twitter:image" content="https://aksarbenlocksmiths.com/images/shield-logo.webp" />
                 <meta name="twitter:image:width" content="1080" />
                 <meta name="twitter:image:height" content="1080" />
 
-                {/* JSON-LD, Blog index breadcrumb */}
+                <script
+                  type="application/ld+json"
+                  dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(
+                      activeCatMeta
+                        ? {
+                            "@context": "https://schema.org",
+                            "@type": "CollectionPage",
+                            "@id": `${canonicalUrl}#collection`,
+                            name: metaCat?.h1 || pageTitle,
+                            url: canonicalUrl,
+                            isPartOf: `${origin}/blog`,
+                            mainEntity: {
+                              "@type": "ItemList",
+                              itemListElement: itemListElements
+                            }
+                          }
+                        : {
+                            "@context": "https://schema.org",
+                            "@type": "Blog",
+                            name: "Aksarben Locksmiths Blog",
+                            url: `${origin}/blog`,
+                            description: "Local locksmith tips, pricing clarity, and security guidance for Omaha area drivers, homeowners, and businesses."
+                          }
+                    )
+                  }}
+                />
                 <script
                   type="application/ld+json"
                   dangerouslySetInnerHTML={{
                     __html: JSON.stringify({
                       "@context": "https://schema.org",
                       "@type": "BreadcrumbList",
-                      "itemListElement": [
-                        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aksarbenlocksmiths.com/" },
-                        { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://aksarbenlocksmiths.com/blog" }
+                      itemListElement: [
+                        { "@type": "ListItem", position: 1, name: "Home", item: `${origin}/` },
+                        { "@type": "ListItem", position: 2, name: "Blog", item: `${origin}/blog` },
+                        ...(activeCatMeta
+                          ? [{ "@type": "ListItem", position: 3, name: metaCat?.h1 || pageTitle, item: canonicalUrl }]
+                          : [])
                       ]
                     })
                   }}
                 />
-                <script type="application/ld+json">{JSON.stringify(blogLd)}</script>
               </Helmet>
 
               <section className="mx-auto max-w-5xl">
@@ -263,7 +306,7 @@ export default function BlogPage() {
 
                 <div className="bg-gradient-to-br from-red-800 via-purple-900 to-purple-950 backdrop-blur-lg rounded-2xl px-6 py-4 mt-8 mb-2 border border-white/10 shadow-xl ring-1 ring-white/20 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
                   <h1 className="text-2xl md:text-4xl font-bold tracking-tight">
-                    AksarbenLocksmiths Blog
+                    {activeCatMeta ? (metaCat?.h1 || "AksarbenLocksmiths Blog") : "AksarbenLocksmiths Blog"}
                   </h1>
                   <p className="mt-3 text-base md:text-lg text-gray-200">
                     Helpful tips and locksmith insights for:<br />
@@ -273,19 +316,19 @@ export default function BlogPage() {
 
                 {/* Category filter */}
                 <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-2">
-                  {BLOG_CATEGORIES.map((cat) => {
+                  {BLOG_CATEGORY_LIST.map((cat) => {
                     const isActive = cat.slug === activeCat;
                     return (
                       <button
                         key={cat.slug}
                         type="button"
-                        onClick={(e) => { 
-                          setActiveCat(cat.slug); 
-                          trackClick("blog_chip_click", e.currentTarget as unknown as HTMLElement, { 
-                            source_page: "blog_index", 
-                            page_section: "chips", 
-                            category: cat.slug 
-                          }); 
+                        onClick={(e) => {
+                          setActiveCat(cat.slug);
+                          trackClick("blog_chip_click", e.currentTarget as unknown as HTMLElement, {
+                            source_page: "blog_index",
+                            page_section: "chips",
+                            category: cat.slug
+                          });
                         }}
                         className={[
                           "px-4 py-2 rounded-full text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black w-full justify-center text-center",
@@ -300,6 +343,12 @@ export default function BlogPage() {
                     );
                   })}
                 </div>
+
+                {activeCatMeta && metaCat?.intro && (
+                  <div className="mt-6 text-white/90 text-sm md:text-base max-w-3xl">
+                    <p className="leading-relaxed">{metaCat.intro}</p>
+                  </div>
+                )}
 
                 {/* Cards */}
                 <div ref={listRef} className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
