@@ -124,19 +124,14 @@ export default function DynamicServicePage() {
   };
 
   useEffect(() => {
-    const wantsLuxury = (location.state as any)?.scrollFx === "midThenBottom";
+    const wantsBottomThenTop = (location.state as any)?.scrollFx === "bottomThenTop";
 
-    if (wantsLuxury) {
-      const total = document.documentElement.scrollHeight;
-      const mid = Math.max(0, Math.round((total - window.innerHeight) / 2));
-      window.scrollTo({ top: mid, behavior: "auto" });
+    if (wantsBottomThenTop) {
+      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "auto" });
 
       requestAnimationFrame(() => {
         setTimeout(() => {
-          window.scrollTo({
-            top: document.documentElement.scrollHeight,
-            behavior: "smooth",
-          });
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }, 100);
       });
     } else {
@@ -467,7 +462,7 @@ export default function DynamicServicePage() {
                 <li key={service.slug}>
                   <Link
                     to={`/services/${service.slug}`}
-                    state={{ scrollFx: "midThenBottom" }}
+                    state={{ scrollFx: "bottomThenTop" }}
                     onClick={(e) => trackClick('internal_service_link', e.currentTarget as unknown as HTMLElement, {
                       from_service: data.title,
                       to_service: service.title,
