@@ -344,7 +344,7 @@ export default function BlogPage() {
                   })}
                 </div>
 
-                {/* Cards */
+                {/* Cards */}
                 <div ref={listRef} className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {filtered.map((post) => (
                     <article
