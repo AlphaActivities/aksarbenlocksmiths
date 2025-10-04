@@ -621,6 +621,10 @@ video:fullscreen {
   .hero-poster { display: none !important; }
 }
 
-html, body, #root {
+html, body {
   background-color: #0a0a0a;
+}
+
+#root {
+  background-color: transparent;
 }
