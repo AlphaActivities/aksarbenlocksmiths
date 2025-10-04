@@ -147,7 +147,7 @@ export default function DynamicServicePage() {
         });
       }, 100);
     }
-  }, [slug, location.state]);
+  }, [slug]);
 
   // Video event handlers
   const handleVideoPlay = () => {
