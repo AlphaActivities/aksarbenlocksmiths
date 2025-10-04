@@ -202,6 +202,7 @@ export default function BlogPage() {
                 <title>{pageTitle}</title>
                 <meta name="description" content={pageDesc} />
                 <link rel="canonical" href={canonicalUrl} />
+                <meta name="robots" content="index, follow" />
                 <meta property="og:site_name" content="Aksarben Locksmiths" />
 
                 <meta property="og:type" content="website" />

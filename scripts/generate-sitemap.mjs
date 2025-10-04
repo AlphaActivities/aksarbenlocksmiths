@@ -77,12 +77,13 @@ const services = [
   "duplication",
   "rekeying",
   "consultation",
-  "emergency",
-  "lock-repair",
 ];
 for (const s of services) {
   urls.push({ loc: `${SITE}/services/${s}`, lastmod: "2025-09-25", changefreq: "monthly", priority: "0.8" });
 }
+
+// service areas page
+urls.push({ loc: `${SITE}/service-areas`, lastmod: "2025-09-25", changefreq: "monthly", priority: "0.8" });
 
 // blog posts (use updatedAt || date)
 for (const p of posts) {

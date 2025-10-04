@@ -231,6 +231,7 @@ export default function DynamicServicePage() {
         {meta && <title>{meta.title}</title>}
         {meta && <meta name="description" content={meta.metaDescription || meta.description?.replace(/\s+/g, ' ').trim().slice(0, 155)} />}
         <link rel="canonical" href={canonicalUrl} />
+        <meta name="robots" content="index, follow" />
 
         {meta && <meta property="og:title" content={meta.title} />}
         {meta && <meta property="og:description" content={meta.metaDescription || meta.description?.replace(/\s+/g, ' ').trim().slice(0, 155)} />}
@@ -252,6 +253,21 @@ export default function DynamicServicePage() {
         {faqLd && (
           <script type="application/ld+json">
             {JSON.stringify(faqLd)}
+          </script>
+        )}
+
+        {data && (
+          <script type="application/ld+json">
+            {JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "VideoObject",
+              "name": `${data.title} Locksmith Service in Omaha`,
+              "description": `Watch how our professionals perform ${data.title.toLowerCase()} efficiently and securely across Omaha.`,
+              "thumbnailUrl": `https://aksarbenlocksmiths.com${data.thumbnail}`,
+              "contentUrl": `https://aksarbenlocksmiths.com${data.video}`,
+              "uploadDate": "2025-09-25",
+              "duration": "PT2M30S"
+            })}
           </script>
         )}
       </Helmet>

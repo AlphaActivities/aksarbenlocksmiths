@@ -148,6 +148,8 @@ function App() {
               </section>
               
               <Helmet>
+                <link rel="canonical" href="https://aksarbenlocksmiths.com/" />
+                <meta name="robots" content="index, follow" />
                 <link rel="preload" as="image" href="/images/poster.webp" imagesrcset="/images/poster.webp" />
                 <script type="application/ld+json">{`
                   {

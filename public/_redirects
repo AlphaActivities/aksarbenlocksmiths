@@ -4,6 +4,10 @@ http://www.aksarbenlocksmiths.com/* https://aksarbenlocksmiths.com/:splat 301!
 # Force apex
 https://www.aksarbenlocksmiths.com/* https://aksarbenlocksmiths.com/:splat 301!
 
+# Service redirects
+/services/emergency   /   301!
+/services/lock-repair /services/rekeying 301!
+
 # SPA
 /sitemap.xml   /sitemap.xml   200
 /robots.txt    /robots.txt    200
