@@ -359,6 +359,13 @@ export default function DynamicServicePage() {
                   </div>
                 </div>
               </div>
+
+              <span
+                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 translate-y-[2.8rem] text-white/90 text-sm md:text-base font-medium opacity-80 md:opacity-0 md:group-hover:opacity-80 transition-opacity duration-200 select-none drop-shadow"
+                aria-hidden="true"
+              >
+                Watch video
+              </span>
             </button>
           )}
 
