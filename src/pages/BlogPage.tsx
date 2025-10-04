@@ -398,7 +398,6 @@ export default function BlogPage() {
                   ))}
                 </div>
 
-                {/* Bottom CTA, matches Dynamic Service styling */}
                 <div className="flex justify-center mt-10">
                   <a
                     href="tel:+14025566715"
