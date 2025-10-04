@@ -1,5 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Phone, MapPin } from "lucide-react";
 import { Helmet } from "react-helmet-async";
@@ -99,6 +98,7 @@ const serviceData = {
 export default function DynamicServicePage() {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [playing, setPlaying] = useState(false);
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
   const data = serviceData[slug] ?? serviceData[slug as keyof typeof serviceData];
@@ -124,14 +124,30 @@ export default function DynamicServicePage() {
   };
 
   useEffect(() => {
-    // Scroll to bottom after slight delay to allow full rendering
-    setTimeout(() => {
-      window.scrollTo({ 
-        top: document.documentElement.scrollHeight, 
-        behavior: "smooth" 
+    const wantsLuxury = (location.state as any)?.scrollFx === "midThenBottom";
+
+    if (wantsLuxury) {
+      const total = document.documentElement.scrollHeight;
+      const mid = Math.max(0, Math.round((total - window.innerHeight) / 2));
+      window.scrollTo({ top: mid, behavior: "auto" });
+
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: "smooth",
+          });
+        }, 100);
       });
-    }, 100);
-  }, []);
+    } else {
+      setTimeout(() => {
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: "smooth",
+        });
+      }, 100);
+    }
+  }, [slug, location.state]);
 
   // Video event handlers
   const handleVideoPlay = () => {
@@ -449,9 +465,10 @@ export default function DynamicServicePage() {
               .filter(service => service.slug !== slug)
               .map(service => (
                 <li key={service.slug}>
-                  <a 
-                    href={`/services/${service.slug}`} 
-                    onClick={(e) => trackClick('internal_service_link', e.currentTarget, {
+                  <Link
+                    to={`/services/${service.slug}`}
+                    state={{ scrollFx: "midThenBottom" }}
+                    onClick={(e) => trackClick('internal_service_link', e.currentTarget as unknown as HTMLElement, {
                       from_service: data.title,
                       to_service: service.title,
                       page_section: 'more_services'
@@ -459,7 +476,7 @@ export default function DynamicServicePage() {
                     className="hover:underline"
                   >
                     {service.title}
-                  </a>
+                  </Link>
                 </li>
               ))}
           </ul>

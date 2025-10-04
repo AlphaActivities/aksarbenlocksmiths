@@ -83,7 +83,7 @@ const ServicesSection: React.FC = () => {
             <Link
               key={index}
               to={`/services/${service.slug}`}
-              state={{ scrollTo: "services" }}
+              state={{ scrollFx: "midThenBottom" }}
               onClick={(e) => {
                 sessionStorage.setItem("lastScrollY", window.scrollY.toString());
                 trackEvent('service_tile_click', {
@@ -112,8 +112,6 @@ const ServicesSection: React.FC = () => {
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   loading="lazy"
                   decoding="async"
-                  width={1280}
-                  height={720}
                   width={1280}
                   height={720}
                 />
