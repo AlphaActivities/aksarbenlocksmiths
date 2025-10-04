@@ -449,8 +449,8 @@ export default function DynamicServicePage() {
               .filter(service => service.slug !== slug)
               .map(service => (
                 <li key={service.slug}>
-                  <a 
-                    href={`/services/${service.slug}`} 
+                  <Link
+                    to={`/services/${service.slug}`}
                     onClick={(e) => trackClick('internal_service_link', e.currentTarget, {
                       from_service: data.title,
                       to_service: service.title,
@@ -459,7 +459,7 @@ export default function DynamicServicePage() {
                     className="hover:underline"
                   >
                     {service.title}
-                  </a>
+                  </Link>
                 </li>
               ))}
           </ul>

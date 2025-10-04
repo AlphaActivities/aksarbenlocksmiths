@@ -620,3 +620,7 @@ video:fullscreen {
   .hero-video { display: block !important; }
   .hero-poster { display: none !important; }
 }
+
+html, body, #root {
+  background-color: #0a0a0a;
+}
