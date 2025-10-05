@@ -173,6 +173,7 @@ export default function BlogCategoryPage() {
               <title>{meta.title}</title>
               <meta name="description" content={meta.seoDescription} />
               <link rel="canonical" href={canonical} />
+              <meta name="robots" content="index, follow" />
               <meta property="og:type" content="website" />
               <meta property="og:title" content={meta.h1 + ' | Aksarben Locksmiths'} />
               <meta property="og:description" content={meta.seoDescription} />

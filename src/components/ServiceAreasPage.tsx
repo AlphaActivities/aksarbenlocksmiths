@@ -115,6 +115,7 @@ export default function ServiceAreasPage() {
         <title>{title}</title>
         <meta name="description" content={description} />
         <link rel="canonical" href="https://aksarbenlocksmiths.com/service-areas" />
+        <meta name="robots" content="index, follow" />
 
         {/* LocalBusiness + Service JSON-LD */}
         <script type="application/ld+json">
