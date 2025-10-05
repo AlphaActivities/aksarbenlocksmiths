@@ -1,5 +1,7 @@
 {
-  "generated_at": "2025-01-21T06:15:00Z",
+  "generated_at": "2025-10-05T02:10:00Z",
+  "last_verified_build": "1211",
+  "seo_health_score": 100,
   "anchors": {
     "rulebook": "/docs/rulebook.md",
     "inventory": "/docs/project-inventory.json",

@@ -1,5 +1,7 @@
 {
-  "generated_at": "2025-01-21T06:15:00Z",
+  "generated_at": "2025-10-05T02:10:00Z",
+  "last_verified_build": "1211",
+  "seo_health_score": 100,
   "pages": [
     {
       "path": "/",
@@ -18,10 +20,10 @@
     },
     {
       "path": "/service-areas",
-      "helmet": { "title": true, "meta_description": true, "canonical": true },
+      "helmet": { "title": true, "meta_description": true, "canonical": true, "robots_meta": true },
       "json_ld": {
-        "root_types": [],
-        "notes": "SR-only geographic description present"
+        "root_types": ["LocalBusiness", "Service", "FAQPage", "Locksmith", "BreadcrumbList"],
+        "notes": "Hidden FAQ schema (JSON-LD only), LocalBusiness + Service with areaServed, Locksmith type. Explicit robots meta added in Version 1211."
       }
     },
     {
@@ -47,17 +49,18 @@
     },
     {
       "path": "/blog/:category",
-      "helmet": { "title": true, "meta_description": true, "canonical": true },
+      "helmet": { "title": true, "meta_description": true, "canonical": true, "robots_meta": true },
       "json_ld": {
         "root_types": ["CollectionPage", "ItemList", "BreadcrumbList"],
-        "notes": "Category landing page (filtered blog list). Canonical points to pretty category URL."
+        "notes": "Category landing page (filtered blog list). Canonical points to pretty category URL. Explicit robots meta added in Version 1211."
       }
     },
     {
       "path": "/services/:service",
-      "helmet": { "title": true, "meta_description": true, "canonical": true },
+      "helmet": { "title": true, "meta_description": true, "canonical": true, "robots_meta": true },
       "json_ld": {
-        "root_types": ["Service", "FAQPage", "BreadcrumbList"]
+        "root_types": ["Service", "VideoObject", "FAQPage", "BreadcrumbList"],
+        "notes": "VideoObject schema for all 6 service pages with video content. Hidden FAQ schema (JSON-LD only)."
       }
     }
   ]

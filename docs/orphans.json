@@ -1,5 +1,10 @@
 {
-  "generated_at": "2025-01-15T19:47:00Z",
+  "generated_at": "2025-10-05T02:10:00Z",
+  "last_verified_build": "1211",
+  "redirects": [
+    { "from": "/services/emergency", "to": "/", "status": 301, "reason": "Emergency calls handled on homepage" },
+    { "from": "/services/lock-repair", "to": "/services/rekeying", "status": 301, "reason": "Lock repair consolidated into rekeying service" }
+  ],
   "removed_assets": [
     { "path": "public/vite.svg", "reason": "favicon moved to /favicons/favicon.svg" },
     { "path": "public/images/Services Thumbnails/Lock ReKeying.webp", "reason": "renamed to Lock-ReKeying.webp" },
