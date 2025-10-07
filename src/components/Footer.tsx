@@ -98,38 +98,86 @@ const Footer: React.FC = () => (
                 <Facebook className="w-5 h-5 text-white" />
               </a>
 
-              {/* Twitter */}
+              {/* Twitter, X with app deep link + fallback */}
               <a
-                href="https://twitter.com/aksarbenlock"
+                href="https://x.com/aksarbenlocks"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Twitter"
                 className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500 transition focus:outline-none focus:ring-2 focus:ring-red-500/60"
-                onClick={(e) =>
+                onClick={(e) => {
+                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
+                    return;
+                  }
+
                   trackClick('footer_social_click', e.currentTarget, {
                     platform: 'Twitter',
-                    url: 'https://twitter.com/aksarbenlock',
+                    url: 'https://x.com/aksarbenlocks',
                     page_section: 'footer',
-                  })
-                }
+                    intent: 'app_fallback',
+                  });
+
+                  e.preventDefault();
+
+                  const ua = navigator.userAgent || '';
+                  const isIOS = /iPad|iPhone|iPod/.test(ua);
+                  const isAndroid = /Android/.test(ua);
+
+                  const webUrl = 'https://x.com/aksarbenlocks';
+                  const appUrl = 'twitter://user?screen_name=aksarbenlocks';
+
+                  if (isIOS || isAndroid) {
+                    openWithAppFallback({
+                      appUrl,
+                      webUrl,
+                      timeoutMs: 600,
+                    });
+                  } else {
+                    window.location.href = webUrl;
+                  }
+                }}
               >
                 <Twitter className="w-5 h-5 text-white" />
               </a>
 
-              {/* Google Maps */}
+              {/* Google Maps with app deep link + smart link fallback */}
               <a
-                href="https://maps.google.com/?q=Aksarben+Locksmiths+Omaha"
+                href="https://maps.app.goo.gl/wEUyPutcxoth9yat8"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Google Maps"
                 className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500 transition focus:outline-none focus:ring-2 focus:ring-red-500/60"
-                onClick={(e) =>
+                onClick={(e) => {
+                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
+                    return;
+                  }
+
                   trackClick('footer_social_click', e.currentTarget, {
                     platform: 'Google Maps',
-                    url: 'https://maps.google.com/?q=Aksarben+Locksmiths+Omaha',
+                    url: 'https://maps.app.goo.gl/wEUyPutcxoth9yat8',
                     page_section: 'footer',
-                  })
-                }
+                    intent: 'app_fallback',
+                  });
+
+                  e.preventDefault();
+
+                  const ua = navigator.userAgent || '';
+                  const isIOS = /iPad|iPhone|iPod/.test(ua);
+                  const isAndroid = /Android/.test(ua);
+
+                  const webUrl = 'https://maps.app.goo.gl/wEUyPutcxoth9yat8';
+                  const appUrl = 'comgooglemaps://?center=41.320272,-96.1460354&q=Aksarben+Locksmiths+LLC';
+
+                  if (isIOS || isAndroid) {
+                    openWithAppFallback({
+                      appUrl,
+                      webUrl,
+                      timeoutMs: 600,
+                    });
+                  } else {
+                    window.location.href = webUrl;
+                  }
+                }}
               >
                 <MapPin className="w-5 h-5 text-white" />
               </a>
