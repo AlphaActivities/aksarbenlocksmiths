@@ -1,6 +1,6 @@
 // Google Analytics 4 utility functions
 
-const GA_ID = import.meta.env.VITE_GA4_MEASUREMENT_ID;
+const GA_ID = import.meta.env.VITE_GA4_MEASUREMENT_ID || 'G-R5H0MX6FR2';
 
 export const DEBUG_ANALYTICS = import.meta.env.DEV && !!localStorage.getItem('DEBUG_ANALYTICS');
 const dbg = (...args: any[]) => { if (DEBUG_ANALYTICS) console.log('[ANALYTICS]', ...args); };
