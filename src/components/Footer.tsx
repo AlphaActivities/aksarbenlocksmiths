@@ -55,45 +55,76 @@ const Footer: React.FC = () => (
             </div>
 
             <div className="flex space-x-4 mt-4">
+              {/* Facebook */}
               <a
-                href="https://www.facebook.com/AksarbenLocksmithsLLC/"
+                href="https://www.facebook.com/aksarbenlocksmiths"
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={(e) => trackClick('footer_social_click', e.currentTarget, { 
-                  platform: 'Facebook',
-                  url: 'https://www.facebook.com/AksarbenLocksmithsLLC/',
-                  page_section: 'footer'
-                })}
-                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500 transition"
+                aria-label="Facebook"
+                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500 transition focus:outline-none focus:ring-2 focus:ring-red-500/60"
+                onClick={(e) =>
+                  trackClick('footer_social_click', e.currentTarget, {
+                    platform: 'Facebook',
+                    url: 'https://www.facebook.com/aksarbenlocksmiths',
+                    page_section: 'footer',
+                  })
+                }
               >
                 <Facebook className="w-5 h-5 text-white" />
               </a>
+
+              {/* Twitter */}
               <a
-                href="https://x.com/Aksarbenlocks"
+                href="https://twitter.com/aksarbenlock"
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={(e) => trackClick('footer_social_click', e.currentTarget, { 
-                  platform: 'Twitter',
-                  url: 'https://x.com/Aksarbenlocks',
-                  page_section: 'footer'
-                })}
                 aria-label="Twitter"
-                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500 transition"
+                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500 transition focus:outline-none focus:ring-2 focus:ring-red-500/60"
+                onClick={(e) =>
+                  trackClick('footer_social_click', e.currentTarget, {
+                    platform: 'Twitter',
+                    url: 'https://twitter.com/aksarbenlock',
+                    page_section: 'footer',
+                  })
+                }
               >
                 <Twitter className="w-5 h-5 text-white" />
               </a>
+
+              {/* Google Maps */}
               <a
-                href="https://www.google.com/maps/place/Aksarben+Locksmiths+LLC/@41.3203175,-96.4756949,10z"
+                href="https://maps.google.com/?q=Aksarben+Locksmiths+Omaha"
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={(e) => trackClick('footer_social_click', e.currentTarget, { 
-                  platform: 'Google Maps',
-                  url: 'https://www.google.com/maps/place/Aksarben+Locksmiths+LLC/@41.3203175,-96.4756949,10z',
-                  page_section: 'footer'
-                })}
-                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500 transition"
+                aria-label="Google Maps"
+                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500 transition focus:outline-none focus:ring-2 focus:ring-red-500/60"
+                onClick={(e) =>
+                  trackClick('footer_social_click', e.currentTarget, {
+                    platform: 'Google Maps',
+                    url: 'https://maps.google.com/?q=Aksarben+Locksmiths+Omaha',
+                    page_section: 'footer',
+                  })
+                }
               >
                 <MapPin className="w-5 h-5 text-white" />
+              </a>
+
+              {/* Yelp, new icon at the far right */}
+              <a
+                href="https://www.yelp.com/biz/aksarben-locksmiths-omaha-15"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Yelp"
+                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500 transition focus:outline-none focus:ring-2 focus:ring-red-500/60"
+                onClick={(e) =>
+                  trackClick('footer_social_click', e.currentTarget, {
+                    platform: 'Yelp',
+                    url: 'https://www.yelp.com/biz/aksarben-locksmiths-omaha-15',
+                    page_section: 'footer',
+                  })
+                }
+              >
+                <img src="/icons/yelp.svg" alt="Yelp" className="h-5 w-5" />
               </a>
             </div>
           </div>
