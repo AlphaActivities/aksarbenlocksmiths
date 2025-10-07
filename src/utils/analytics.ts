@@ -101,6 +101,19 @@ export const getAttributionParams = (): Record<string, any> => {
   return out;
 };
 
+export function getPageType(pathname: string = window.location.pathname):
+  'homepage' | 'service_page' | 'service_areas' | 'blog_index' | 'blog_post' | 'blog_category' | 'other' {
+  if (pathname === '/') return 'homepage';
+  if (pathname === '/service-areas') return 'service_areas';
+  if (pathname.startsWith('/services')) return 'service_page';
+  if (pathname === '/blog') return 'blog_index';
+  if (pathname.startsWith('/blog/')) {
+    const segs = pathname.split('/').filter(Boolean);
+    return segs.length >= 3 ? 'blog_post' : 'blog_category';
+  }
+  return 'other';
+}
+
 declare global {
   interface Window {
     dataLayer: any[];
@@ -181,17 +194,27 @@ export const configureGA4 = () => {
 // ---- Page Views (for SPA route changes) ----
 export const trackPageView = (extra: Record<string, any> = {}) => {
   if (typeof window === 'undefined' || !window.gtag) return;
+
   const page_location = window.location.href;
   const page_path = window.location.pathname + window.location.search + window.location.hash;
-  const page_title = document?.title || undefined;
-  const attr = getAttributionParams?.() || {};
-  window.gtag('event', 'page_view', {
+  const page_title = document.title;
+  const page_type = getPageType(window.location.pathname);
+
+  const baseParams: Record<string, any> = {
     page_location,
     page_path,
     page_title,
-    ...attr,
+    page_type,
+    ...getAttributionParams(),
     ...extra,
-  });
+  };
+
+  window.gtag('event', 'page_view', baseParams);
+
+  const aliasEvent = `${page_type}_page_view`;
+  window.gtag('event', aliasEvent, baseParams);
+
+  dbg('events_fired', { events: ['page_view', aliasEvent], params: baseParams });
 };
 
 // ---- Outbound link tracking (one-time document listener) ----
@@ -252,6 +275,7 @@ export const trackClick = (eventName: string, element?: HTMLElement, additionalP
 
   window.gtag('event', eventName, {
     event_category: 'click',
+    page_type: getPageType(window.location.pathname),
     ...elementData,
     ...attribution,
     ...additionalParams,
@@ -386,6 +410,9 @@ export const trackVideoEvent = (eventName: string, videoTitle: string, videoData
     event_label: videoTitle,
     video_url: videoData?.video_url,
     video_thumbnail: videoData?.video_thumbnail,
+    page_type: getPageType(window.location.pathname),
+    page_path: window.location.pathname + window.location.search + window.location.hash,
+    page_title: document.title,
     ...additionalParams,
   });
 };
@@ -441,20 +468,26 @@ export const initializeScrollDepthTracking = () => {
     milestones.forEach(milestone => {
       if (scrollPercentage >= milestone && !scrollDepthTracked.has(milestone)) {
         scrollDepthTracked.add(milestone);
-        
-        const path = window.location.pathname;
-        let pageType: string = 'other';
-        
-        if (path === '/') pageType = 'homepage';
-        else if (path.startsWith('/services')) pageType = 'service_page';
-        else if (path === '/blog') pageType = 'blog_index';
-        else if (path.startsWith('/blog/') && path.split('/').length === 3) pageType = 'blog_post';
-        else if (path.startsWith('/blog/')) pageType = 'blog_category';
-        
-        trackEvent('scroll_depth', {
+
+        const page_location = window.location.href;
+        const page_path = window.location.pathname + window.location.search + window.location.hash;
+        const page_title = document.title;
+        const page_type = getPageType(window.location.pathname);
+
+        const params = {
           depth_percentage: milestone,
-          page_type: pageType
-        });
+          page_type,
+          page_path,
+          page_title,
+          page_location
+        };
+
+        trackEvent('scroll_depth', params);
+
+        const scrollAlias = `scroll_${milestone}`;
+        trackEvent(scrollAlias, params);
+
+        dbg('events_fired', { events: ['scroll_depth', scrollAlias], params });
       }
     });
   };
@@ -481,20 +514,13 @@ export const initializeSectionDwellTracking = () => {
           const timer = setTimeout(() => {
             if (!sectionDwellTracked.has(sectionId)) {
               sectionDwellTracked.add(sectionId);
-              
-              const path = window.location.pathname;
-              let pageType: string = 'other';
-              
-              if (path === '/') pageType = 'homepage';
-              else if (path.startsWith('/services')) pageType = 'service_page';
-              else if (path === '/blog') pageType = 'blog_index';
-              else if (path.startsWith('/blog/') && path.split('/').length === 3) pageType = 'blog_post';
-              else if (path.startsWith('/blog/')) pageType = 'blog_category';
-              
+
               trackEvent('section_dwell_time', {
                 section_name: sectionId,
                 dwell_seconds: 3,
-                page_type: pageType
+                page_type: getPageType(window.location.pathname),
+                page_path: window.location.pathname + window.location.search + window.location.hash,
+                page_title: document.title
               });
             }
           }, 3000); // 3 seconds
