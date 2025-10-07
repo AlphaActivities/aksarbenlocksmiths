@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, MapPin, Phone, Mail, Twitter } from 'lucide-react';
 import { trackClick, trackNavigation, trackEvent } from '../utils/analytics';
+import { openWithAppFallback } from '../utils/openWithAppFallback';
 
 const serviceLinks = [
   { name: 'Residential Lockouts', slug: 'residential' },
@@ -55,20 +56,44 @@ const Footer: React.FC = () => (
             </div>
 
             <div className="flex space-x-4 mt-4">
-              {/* Facebook */}
+              {/* Facebook with app deep link + fallback */}
               <a
-                href="https://www.facebook.com/aksarbenlocksmiths"
+                href="https://m.facebook.com/AksarbenLocksmithsLLC/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
                 className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500 transition focus:outline-none focus:ring-2 focus:ring-red-500/60"
-                onClick={(e) =>
+                onClick={(e) => {
+                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
+                    return;
+                  }
+
                   trackClick('footer_social_click', e.currentTarget, {
                     platform: 'Facebook',
-                    url: 'https://www.facebook.com/aksarbenlocksmiths',
+                    url: 'https://m.facebook.com/AksarbenLocksmithsLLC/',
                     page_section: 'footer',
-                  })
-                }
+                    intent: 'app_fallback',
+                  });
+
+                  e.preventDefault();
+
+                  const ua = navigator.userAgent || '';
+                  const isIOS = /iPad|iPhone|iPod/.test(ua);
+                  const isAndroid = /Android/.test(ua);
+
+                  const webUrl = 'https://m.facebook.com/AksarbenLocksmithsLLC/';
+                  const appUrl = 'fb://facewebmodal/f?href=https://www.facebook.com/AksarbenLocksmithsLLC/';
+
+                  if (isIOS || isAndroid) {
+                    openWithAppFallback({
+                      appUrl,
+                      webUrl,
+                      timeoutMs: 600,
+                    });
+                  } else {
+                    window.location.href = webUrl;
+                  }
+                }}
               >
                 <Facebook className="w-5 h-5 text-white" />
               </a>
