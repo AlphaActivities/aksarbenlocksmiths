@@ -212,6 +212,11 @@ export default function DynamicServicePage() {
   const meta = SERVICE_META[slug as string];
   const ogImage = data?.thumbnail ? `${origin}${data.thumbnail}` : `${origin}/images/shield-logo.webp`;
 
+  // ISO-8601 with Omaha timezone
+  const videoUploadDate = "2025-09-25T12:00:00-05:00";
+  // Canonical page URL for this service, used as embedUrl
+  const pageUrl = `https://aksarbenlocksmiths.com/services/${slug}`;
+
   const serviceLd = meta ? {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -276,7 +281,8 @@ export default function DynamicServicePage() {
               "description": `Watch how our professionals perform ${data.title.toLowerCase()} efficiently and securely across Omaha.`,
               "thumbnailUrl": `https://aksarbenlocksmiths.com${data.thumbnail}`,
               "contentUrl": `https://aksarbenlocksmiths.com${data.video}`,
-              "uploadDate": "2025-09-25",
+              "embedUrl": pageUrl,
+              "uploadDate": videoUploadDate,
               "duration": "PT2M30S"
             })}
           </script>
