@@ -1,5 +1,7 @@
 // Google Analytics 4 utility functions
 
+const GA_ID = import.meta.env.VITE_GA4_MEASUREMENT_ID;
+
 export const DEBUG_ANALYTICS = import.meta.env.DEV && !!localStorage.getItem('DEBUG_ANALYTICS');
 const dbg = (...args: any[]) => { if (DEBUG_ANALYTICS) console.log('[ANALYTICS]', ...args); };
 
@@ -101,57 +103,78 @@ export const getAttributionParams = (): Record<string, any> => {
 
 declare global {
   interface Window {
+    dataLayer: any[];
     gtag: (...args: any[]) => void;
   }
 }
 
+// Load GA4 script and initialize (called once)
+let __gaLoaded = false;
+export function ensureGA4Loaded() {
+  if (typeof window === 'undefined' || __gaLoaded) return;
+  if (!GA_ID) {
+    console.warn('GA4 ID missing, set VITE_GA4_MEASUREMENT_ID in .env');
+    return;
+  }
+
+  const s = document.createElement('script');
+  s.async = true;
+  s.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+  document.head.appendChild(s);
+
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function gtag() { window.dataLayer.push(arguments as any); };
+
+  window.gtag('js', new Date());
+  window.gtag('config', GA_ID, {
+    send_page_view: false,
+    anonymize_ip: true,
+    allow_google_signals: false
+  });
+
+  __gaLoaded = true;
+  dbg('GA4 loaded programmatically', GA_ID);
+}
+
 // Configure GA4 with debug user ID in development
 export const configureGA4 = () => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    const config: Record<string, any> = {
-      // privacy hardening
-      anonymize_ip: true,        // hide last octet in GA4 processing
-      allow_google_signals: false
-    };
+  ensureGA4Loaded();
+
+  if (typeof window === 'undefined' || !window.gtag) return;
+
+  const userProps: Record<string, any> = {
+    user_type: 'general_visitor',
+    visit_intent: 'locksmith_service',
+    platform: navigator.platform || 'unknown',
+  };
+
+  if (import.meta.env.DEV) {
+    userProps.user_id = 'debug-user-josh';
+  }
+
+  dbg('user_properties', userProps);
     
-    // Add debug user ID only in development
-    if (import.meta.env.DEV) {
-      config.user_id = 'debug-user-josh';
-    }
+  try { captureAttributionFromURL(); } catch {}
+
+  window.gtag('set', 'user_properties', userProps);
     
-    dbg('config', config);
-    
-    window.gtag('config', 'G-R5H0MX6FR2', config);
-    
-    // capture first route load
-    try { captureAttributionFromURL(); } catch {}
-    
-    // Set user properties
-    window.gtag('set', 'user_properties', {
-      user_type: 'general_visitor',  // You can customize this dynamically in future
-      visit_intent: 'locksmith_service',
-      platform: navigator.platform || 'unknown',
+  const urlParams = new URLSearchParams(window.location.search);
+  const utmSource = urlParams.get('utm_source');
+  const utmMedium = urlParams.get('utm_medium');
+  const utmCampaign = urlParams.get('utm_campaign');
+
+  if (utmSource || utmMedium || utmCampaign) {
+    window.gtag('event', 'utm_tracking', {
+      utm_source: utmSource,
+      utm_medium: utmMedium,
+      utm_campaign: utmCampaign,
     });
-    
-    // Track UTM parameters (runs only once on load)
-    const urlParams = new URLSearchParams(window.location.search);
-    const utmSource = urlParams.get('utm_source');
-    const utmMedium = urlParams.get('utm_medium');
-    const utmCampaign = urlParams.get('utm_campaign');
 
-    if (utmSource || utmMedium || utmCampaign) {
-      window.gtag('event', 'utm_tracking', {
-        utm_source: utmSource,
-        utm_medium: utmMedium,
-        utm_campaign: utmCampaign,
-      });
-
-      window.gtag('set', 'user_properties', {
-        utm_source: utmSource,
-        utm_medium: utmMedium,
-        utm_campaign: utmCampaign,
-      });
-    }
+    window.gtag('set', 'user_properties', {
+      utm_source: utmSource,
+      utm_medium: utmMedium,
+      utm_campaign: utmCampaign,
+    });
   }
 };
 
@@ -395,10 +418,19 @@ export const trackEngagement = (action: string, element: string, additionalParam
 // Scroll depth tracking
 let scrollDepthTracked = new Set<number>();
 
+export const resetScrollTracking = () => {
+  scrollDepthTracked.clear();
+};
+
 export const initializeScrollDepthTracking = () => {
   if (typeof window === 'undefined') return;
-  
+
+  let __lastScrollTs = 0;
   const trackScrollDepth = () => {
+    const now = Date.now();
+    if (now - __lastScrollTs < 150) return;
+    __lastScrollTs = now;
+
     const scrollTop = window.scrollY;
     const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
     const scrollPercentage = Math.round((scrollTop / documentHeight) * 100);
@@ -428,13 +460,6 @@ export const initializeScrollDepthTracking = () => {
   };
   
   window.addEventListener('scroll', trackScrollDepth, { passive: true });
-  
-  // Reset tracking when navigating to new page
-  const resetScrollTracking = () => {
-    scrollDepthTracked.clear();
-  };
-  
-  window.addEventListener('beforeunload', resetScrollTracking);
 };
 
 // Section dwell time tracking

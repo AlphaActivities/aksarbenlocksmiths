@@ -21,15 +21,19 @@ import SearchPage from './pages/SearchPage';
 import NotFound from './pages/NotFound';
 import ErrorBoundary from './components/ErrorBoundary';
 import { Helmet } from 'react-helmet-async';
-import { trackClick, captureAttributionFromURL } from './utils/analytics';
+import { trackClick, captureAttributionFromURL, resetScrollTracking } from './utils/analytics';
 import GlobalBackgroundVideo from './components/GlobalBackgroundVideo';
 
 function PageViewTracker() {
   const loc = useLocation();
   React.useEffect(() => {
-    // fire a virtual page_view on every route change
     trackPageView();
   }, [loc.pathname, loc.search, loc.hash]);
+
+  React.useEffect(() => {
+    resetScrollTracking();
+  }, [loc.pathname]);
+
   return null;
 }
 
