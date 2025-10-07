@@ -117,12 +117,13 @@ const ContactSection: React.FC = () => {
                   </div>
                   <div>
                     <p className="font-medium text-white mb-1">Phone</p>
-                    <a 
-                      href="tel:+14025566715" 
-                      onClick={(e) => trackClick('contact_phone_click', e.currentTarget, { 
+                    <a
+                      href="tel:+14025566715"
+                      onClick={(e) => trackClick('contact_phone_click', e.currentTarget, {
                         phone_number: '+14025566715',
                         source: 'contact_section',
-                        page_section: 'contact'
+                        page_section: 'contact',
+                        origin: 'contact_section'
                       })}
                       className="text-white/70 hover:text-red-500 transition-colors"
                     >

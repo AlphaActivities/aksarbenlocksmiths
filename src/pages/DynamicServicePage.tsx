@@ -151,6 +151,7 @@ export default function DynamicServicePage() {
       video_thumbnail: data?.thumbnail
     }, {
       service_name: data?.title,
+      service_slug: slug,
       page_section: 'service_page'
     });
   };
@@ -161,6 +162,7 @@ export default function DynamicServicePage() {
       video_thumbnail: data?.thumbnail
     }, {
       service_name: data?.title,
+      service_slug: slug,
       page_section: 'service_page'
     });
   };
@@ -171,6 +173,7 @@ export default function DynamicServicePage() {
       video_thumbnail: data?.thumbnail
     }, {
       service_name: data?.title,
+      service_slug: slug,
       page_section: 'service_page'
     });
   };
@@ -182,6 +185,7 @@ export default function DynamicServicePage() {
       video_thumbnail: data?.thumbnail
     }, {
       service_name: data?.title,
+      service_slug: slug,
       page_section: 'service_page'
     });
   };
@@ -420,11 +424,12 @@ export default function DynamicServicePage() {
         <div className="flex justify-center mt-8">
           <a 
             href="tel:+14025566715" 
-            onClick={(e) => trackClick('service_page_request_service', e.currentTarget, { 
+            onClick={(e) => trackClick('service_page_request_service', e.currentTarget, {
               service: data.title,
               service_name: data.title,
               phone_number: '+14025566715',
-              page_section: 'service_page'
+              page_section: 'service_page',
+              origin: 'service_page_cta'
             })}
             className="bg-gradient-to-l from-red-900 via-red-600 to-red-800 text-white py-3 px-6 rounded-full shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out animate-[pulseRedGlow_3s_ease-in-out_infinite] inline-block"
           >

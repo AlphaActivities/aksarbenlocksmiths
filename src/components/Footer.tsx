@@ -165,12 +165,12 @@ const Footer: React.FC = () => (
             <ul className="space-y-8 text-white/70">
               <li className="flex items-center space-x-5">
                 <Phone className="w-6 h-6 text-red-500" />
-                <a 
-                  href="tel:+14025566715" 
-                  onClick={(e) => trackClick('footer_phone_click', e.currentTarget, { 
+                <a
+                  href="tel:+14025566715"
+                  onClick={(e) => trackClick('footer_phone_click', e.currentTarget, {
                     phone_number: '+14025566715',
-                    source: 'footer',
-                    page_section: 'footer'
+                    page_section: 'footer',
+                    origin: 'footer'
                   })}
                   className="text-lg font-medium hover:text-red-500 transition-colors"
                 >

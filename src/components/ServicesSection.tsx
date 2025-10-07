@@ -88,6 +88,7 @@ const ServicesSection: React.FC = () => {
                 sessionStorage.setItem("lastScrollY", window.scrollY.toString());
                 trackEvent('service_tile_click', {
                   service: service.slug,
+                  service_slug: service.slug,
                   service_title: service.title,
                   service_name: service.title,
                   element_text: service.title,

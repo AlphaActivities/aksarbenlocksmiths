@@ -101,6 +101,11 @@ export const getAttributionParams = (): Record<string, any> => {
   return out;
 };
 
+function getServiceSlugFromPath(pathname: string): string | null {
+  const m = pathname.match(/^\/services\/([^\/?#]+)/);
+  return m ? decodeURIComponent(m[1]) : null;
+}
+
 export function getPageType(pathname: string = window.location.pathname):
   'homepage' | 'service_page' | 'service_areas' | 'blog_index' | 'blog_post' | 'blog_category' | 'other' {
   if (pathname === '/') return 'homepage';
@@ -209,12 +214,16 @@ export const trackPageView = (extra: Record<string, any> = {}) => {
     ...extra,
   };
 
-  window.gtag('event', 'page_view', baseParams);
+  const enhanced = { ...baseParams };
+  if (page_type === 'service_page') {
+    const slug = getServiceSlugFromPath(window.location.pathname);
+    if (slug) enhanced.service_slug = slug;
+  }
 
   const aliasEvent = `${page_type}_page_view`;
-  window.gtag('event', aliasEvent, baseParams);
+  window.gtag('event', aliasEvent, enhanced);
 
-  dbg('events_fired', { events: ['page_view', aliasEvent], params: baseParams });
+  dbg('events_fired', { events: [aliasEvent], params: enhanced });
 };
 
 // ---- Outbound link tracking (one-time document listener) ----
@@ -287,7 +296,7 @@ export const trackClick = (eventName: string, element?: HTMLElement, additionalP
   const pricingEvents = ['pricing_cta_click'];
   const serviceViewEvents = ['service_tile_click'];
   const testimonialEvents = ['testimonial_view', 'testimonial_arrow_click', 'testimonial_dot_click'];
-  const menuNavigationEvents = ['mobile_nav_click', 'footer_nav_click', 'hamburger_menu_toggle'];
+  const menuNavigationEvents = ['mobile_nav_click', 'footer_nav_click'];
   const videoEngagementEvents = ['video_play', 'video_pause', 'video_complete', 'video_play_button_click'];
   const scrollEvents = ['scroll_depth'];
   const dwellEvents = ['section_dwell_time'];
@@ -300,6 +309,7 @@ export const trackClick = (eventName: string, element?: HTMLElement, additionalP
       service_type: additionalParams.service_type || additionalParams.service_name || 'unknown',
       phone_number: additionalParams.phone_number || undefined,
       page_section: additionalParams.page_section || elementData.page_section || 'unknown',
+      origin: additionalParams.origin || additionalParams.source || additionalParams.page_section,
       ...elementData,
       ...additionalParams,
     });
@@ -346,14 +356,6 @@ export const trackClick = (eventName: string, element?: HTMLElement, additionalP
     });
   }
 
-  if (menuNavigationEvents.includes(eventName)) {
-    window.gtag('event', 'navigate_menu', {
-      event_category: 'navigation',
-      page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-      ...elementData,
-      ...additionalParams,
-    });
-  }
 
   if (videoEngagementEvents.includes(eventName)) {
     window.gtag('event', 'engage_video', {
@@ -474,20 +476,21 @@ export const initializeScrollDepthTracking = () => {
         const page_title = document.title;
         const page_type = getPageType(window.location.pathname);
 
-        const params = {
+        const payload: any = {
           depth_percentage: milestone,
           page_type,
           page_path,
           page_title,
           page_location
         };
+        if (page_type === 'service_page') {
+          const slug = getServiceSlugFromPath(window.location.pathname);
+          if (slug) payload.service_slug = slug;
+        }
 
-        trackEvent('scroll_depth', params);
+        trackEvent(`scroll_${milestone}`, payload);
 
-        const scrollAlias = `scroll_${milestone}`;
-        trackEvent(scrollAlias, params);
-
-        dbg('events_fired', { events: ['scroll_depth', scrollAlias], params });
+        dbg('events_fired', { events: [`scroll_${milestone}`], params: payload });
       }
     });
   };

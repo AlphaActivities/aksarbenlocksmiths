@@ -110,11 +110,11 @@ const Navbar: React.FC = () => {
                 'Contact',
               ].map((item) => (
                 <li key={item}>
-                  <a 
-                    href={`#${item.toLowerCase()}`} 
+                  <a
+                    href={`#${item.toLowerCase()}`}
                     onClick={(e) => {
                       trackNavigation(item.toLowerCase(), 'header');
-                      trackClick('navigation_click', e.currentTarget, {
+                      trackClick('header_nav_click', e.currentTarget, {
                         page_section: 'header_navigation',
                         nav_item: item.toLowerCase()
                       });
@@ -145,7 +145,7 @@ const Navbar: React.FC = () => {
             onClick={(e) => {
               const newMenuState = !menuOpen;
               setMenuOpen(newMenuState);
-              trackClick('hamburger_menu_toggle', e.currentTarget, {
+              trackClick('hamburger_menu_click', e.currentTarget, {
                 source: 'mobile_nav',
                 state: newMenuState ? 'open' : 'close'
               });

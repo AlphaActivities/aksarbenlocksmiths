@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Award, Clock, CheckCircle } from 'lucide-react';
 import PillBadge from './ui/PillBadge';
-import { trackClick, trackEngagement } from '../utils/analytics';
+import { trackClick, trackEvent } from '../utils/analytics';
 
 // Trigger full rebuild to refresh Tailwind purge cache
 
@@ -11,7 +11,8 @@ const AboutSection: React.FC = () => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          trackEngagement('section_view', 'about_section', {
+          trackEvent('about_section_view', {
+            page_section: 'about',
             visibility_threshold: '50%'
           });
         }
@@ -28,12 +29,6 @@ const AboutSection: React.FC = () => {
       if (aboutSection) observer.unobserve(aboutSection);
     };
   }, []);
-
-  const handleImageHover = (imageName: string, action: 'enter' | 'leave') => {
-    trackEngagement('image_hover', `about_image_${imageName}`, {
-      hover_action: action
-    });
-  };
 
   return (
     <section id="about" className="py-24 scroll-mt-[38px]">
