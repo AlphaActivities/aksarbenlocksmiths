@@ -215,13 +215,14 @@ export default function BlogPostPage() {
         </a>
       </div>
 
-      <div className="min-h-[100svh] w-full relative overflow-x-hidden touch-pan-y overscroll-x-none overscroll-y-contain">
+      <div className="min-h-[100svh] w-full relative overflow-x-hidden touch-pan-y overscroll-x-none overscroll-y-contain bg-[#0b1220]">
         <main className="min-h-[100svh] w-full relative overflow-visible">
           <video
             autoPlay
             muted
             loop
             playsInline
+            preload="none"
             aria-hidden="true"
             poster="/images/services-thumbnails/Residential-Service-Photo.webp"
             className="fixed inset-0 w-full h-full object-cover opacity-45 z-0 pointer-events-none"

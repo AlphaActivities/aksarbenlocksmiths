@@ -176,13 +176,14 @@ export default function BlogPage() {
       </div>
 
       {/* Service Areas style wallpaper and overlays */}
-      <div className="min-h-screen w-full relative">
+      <div className="min-h-screen w-full relative bg-[#0b1220]">
         <main className="min-h-screen w-full relative overflow-hidden">
           <video
             autoPlay
             muted
             loop
             playsInline
+            preload="none"
             aria-hidden="true"
             poster="/images/services-thumbnails/Residential-Service-Photo.webp"
             className="fixed inset-0 w-full h-full object-cover opacity-45 z-0"

@@ -20,6 +20,7 @@ import BlogCategoryPage from './pages/BlogCategoryPage';
 import SearchPage from './pages/SearchPage';
 import NotFound from './pages/NotFound';
 import ErrorBoundary from './components/ErrorBoundary';
+import RouteTransitionMask from './components/RouteTransitionMask';
 import { Helmet } from 'react-helmet-async';
 import { trackClick, captureAttributionFromURL, resetScrollTracking } from './utils/analytics';
 import GlobalBackgroundVideo from './components/GlobalBackgroundVideo';
@@ -52,7 +53,9 @@ function App() {
       const lastY = sessionStorage.getItem("lastScrollY");
       
       if (!location?.state?.restorePosition && !location?.state?.scrollTo && !location?.state?.scrollFx) {
-        window.scrollTo({ top: 0, behavior: "auto" });
+        requestAnimationFrame(() => {
+          window.scrollTo(0, 0);
+        });
         return;
       }
       
@@ -92,6 +95,7 @@ function App() {
   return (
     <ErrorBoundary>
       <PageViewTracker />
+      <RouteTransitionMask />
       <GlobalBackgroundVideo />
       <a
         href="#main-content"
@@ -103,7 +107,7 @@ function App() {
         <Route
           path="/"
           element={
-            <div className="text-white">
+            <div className="text-white bg-[#0b1220]">
               <div className="fixed top-0 w-full z-50 bg-black backdrop-blur-md shadow-lg text-sm px-4 py-1 flex justify-between items-center">
                 <span className="text-white animate-pulse">24/7 Emergency Service</span>
                 <a
