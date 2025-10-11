@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useSearchParams, useNavigate, useParams } from "react-router-dom";
+import { Link, useSearchParams, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { BLOG_CATEGORIES as BLOG_CATEGORY_LIST } from "../data/blogPosts";
 import { BLOG_CATEGORIES } from "../data/blogCategories";
@@ -16,7 +16,6 @@ const BLOG_PLACEHOLDER =
   );
 
 export default function BlogPage() {
-  const navigate = useNavigate();
   const { category: categoryParam } = useParams();
   const [params, setParams] = useSearchParams();
   
@@ -268,13 +267,13 @@ export default function BlogPage() {
               <section className="mx-auto max-w-5xl">
                 {/* Back to Home button, matches Dynamic Service styles */}
                 <div className="mb-4 flex items-center justify-between min-h-[40px]">
-                  <button
+                  <Link
+                    to="/"
                     onClick={(e) => {
-                      navigate(-1);
-                      trackClick("back_to_home", e.currentTarget, {
-                        source_page: "blog_index",
-                        page_section: "header",
-                        destination: "/",
+                      trackClick('back_to_home', e.currentTarget as unknown as HTMLElement, {
+                        source_page: 'blog_index',
+                        page_section: 'header',
+                        destination: '/',
                       });
                     }}
                     className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
@@ -283,7 +282,7 @@ export default function BlogPage() {
                   >
                     <ArrowLeft className="w-4 h-4" />
                     Back to Home
-                  </button>
+                  </Link>
 
                   <Link
                     to="/service-areas"

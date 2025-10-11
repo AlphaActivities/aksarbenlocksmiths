@@ -622,8 +622,16 @@ video:fullscreen {
 }
 
 /* Persistent site background to prevent white flash between routes */
-html, body, #root {
+html, body {
   min-height: 100vh;
-  background: linear-gradient(to bottom right, #0f172a, #1e293b, #0f172a); /* slate-900 → slate-800 → slate-900 */
+  /* Solid color first to avoid any paint gaps */
+  background-color: #0b1220;         /* dark slate fallback */
+  /* Gradient for nice base on non-video pages and pre-hydration */
+  background-image: linear-gradient(to bottom right, #0f172a, #1e293b, #0f172a);
   background-attachment: fixed;
+}
+
+#root {
+  min-height: 100vh;
+  background: transparent;           /* let the fixed hero video show through */
 }
