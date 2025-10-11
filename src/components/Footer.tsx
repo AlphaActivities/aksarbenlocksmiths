@@ -189,13 +189,37 @@ const Footer: React.FC = () => (
                 rel="noopener noreferrer"
                 aria-label="Yelp"
                 className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500 transition focus:outline-none focus:ring-2 focus:ring-red-500/60"
-                onClick={(e) =>
+                onClick={(e) => {
+                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
+                    return;
+                  }
+
                   trackClick('footer_social_click', e.currentTarget, {
                     platform: 'Yelp',
                     url: 'https://www.yelp.com/biz/aksarben-locksmiths-omaha-15',
                     page_section: 'footer',
-                  })
-                }
+                    intent: 'app_fallback',
+                  });
+
+                  e.preventDefault();
+
+                  const ua = navigator.userAgent || '';
+                  const isIOS = /iPad|iPhone|iPod/.test(ua);
+                  const isAndroid = /Android/.test(ua);
+
+                  const webUrl = 'https://www.yelp.com/biz/aksarben-locksmiths-omaha-15';
+                  const appUrl = 'yelp:///biz/aksarben-locksmiths-omaha-15';
+
+                  if (isIOS || isAndroid) {
+                    openWithAppFallback({
+                      appUrl,
+                      webUrl,
+                      timeoutMs: 600,
+                    });
+                  } else {
+                    window.location.href = webUrl;
+                  }
+                }}
               >
                 <img src="/icons/yelp.svg" alt="Yelp" className="h-5 w-5" />
               </a>
