@@ -621,17 +621,22 @@ video:fullscreen {
   .hero-poster { display: none !important; }
 }
 
-/* Persistent site background to prevent white flash between routes */
+/* Base paint: solid, fast, no jank */
 html, body {
   min-height: 100vh;
-  /* Solid color first to avoid any paint gaps */
-  background-color: #0b1220;         /* dark slate fallback */
-  /* Gradient for nice base on non-video pages and pre-hydration */
-  background-image: linear-gradient(to bottom right, #0f172a, #1e293b, #0f172a);
-  background-attachment: fixed;
+  /* Solid base: no gradients, no fixed attachment */
+  background-color: #0b1220; /* same dark you already chose */
+  background-image: none;    /* remove gradient that reads as blue in a quick flash */
+  background-attachment: initial;
 }
 
+/* Keep root transparent so hero video can show when present */
 #root {
   min-height: 100vh;
-  background: transparent;           /* let the fixed hero video show through */
+  background: transparent;
+}
+
+/* Prevent any accidental background transition/jank */
+html, body, #root {
+  transition: none !important;
 }
