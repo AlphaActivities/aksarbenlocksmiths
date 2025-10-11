@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { posts as BLOG_POSTS, findPost } from "../data/posts";
 import { trackClick } from "../utils/analytics";
 import { ArrowLeft, Phone } from "lucide-react";
+import BlogRelatedLinks from "../components/BlogRelatedLinks";
 
 const BLOG_PLACEHOLDER =
   "data:image/svg+xml;utf8," +
@@ -360,6 +361,13 @@ export default function BlogPostPage() {
                   Request Service
                 </a>
               </div>
+
+              <BlogRelatedLinks
+                currentSlug={post.slug}
+                category={post.category as "emergency" | "keys" | "residential" | "commercial"}
+                max={3}
+                title="More in this category"
+              />
             </div>
             </div>
 
