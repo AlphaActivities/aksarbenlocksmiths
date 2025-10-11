@@ -111,19 +111,19 @@ export default function BlogPostPage() {
                   </p>
 
                   <div className="mt-4 flex gap-3">
-                    <Link
-                      to="/"
-                      aria-label="Back to Home"
-                      onClick={(e) =>
+                    <button
+                      onClick={(e) => {
+                        navigate("/", { state: { restorePosition: true } });
                         trackClick("not_found_back_home_click", e.currentTarget, {
                           source_page: "blog_post_404",
                           page_section: "not_found",
-                        })
-                      }
+                        });
+                      }}
                       className="inline-flex items-center rounded-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium transition-colors"
+                      aria-label="Back to Home"
                     >
                       Back to Home
-                    </Link>
+                    </button>
 
                     <Link
                       to="/blog"

@@ -270,7 +270,7 @@ export default function BlogPage() {
                 <div className="mb-4 flex items-center justify-between min-h-[40px]">
                   <button
                     onClick={(e) => {
-                      navigate(-1);
+                      navigate("/", { state: { restorePosition: true } });
                       trackClick("back_to_home", e.currentTarget, {
                         source_page: "blog_index",
                         page_section: "header",

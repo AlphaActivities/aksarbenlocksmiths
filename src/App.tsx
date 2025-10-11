@@ -53,6 +53,15 @@ function App() {
       
       if (!location?.state?.restorePosition && !location?.state?.scrollTo && !location?.state?.scrollFx) {
         window.scrollTo({ top: 0, behavior: "auto" });
+        try {
+          if (location?.state) {
+            const clean = { ...(location.state || {}) };
+            delete clean.restorePosition;
+            delete clean.scrollTo;
+            delete clean.scrollFx;
+            window.history.replaceState(clean, "", location.pathname + location.search + location.hash);
+          }
+        } catch {}
         return;
       }
       
@@ -76,6 +85,13 @@ function App() {
           };
 
           scroll();
+          try {
+            const clean = { ...(location.state || {}) };
+            delete clean.restorePosition;
+            delete clean.scrollTo;
+            delete clean.scrollFx;
+            window.history.replaceState(clean, "", location.pathname + location.search + location.hash);
+          } catch {}
           return;
         }
       } else if (location?.state?.scrollTo === "services") {
@@ -83,6 +99,13 @@ function App() {
         if (el && el.getBoundingClientRect().height > 0) {
           el.scrollIntoView({ behavior: "smooth", block: "start" });
         }
+        try {
+          const clean = { ...(location.state || {}) };
+          delete clean.restorePosition;
+          delete clean.scrollTo;
+          delete clean.scrollFx;
+          window.history.replaceState(clean, "", location.pathname + location.search + location.hash);
+        } catch {}
       }
     };
 
