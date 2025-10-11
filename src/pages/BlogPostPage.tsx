@@ -4,7 +4,6 @@ import { Helmet } from "react-helmet-async";
 import { posts as BLOG_POSTS, findPost } from "../data/posts";
 import { trackClick } from "../utils/analytics";
 import { ArrowLeft, Phone } from "lucide-react";
-import BlogRelatedLinks from "../components/BlogRelatedLinks";
 
 const BLOG_PLACEHOLDER =
   "data:image/svg+xml;utf8," +
@@ -215,14 +214,13 @@ export default function BlogPostPage() {
         </a>
       </div>
 
-      <div className="min-h-[100svh] w-full relative overflow-x-hidden touch-pan-y overscroll-x-none overscroll-y-contain bg-[#0b1220]">
+      <div className="min-h-[100svh] w-full relative overflow-x-hidden touch-pan-y overscroll-x-none overscroll-y-contain">
         <main className="min-h-[100svh] w-full relative overflow-visible">
           <video
             autoPlay
             muted
             loop
             playsInline
-            preload="none"
             aria-hidden="true"
             poster="/images/services-thumbnails/Residential-Service-Photo.webp"
             className="fixed inset-0 w-full h-full object-cover opacity-45 z-0 pointer-events-none"
@@ -251,13 +249,13 @@ export default function BlogPostPage() {
               <div className="mx-auto max-w-5xl pt-4 pb-6 md:pt-6 md:pb-8">
               {/* Back to Home button */}
               <div className="mb-4 flex items-center justify-between min-h-[40px]">
-                <Link
-                  to="/blog"
+                <button
                   onClick={(e) => {
-                    trackClick("back_to_blog", e.currentTarget as unknown as HTMLElement, {
+                    navigate(-1);
+                    trackClick("back_to_home", e.currentTarget, {
                       source_page: "blog_post",
                       page_section: "header",
-                      destination: "/blog",
+                      destination: "/",
                       from_post: post.slug,
                     });
                   }}
@@ -267,7 +265,7 @@ export default function BlogPostPage() {
                 >
                   <ArrowLeft className="w-4 h-4" />
                   Back to Blog
-                </Link>
+                </button>
               </div>
               </div>
             </div>
@@ -362,13 +360,6 @@ export default function BlogPostPage() {
                   Request Service
                 </a>
               </div>
-
-              <BlogRelatedLinks
-                currentSlug={post.slug}
-                category={post.category as "emergency" | "keys" | "residential" | "commercial"}
-                max={3}
-                title="More in this category"
-              />
             </div>
             </div>
 
