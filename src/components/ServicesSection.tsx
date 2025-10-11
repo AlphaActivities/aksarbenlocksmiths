@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home, Car, Key, RefreshCw, Shield, KeyRound } from 'lucide-react';
 import PillBadge from './ui/PillBadge';
-import { trackEvent } from '../utils/analytics';
+import { trackEvent, buildEventName } from '../utils/analytics';
 
 const services = [
   {
@@ -86,7 +86,8 @@ const ServicesSection: React.FC = () => {
               state={{ scrollFx: "bottomThenTop" }}
               onClick={(e) => {
                 sessionStorage.setItem("lastScrollY", window.scrollY.toString());
-                trackEvent('service_tile_click', {
+                const eventName = buildEventName({ base: 'service_tile_click', slug: service.slug });
+                trackEvent(eventName, {
                   service: service.slug,
                   service_slug: service.slug,
                   service_title: service.title,

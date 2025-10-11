@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { posts as BLOG_POSTS, findPost } from "../data/posts";
-import { trackEngagement, trackClick } from "../utils/analytics";
+import { trackClick } from "../utils/analytics";
 import { ArrowLeft, Phone } from "lucide-react";
 
 const BLOG_PLACEHOLDER =

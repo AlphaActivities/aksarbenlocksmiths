@@ -2,7 +2,7 @@ import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Phone, MapPin } from "lucide-react";
 import { Helmet } from "react-helmet-async";
-import { trackVideoEvent, trackClick } from "../utils/analytics";
+import { trackVideoEvent, trackClick, buildEventName } from "../utils/analytics";
 import { SERVICE_FAQS } from "../data/service-faqs";
 import servicesData from "../data/services.json";
 
@@ -146,7 +146,8 @@ export default function DynamicServicePage() {
 
   // Video event handlers
   const handleVideoPlay = () => {
-    trackVideoEvent('video_play', data?.title || 'Unknown Service', {
+    const eventName = buildEventName({ base: slug || 'service', action: 'video_play' });
+    trackVideoEvent(eventName, data?.title || 'Unknown Service', {
       video_url: data?.video,
       video_thumbnail: data?.thumbnail
     }, {
@@ -157,7 +158,8 @@ export default function DynamicServicePage() {
   };
 
   const handleVideoPause = () => {
-    trackVideoEvent('video_pause', data?.title || 'Unknown Service', {
+    const eventName = buildEventName({ base: slug || 'service', action: 'video_pause' });
+    trackVideoEvent(eventName, data?.title || 'Unknown Service', {
       video_url: data?.video,
       video_thumbnail: data?.thumbnail
     }, {
@@ -168,7 +170,8 @@ export default function DynamicServicePage() {
   };
 
   const handleVideoEnded = () => {
-    trackVideoEvent('video_complete', data?.title || 'Unknown Service', {
+    const eventName = buildEventName({ base: slug || 'service', action: 'video_complete' });
+    trackVideoEvent(eventName, data?.title || 'Unknown Service', {
       video_url: data?.video,
       video_thumbnail: data?.thumbnail
     }, {
@@ -180,7 +183,8 @@ export default function DynamicServicePage() {
 
   const handlePlayButtonClick = () => {
     setPlaying(true);
-    trackVideoEvent('video_play_button_click', data?.title || 'Unknown Service', {
+    const eventName = buildEventName({ base: slug || 'service', action: 'video_play_button_click' });
+    trackVideoEvent(eventName, data?.title || 'Unknown Service', {
       video_url: data?.video,
       video_thumbnail: data?.thumbnail
     }, {
@@ -424,13 +428,17 @@ export default function DynamicServicePage() {
         <div className="flex justify-center mt-8">
           <a 
             href="tel:+14025566715" 
-            onClick={(e) => trackClick('service_page_request_service', e.currentTarget, {
-              service: data.title,
-              service_name: data.title,
-              phone_number: '+14025566715',
-              page_section: 'service_page',
-              origin: 'service_page_cta'
-            })}
+            onClick={(e) => {
+              const eventName = buildEventName({ base: 'service_page_cta', action: 'call_button_click' });
+              trackClick(eventName, e.currentTarget, {
+                service: data.title,
+                service_name: data.title,
+                service_slug: slug,
+                phone_number: '+14025566715',
+                page_section: 'service_page',
+                origin: 'service_page_cta'
+              });
+            }}
             className="bg-gradient-to-l from-red-900 via-red-600 to-red-800 text-white py-3 px-6 rounded-full shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out animate-[pulseRedGlow_3s_ease-in-out_infinite] inline-block"
           >
             Request Service

@@ -38,6 +38,49 @@ const readJSON = (key: string): any => {
 const writeFirst = (data: any) => { try { window.localStorage.setItem(ATTR_LS_KEY, JSON.stringify(data)); } catch {} };
 const writeLast  = (data: any) => { try { window.sessionStorage.setItem(ATTR_SS_KEY, JSON.stringify(data)); } catch {} };
 
+function toSnake(s?: string | null): string | undefined {
+  if (!s) return undefined;
+  return s
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+    .replace(/_+/g, '_');
+}
+
+export function buildEventName(ctx: {
+  base: string;
+  slug?: string;
+  category?: string;
+  action?: string;
+  percent?: number;
+}) {
+  const parts = [
+    toSnake(ctx.base),
+    toSnake(ctx.slug),
+    toSnake(ctx.category),
+    toSnake(ctx.action),
+    ctx.percent ? `scroll_${ctx.percent}` : undefined,
+  ].filter(Boolean) as string[];
+  return parts.join('_');
+}
+
+function getServiceSlugFromPath(pathname: string): string | undefined {
+  const m = pathname.match(/^\/services\/([^\/?#]+)/i);
+  return m ? toSnake(decodeURIComponent(m[1])) : undefined;
+}
+
+function getBlogSlugFromPath(pathname: string): string | undefined {
+  const m = pathname.match(/^\/blog\/([^\/?#]+)/i);
+  return m ? toSnake(decodeURIComponent(m[1])) : undefined;
+}
+
+function getBlogCategoryFromPath(pathname: string): string | undefined {
+  const m = pathname.match(/^\/blog\/([^\/\?#]+)\/([^\/?#]+)/i);
+  return m ? toSnake(decodeURIComponent(m[1])) : undefined;
+}
+
 // Build an attribution object from the current URL and referrer
 export const captureAttributionFromURL = (href?: string, referrer?: string) => {
   if (typeof window === "undefined") return;
@@ -100,11 +143,6 @@ export const getAttributionParams = (): Record<string, any> => {
 
   return out;
 };
-
-function getServiceSlugFromPath(pathname: string): string | null {
-  const m = pathname.match(/^\/services\/([^\/?#]+)/);
-  return m ? decodeURIComponent(m[1]) : null;
-}
 
 export function getPageType(pathname: string = window.location.pathname):
   'homepage' | 'service_page' | 'service_areas' | 'blog_index' | 'blog_post' | 'blog_category' | 'other' {
@@ -215,15 +253,35 @@ export const trackPageView = (extra: Record<string, any> = {}) => {
   };
 
   const enhanced = { ...baseParams };
-  if (page_type === 'service_page') {
-    const slug = getServiceSlugFromPath(window.location.pathname);
-    if (slug) enhanced.service_slug = slug;
-  }
+  const serviceSlug = page_type === 'service_page' ? getServiceSlugFromPath(window.location.pathname) : undefined;
+  const blogSlug = page_type === 'blog_post' ? getBlogSlugFromPath(window.location.pathname) : undefined;
+  const categorySlug = page_type === 'blog_category' ? getBlogCategoryFromPath(window.location.pathname) : undefined;
 
-  const aliasEvent = `${page_type}_page_view`;
-  window.gtag('event', aliasEvent, enhanced);
+  if (serviceSlug) enhanced.service_slug = serviceSlug;
+  if (blogSlug) enhanced.blog_slug = blogSlug;
+  if (categorySlug) enhanced.category_slug = categorySlug;
 
-  dbg('events_fired', { events: [aliasEvent], params: enhanced });
+  const pvBaseMap: Record<string, string> = {
+    homepage: 'homepage_page_view',
+    service_page: 'service_page_view',
+    blog_index: 'blog_index_page_view',
+    blog_post: 'blog_post_page_view',
+    blog_category: 'blog_category_page_view',
+    service_areas: 'service_areas_page_view',
+    pricing: 'pricing_page_view',
+    contact: 'contact_page_view',
+    search: 'search_page_view',
+  };
+
+  const baseName = pvBaseMap[page_type] || 'page_view';
+  const finalName = buildEventName({
+    base: baseName,
+    slug: serviceSlug || blogSlug || categorySlug,
+  });
+
+  window.gtag('event', finalName, enhanced);
+
+  dbg('events_fired', { events: [finalName], params: enhanced });
 };
 
 // ---- Outbound link tracking (one-time document listener) ----
@@ -255,9 +313,12 @@ export const initOutboundLinkTracking = () => {
 
     if (window.gtag) {
       const attr = (typeof getAttributionParams === 'function' ? getAttributionParams() : {}) || {};
-      window.gtag('event', 'outbound_click', {
+      const domain = toSnake(url.hostname.replace(/^www\./, ''));
+      const eventName = buildEventName({ base: 'outbound_click', slug: domain });
+      window.gtag('event', eventName, {
         event_category: 'navigation',
         target_url: url.href,
+        target_domain: url.hostname,
         link_text: el.textContent || '',
         ...attr,
       });
@@ -290,30 +351,13 @@ export const trackClick = (eventName: string, element?: HTMLElement, additionalP
     ...additionalParams,
   });
 
-  // Fire alias events for specific tracking needs
-  const callEvents = ['header_call_now', 'footer_phone_click', 'contact_phone_click', 'floating_call_button', 'service_page_request_service'];
+  // Fire alias events for specific tracking needs (removed generic click_call_button aliasing)
   const emailEvents = ['footer_email_click', 'contact_email_click'];
   const pricingEvents = ['pricing_cta_click'];
   const serviceViewEvents = ['service_tile_click'];
   const testimonialEvents = ['testimonial_view', 'testimonial_arrow_click', 'testimonial_dot_click'];
-  const menuNavigationEvents = ['mobile_nav_click', 'footer_nav_click'];
-  const videoEngagementEvents = ['video_play', 'video_pause', 'video_complete', 'video_play_button_click'];
-  const scrollEvents = ['scroll_depth'];
-  const dwellEvents = ['section_dwell_time'];
   const socialEvents = ['footer_social_click'];
   const logoEvents = ['logo_click'];
-
-  if (callEvents.includes(eventName)) {
-    window.gtag('event', 'click_call_button', {
-      event_category: 'click',
-      service_type: additionalParams.service_type || additionalParams.service_name || 'unknown',
-      phone_number: additionalParams.phone_number || undefined,
-      page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-      origin: additionalParams.origin || additionalParams.source || additionalParams.page_section,
-      ...elementData,
-      ...additionalParams,
-    });
-  }
 
   if (emailEvents.includes(eventName)) {
     window.gtag('event', 'click_email_button', {
@@ -426,23 +470,6 @@ export const trackFormEvent = (action: string, formName: string, additionalParam
   });
 };
 
-export const trackNavigation = (section: string, source: string = 'header') => {
-  trackEvent('navigation_click', {
-    section,
-    source
-  });
-};
-
-export const trackEngagement = (action: string, element: string, additionalParams?: Record<string, any>) => {
-  const attribution = getAttributionParams();
-
-  trackEvent('engagement', {
-    action,
-    element,
-    ...attribution,
-    ...additionalParams
-  });
-};
 
 // Scroll depth tracking
 let scrollDepthTracked = new Set<number>();
@@ -476,6 +503,10 @@ export const initializeScrollDepthTracking = () => {
         const page_title = document.title;
         const page_type = getPageType(window.location.pathname);
 
+        const serviceSlug = page_type === 'service_page' ? getServiceSlugFromPath(window.location.pathname) : undefined;
+        const blogSlug = page_type === 'blog_post' ? getBlogSlugFromPath(window.location.pathname) : undefined;
+        const categorySlug = page_type === 'blog_category' ? getBlogCategoryFromPath(window.location.pathname) : undefined;
+
         const payload: any = {
           depth_percentage: milestone,
           page_type,
@@ -483,14 +514,29 @@ export const initializeScrollDepthTracking = () => {
           page_title,
           page_location
         };
-        if (page_type === 'service_page') {
-          const slug = getServiceSlugFromPath(window.location.pathname);
-          if (slug) payload.service_slug = slug;
-        }
+        if (serviceSlug) payload.service_slug = serviceSlug;
+        if (blogSlug) payload.blog_slug = blogSlug;
+        if (categorySlug) payload.category_slug = categorySlug;
 
-        trackEvent(`scroll_${milestone}`, payload);
+        const pageContext =
+          page_type === 'homepage' ? 'homepage' :
+          page_type === 'service_page' ? `service_${serviceSlug || 'page'}` :
+          page_type === 'blog_post' ? `blog_${blogSlug || 'post'}` :
+          page_type === 'blog_index' ? 'blog_index' :
+          page_type === 'blog_category' ? `blog_category_${categorySlug || 'page'}` :
+          page_type === 'service_areas' ? 'service_areas' :
+          page_type === 'pricing' ? 'pricing' :
+          page_type === 'contact' ? 'contact' :
+          page_type;
 
-        dbg('events_fired', { events: [`scroll_${milestone}`], params: payload });
+        const scrollName = buildEventName({
+          base: pageContext,
+          percent: milestone,
+        });
+
+        trackEvent(scrollName, payload);
+
+        dbg('events_fired', { events: [scrollName], params: payload });
       }
     });
   };

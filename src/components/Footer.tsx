@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, MapPin, Phone, Mail, Twitter } from 'lucide-react';
-import { trackClick, trackNavigation, trackEvent } from '../utils/analytics';
+import { trackClick, trackEvent, buildEventName } from '../utils/analytics';
 import { openWithAppFallback } from '../utils/openWithAppFallback';
 
 const serviceLinks = [
@@ -231,28 +231,28 @@ const Footer: React.FC = () => (
             <h3 className="font-bold text-white text-lg mb-6">Quick Links</h3>
             <ul className="space-y-3">
               <li><a href="#home" onClick={(e) => {
-                trackNavigation('home', 'footer');
-                trackClick('footer_nav_click', e.currentTarget, { page_section: 'footer' });
+                const eventName = buildEventName({ base: 'footer_nav_click', slug: 'home' });
+                trackClick(eventName, e.currentTarget, { page_section: 'footer', nav_item: 'home' });
               }} className="hover:text-red-500 transition-colors">Home</a></li>
               <li><a href="#services" onClick={(e) => {
-                trackNavigation('services', 'footer');
-                trackClick('footer_nav_click', e.currentTarget, { page_section: 'footer' });
+                const eventName = buildEventName({ base: 'footer_nav_click', slug: 'services' });
+                trackClick(eventName, e.currentTarget, { page_section: 'footer', nav_item: 'services' });
               }} className="hover:text-red-500 transition-colors">Services</a></li>
               <li><a href="#about" onClick={(e) => {
-                trackNavigation('about', 'footer');
-                trackClick('footer_nav_click', e.currentTarget, { page_section: 'footer' });
+                const eventName = buildEventName({ base: 'footer_nav_click', slug: 'about' });
+                trackClick(eventName, e.currentTarget, { page_section: 'footer', nav_item: 'about' });
               }} className="hover:text-red-500 transition-colors">About Us</a></li>
               <li><a href="#testimonials" onClick={(e) => {
-                trackNavigation('testimonials', 'footer');
-                trackClick('footer_nav_click', e.currentTarget, { page_section: 'footer' });
+                const eventName = buildEventName({ base: 'footer_nav_click', slug: 'testimonials' });
+                trackClick(eventName, e.currentTarget, { page_section: 'footer', nav_item: 'testimonials' });
               }} className="hover:text-red-500 transition-colors">Testimonials</a></li>
               <li><a href="#pricing" onClick={(e) => {
-                trackNavigation('pricing', 'footer');
-                trackClick('footer_nav_click', e.currentTarget, { page_section: 'footer' });
+                const eventName = buildEventName({ base: 'footer_nav_click', slug: 'pricing' });
+                trackClick(eventName, e.currentTarget, { page_section: 'footer', nav_item: 'pricing' });
               }} className="hover:text-red-500 transition-colors">Pricing</a></li>
               <li><a href="#contact" onClick={(e) => {
-                trackNavigation('contact', 'footer');
-                trackClick('footer_nav_click', e.currentTarget, { page_section: 'footer' });
+                const eventName = buildEventName({ base: 'footer_nav_click', slug: 'contact' });
+                trackClick(eventName, e.currentTarget, { page_section: 'footer', nav_item: 'contact' });
               }} className="hover:text-red-500 transition-colors">Contact</a></li>
             </ul>
           </div>
@@ -295,11 +295,14 @@ const Footer: React.FC = () => (
                 <Phone className="w-6 h-6 text-red-500" />
                 <a
                   href="tel:+14025566715"
-                  onClick={(e) => trackClick('footer_phone_click', e.currentTarget, {
-                    phone_number: '+14025566715',
-                    page_section: 'footer',
-                    origin: 'footer'
-                  })}
+                  onClick={(e) => {
+                    const eventName = buildEventName({ base: 'footer', action: 'call_button_click' });
+                    trackClick(eventName, e.currentTarget, {
+                      phone_number: '+14025566715',
+                      page_section: 'footer',
+                      origin: 'footer'
+                    });
+                  }}
                   className="text-lg font-medium hover:text-red-500 transition-colors"
                 >
                   (402) 556-6715

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Phone } from 'lucide-react';
-import { trackNavigation, trackClick } from '../utils/analytics';
+import { trackClick, buildEventName } from '../utils/analytics';
 
 const navItems = [
   { label: "🚨 Emergency", href: "#home" },
@@ -113,8 +113,8 @@ const Navbar: React.FC = () => {
                   <a
                     href={`#${item.toLowerCase()}`}
                     onClick={(e) => {
-                      trackNavigation(item.toLowerCase(), 'header');
-                      trackClick('header_nav_click', e.currentTarget, {
+                      const eventName = buildEventName({ base: 'header_nav_click', slug: item.toLowerCase() });
+                      trackClick(eventName, e.currentTarget, {
                         page_section: 'header_navigation',
                         nav_item: item.toLowerCase()
                       });
@@ -131,10 +131,14 @@ const Navbar: React.FC = () => {
 
           <a
             href="tel:+14025566715"
-            onClick={(e) => trackClick('header_call_now', e.currentTarget, { 
-              phone_number: '+14025566715',
-              page_section: 'header_cta'
-            })}
+            onClick={(e) => {
+              const eventName = buildEventName({ base: 'header', action: 'call_button_click' });
+              trackClick(eventName, e.currentTarget, {
+                phone_number: '+14025566715',
+                origin: 'header',
+                page_section: 'header_cta'
+              });
+            }}
             className="hidden xl:flex items-center gap-2 px-4 py-1 rounded-full bg-red-700/90 text-white border border-red-800/30 transition-all duration-200 hover:scale-110 hover:shadow-[0_0_12px_4px_rgba(239,68,68,0.6)] hover:duration-100 flex-shrink-0"
           >
             <Phone className="h-4 w-4" />
@@ -189,9 +193,11 @@ const Navbar: React.FC = () => {
                         page_section: 'mobile_menu',
                         nav_item: 'emergency'
                       });
-                      trackClick('mobile_emergency_call', e.currentTarget, {
+                      const eventName = buildEventName({ base: 'mobile_emergency', action: 'call_button_click' });
+                      trackClick(eventName, e.currentTarget, {
                         page_section: 'mobile_menu',
                         nav_item: 'emergency_call',
+                        origin: 'mobile_emergency',
                         phone_number: '+14025566715'
                       });
                       trackNavigation('emergency_call', 'mobile_menu');
@@ -200,8 +206,8 @@ const Navbar: React.FC = () => {
                     }
 
                     setMenuOpen(false);
-                    trackNavigation(item.href.replace('#', ''), 'mobile_menu');
-                    trackClick('mobile_nav_click', e.currentTarget, {
+                    const eventName = buildEventName({ base: 'mobile_nav_click', slug: item.href.replace('#', '') });
+                    trackClick(eventName, e.currentTarget, {
                       page_section: 'mobile_menu',
                       nav_item: item.href.replace('#', '')
                     });

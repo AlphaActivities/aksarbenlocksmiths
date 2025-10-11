@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Phone, MapPin, Mail, Clock } from 'lucide-react';
 import PillBadge from './ui/PillBadge';
-import { trackFormEvent, trackClick, trackEvent } from '../utils/analytics';
+import { trackFormEvent, trackClick, trackEvent, buildEventName } from '../utils/analytics';
 
 const ContactSection: React.FC = () => {
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -119,12 +119,15 @@ const ContactSection: React.FC = () => {
                     <p className="font-medium text-white mb-1">Phone</p>
                     <a
                       href="tel:+14025566715"
-                      onClick={(e) => trackClick('contact_phone_click', e.currentTarget, {
-                        phone_number: '+14025566715',
-                        source: 'contact_section',
-                        page_section: 'contact',
-                        origin: 'contact_section'
-                      })}
+                      onClick={(e) => {
+                        const eventName = buildEventName({ base: 'contact_section', action: 'call_button_click' });
+                        trackClick(eventName, e.currentTarget, {
+                          phone_number: '+14025566715',
+                          source: 'contact_section',
+                          page_section: 'contact',
+                          origin: 'contact_section'
+                        });
+                      }}
                       className="text-white/70 hover:text-red-500 transition-colors"
                     >
                       (402) 556-6715

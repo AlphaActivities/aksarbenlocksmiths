@@ -5,7 +5,7 @@ import { BLOG_CATEGORIES as BLOG_CATEGORY_LIST } from "../data/blogPosts";
 import { BLOG_CATEGORIES } from "../data/blogCategories";
 import { posts as BLOG_POSTS } from "../data/posts";
 import { isValidCategory } from "../data/blogCategories";
-import { trackEngagement, trackClick } from "../utils/analytics";
+import { trackClick, buildEventName } from "../utils/analytics";
 import { ArrowLeft, Phone, MapPin } from "lucide-react";
 import type { BlogCategory } from "../data/posts";
 
@@ -325,10 +325,11 @@ export default function BlogPage() {
                         type="button"
                         onClick={(e) => {
                           setActiveCat(cat.slug);
-                          trackClick("blog_chip_click", e.currentTarget as unknown as HTMLElement, {
+                          const eventName = buildEventName({ base: 'blog_category', slug: cat.slug, action: 'chip_click' });
+                          trackClick(eventName, e.currentTarget as unknown as HTMLElement, {
                             source_page: "blog_index",
                             page_section: "chips",
-                            category: cat.slug
+                            category_slug: cat.slug
                           });
                         }}
                         className={[
@@ -357,11 +358,13 @@ export default function BlogPage() {
                         aria-label={`Read post: ${post.title}`}
                         onClick={(e) => {
                           try {
-                            trackClick?.("blog_card_click", e.currentTarget, {
+                            const eventName = buildEventName({ base: 'blog', slug: post.slug, action: 'card_click' });
+                            trackClick?.(eventName, e.currentTarget, {
                               source_page: "blog_index",
                               page_section: "card_grid",
-                              slug: post.slug,
-                              category: post.category,
+                              blog_slug: post.slug,
+                              blog_title: post.title,
+                              blog_category: post.category,
                               city: post.city,
                             });
                           } catch {}
