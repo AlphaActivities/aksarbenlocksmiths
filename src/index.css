@@ -620,3 +620,10 @@ video:fullscreen {
   .hero-video { display: block !important; }
   .hero-poster { display: none !important; }
 }
+
+/* Persistent site background to prevent white flash between routes */
+html, body, #root {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #0f172a, #1e293b, #0f172a); /* slate-900 → slate-800 → slate-900 */
+  background-attachment: fixed;
+}
