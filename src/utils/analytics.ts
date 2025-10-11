@@ -279,10 +279,9 @@ export const trackPageView = (extra: Record<string, any> = {}) => {
     slug: serviceSlug || blogSlug || categorySlug,
   });
 
-  queueMicrotask(() => {
-    window.gtag('event', finalName, enhanced);
-    dbg('events_fired', { events: [finalName], params: enhanced });
-  });
+  window.gtag('event', finalName, enhanced);
+
+  dbg('events_fired', { events: [finalName], params: enhanced });
 };
 
 // ---- Outbound link tracking (one-time document listener) ----
