@@ -90,13 +90,14 @@ const AboutSection: React.FC = () => {
               <Link
                 to="/blog"
                 aria-label="Visit our blog"
-                onClick={(e) =>
+                onClick={(e) => {
+                  sessionStorage.setItem("lastScrollY", window.scrollY.toString());
                   trackClick("blog_cta_click", e.currentTarget, {
                     source_page: "about_section",
                     page_section: "about",
                     pill_label: "Our Blog",
-                  })
-                }
+                  });
+                }}
                 className="bg-purple-600 hover:bg-purple-700 text-white px-4 sm:px-6 py-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300 font-medium text-sm sm:text-base whitespace-nowrap"
               >
                 Our Blog
