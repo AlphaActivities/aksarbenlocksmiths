@@ -250,13 +250,13 @@ export default function BlogPostPage() {
               <div className="mx-auto max-w-5xl pt-4 pb-6 md:pt-6 md:pb-8">
               {/* Back to Home button */}
               <div className="mb-4 flex items-center justify-between min-h-[40px]">
-                <Link
-                  to="/blog"
+                <button
                   onClick={(e) => {
-                    trackClick("back_to_blog", e.currentTarget as unknown as HTMLElement, {
+                    navigate(-1);
+                    trackClick("back_to_home", e.currentTarget, {
                       source_page: "blog_post",
                       page_section: "header",
-                      destination: "/blog",
+                      destination: "/",
                       from_post: post.slug,
                     });
                   }}
@@ -266,7 +266,7 @@ export default function BlogPostPage() {
                 >
                   <ArrowLeft className="w-4 h-4" />
                   Back to Blog
-                </Link>
+                </button>
               </div>
               </div>
             </div>
