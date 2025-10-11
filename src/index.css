@@ -620,3 +620,23 @@ video:fullscreen {
   .hero-video { display: block !important; }
   .hero-poster { display: none !important; }
 }
+
+/* Base paint: solid, fast, no jank */
+html, body {
+  min-height: 100vh;
+  /* Solid base: no gradients, no fixed attachment */
+  background-color: #0b1220; /* same dark you already chose */
+  background-image: none;    /* remove gradient that reads as blue in a quick flash */
+  background-attachment: initial;
+}
+
+/* Keep root transparent so hero video can show when present */
+#root {
+  min-height: 100vh;
+  background: transparent;
+}
+
+/* Prevent any accidental background transition/jank */
+html, body, #root {
+  transition: none !important;
+}
