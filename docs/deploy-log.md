@@ -58,3 +58,16 @@ Date | Change | Author | Status
 - Unified accessibility: aria-labels, focus rings, hover states, keyboard nav parity
 - Updated LocalBusiness + Organization JSON-LD sameAs arrays to include Facebook, Twitter/X, Yelp
 - Build verification: ✅ Passed | Console Errors 0 | Bundle +1 KB | UX Significant (native app experience)
+2025-10-11 | Version 1236: Human-Readable GA4 Analytics Overhaul | Josh Applied Improvements | Deployed
+- Added helper utilities (toSnake, buildEventName, slug extractors) in /src/utils/analytics.ts
+- Standardized all GA4 event names to human-readable, context-rich format with single underscores
+- Updated page view events to include slugs (service_page_view_residential, blog_post_page_view_how_to_avoid_lockouts)
+- Added context-aware scroll events (homepage_scroll_25, service_residential_scroll_100, blog_locksmith_tips_scroll_50)
+- Implemented service-specific video tracking (residential_video_play, automotive_lockouts_video_complete)
+- Refactored call button tracking by origin (header_call_button_click, footer_call_button_click, floating_call_button_click, contact_section_call_button_click, service_page_cta_call_button_click)
+- Enhanced navigation tracking (hamburger_menu_click, header_nav_click_services, mobile_nav_click_contact, footer_nav_click_pricing)
+- Updated service and blog interaction events (service_tile_click_residential, blog_how_to_avoid_lockouts_card_click, blog_category_page_view_security_tips)
+- Expanded outbound/social tracking (facebook_social_click, instagram_social_click, outbound_click_maps_google_com)
+- Removed obsolete generic events (scroll_depth, navigation_click, navigate_menu, engagement, old click_call_button alias)
+- Verified GA4 realtime and DebugView integrity – all events readable and context-specific
+- Build Health ✅ 339.33 kB | Console Errors 0 | Analytics Precision 100 % | Readability 100 %
