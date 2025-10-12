@@ -60,21 +60,25 @@ const TestimonialsSection: React.FC = () => {
 
   const handlePrev = () => {
     setAutoplay(false);
-    trackClick('testimonial_arrow_click', undefined, { 
-      direction: 'previous',
-      page_section: 'testimonials',
-      element_text: 'Previous'
-    });
+    try {
+      trackClick('testimonial_arrow_click', undefined, {
+        direction: 'previous',
+        page_section: 'testimonials',
+        element_text: 'Previous'
+      });
+    } catch {}
     setActiveIndex((current) => (current - 1 + testimonials.length) % testimonials.length);
   };
 
   const handleNext = () => {
     setAutoplay(false);
-    trackClick('testimonial_arrow_click', undefined, { 
-      direction: 'next',
-      page_section: 'testimonials',
-      element_text: 'Next'
-    });
+    try {
+      trackClick('testimonial_arrow_click', undefined, {
+        direction: 'next',
+        page_section: 'testimonials',
+        element_text: 'Next'
+      });
+    } catch {}
     setActiveIndex((current) => (current + 1) % testimonials.length);
   };
 
@@ -205,11 +209,13 @@ const TestimonialsSection: React.FC = () => {
               key={index}
               onClick={(e) => {
                 setAutoplay(false);
-                trackClick('testimonial_dot_click', e.currentTarget, { 
-                  testimonial_index: index,
-                  testimonial_name: testimonials[index].name,
-                  page_section: 'testimonials'
-                });
+                try {
+                  trackClick('testimonial_dot_click', e.currentTarget, {
+                    testimonial_index: index,
+                    testimonial_name: testimonials[index].name,
+                    page_section: 'testimonials'
+                  });
+                } catch {}
                 setActiveIndex(index);
               }}
               className={`w-3 h-3 rounded-full mx-1 transition-colors ${
