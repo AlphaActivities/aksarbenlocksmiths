@@ -116,7 +116,7 @@ const TestimonialsSection: React.FC = () => {
           <div className="relative px-6 py-10 mt-6 rounded-2xl shadow-2xl border border-white/10 ring-1 ring-white/10 max-w-4xl mx-auto overflow-hidden bg-black/80 backdrop-blur-md">
             
             {/* 🌌 STRONG TWILIGHT MOTION OVERLAY */}
-            <div className="absolute inset-0 z-0 animate-twilight-flow bg-gradient-to-r from-purple-900 via-fuchsia-600 to-purple-900 opacity-50 blur-sm scale-[1.4]"></div>
+            <div className="absolute inset-0 z-0 pointer-events-none animate-twilight-flow bg-gradient-to-r from-purple-900 via-fuchsia-600 to-purple-900 opacity-50 blur-sm scale-[1.4]"></div>
 
             {/* ✨ CONTENT ABOVE SHIMMER */}
             <div className="relative z-10 space-y-4">
