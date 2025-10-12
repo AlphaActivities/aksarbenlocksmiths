@@ -332,132 +332,119 @@ export const trackEvent = (eventName: string, parameters?: Record<string, any>) 
   }
 };
 
-export const trackClick = (
-  eventName: string,
-  element?: HTMLElement,
-  additionalParams: Record<string, any> = {}
-) => {
-  try {
-    if (!eventName || typeof eventName !== 'string') return;
+export const trackClick = (eventName: string, element?: HTMLElement, additionalParams: Record<string, any> = {}) => {
+  if (typeof window.gtag !== 'function') return;
 
-    if (typeof window === 'undefined' || typeof window.gtag !== 'function') return;
+  const elementData = element ? {
+    element_text: element.innerText || element.textContent || '',
+    target_url: element.getAttribute('href') || undefined,
+    page_section: element.closest('section')?.id || element.closest('[id]')?.id || 'unknown'
+  } : {};
 
-    const elementData = element ? {
-      element_text: element.innerText || element.textContent || '',
-      target_url: element.getAttribute('href') || undefined,
-      page_section: element.closest('section')?.id || element.closest('[id]')?.id || 'unknown'
-    } : {};
+  const attribution = getAttributionParams();
 
-    const attribution = getAttributionParams();
+  window.gtag('event', eventName, {
+    event_category: 'click',
+    page_type: getPageType(window.location.pathname),
+    ...elementData,
+    ...attribution,
+    ...additionalParams,
+  });
 
-    window.gtag('event', eventName, {
+  // Fire alias events for specific tracking needs (removed generic click_call_button aliasing)
+  const emailEvents = ['footer_email_click', 'contact_email_click'];
+  const pricingEvents = ['pricing_cta_click'];
+  const serviceViewEvents = ['service_tile_click'];
+  const testimonialEvents = ['testimonial_view', 'testimonial_arrow_click', 'testimonial_dot_click'];
+  const socialEvents = ['footer_social_click'];
+  const logoEvents = ['logo_click'];
+
+  if (emailEvents.includes(eventName)) {
+    window.gtag('event', 'click_email_button', {
       event_category: 'click',
-      page_type: getPageType(window.location.pathname),
+      service_type: additionalParams.service_type || additionalParams.service_name || 'unknown',
+      phone_number: additionalParams.phone_number || undefined,
+      page_section: additionalParams.page_section || elementData.page_section || 'unknown',
       ...elementData,
-      ...attribution,
       ...additionalParams,
     });
+  }
 
-    const emailEvents = ['footer_email_click', 'contact_email_click'];
-    const pricingEvents = ['pricing_cta_click'];
-    const serviceViewEvents = ['service_tile_click'];
-    const testimonialEvents = ['testimonial_view', 'testimonial_arrow_click', 'testimonial_dot_click'];
-    const videoEngagementEvents: string[] = [];
-    const scrollEvents: string[] = [];
-    const dwellEvents: string[] = [];
-    const socialEvents = ['footer_social_click'];
-    const logoEvents = ['logo_click'];
+  if (pricingEvents.includes(eventName)) {
+    window.gtag('event', 'click_pricing_button', {
+      event_category: 'click',
+      service_type: additionalParams.service_type || additionalParams.service_name || 'unknown',
+      phone_number: additionalParams.phone_number || undefined,
+      page_section: additionalParams.page_section || elementData.page_section || 'unknown',
+      ...elementData,
+      ...additionalParams,
+    });
+  }
 
-    if (emailEvents.includes(eventName)) {
-      window.gtag('event', 'click_email_button', {
-        event_category: 'click',
-        service_type: additionalParams.service_type || additionalParams.service_name || 'unknown',
-        phone_number: additionalParams.phone_number || undefined,
-        page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-        ...elementData,
-        ...additionalParams,
-      });
-    }
+  if (serviceViewEvents.includes(eventName)) {
+    window.gtag('event', 'view_service', {
+      event_category: 'engagement',
+      service_type: additionalParams.service_type || additionalParams.service_name || 'unknown',
+      page_section: additionalParams.page_section || elementData.page_section || 'unknown',
+      ...elementData,
+      ...additionalParams,
+    });
+  }
 
-    if (pricingEvents.includes(eventName)) {
-      window.gtag('event', 'click_pricing_button', {
-        event_category: 'click',
-        service_type: additionalParams.service_type || additionalParams.service_name || 'unknown',
-        phone_number: additionalParams.phone_number || undefined,
-        page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-        ...elementData,
-        ...additionalParams,
-      });
-    }
+  if (testimonialEvents.includes(eventName)) {
+    window.gtag('event', 'engage_testimonial', {
+      event_category: 'engagement',
+      page_section: additionalParams.page_section || elementData.page_section || 'unknown',
+      ...elementData,
+      ...additionalParams,
+    });
+  }
 
-    if (serviceViewEvents.includes(eventName)) {
-      window.gtag('event', 'view_service', {
-        event_category: 'engagement',
-        service_type: additionalParams.service_type || additionalParams.service_name || 'unknown',
-        page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-        ...elementData,
-        ...additionalParams,
-      });
-    }
 
-    if (testimonialEvents.includes(eventName)) {
-      window.gtag('event', 'engage_testimonial', {
-        event_category: 'engagement',
-        page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-        ...elementData,
-        ...additionalParams,
-      });
-    }
+  if (videoEngagementEvents.includes(eventName)) {
+    window.gtag('event', 'engage_video', {
+      event_category: 'engagement',
+      service_type: additionalParams.service_type || additionalParams.service_name || 'unknown',
+      page_section: additionalParams.page_section || elementData.page_section || 'unknown',
+      ...elementData,
+      ...additionalParams,
+    });
+  }
 
-    if (videoEngagementEvents.includes(eventName)) {
-      window.gtag('event', 'engage_video', {
-        event_category: 'engagement',
-        service_type: additionalParams.service_type || additionalParams.service_name || 'unknown',
-        page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-        ...elementData,
-        ...additionalParams,
-      });
-    }
+  if (scrollEvents.includes(eventName)) {
+    window.gtag('event', 'scroll_milestone', {
+      event_category: 'engagement',
+      page_section: additionalParams.page_section || elementData.page_section || 'unknown',
+      ...elementData,
+      ...additionalParams,
+    });
+  }
 
-    if (scrollEvents.includes(eventName)) {
-      window.gtag('event', 'scroll_milestone', {
-        event_category: 'engagement',
-        page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-        ...elementData,
-        ...additionalParams,
-      });
-    }
+  if (dwellEvents.includes(eventName)) {
+    window.gtag('event', 'dwell_section', {
+      event_category: 'engagement',
+      page_section: additionalParams.page_section || elementData.page_section || 'unknown',
+      ...elementData,
+      ...additionalParams,
+    });
+  }
 
-    if (dwellEvents.includes(eventName)) {
-      window.gtag('event', 'dwell_section', {
-        event_category: 'engagement',
-        page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-        ...elementData,
-        ...additionalParams,
-      });
-    }
+  if (socialEvents.includes(eventName)) {
+    window.gtag('event', 'click_social', {
+      event_category: 'click',
+      page_section: additionalParams.page_section || elementData.page_section || 'unknown',
+      ...elementData,
+      ...additionalParams,
+    });
+  }
 
-    if (socialEvents.includes(eventName)) {
-      window.gtag('event', 'click_social', {
-        event_category: 'click',
-        page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-        ...elementData,
-        ...additionalParams,
-      });
-    }
-
-    if (logoEvents.includes(eventName)) {
-      window.gtag('event', 'click_logo', {
-        event_category: 'click',
-        page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-        ...elementData,
-        ...additionalParams,
-      });
-    }
-  } catch (err) {
-    if (DEBUG_ANALYTICS) {
-      console.warn('trackClick suppressed error', err);
-    }
+  if (logoEvents.includes(eventName)) {
+    window.gtag('event', 'click_logo', {
+      event_category: 'click',
+      page_section: additionalParams.page_section || elementData.page_section || 'unknown',
+      ...elementData,
+      ...additionalParams,
+    });
   }
 };
 

@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { posts as BLOG_POSTS, findPost } from "../data/posts";
-import { trackClick, buildEventName } from "../utils/analytics";
+import { trackClick } from "../utils/analytics";
 import { ArrowLeft, Phone } from "lucide-react";
 
 const BLOG_PLACEHOLDER =
@@ -12,6 +12,7 @@ const BLOG_PLACEHOLDER =
   );
 
 export default function BlogPostPage() {
+  const navigate = useNavigate();
   const { slug } = useParams();
   const post = useMemo(() => (slug ? findPost(slug) : undefined), [slug]);
   const articleRef = useRef<HTMLElement | null>(null);
@@ -65,6 +66,16 @@ export default function BlogPostPage() {
 
         <div className="min-h-screen w-full relative">
           <main className="min-h-screen w-full relative overflow-hidden">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              aria-hidden="true"
+              poster="/images/Services Thumbnails/Residential-Service-Photo.webp"
+              className="fixed inset-0 w-full h-full object-cover opacity-45 z-0"
+              src="/videos/wallpaper.mp4"
+            />
             <div className="absolute inset-0 pointer-events-none">
               <div className="animated-footer-bg" />
               <div className="footer-glass-effect absolute inset-0" />
@@ -236,15 +247,15 @@ export default function BlogPostPage() {
 
             <div className="w-full px-6">
               <div className="mx-auto max-w-5xl pt-4 pb-6 md:pt-6 md:pb-8">
-              {/* Back to Blog button */}
+              {/* Back to Home button */}
               <div className="mb-4 flex items-center justify-between min-h-[40px]">
-                <Link
-                  to="/blog"
+                <button
                   onClick={(e) => {
-                    trackClick("back_to_blog", e.currentTarget as unknown as HTMLElement, {
+                    navigate(-1);
+                    trackClick("back_to_home", e.currentTarget, {
                       source_page: "blog_post",
                       page_section: "header",
-                      destination: "/blog",
+                      destination: "/",
                       from_post: post.slug,
                     });
                   }}
@@ -254,7 +265,7 @@ export default function BlogPostPage() {
                 >
                   <ArrowLeft className="w-4 h-4" />
                   Back to Blog
-                </Link>
+                </button>
               </div>
               </div>
             </div>
@@ -348,46 +359,6 @@ export default function BlogPostPage() {
                 >
                   Request Service
                 </a>
-              </div>
-
-              {/* Related posts — same style as service links */}
-              <div className="text-sm mt-12 text-white">
-                <strong>More in this category:</strong>
-                <ul className="list-disc list-inside space-y-1 mt-2">
-                  {BLOG_POSTS
-                    .filter((p) => p.category === post.category && p.slug !== post.slug)
-                    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-                    .slice(0, 5)
-                    .map((p) => (
-                      <li key={p.slug}>
-                        <Link
-                          to={`/blog/${p.slug}`}
-                          onClick={(e) =>
-                            trackClick(
-                              buildEventName({
-                                base: "blog",
-                                slug: p.slug,
-                                action: "related_click",
-                              }),
-                              e.currentTarget as unknown as HTMLElement,
-                              {
-                                page_section: "related_posts",
-                                page_type: "blog_post",
-                                page_path: window.location.pathname,
-                                blog_slug: p.slug,
-                                blog_title: p.title,
-                                blog_category: p.category,
-                                from_post: post.slug,
-                              }
-                            )
-                          }
-                          className="hover:underline"
-                        >
-                          {p.title}
-                        </Link>
-                      </li>
-                    ))}
-                </ul>
               </div>
             </div>
             </div>

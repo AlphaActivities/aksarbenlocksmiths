@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import PillBadge from './ui/PillBadge';
 import { trackClick, trackEvent } from '../utils/analytics';
@@ -48,20 +48,10 @@ const TestimonialsSection: React.FC = () => {
   const [autoplay, setAutoplay] = useState(true);
   const [hasTrackedView, setHasTrackedView] = useState(false);
 
-  // Analytics session refs
-  const viewStartTsRef = useRef<number | null>(null);
-  const cyclesTotalRef = useRef(0);
-  const cyclesAutoplayRef = useRef(0);
-  const cyclesManualRef = useRef(0);
-  const seenSlidesRef = useRef<Set<number>>(new Set([0]));
-  const lastIndexRef = useRef<number>(0);
-  const lastMethodRef = useRef<'autoplay' | 'prev' | 'next' | 'dot' | null>(null);
-
   useEffect(() => {
     if (!autoplay) return;
 
     const interval = setInterval(() => {
-      lastMethodRef.current = 'autoplay';
       setActiveIndex((current) => (current + 1) % testimonials.length);
     }, 5000);
 
@@ -70,123 +60,23 @@ const TestimonialsSection: React.FC = () => {
 
   const handlePrev = () => {
     setAutoplay(false);
-    try {
-      trackClick('testimonial_arrow_click', undefined, {
-        direction: 'previous',
-        page_section: 'testimonials',
-        element_text: 'Previous'
-      });
-    } catch {}
-    lastMethodRef.current = 'prev';
+    trackClick('testimonial_arrow_click', undefined, { 
+      direction: 'previous',
+      page_section: 'testimonials',
+      element_text: 'Previous'
+    });
     setActiveIndex((current) => (current - 1 + testimonials.length) % testimonials.length);
   };
 
   const handleNext = () => {
     setAutoplay(false);
-    try {
-      trackClick('testimonial_arrow_click', undefined, {
-        direction: 'next',
-        page_section: 'testimonials',
-        element_text: 'Next'
-      });
-    } catch {}
-    lastMethodRef.current = 'next';
+    trackClick('testimonial_arrow_click', undefined, { 
+      direction: 'next',
+      page_section: 'testimonials',
+      element_text: 'Next'
+    });
     setActiveIndex((current) => (current + 1) % testimonials.length);
   };
-
-  // Track cycle on every slide change
-  useEffect(() => {
-    const from = lastIndexRef.current;
-    const to = activeIndex;
-    if (from === to) return;
-
-    const method = lastMethodRef.current ?? 'autoplay';
-
-    cyclesTotalRef.current += 1;
-    if (method === 'autoplay') {
-      cyclesAutoplayRef.current += 1;
-    } else {
-      cyclesManualRef.current += 1;
-    }
-    seenSlidesRef.current.add(to);
-
-    try {
-      trackEvent('testimonial_cycle', {
-        method,
-        from_index: from,
-        to_index: to,
-        page_section: 'testimonials',
-        total_slides: testimonials.length,
-      });
-    } catch {}
-
-    lastIndexRef.current = to;
-    lastMethodRef.current = null;
-  }, [activeIndex]);
-
-  // Initialize lastIndexRef on mount
-  useEffect(() => {
-    lastIndexRef.current = 0;
-  }, []);
-
-  // View session analytics
-  useEffect(() => {
-    const el = document.getElementById('testimonials');
-    if (!el) return;
-
-    const handleEnter = () => {
-      if (viewStartTsRef.current == null) {
-        viewStartTsRef.current = performance.now();
-        try {
-          trackEvent('testimonial_view_start', {
-            page_section: 'testimonials',
-            initial_index: activeIndex,
-            total_slides: testimonials.length,
-          });
-        } catch {}
-      }
-    };
-
-    const handleExit = () => {
-      if (viewStartTsRef.current != null) {
-        const dwellMs = Math.max(0, Math.round(performance.now() - viewStartTsRef.current));
-        try {
-          trackEvent('testimonial_view_end', {
-            page_section: 'testimonials',
-            dwell_ms: dwellMs,
-            cycles_total: cyclesTotalRef.current,
-            cycles_autoplay: cyclesAutoplayRef.current,
-            cycles_manual: cyclesManualRef.current,
-            unique_slides_viewed: seenSlidesRef.current.size,
-            last_index: lastIndexRef.current,
-          });
-        } catch {}
-        viewStartTsRef.current = null;
-        cyclesTotalRef.current = 0;
-        cyclesAutoplayRef.current = 0;
-        cyclesManualRef.current = 0;
-        seenSlidesRef.current = new Set([activeIndex]);
-      }
-    };
-
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          handleEnter();
-        } else {
-          handleExit();
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    io.observe(el);
-    return () => {
-      io.unobserve(el);
-      handleExit();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // Track testimonial view only when section becomes visible and user has interacted
   useEffect(() => {
@@ -226,7 +116,7 @@ const TestimonialsSection: React.FC = () => {
           <div className="relative px-6 py-10 mt-6 rounded-2xl shadow-2xl border border-white/10 ring-1 ring-white/10 max-w-4xl mx-auto overflow-hidden bg-black/80 backdrop-blur-md">
             
             {/* 🌌 STRONG TWILIGHT MOTION OVERLAY */}
-            <div className="absolute inset-0 z-0 pointer-events-none animate-twilight-flow bg-gradient-to-r from-purple-900 via-fuchsia-600 to-purple-900 opacity-50 blur-sm scale-[1.4]"></div>
+            <div className="absolute inset-0 z-0 animate-twilight-flow bg-gradient-to-r from-purple-900 via-fuchsia-600 to-purple-900 opacity-50 blur-sm scale-[1.4]"></div>
 
             {/* ✨ CONTENT ABOVE SHIMMER */}
             <div className="relative z-10 space-y-4">
@@ -315,14 +205,11 @@ const TestimonialsSection: React.FC = () => {
               key={index}
               onClick={(e) => {
                 setAutoplay(false);
-                try {
-                  trackClick('testimonial_dot_click', e.currentTarget, {
-                    testimonial_index: index,
-                    testimonial_name: testimonials[index].name,
-                    page_section: 'testimonials'
-                  });
-                } catch {}
-                lastMethodRef.current = 'dot';
+                trackClick('testimonial_dot_click', e.currentTarget, { 
+                  testimonial_index: index,
+                  testimonial_name: testimonials[index].name,
+                  page_section: 'testimonials'
+                });
                 setActiveIndex(index);
               }}
               className={`w-3 h-3 rounded-full mx-1 transition-colors ${
