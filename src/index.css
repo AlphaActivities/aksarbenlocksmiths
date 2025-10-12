@@ -26,6 +26,10 @@ html, body {
 @tailwind components;
 @tailwind utilities;
 
+.gradient-animate {
+  color: #ffffff;
+}
+
 @keyframes heatwave {
   0% {
     background-position: 300% 50%;
@@ -192,7 +196,7 @@ html, body {
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  animation: fastSweep 1.5s linear infinite;
+  animation: fastSweep 3.6s linear infinite;
   font-weight: 800;
   transition: none !important;
   filter: none !important;
@@ -591,7 +595,12 @@ video:fullscreen {
     /* existing shimmer animation declaration stays here */
   }
   .gradient-animate {
-    /* existing gradient animation declaration stays here */
+    background: linear-gradient(90deg, #ef4444, #ffffff, #3b82f6, #ef4444);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: heatwave 3.6s linear infinite;
   }
 }
 
