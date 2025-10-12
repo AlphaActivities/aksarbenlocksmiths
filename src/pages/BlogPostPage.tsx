@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { posts as BLOG_POSTS, findPost } from "../data/posts";
-import { trackClick } from "../utils/analytics";
+import { trackClick, buildEventName } from "../utils/analytics";
 import { ArrowLeft, Phone } from "lucide-react";
 
 const BLOG_PLACEHOLDER =
@@ -348,6 +348,46 @@ export default function BlogPostPage() {
                 >
                   Request Service
                 </a>
+              </div>
+
+              {/* Related posts — same style as service links */}
+              <div className="text-sm mt-12 text-white">
+                <strong>More in this category:</strong>
+                <ul className="list-disc list-inside space-y-1 mt-2">
+                  {BLOG_POSTS
+                    .filter((p) => p.category === post.category && p.slug !== post.slug)
+                    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                    .slice(0, 5)
+                    .map((p) => (
+                      <li key={p.slug}>
+                        <Link
+                          to={`/blog/${p.slug}`}
+                          onClick={(e) =>
+                            trackClick(
+                              buildEventName({
+                                base: "blog",
+                                slug: p.slug,
+                                action: "related_click",
+                              }),
+                              e.currentTarget as unknown as HTMLElement,
+                              {
+                                page_section: "related_posts",
+                                page_type: "blog_post",
+                                page_path: window.location.pathname,
+                                blog_slug: p.slug,
+                                blog_title: p.title,
+                                blog_category: p.category,
+                                from_post: post.slug,
+                              }
+                            )
+                          }
+                          className="hover:underline"
+                        >
+                          {p.title}
+                        </Link>
+                      </li>
+                    ))}
+                </ul>
               </div>
             </div>
             </div>
