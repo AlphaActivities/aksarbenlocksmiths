@@ -123,7 +123,7 @@ export default function BlogPage() {
 
   const origin = typeof window !== "undefined" ? window.location.origin : "https://aksarbenlocksmiths.com";
   const canonicalUrl = activeCatMeta
-    ? `${origin}/blog?cat=${activeCatMeta}`
+    ? `${origin}/blog/${activeCatMeta}`
     : `${origin}/blog`;
 
   const defaultTitle = "Our Blog, Omaha Locksmith Tips and Guides";
@@ -310,28 +310,30 @@ export default function BlogPage() {
                   {BLOG_CATEGORY_LIST.map((cat) => {
                     const isActive = cat.slug === activeCat;
                     return (
-                      <button
+                      <Link
                         key={cat.slug}
-                        type="button"
+                        to={`/blog/${cat.slug}`}
                         onClick={(e) => {
-                          setActiveCat(cat.slug);
-                          const eventName = buildEventName({ base: 'blog_category', slug: cat.slug, action: 'chip_click' });
-                          trackClick(eventName, e.currentTarget as unknown as HTMLElement, {
-                            source_page: "blog_index",
-                            page_section: "chips",
-                            category_slug: cat.slug
-                          });
+                          trackClick(
+                            buildEventName({ base: 'blog_category', slug: cat.slug, action: 'chip_click' }),
+                            e.currentTarget as unknown as HTMLElement,
+                            {
+                              source_page: 'blog_index',
+                              page_section: 'chips',
+                              category_slug: cat.slug,
+                            }
+                          );
                         }}
                         className={[
-                          "px-4 py-2 rounded-full text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black w-full justify-center text-center",
+                          "px-4 py-2 rounded-full text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black w-full justify-center text-center inline-flex items-center",
                           isActive
                             ? "bg-purple-600 border border-purple-600 shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:shadow-[0_0_28px_rgba(255,255,255,0.6)]"
                             : "bg-[#2a1645] hover:bg-[#4a2974] border border-[#3a1f5c] shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:shadow-[0_0_28px_rgba(255,255,255,0.6)]"
                         ].join(" ")}
-                        aria-pressed={isActive}
+                        aria-current={isActive ? 'page' : undefined}
                       >
                         {cat.label}
-                      </button>
+                      </Link>
                     );
                   })}
                 </div>
