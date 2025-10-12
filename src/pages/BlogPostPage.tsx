@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { posts as BLOG_POSTS, findPost } from "../data/posts";
 import { trackClick } from "../utils/analytics";
@@ -12,7 +12,6 @@ const BLOG_PLACEHOLDER =
   );
 
 export default function BlogPostPage() {
-  const navigate = useNavigate();
   const { slug } = useParams();
   const post = useMemo(() => (slug ? findPost(slug) : undefined), [slug]);
   const articleRef = useRef<HTMLElement | null>(null);
@@ -237,15 +236,15 @@ export default function BlogPostPage() {
 
             <div className="w-full px-6">
               <div className="mx-auto max-w-5xl pt-4 pb-6 md:pt-6 md:pb-8">
-              {/* Back to Home button */}
+              {/* Back to Blog button */}
               <div className="mb-4 flex items-center justify-between min-h-[40px]">
-                <button
+                <Link
+                  to="/blog"
                   onClick={(e) => {
-                    navigate(-1);
-                    trackClick("back_to_home", e.currentTarget, {
+                    trackClick("back_to_blog", e.currentTarget as unknown as HTMLElement, {
                       source_page: "blog_post",
                       page_section: "header",
-                      destination: "/",
+                      destination: "/blog",
                       from_post: post.slug,
                     });
                   }}
@@ -255,7 +254,7 @@ export default function BlogPostPage() {
                 >
                   <ArrowLeft className="w-4 h-4" />
                   Back to Blog
-                </button>
+                </Link>
               </div>
               </div>
             </div>
