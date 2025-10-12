@@ -349,8 +349,10 @@ export default function BlogPostPage() {
                   Request Service
                 </a>
               </div>
+            </div>
 
-              {/* Related posts — same style as service links */}
+            {/* Related posts — moved outside centered column to match service left lane */}
+            <div className="px-6">
               <div className="text-sm mt-12 text-white">
                 <strong>More in this category:</strong>
                 <ul className="list-disc list-inside space-y-1 mt-2">
