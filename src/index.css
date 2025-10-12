@@ -196,7 +196,7 @@ html, body {
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  animation: fastSweep 1.5s linear infinite;
+  animation: fastSweep 3.6s linear infinite;
   font-weight: 800;
   transition: none !important;
   filter: none !important;
