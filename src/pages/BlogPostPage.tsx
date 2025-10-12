@@ -74,56 +74,39 @@ export default function BlogPostPage() {
             <div className="relative z-10 text-white pt-12 md:pt-14">
               <main className="min-h-screen w-full px-4 py-12 md:py-16">
                 <section className="mx-auto max-w-5xl text-white">
-                  <div className="mb-6 flex items-center justify-between">
-                    <button
-                      onClick={(e) => {
-                        navigate(-1);
-                        trackClick("back_to_home", e.currentTarget, {
-                          source_page: "blog_post",
-                          page_section: "header",
-                          destination: "/",
-                        });
-                      }}
-                      className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
-                      aria-label="Back to Home"
-                      title="Back to Home"
-                    >
-                      <ArrowLeft className="w-4 h-4" />
-                      Back to Home
-                    </button>
-                  </div>
-
                   <h1 className="text-2xl md:text-3xl font-bold">Post not found</h1>
                   <p className="mt-3 text-gray-300">
                     The article you are looking for is unavailable.{" "}
                     <Link to="/blog" className="text-purple-400 underline">Go back to the blog.</Link>
                   </p>
 
-                  <div className="mt-4 flex gap-3">
-                    <button
-                      onClick={(e) => {
-                        navigate("/", { state: { restorePosition: true } });
+                  <div className="mt-6 flex items-center gap-4">
+                    <Link
+                      to="/"
+                      onClick={(e) =>
                         trackClick("not_found_back_home_click", e.currentTarget, {
                           source_page: "blog_post_404",
                           page_section: "not_found",
-                        });
-                      }}
-                      className="inline-flex items-center rounded-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium transition-colors"
+                        })
+                      }
+                      className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                       aria-label="Back to Home"
+                      title="Back to Home"
                     >
                       Back to Home
-                    </button>
+                    </Link>
 
                     <Link
                       to="/blog"
-                      aria-label="Back to the blog"
                       onClick={(e) =>
                         trackClick("not_found_back_blog_click", e.currentTarget, {
                           source_page: "blog_post_404",
                           page_section: "not_found",
                         })
                       }
-                      className="inline-flex items-center rounded-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors"
+                      className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-sm shadow hover:brightness-110 transition duration-200"
+                      aria-label="Go back to the blog"
+                      title="Go back to the blog"
                     >
                       Go back to the blog
                     </Link>
@@ -205,17 +188,6 @@ export default function BlogPostPage() {
 
       <div className="min-h-[100svh] w-full relative overflow-x-hidden touch-pan-y overscroll-x-none overscroll-y-contain">
         <main className="min-h-[100svh] w-full relative overflow-visible">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            aria-hidden="true"
-            poster="/images/services-thumbnails/Residential-Service-Photo.webp"
-            className="fixed inset-0 w-full h-full object-cover opacity-45 z-0 pointer-events-none"
-            src="/videos/wallpaper.mp4"
-          />
-
           <div className="relative z-10 text-white pt-8 md:pt-10 pb-12 md:pb-16 lg:pb-20">
             <Helmet>
               <title>{title}</title>
