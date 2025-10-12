@@ -620,3 +620,16 @@ video:fullscreen {
   .hero-video { display: block !important; }
   .hero-poster { display: none !important; }
 }
+
+/* Base paint safety: solid background behind fixed video, no gradient, no attachment */
+html, body {
+  min-height: 100vh;
+  background-color: #0b1220; /* matches site's dark base */
+  background-image: none;
+  background-attachment: initial;
+}
+
+/* Critical: keep root transparent so the global video at z-[-1] is visible */
+#root {
+  background: transparent;
+}
