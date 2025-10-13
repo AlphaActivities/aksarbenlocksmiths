@@ -61,8 +61,10 @@ export default function BlogPage() {
   const activeCatMeta = activeCatForSEO && isValidCategory(activeCatForSEO) ? activeCatForSEO : null;
 
   const origin = typeof window !== "undefined" ? window.location.origin : "https://aksarbenlocksmiths.com";
+  const categoryPath = `/blog/${resolvedCat}`;
+  const categoryAbs = `${origin}${categoryPath}`;
   const canonicalUrl = activeCatMeta
-    ? `${origin}/blog?cat=${activeCatMeta}`
+    ? categoryAbs
     : `${origin}/blog`;
 
   const defaultTitle = "Our Blog, Omaha Locksmith Tips and Guides";
@@ -157,9 +159,9 @@ export default function BlogPage() {
                         ? {
                             "@context": "https://schema.org",
                             "@type": "CollectionPage",
-                            "@id": `${canonicalUrl}#collection`,
+                            "@id": `${categoryAbs}#collection`,
                             name: metaCat?.h1 || pageTitle,
-                            url: canonicalUrl,
+                            url: categoryAbs,
                             isPartOf: `${origin}/blog`,
                             mainEntity: {
                               "@type": "ItemList",
@@ -186,7 +188,7 @@ export default function BlogPage() {
                         { "@type": "ListItem", position: 1, name: "Home", item: `${origin}/` },
                         { "@type": "ListItem", position: 2, name: "Blog", item: `${origin}/blog` },
                         ...(activeCatMeta
-                          ? [{ "@type": "ListItem", position: 3, name: metaCat?.h1 || pageTitle, item: canonicalUrl }]
+                          ? [{ "@type": "ListItem", position: 3, name: metaCat?.h1 || pageTitle, item: categoryAbs }]
                           : [])
                       ]
                     })
