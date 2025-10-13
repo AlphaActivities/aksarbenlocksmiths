@@ -21,8 +21,10 @@ export default function BlogPage() {
   const [params, setParams] = useSearchParams();
 
   useEffect(() => {
-    if (!categoryParam) {
-      navigate('/blog/emergency', { replace: true });
+    const cat = categoryParam?.toLowerCase();
+    const valid = cat === "emergency" || cat === "keys" || cat === "residential" || cat === "commercial";
+    if (!valid) {
+      navigate("/blog/emergency", { replace: true });
     }
   }, [categoryParam, navigate]);
 
@@ -123,7 +125,7 @@ export default function BlogPage() {
   const origin = typeof window !== "undefined" ? window.location.origin : "https://aksarbenlocksmiths.com";
   const canonicalUrl = activeCatMeta
     ? `${origin}/blog/${activeCatMeta}`
-    : `${origin}/blog`;
+    : `${origin}/blog/emergency`;
 
   const defaultTitle = "Our Blog, Omaha Locksmith Tips and Guides";
   const defaultDesc = "Emergency lockouts, keys and duplication, residential and commercial security for Omaha and surrounding cities.";
@@ -297,29 +299,27 @@ export default function BlogPage() {
                 {/* Category filter */}
                 <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-2">
                   {BLOG_CATEGORY_LIST.map((cat) => {
-                    const isActive = activeCatFromRoute === cat.slug;
+                    const isActive = (categoryParam ?? "") === cat.slug;
+                    const chipClasses = [
+                      "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black w-full justify-center text-center inline-flex items-center",
+                      isActive
+                        ? "bg-purple-600 border border-purple-600 shadow-[0_0_24px_rgba(255,255,255,0.5)]"
+                        : "bg-[#2a1645] hover:bg-[#4a2974] border border-[#3a1f5c]"
+                    ].join(" ");
+
                     return (
                       <Link
                         key={cat.slug}
                         to={`/blog/${cat.slug}`}
                         onClick={(e) => {
                           trackClick(
-                            buildEventName({ base: 'blog_category', slug: cat.slug, action: 'chip_click' }),
+                            buildEventName({ base: "blog_category", slug: cat.slug, action: "chip_click" }),
                             e.currentTarget as unknown as HTMLElement,
-                            {
-                              source_page: 'blog_index',
-                              page_section: 'chips',
-                              category_slug: cat.slug,
-                            }
+                            { source_page: "blog_index", page_section: "chips", category_slug: cat.slug }
                           );
                         }}
-                        className={[
-                          "px-4 py-2 rounded-full text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black w-full justify-center text-center inline-flex items-center",
-                          isActive
-                            ? "bg-purple-600 border border-purple-600 shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:shadow-[0_0_28px_rgba(255,255,255,0.6)]"
-                            : "bg-[#2a1645] hover:bg-[#4a2974] border border-[#3a1f5c] shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:shadow-[0_0_28px_rgba(255,255,255,0.6)]"
-                        ].join(" ")}
-                        aria-current={isActive ? 'page' : undefined}
+                        className={chipClasses}
+                        aria-current={isActive ? "page" : undefined}
                       >
                         {cat.label}
                       </Link>
