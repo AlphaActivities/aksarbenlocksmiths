@@ -233,8 +233,12 @@ function App() {
         />
         <Route path="/services/:slug" element={<DynamicServicePage />} />
         <Route path="/service-areas" element={<ServiceAreasPage />} />
+        {/* BLOG ROUTES — category BEFORE slug */}
+        <Route
+          path="/blog/:category(emergency|keys|residential|commercial)"
+          element={<BlogPage />}
+        />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
-        <Route path="/blog/:category(emergency|keys|residential|commercial)" element={<BlogPage />} />
         <Route path="/blog" element={<Navigate to="/blog/emergency" replace />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="*" element={<NotFound />} />
