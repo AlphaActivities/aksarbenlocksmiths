@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useSearchParams, useNavigate, useParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate, useParams, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { BLOG_CATEGORIES as BLOG_CATEGORY_LIST } from "../data/blogPosts";
 import { BLOG_CATEGORIES } from "../data/blogCategories";
@@ -17,24 +17,24 @@ const BLOG_PLACEHOLDER =
 
 export default function BlogPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { category: categoryParam } = useParams();
 
   // Declare all hooks BEFORE any returns
-  const [activeCat, setActiveCat] = useState<BlogCategory>((categoryParam as BlogCategory) || 'emergency');
   const listRef = useRef<HTMLDivElement | null>(null);
+
+  // Resolve category from URL path or param
+  const pathCat = location.pathname.startsWith("/blog/")
+    ? (location.pathname.split("/")[2] as BlogCategory | undefined)
+    : undefined;
+
+  const resolvedCat = (categoryParam as BlogCategory | undefined) ?? pathCat ?? "emergency";
 
   // Ensure valid category, otherwise redirect once
   useEffect(() => {
-    const cat = (categoryParam || '').toLowerCase();
-    const valid = cat === 'emergency' || cat === 'keys' || cat === 'residential' || cat === 'commercial';
+    const valid = resolvedCat === 'emergency' || resolvedCat === 'keys' || resolvedCat === 'residential' || resolvedCat === 'commercial';
     if (!valid) navigate('/blog/emergency', { replace: true });
-  }, [categoryParam, navigate]);
-
-  // Sync activeCat with URL parameter
-  useEffect(() => {
-    const next = (categoryParam as BlogCategory) || 'emergency';
-    setActiveCat(next);
-  }, [categoryParam]);
+  }, [resolvedCat, navigate]);
 
   // Impression event for the list view
   useEffect(() => {
@@ -50,14 +50,14 @@ export default function BlogPage() {
   // Filtered posts, memoized
   const filtered = useMemo(() => {
     return BLOG_POSTS
-      .filter((p) => p.category === activeCat)
+      .filter((p) => p.category === resolvedCat)
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  }, [activeCat]);
+  }, [resolvedCat]);
 
   // OG fallback used on category pages
   const DEFAULT_OG = `${window.location.origin}/images/og/home-1200x630.webp`;
 
-  const activeCatForSEO = (categoryParam || activeCat) as BlogCategory | null;
+  const activeCatForSEO = resolvedCat as BlogCategory | null;
   const activeCatMeta = activeCatForSEO && isValidCategory(activeCatForSEO) ? activeCatForSEO : null;
 
   const origin = typeof window !== "undefined" ? window.location.origin : "https://aksarbenlocksmiths.com";
@@ -247,7 +247,7 @@ export default function BlogPage() {
                 {/* Category filter */}
                 <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-2">
                   {BLOG_CATEGORY_LIST.map((cat) => {
-                    const isActive = cat.slug === activeCat;
+                    const isActive = cat.slug === resolvedCat;
                     return (
                       <Link
                         key={cat.slug}

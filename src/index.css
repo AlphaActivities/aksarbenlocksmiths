@@ -23,12 +23,6 @@ html, body {
   overscroll-behavior-y: none;
 }
 
-/* Prevent white flash during route transitions */
-html, body, #root {
-  background-color: #0B1020;
-  color-scheme: dark;
-}
-
 @tailwind components;
 @tailwind utilities;
 
