@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { posts as BLOG_POSTS, findPost } from "../data/posts";
 import { trackClick, buildEventName } from "../utils/analytics";
