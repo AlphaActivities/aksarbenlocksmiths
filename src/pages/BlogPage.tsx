@@ -44,7 +44,9 @@ export default function BlogPage() {
         listRef.current,
         { source_page: "blog_index", page_section: "list", item_count: BLOG_POSTS.length }
       );
-    } catch {}
+    } catch (_err) {
+      // intentional no-op: analytics best-effort
+    }
   }, []);
 
   // Filtered posts, memoized

@@ -15,6 +15,7 @@ export default function BlogPostPage() {
   const { slug } = useParams();
   const post = useMemo(() => (slug ? findPost(slug) : undefined), [slug]);
   const articleRef = useRef<HTMLElement | null>(null);
+  const lastTrackedSlug = useRef<string | null>(null);
   const navigate = useNavigate();
 
   // Schema and URL helpers - compute before any returns
@@ -46,15 +47,18 @@ export default function BlogPostPage() {
   }, [paragraphs, post]);
 
   useEffect(() => {
-    if (post) {
-      try {
-        trackEngagement?.("blog_post_view", articleRef.current, {
-          source_page: "blog_post",
-          slug: post.slug,
-          category: post.category,
-          city: post.city,
-        });
-      } catch {}
+    if (!post) return;
+    if (lastTrackedSlug.current === post.slug) return;
+    lastTrackedSlug.current = post.slug;
+    try {
+      trackEngagement?.("blog_post_view", articleRef.current, {
+        source_page: "blog_post",
+        slug: post.slug,
+        category: post.category,
+        city: post.city,
+      });
+    } catch (_err) {
+      // intentional no-op: analytics best-effort
     }
   }, [post]);
 
