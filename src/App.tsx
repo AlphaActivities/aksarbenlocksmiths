@@ -232,9 +232,25 @@ function App() {
         />
         <Route path="/services/:slug" element={<DynamicServicePage />} />
         <Route path="/service-areas" element={<ServiceAreasPage />} />
-        <Route path="/blog/:category(emergency|keys|residential|commercial)" element={<BlogPage />} />
+
+        {/* Blog category routes, explicit first */}
+        <Route path="/blog/emergency" element={<BlogPage />} />
+        <Route path="/blog/keys" element={<BlogPage />} />
+        <Route path="/blog/residential" element={<BlogPage />} />
+        <Route path="/blog/commercial" element={<BlogPage />} />
+
+        {/* Optional fallback patterned category route */}
+        <Route
+          path="/blog/:category(emergency|keys|residential|commercial)"
+          element={<BlogPage />}
+        />
+
+        {/* Post slugs after categories so they never hijack category names */}
         <Route path="/blog/:slug" element={<BlogPostPage />} />
+
+        {/* Default /blog goes to Emergency */}
         <Route path="/blog" element={<Navigate to="/blog/emergency" replace />} />
+
         <Route path="/search" element={<SearchPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
