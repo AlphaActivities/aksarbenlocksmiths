@@ -87,8 +87,7 @@ export default function BlogPage() {
     );
   }
   
-  const initialCat = (categoryParam as BlogCategory) || (params.get("cat") as BlogCategory) || "emergency";
-  const [activeCat, setActiveCat] = useState<BlogCategory>(initialCat);
+  const activeCatFromRoute = categoryParam ?? undefined;
   const listRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -102,23 +101,17 @@ export default function BlogPage() {
     } catch {}
   }, []);
 
-  useEffect(() => {
-    if (!categoryParam) {
-      setParams({ cat: activeCat }, { replace: true });
-    }
-  }, [activeCat, categoryParam, setParams]);
-
   const filtered = useMemo(
     () => {
       if (categoryParam) {
         return BLOG_POSTS.filter((p) => p.category === categoryParam).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
       }
-      return BLOG_POSTS.filter((p) => p.category === activeCat).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      return BLOG_POSTS.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     },
-    [activeCat, categoryParam]
+    [categoryParam]
   );
 
-  const activeCatForSEO = (categoryParam || activeCat) as BlogCategory | null;
+  const activeCatForSEO = categoryParam as BlogCategory | null;
   const activeCatMeta = activeCatForSEO && isValidCategory(activeCatForSEO) ? activeCatForSEO : null;
 
   const origin = typeof window !== "undefined" ? window.location.origin : "https://aksarbenlocksmiths.com";
@@ -298,7 +291,7 @@ export default function BlogPage() {
                 {/* Category filter */}
                 <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-2">
                   {BLOG_CATEGORY_LIST.map((cat) => {
-                    const isActive = cat.slug === activeCat;
+                    const isActive = activeCatFromRoute === cat.slug;
                     return (
                       <Link
                         key={cat.slug}
