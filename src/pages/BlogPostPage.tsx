@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { posts as BLOG_POSTS, findPost } from "../data/posts";
 import { trackClick, buildEventName } from "../utils/analytics";
@@ -13,8 +13,16 @@ const BLOG_PLACEHOLDER =
 
 export default function BlogPostPage() {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const post = useMemo(() => (slug ? findPost(slug) : undefined), [slug]);
   const articleRef = useRef<HTMLElement | null>(null);
+
+  const categories = new Set(['emergency', 'keys', 'residential', 'commercial']);
+  useEffect(() => {
+    if (slug && categories.has(slug)) {
+      navigate(`/blog/${slug}`, { replace: true });
+    }
+  }, [slug, navigate]);
 
   // Schema and URL helpers
   const origin = typeof window !== "undefined" ? window.location.origin : "https://aksarbenlocksmiths.com";
