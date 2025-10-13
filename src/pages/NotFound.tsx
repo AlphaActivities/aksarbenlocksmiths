@@ -56,10 +56,10 @@ export default function NotFound() {
             type="button"
             onClick={() => window.location.reload()}
             className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600 text-white text-sm hover:brightness-110 transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            aria-label="Retry"
-            title="Retry"
+            aria-label="Refresh"
+            title="Refresh"
           >
-            Retry
+            Refresh
           </button>
         </div>
       </main>
