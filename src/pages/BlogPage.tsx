@@ -19,19 +19,7 @@ export default function BlogPage() {
   const navigate = useNavigate();
   const { category: categoryParam } = useParams();
   const [params, setParams] = useSearchParams();
-
-  useEffect(() => {
-    const cat = categoryParam?.toLowerCase();
-    const valid = cat === "emergency" || cat === "keys" || cat === "residential" || cat === "commercial";
-    if (!valid) {
-      navigate("/blog/emergency", { replace: true });
-    }
-  }, [categoryParam, navigate]);
-
-  if (!categoryParam || !isValidCategory(categoryParam)) {
-    return null;
-  }
-
+  
   // If we have a category param that's invalid, show not found
   if (categoryParam && !isValidCategory(categoryParam)) {
     return (
@@ -99,7 +87,8 @@ export default function BlogPage() {
     );
   }
   
-  const activeCatFromRoute = categoryParam ?? undefined;
+  const initialCat = (categoryParam as BlogCategory) || (params.get("cat") as BlogCategory) || "emergency";
+  const [activeCat, setActiveCat] = useState<BlogCategory>(initialCat);
   const listRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -113,22 +102,29 @@ export default function BlogPage() {
     } catch {}
   }, []);
 
+  useEffect(() => {
+    if (!categoryParam) {
+      setParams({ cat: activeCat }, { replace: true });
+    }
+  }, [activeCat, categoryParam, setParams]);
+
   const filtered = useMemo(
     () => {
-      return BLOG_POSTS
-        .filter((p) => p.category === categoryParam)
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      if (categoryParam) {
+        return BLOG_POSTS.filter((p) => p.category === categoryParam).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      }
+      return BLOG_POSTS.filter((p) => p.category === activeCat).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     },
-    [categoryParam]
+    [activeCat, categoryParam]
   );
 
-  const activeCatForSEO = categoryParam as BlogCategory | null;
+  const activeCatForSEO = (categoryParam || activeCat) as BlogCategory | null;
   const activeCatMeta = activeCatForSEO && isValidCategory(activeCatForSEO) ? activeCatForSEO : null;
 
   const origin = typeof window !== "undefined" ? window.location.origin : "https://aksarbenlocksmiths.com";
   const canonicalUrl = activeCatMeta
-    ? `${origin}/blog/${activeCatMeta}`
-    : `${origin}/blog/emergency`;
+    ? `${origin}/blog?cat=${activeCatMeta}`
+    : `${origin}/blog`;
 
   const defaultTitle = "Our Blog, Omaha Locksmith Tips and Guides";
   const defaultDesc = "Emergency lockouts, keys and duplication, residential and commercial security for Omaha and surrounding cities.";
@@ -173,6 +169,16 @@ export default function BlogPage() {
       {/* Service Areas style wallpaper and overlays */}
       <div className="min-h-screen w-full relative">
         <main className="min-h-screen w-full relative overflow-hidden">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            aria-hidden="true"
+            poster="/images/services-thumbnails/Residential-Service-Photo.webp"
+            className="fixed inset-0 w-full h-full object-cover opacity-45 z-0"
+            src="/videos/wallpaper.mp4"
+          />
           <div className="absolute inset-0 pointer-events-none">
             <div className="animated-footer-bg" />
             <div className="footer-glass-effect absolute inset-0" />
@@ -302,30 +308,30 @@ export default function BlogPage() {
                 {/* Category filter */}
                 <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-2">
                   {BLOG_CATEGORY_LIST.map((cat) => {
-                    const isActive = (categoryParam ?? "") === cat.slug;
-                    const chipClasses = [
-                      "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black w-full justify-center text-center inline-flex items-center",
-                      isActive
-                        ? "bg-purple-600 border border-purple-600 shadow-[0_0_24px_rgba(255,255,255,0.5)]"
-                        : "bg-[#2a1645] hover:bg-[#4a2974] border border-[#3a1f5c]"
-                    ].join(" ");
-
+                    const isActive = cat.slug === activeCat;
                     return (
-                      <Link
+                      <button
                         key={cat.slug}
-                        to={`/blog/${cat.slug}`}
+                        type="button"
                         onClick={(e) => {
-                          trackClick(
-                            buildEventName({ base: "blog_category", slug: cat.slug, action: "chip_click" }),
-                            e.currentTarget as unknown as HTMLElement,
-                            { source_page: "blog_index", page_section: "chips", category_slug: cat.slug }
-                          );
+                          setActiveCat(cat.slug);
+                          const eventName = buildEventName({ base: 'blog_category', slug: cat.slug, action: 'chip_click' });
+                          trackClick(eventName, e.currentTarget as unknown as HTMLElement, {
+                            source_page: "blog_index",
+                            page_section: "chips",
+                            category_slug: cat.slug
+                          });
                         }}
-                        className={chipClasses}
-                        aria-current={isActive ? "page" : undefined}
+                        className={[
+                          "px-4 py-2 rounded-full text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black w-full justify-center text-center",
+                          isActive
+                            ? "bg-purple-600 border border-purple-600 shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:shadow-[0_0_28px_rgba(255,255,255,0.6)]"
+                            : "bg-[#2a1645] hover:bg-[#4a2974] border border-[#3a1f5c] shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:shadow-[0_0_28px_rgba(255,255,255,0.6)]"
+                        ].join(" ")}
+                        aria-pressed={isActive}
                       >
                         {cat.label}
-                      </Link>
+                      </button>
                     );
                   })}
                 </div>

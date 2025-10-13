@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { Phone } from 'lucide-react';
 import { trackPageView } from './utils/analytics';
 import Navbar from './components/Navbar';
@@ -233,15 +233,9 @@ function App() {
         />
         <Route path="/services/:slug" element={<DynamicServicePage />} />
         <Route path="/service-areas" element={<ServiceAreasPage />} />
-        {/* Blog and posts */}
-        <Route path="/blog" element={<Navigate to="/blog/emergency" replace />} />
-        {/* Static, always-match category routes */}
-        <Route path="/blog/emergency" element={<BlogPage />} />
-        <Route path="/blog/keys" element={<BlogPage />} />
-        <Route path="/blog/residential" element={<BlogPage />} />
-        <Route path="/blog/commercial" element={<BlogPage />} />
-        {/* Blog posts — placed AFTER the static category routes */}
         <Route path="/blog/:slug" element={<BlogPostPage />} />
+        <Route path="/blog/:category(emergency|keys|residential|commercial)" element={<BlogPage />} />
+        <Route path="/blog" element={<BlogPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
