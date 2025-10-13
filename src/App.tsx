@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Phone } from 'lucide-react';
 import { trackPageView } from './utils/analytics';
 import Navbar from './components/Navbar';
@@ -16,7 +16,6 @@ import DynamicServicePage from './pages/DynamicServicePage';
 import ServiceAreasPage from './components/ServiceAreasPage';
 import BlogPage from './pages/BlogPage';
 import BlogPostPage from './pages/BlogPostPage';
-import BlogCategoryPage from './pages/BlogCategoryPage';
 import SearchPage from './pages/SearchPage';
 import NotFound from './pages/NotFound';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -233,9 +232,9 @@ function App() {
         />
         <Route path="/services/:slug" element={<DynamicServicePage />} />
         <Route path="/service-areas" element={<ServiceAreasPage />} />
-        <Route path="/blog/:slug" element={<BlogPostPage />} />
         <Route path="/blog/:category(emergency|keys|residential|commercial)" element={<BlogPage />} />
-        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:slug" element={<BlogPostPage />} />
+        <Route path="/blog" element={<Navigate to="/blog/emergency" replace />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

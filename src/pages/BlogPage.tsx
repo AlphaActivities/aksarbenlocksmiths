@@ -18,81 +18,20 @@ const BLOG_PLACEHOLDER =
 export default function BlogPage() {
   const navigate = useNavigate();
   const { category: categoryParam } = useParams();
-  const [params, setParams] = useSearchParams();
-  
-  // If we have a category param that's invalid, show not found
-  if (categoryParam && !isValidCategory(categoryParam)) {
-    return (
-      <>
-        <div className="fixed top-0 w-full z-50 bg-black backdrop-blur-md shadow-lg text-sm px-4 py-1 flex justify-between items-center">
-          <span className="text-white animate-pulse">24/7 Emergency Service</span>
-          <a
-            href="tel:+14025566715"
-            onClick={(e) =>
-              trackClick("top_bar_phone_click", e.currentTarget, {
-                phone_number: "+14025566715",
-                source: "top_emergency_bar",
-                page_section: "emergency_top_bar",
-              })
-            }
-            className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition animate-pulse"
-          >
-            <Phone className="h-4 w-4" />
-            (402) 556-6715
-          </a>
-        </div>
 
-        <div className="min-h-screen w-full relative">
-          <main className="min-h-screen w-full relative overflow-hidden">
-            <div className="absolute inset-0 pointer-events-none">
-              <div className="animated-footer-bg" />
-              <div className="footer-glass-effect absolute inset-0" />
-            </div>
-            <div className="absolute inset-0 z-[3] pointer-events-none bg-black/25 md:bg-black/10"></div>
-
-            <div className="relative z-10 text-white pt-12 md:pt-16">
-              <main className="container mx-auto px-6 py-16">
-                <h1 className="text-3xl font-bold mb-4 text-white">Category not found</h1>
-                <div className="flex gap-3">
-                  <Link
-                    to="/"
-                    aria-label="Back to Home"
-                    onClick={(e) =>
-                      trackClick("not_found_back_home_click", e.currentTarget, {
-                        source_page: "blog_category_404",
-                        page_section: "not_found",
-                      })
-                    }
-                    className="inline-flex items-center rounded-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium transition-colors"
-                  >
-                    Back to Home
-                  </Link>
-                  
-                  <Link 
-                    className="inline-flex items-center rounded-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors" 
-                    to="/blog"
-                    onClick={(e) => trackClick('category_not_found_back_to_blog', e.currentTarget, {
-                      source_page: 'blog_category_404',
-                      page_section: 'not_found'
-                    })}
-                  >
-                    Go back to the blog
-                  </Link>
-                </div>
-              </main>
-            </div>
-          </main>
-        </div>
-      </>
-    );
-  }
-  
-  const initialCat = (categoryParam as BlogCategory) || (params.get("cat") as BlogCategory) || "emergency";
-  const [activeCat, setActiveCat] = useState<BlogCategory>(initialCat);
+  // Declare all hooks BEFORE any returns
+  const [activeCat, setActiveCat] = useState<BlogCategory>((categoryParam as BlogCategory) || 'emergency');
   const listRef = useRef<HTMLDivElement | null>(null);
 
+  // Ensure valid category, otherwise redirect once
   useEffect(() => {
-    // Impression event for the list view
+    const cat = (categoryParam || '').toLowerCase();
+    const valid = cat === 'emergency' || cat === 'keys' || cat === 'residential' || cat === 'commercial';
+    if (!valid) navigate('/blog/emergency', { replace: true });
+  }, [categoryParam, navigate]);
+
+  // Impression event for the list view
+  useEffect(() => {
     try {
       trackEngagement?.(
         "blog_list_impression",
@@ -102,21 +41,16 @@ export default function BlogPage() {
     } catch {}
   }, []);
 
-  useEffect(() => {
-    if (!categoryParam) {
-      setParams({ cat: activeCat }, { replace: true });
-    }
-  }, [activeCat, categoryParam, setParams]);
+  // Filtered posts, memoized
+  const filtered = useMemo(() => {
+    const cat = (categoryParam as BlogCategory) || 'emergency';
+    return BLOG_POSTS
+      .filter((p) => p.category === cat)
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }, [categoryParam]);
 
-  const filtered = useMemo(
-    () => {
-      if (categoryParam) {
-        return BLOG_POSTS.filter((p) => p.category === categoryParam).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-      }
-      return BLOG_POSTS.filter((p) => p.category === activeCat).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    },
-    [activeCat, categoryParam]
-  );
+  // OG fallback used on category pages
+  const DEFAULT_OG = `${window.location.origin}/images/og/home-1200x630.webp`;
 
   const activeCatForSEO = (categoryParam || activeCat) as BlogCategory | null;
   const activeCatMeta = activeCatForSEO && isValidCategory(activeCatForSEO) ? activeCatForSEO : null;
@@ -199,16 +133,16 @@ export default function BlogPage() {
                 <meta property="og:title" content={ogTitle} />
                 <meta property="og:description" content={ogDesc} />
                 <meta property="og:url" content={ogUrl} />
-                <meta property="og:image" content="https://aksarbenlocksmiths.com/images/shield-logo.webp" />
-                <meta property="og:image:width" content="1080" />
-                <meta property="og:image:height" content="1080" />
+                <meta property="og:image" content={DEFAULT_OG} />
+                <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="630" />
 
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:title" content={ogTitle} />
                 <meta name="twitter:description" content={ogDesc} />
-                <meta name="twitter:image" content="https://aksarbenlocksmiths.com/images/shield-logo.webp" />
-                <meta name="twitter:image:width" content="1080" />
-                <meta name="twitter:image:height" content="1080" />
+                <meta name="twitter:image" content={DEFAULT_OG} />
+                <meta name="twitter:image:width" content="1200" />
+                <meta name="twitter:image:height" content="630" />
 
                 <script
                   type="application/ld+json"

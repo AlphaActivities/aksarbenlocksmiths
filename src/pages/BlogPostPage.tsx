@@ -15,19 +15,35 @@ export default function BlogPostPage() {
   const { slug } = useParams();
   const post = useMemo(() => (slug ? findPost(slug) : undefined), [slug]);
   const articleRef = useRef<HTMLElement | null>(null);
+  const navigate = useNavigate();
 
-  // Schema and URL helpers
+  // Schema and URL helpers - compute before any returns
   const origin = typeof window !== "undefined" ? window.location.origin : "https://aksarbenlocksmiths.com";
   const imageUrl = `${origin}${post?.coverImage || ""}`;
   const canonicalPath = `/blog/${post?.slug || slug}`;
   const canonicalAbs = origin + canonicalPath;
   const logoAbs = origin + "/images/shield-logo.webp";
-  const categoryLabel = post ? 
+  const categoryLabel = post ?
     ({ emergency: "Emergency and Lockouts",
-       keys: "Keys and Duplication", 
+       keys: "Keys and Duplication",
        residential: "Residential Locksmith",
        commercial: "Commercial Locksmith" } as const)[post.category] || post.category
     : "";
+
+  const description = post?.excerpt || "";
+  const title = post ? `${post.title} | Aksarben Locksmiths Blog` : "Post not found | Aksarben Locksmiths Blog";
+  const paragraphs = post ? post.body.split("\n\n") : [];
+
+  // Compute word count for schema
+  const wordCount = useMemo(() => {
+    if (!post) return undefined;
+    try {
+      const text = Array.isArray(paragraphs) ? paragraphs.join(" ") : (post?.content ?? "");
+      return text.trim().split(/\s+/).filter(Boolean).length || undefined;
+    } catch {
+      return undefined;
+    }
+  }, [paragraphs, post]);
 
   useEffect(() => {
     if (post) {
@@ -136,21 +152,6 @@ export default function BlogPostPage() {
       </>
     );
   }
-
-  const description = post.excerpt;
-  const title = `${post.title} | Aksarben Locksmiths Blog`;
-
-  const paragraphs = post.body.split("\n\n");
-
-  // compute word count for schema
-  const wordCount = useMemo(() => {
-    try {
-      const text = Array.isArray(paragraphs) ? paragraphs.join(" ") : (post?.content ?? "");
-      return text.trim().split(/\s+/).filter(Boolean).length || undefined;
-    } catch { 
-      return undefined; 
-    }
-  }, [paragraphs, post?.content]);
 
   const jsonLd = {
     "@context": "https://schema.org",
