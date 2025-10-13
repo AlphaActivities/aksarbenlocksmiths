@@ -76,8 +76,7 @@ export default function BlogPostPage() {
                 <section className="mx-auto max-w-5xl text-white">
                   <h1 className="text-2xl md:text-3xl font-bold">Post not found</h1>
                   <p className="mt-3 text-gray-300">
-                    The article you are looking for is unavailable.{" "}
-                    <Link to="/blog" className="text-purple-400 underline">Go back to the blog.</Link>
+                    The article you are looking for is unavailable.
                   </p>
 
                   <div className="mt-6 flex items-center gap-4">
@@ -97,7 +96,7 @@ export default function BlogPostPage() {
                     </Link>
 
                     <Link
-                      to="/blog"
+                      to="/blog/emergency"
                       onClick={(e) =>
                         trackClick("not_found_back_blog_click", e.currentTarget, {
                           source_page: "blog_post_404",
