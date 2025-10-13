@@ -88,7 +88,7 @@ const AboutSection: React.FC = () => {
                 Testimonials
               </a>
               <Link
-                to="/blog"
+                to="/blog/emergency"
                 aria-label="Visit our blog"
                 onClick={(e) => {
                   sessionStorage.setItem("lastScrollY", window.scrollY.toString());
