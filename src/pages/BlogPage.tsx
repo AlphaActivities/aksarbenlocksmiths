@@ -28,6 +28,10 @@ export default function BlogPage() {
     }
   }, [categoryParam, navigate]);
 
+  if (!categoryParam || !isValidCategory(categoryParam)) {
+    return null;
+  }
+
   // If we have a category param that's invalid, show not found
   if (categoryParam && !isValidCategory(categoryParam)) {
     return (
@@ -111,10 +115,9 @@ export default function BlogPage() {
 
   const filtered = useMemo(
     () => {
-      if (categoryParam) {
-        return BLOG_POSTS.filter((p) => p.category === categoryParam).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-      }
-      return BLOG_POSTS.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      return BLOG_POSTS
+        .filter((p) => p.category === categoryParam)
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     },
     [categoryParam]
   );
