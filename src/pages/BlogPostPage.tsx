@@ -91,9 +91,9 @@ export default function BlogPostPage() {
               <main className="min-h-screen w-full px-4 py-12 md:py-16">
                 <section className="mx-auto max-w-5xl text-white">
                   <div className="mb-6 flex items-center justify-between">
-                    <button
+                    <Link
+                      to="/"
                       onClick={(e) => {
-                        navigate(-1);
                         trackClick("back_to_home", e.currentTarget, {
                           source_page: "blog_post",
                           page_section: "header",
@@ -106,19 +106,19 @@ export default function BlogPostPage() {
                     >
                       <ArrowLeft className="w-4 h-4" />
                       Back to Home
-                    </button>
+                    </Link>
                   </div>
 
                   <h1 className="text-2xl md:text-3xl font-bold">Post not found</h1>
                   <p className="mt-3 text-gray-300">
                     The article you are looking for is unavailable.{" "}
-                    <Link to="/blog" className="text-purple-400 underline">Go back to the blog.</Link>
+                    <Link to="/blog/emergency" className="text-purple-400 underline">Go back to the blog.</Link>
                   </p>
 
                   <div className="mt-4 flex gap-3">
-                    <button
+                    <Link
+                      to="/"
                       onClick={(e) => {
-                        navigate("/", { state: { restorePosition: true } });
                         trackClick("not_found_back_home_click", e.currentTarget, {
                           source_page: "blog_post_404",
                           page_section: "not_found",
@@ -128,10 +128,10 @@ export default function BlogPostPage() {
                       aria-label="Back to Home"
                     >
                       Back to Home
-                    </button>
+                    </Link>
 
                     <Link
-                      to="/blog"
+                      to="/blog/emergency"
                       aria-label="Back to the blog"
                       onClick={(e) =>
                         trackClick("not_found_back_blog_click", e.currentTarget, {
@@ -240,12 +240,12 @@ export default function BlogPostPage() {
               {/* Back to Blog button */}
               <div className="mb-4 flex items-center justify-between min-h-[40px]">
                 <Link
-                  to="/blog"
+                  to={`/blog/${post.category}`}
                   onClick={(e) => {
                     trackClick("back_to_blog", e.currentTarget as unknown as HTMLElement, {
                       source_page: "blog_post",
                       page_section: "header",
-                      destination: "/blog",
+                      destination: `/blog/${post.category}`,
                       from_post: post.slug,
                     });
                   }}
@@ -270,8 +270,8 @@ export default function BlogPostPage() {
                   </li>
                   <li className="text-gray-500">›</li>
                   <li>
-                    <Link to="/blog" className="hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black">
-                      Blog
+                    <Link to={`/blog/${post.category}`} className="hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black">
+                      {categoryLabel}
                     </Link>
                   </li>
                   <li className="text-gray-500">›</li>

@@ -30,6 +30,12 @@ export default function BlogPage() {
     if (!valid) navigate('/blog/emergency', { replace: true });
   }, [categoryParam, navigate]);
 
+  // Sync activeCat with URL parameter
+  useEffect(() => {
+    const next = (categoryParam as BlogCategory) || 'emergency';
+    setActiveCat(next);
+  }, [categoryParam]);
+
   // Impression event for the list view
   useEffect(() => {
     try {
@@ -43,11 +49,10 @@ export default function BlogPage() {
 
   // Filtered posts, memoized
   const filtered = useMemo(() => {
-    const cat = (categoryParam as BlogCategory) || 'emergency';
     return BLOG_POSTS
-      .filter((p) => p.category === cat)
+      .filter((p) => p.category === activeCat)
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  }, [categoryParam]);
+  }, [activeCat]);
 
   // OG fallback used on category pages
   const DEFAULT_OG = `${window.location.origin}/images/og/home-1200x630.webp`;
@@ -244,11 +249,10 @@ export default function BlogPage() {
                   {BLOG_CATEGORY_LIST.map((cat) => {
                     const isActive = cat.slug === activeCat;
                     return (
-                      <button
+                      <Link
                         key={cat.slug}
-                        type="button"
+                        to={`/blog/${cat.slug}`}
                         onClick={(e) => {
-                          setActiveCat(cat.slug);
                           const eventName = buildEventName({ base: 'blog_category', slug: cat.slug, action: 'chip_click' });
                           trackClick(eventName, e.currentTarget as unknown as HTMLElement, {
                             source_page: "blog_index",
@@ -257,15 +261,15 @@ export default function BlogPage() {
                           });
                         }}
                         className={[
-                          "px-4 py-2 rounded-full text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black w-full justify-center text-center",
+                          "inline-flex items-center px-4 py-2 rounded-full text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black w-full justify-center text-center",
                           isActive
                             ? "bg-purple-600 border border-purple-600 shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:shadow-[0_0_28px_rgba(255,255,255,0.6)]"
                             : "bg-[#2a1645] hover:bg-[#4a2974] border border-[#3a1f5c] shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:shadow-[0_0_28px_rgba(255,255,255,0.6)]"
                         ].join(" ")}
-                        aria-pressed={isActive}
+                        aria-current={isActive ? "page" : undefined}
                       >
                         {cat.label}
-                      </button>
+                      </Link>
                     );
                   })}
                 </div>
