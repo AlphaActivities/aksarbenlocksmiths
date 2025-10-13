@@ -19,7 +19,13 @@ export default function BlogPage() {
   const navigate = useNavigate();
   const { category: categoryParam } = useParams();
   const [params, setParams] = useSearchParams();
-  
+
+  useEffect(() => {
+    if (!categoryParam) {
+      navigate('/blog/emergency', { replace: true });
+    }
+  }, [categoryParam, navigate]);
+
   // If we have a category param that's invalid, show not found
   if (categoryParam && !isValidCategory(categoryParam)) {
     return (
