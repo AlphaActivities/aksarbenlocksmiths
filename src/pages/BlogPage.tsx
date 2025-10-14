@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useSearchParams, useNavigate, useParams, useLocation } from "react-router-dom";
+import React, { useEffect, useMemo, useRef } from "react";
+import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { BLOG_CATEGORIES as BLOG_CATEGORY_LIST } from "../data/blogPosts";
 import { BLOG_CATEGORIES } from "../data/blogCategories";

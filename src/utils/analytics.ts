@@ -35,8 +35,8 @@ const parseQuery = (search: string): Record<string, string> => {
 const readJSON = (key: string): any => {
   try { return JSON.parse(window.localStorage.getItem(key) || window.sessionStorage.getItem(key) || "null"); } catch { return null; }
 };
-const writeFirst = (data: any) => { try { window.localStorage.setItem(ATTR_LS_KEY, JSON.stringify(data)); } catch {} };
-const writeLast  = (data: any) => { try { window.sessionStorage.setItem(ATTR_SS_KEY, JSON.stringify(data)); } catch {} };
+const writeFirst = (data: any) => { try { window.localStorage.setItem(ATTR_LS_KEY, JSON.stringify(data)); } catch (_err) { /* intentional no-op: analytics best-effort */ } };
+const writeLast  = (data: any) => { try { window.sessionStorage.setItem(ATTR_SS_KEY, JSON.stringify(data)); } catch (_err) { /* intentional no-op: analytics best-effort */ } };
 
 function toSnake(s?: string | null): string | undefined {
   if (!s) return undefined;
@@ -67,17 +67,20 @@ export function buildEventName(ctx: {
 }
 
 function getServiceSlugFromPath(pathname: string): string | undefined {
-  const m = pathname.match(/^\/services\/([^\/?#]+)/i);
+  const pattern = /^\/services\/([^/?#]+)/i;
+  const m = pathname.match(pattern);
   return m ? toSnake(decodeURIComponent(m[1])) : undefined;
 }
 
 function getBlogSlugFromPath(pathname: string): string | undefined {
-  const m = pathname.match(/^\/blog\/([^\/?#]+)/i);
+  const pattern = /^\/blog\/([^/?#]+)/i;
+  const m = pathname.match(pattern);
   return m ? toSnake(decodeURIComponent(m[1])) : undefined;
 }
 
 function getBlogCategoryFromPath(pathname: string): string | undefined {
-  const m = pathname.match(/^\/blog\/([^\/\?#]+)\/([^\/?#]+)/i);
+  const pattern = /^\/blog\/([^/?#]+)\/([^/?#]+)/i;
+  const m = pathname.match(pattern);
   return m ? toSnake(decodeURIComponent(m[1])) : undefined;
 }
 
@@ -210,7 +213,7 @@ export const configureGA4 = () => {
 
   dbg('user_properties', userProps);
     
-  try { captureAttributionFromURL(); } catch {}
+  try { captureAttributionFromURL(); } catch (_err) { /* intentional no-op: analytics best-effort */ }
 
   window.gtag('set', 'user_properties', userProps);
     

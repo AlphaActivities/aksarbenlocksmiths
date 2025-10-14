@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { posts as BLOG_POSTS, findPost } from "../data/posts";
 import { trackClick, buildEventName } from "../utils/analytics";
@@ -16,7 +16,6 @@ export default function BlogPostPage() {
   const post = useMemo(() => (slug ? findPost(slug) : undefined), [slug]);
   const articleRef = useRef<HTMLElement | null>(null);
   const lastTrackedSlug = useRef<string | null>(null);
-  const navigate = useNavigate();
 
   // Schema and URL helpers - compute before any returns
   const origin = typeof window !== "undefined" ? window.location.origin : "https://aksarbenlocksmiths.com";

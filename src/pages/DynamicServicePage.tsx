@@ -100,7 +100,6 @@ export default function DynamicServicePage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [playing, setPlaying] = useState(false);
-  const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
   const data = serviceData[slug] ?? serviceData[slug as keyof typeof serviceData];
 
   // Define animated backgrounds for each service
