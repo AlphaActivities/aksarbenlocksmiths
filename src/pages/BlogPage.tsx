@@ -72,9 +72,10 @@ export default function BlogPage() {
   const defaultTitle = "Our Blog, Omaha Locksmith Tips and Guides";
   const defaultDesc = "Emergency lockouts, keys and duplication, residential and commercial security for Omaha and surrounding cities.";
 
-  const metaCat = activeCatMeta ? BLOG_CATEGORIES[activeCatMeta] : null;
-  const pageTitle = metaCat?.title || defaultTitle;
-  const pageDesc = metaCat?.seoDescription || defaultDesc;
+  const meta = activeCatMeta ? BLOG_CATEGORIES[activeCatMeta] : null;
+  const categoryH1 = meta?.h1 || "Aksarben Locksmiths Blog";
+  const pageTitle = meta?.title || defaultTitle;
+  const pageDesc = meta?.description || defaultDesc;
   const ogTitle = pageTitle;
   const ogDesc = pageDesc;
   const ogUrl = canonicalUrl;
@@ -162,7 +163,7 @@ export default function BlogPage() {
                             "@context": "https://schema.org",
                             "@type": "CollectionPage",
                             "@id": `${categoryAbs}#collection`,
-                            name: metaCat?.h1 || pageTitle,
+                            name: categoryH1,
                             url: categoryAbs,
                             isPartOf: `${origin}/blog`,
                             mainEntity: {
@@ -190,7 +191,7 @@ export default function BlogPage() {
                         { "@type": "ListItem", position: 1, name: "Home", item: `${origin}/` },
                         { "@type": "ListItem", position: 2, name: "Blog", item: `${origin}/blog` },
                         ...(activeCatMeta
-                          ? [{ "@type": "ListItem", position: 3, name: metaCat?.h1 || pageTitle, item: categoryAbs }]
+                          ? [{ "@type": "ListItem", position: 3, name: categoryH1, item: categoryAbs }]
                           : [])
                       ]
                     })
@@ -240,7 +241,7 @@ export default function BlogPage() {
 
                 <div className="bg-gradient-to-br from-red-800 via-purple-900 to-purple-950 backdrop-blur-lg rounded-2xl px-6 py-4 mt-8 mb-2 border border-white/10 shadow-xl ring-1 ring-white/20 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
                   <h1 className="text-2xl md:text-4xl font-bold tracking-tight">
-                    {activeCatMeta ? (metaCat?.h1 || "AksarbenLocksmiths Blog") : "AksarbenLocksmiths Blog"}
+                    {categoryH1}
                   </h1>
                   <p className="mt-3 text-base md:text-lg text-gray-200">
                     Helpful tips and locksmith insights for:<br />

@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { posts as BLOG_POSTS, findPost } from "../data/posts";
+import { BLOG_CATEGORIES } from "../data/blogCategories";
 import { trackClick, buildEventName } from "../utils/analytics";
 import { ArrowLeft, Phone } from "lucide-react";
 
@@ -23,12 +24,7 @@ export default function BlogPostPage() {
   const canonicalPath = `/blog/${post?.slug || slug}`;
   const canonicalAbs = origin + canonicalPath;
   const logoAbs = origin + "/images/shield-logo.webp";
-  const categoryLabel = post ?
-    ({ emergency: "Emergency and Lockouts",
-       keys: "Keys and Duplication",
-       residential: "Residential Locksmith",
-       commercial: "Commercial Locksmith" } as const)[post.category] || post.category
-    : "";
+  const categoryLabel = post ? (BLOG_CATEGORIES[post.category]?.h1 || "Blog") : "Blog";
 
   const description = post?.excerpt || "";
   const title = post ? `${post.title} | Aksarben Locksmiths Blog` : "Post not found | Aksarben Locksmiths Blog";
@@ -181,8 +177,8 @@ export default function BlogPostPage() {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: origin + "/" },
-      { "@type": "ListItem", position: 2, name: "Blog", item: origin + "/blog" },
+      { "@type": "ListItem", position: 1, name: "Home", item: `${origin}/` },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${origin}/blog` },
       { "@type": "ListItem", position: 3, name: post.title, item: canonicalAbs }
     ]
   };
@@ -228,6 +224,7 @@ export default function BlogPostPage() {
               <meta name="robots" content="index, follow" />
               <meta property="og:type" content="article" />
               <meta property="og:site_name" content="Aksarben Locksmiths" />
+              <meta property="article:section" content={categoryLabel} />
               <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
               <meta property="og:image" content={imageUrl} />
               <meta property="og:image:width" content="1200" />
