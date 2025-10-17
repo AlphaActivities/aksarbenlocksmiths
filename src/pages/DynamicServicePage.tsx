@@ -103,6 +103,27 @@ export default function DynamicServicePage() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const data = serviceData[slug] ?? serviceData[slug as keyof typeof serviceData];
 
+  const enterFullscreen = async (v: HTMLVideoElement) => {
+    const anyV = v as any;
+    try {
+      if (anyV.requestFullscreen) return await anyV.requestFullscreen();
+      if (anyV.webkitEnterFullscreen) return anyV.webkitEnterFullscreen();
+      if (anyV.webkitRequestFullscreen) return anyV.webkitRequestFullscreen();
+      if (anyV.msRequestFullscreen) return anyV.msRequestFullscreen();
+    } catch (_err) { /* best-effort */ }
+  };
+
+  const requestPlayWithFullscreen = async () => {
+    const v = videoRef.current;
+    if (!v) return;
+    try {
+      v.muted = false;
+      await v.play().catch(() => {});
+      try { await (screen.orientation as any)?.lock?.("portrait"); } catch {}
+      await enterFullscreen(v);
+    } catch (_err) { /* best-effort */ }
+  };
+
   // Define animated backgrounds for each service
   const titleBackgroundMap = {
     residential: "bg-gradient-to-br from-[#334155] via-[#1e293b] to-[#0f172a]",
@@ -144,15 +165,6 @@ useEffect(() => {
     }
   }, [slug]);
 
-  useEffect(() => {
-    if (!playing) return;
-    const v = videoRef.current;
-    if (!v) return;
-    v.muted = false;
-    setTimeout(() => {
-      v.play?.().catch(() => {});
-    }, 0);
-  }, [playing]);
 
   // Video event handlers
   const handleVideoPlay = () => {
@@ -191,8 +203,9 @@ useEffect(() => {
     });
   };
 
-  const handlePlayButtonClick = () => {
+  const handlePlayButtonClick = async () => {
     setPlaying(true);
+    setTimeout(() => { requestPlayWithFullscreen(); }, 0);
     const eventName = buildEventName({ base: slug || 'service', action: 'video_play_button_click' });
     trackVideoEvent(eventName, data?.title || 'Unknown Service', {
       video_url: data?.video,
@@ -408,11 +421,10 @@ useEffect(() => {
             <video
               ref={videoRef}
               title={`${data.title} service demonstration video`}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain bg-black"
               src={data.video}
               controls
               playsInline
-              autoPlay={false}
               onPlay={handleVideoPlay}
               onPause={handleVideoPause}
               onEnded={handleVideoEnded}
