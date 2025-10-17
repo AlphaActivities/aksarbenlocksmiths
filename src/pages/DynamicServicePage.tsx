@@ -1,5 +1,5 @@
 import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ArrowLeft, Phone, MapPin } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { trackVideoEvent, trackClick, buildEventName } from "../utils/analytics";
@@ -100,6 +100,7 @@ export default function DynamicServicePage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [playing, setPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const data = serviceData[slug] ?? serviceData[slug as keyof typeof serviceData];
 
   // Define animated backgrounds for each service
@@ -122,7 +123,7 @@ export default function DynamicServicePage() {
     consultation: "from-emerald-900/80 via-green-800/80 to-teal-900/80",
   };
 
-  useEffect(() => {
+useEffect(() => {
     const wantsBottomThenTop = (location.state as any)?.scrollFx === "bottomThenTop";
 
     if (wantsBottomThenTop) {
@@ -142,6 +143,13 @@ export default function DynamicServicePage() {
       }, 100);
     }
   }, [slug]);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    v.play?.().catch(() => {});
+  }, [playing]);
 
   // Video event handlers
   const handleVideoPlay = () => {
@@ -395,12 +403,14 @@ export default function DynamicServicePage() {
 
           {playing && (
             <video
-              ref={setVideoRef}
+              ref={videoRef}
               title={`${data.title} service demonstration video`}
               className="w-full h-full object-cover"
               src={data.video}
               controls
               autoPlay
+              muted
+              playsInline
               onPlay={handleVideoPlay}
               onPause={handleVideoPause}
               onEnded={handleVideoEnded}
