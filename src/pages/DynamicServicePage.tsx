@@ -145,10 +145,13 @@ useEffect(() => {
   }, [slug]);
 
   useEffect(() => {
+    if (!playing) return;
     const v = videoRef.current;
     if (!v) return;
-    v.muted = true;
-    v.play?.().catch(() => {});
+    v.muted = false;
+    setTimeout(() => {
+      v.play?.().catch(() => {});
+    }, 0);
   }, [playing]);
 
   // Video event handlers
@@ -408,9 +411,8 @@ useEffect(() => {
               className="w-full h-full object-cover"
               src={data.video}
               controls
-              autoPlay
-              muted
               playsInline
+              autoPlay={false}
               onPlay={handleVideoPlay}
               onPause={handleVideoPause}
               onEnded={handleVideoEnded}
