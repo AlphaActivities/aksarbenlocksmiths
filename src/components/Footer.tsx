@@ -290,7 +290,7 @@ const Footer: React.FC = () => (
           {/* COLUMN 4 — CONTACT */}
           <div>
             <h3 className="font-bold text-white text-lg mb-10">Contact Us</h3>
-            <ul className="space-y-8 text-white/70">
+            <ul className="space-y-5 md:space-y-6 text-white/70">
               <li className="flex items-center space-x-5">
                 <Phone className="w-6 h-6 text-red-500" />
                 <a
@@ -324,9 +324,57 @@ const Footer: React.FC = () => (
               </li>
               <li className="flex items-start space-x-5">
                 <MapPin className="w-6 h-6 text-red-500 mt-1" />
-                <span className="text-lg font-medium leading-relaxed">
+                <Link
+                  to="/service-areas"
+                  state={{ fromFooter: true }}
+                  onClick={(e) =>
+                    trackClick('footer_service_areas_click', e.currentTarget as unknown as HTMLElement, {
+                      source: 'footer',
+                      page_section: 'footer',
+                      destination: '/service-areas',
+                    })
+                  }
+                  className="text-lg font-medium leading-relaxed hover:text-red-500 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 rounded-md"
+                  aria-label="View our Service Areas"
+                  title="View our Service Areas"
+                >
                   Omaha, Nebraska & All<br />Surrounding Cities
-                </span>
+                </Link>
+              </li>
+              <li>
+                <form
+                  action="/search"
+                  method="get"
+                  className="relative"
+                  onSubmit={(e) => {
+                    const form = e.currentTarget;
+                    const q = (new FormData(form).get('q') as string) ?? '';
+                    try {
+                      trackClick('footer_search_submit', form as unknown as HTMLElement, {
+                        source: 'footer',
+                        page_section: 'footer',
+                        q,
+                      });
+                    } catch {}
+                  }}
+                >
+                  <label htmlFor="footer-search" className="sr-only">Search services & blog</label>
+                  <input
+                    id="footer-search"
+                    name="q"
+                    type="search"
+                    placeholder="Search services & blog…"
+                    className="w-full rounded-xl bg-white/10 text-white placeholder-white/50 px-4 py-3 pr-12 border border-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+                    autoComplete="off"
+                  />
+                  <button
+                    type="submit"
+                    aria-label="Search"
+                    className="absolute right-1.5 top-1.5 h-[2.25rem] px-3 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors"
+                  >
+                    Search
+                  </button>
+                </form>
               </li>
             </ul>
           </div>
