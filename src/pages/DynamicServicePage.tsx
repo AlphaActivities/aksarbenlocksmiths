@@ -101,6 +101,7 @@ export default function DynamicServicePage() {
   const location = useLocation();
   const [playing, setPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const didRunFx = useRef(false);
   const data = serviceData[slug] ?? serviceData[slug as keyof typeof serviceData];
 
   const enterFullscreen = async (v: HTMLVideoElement) => {
@@ -145,25 +146,35 @@ export default function DynamicServicePage() {
   };
 
 useEffect(() => {
-    const wantsBottomThenTop = (location.state as any)?.scrollFx === "bottomThenTop";
+    if (didRunFx.current) return;
+    if (location?.state && (location.state as any)?.scrollFx) return;
+    const t = setTimeout(() => {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    }, 100);
+    return () => clearTimeout(t);
+  }, [location?.state]);
 
-    if (wantsBottomThenTop) {
-      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "auto" });
+  useEffect(() => {
+    if (didRunFx.current) return;
+    const fx = (location?.state as any)?.scrollFx;
+    if (fx !== "bottomThenTop") return;
+    didRunFx.current = true;
 
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }, 100);
-      });
-    } else {
-      setTimeout(() => {
-        window.scrollTo({
-          top: document.documentElement.scrollHeight,
-          behavior: "smooth",
-        });
-      }, 100);
+    const prefersReduced =
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReduced) {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      return;
     }
-  }, [slug]);
+
+    window.scrollTo({ top: Math.max(document.body.scrollHeight - window.innerHeight, 0), behavior: "auto" });
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }, [location?.state]);
 
 
   // Video event handlers
