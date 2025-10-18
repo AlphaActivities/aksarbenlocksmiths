@@ -289,8 +289,8 @@ const Footer: React.FC = () => (
 
           {/* COLUMN 4 — CONTACT */}
           <div>
-            <h3 className="font-bold text-white text-lg mb-10">Contact Us</h3>
-            <ul className="space-y-5 md:space-y-6 text-white/70">
+            <h3 className="font-bold text-white text-lg mb-4">Contact Us</h3>
+            <ul className="space-y-3 md:space-y-4 text-white/70">
               <li className="flex items-center space-x-5">
                 <Phone className="w-6 h-6 text-red-500" />
                 <a
@@ -341,7 +341,7 @@ const Footer: React.FC = () => (
                   Omaha, Nebraska & All<br />Surrounding Cities
                 </Link>
               </li>
-              <li>
+              <li className="mt-0">
                 <form
                   action="/search"
                   method="get"
