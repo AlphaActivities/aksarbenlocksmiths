@@ -109,19 +109,20 @@ export default function SearchPage() {
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
             <button
               onClick={(e) => {
-                if (typeof window !== "undefined" && window.history.length >= 2) {
-                  navigate(-1);
-                } else {
-                  navigate("/", { state: { restorePosition: true } });
-                }
-                trackClick?.("search_back_to_home_click", e.currentTarget as unknown as HTMLElement, {
-                  source_page: "search",
-                  page_section: "header",
-                  destination: "/",
-                  from_path: location?.pathname + location?.search,
+                try {
+                  trackClick?.("search_back_to_home", e.currentTarget as unknown as HTMLElement, {
+                    source_page: "search",
+                    page_section: "header",
+                    destination: "/",
+                  });
+                } catch {}
+
+                navigate("/", {
+                  replace: true,
+                  state: { restorePosition: true, fromSearch: true },
                 });
               }}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out"
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-110 transition duration-300 ease-in-out"
               aria-label="Back to Home"
               title="Back to Home"
             >
