@@ -374,7 +374,7 @@ const Footer: React.FC = () => {
                   <button
                     type="submit"
                     aria-label="Search"
-                    className="absolute right-1.5 top-1.5 h-[2.25rem] px-3 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors"
+                    className="absolute right-1.5 top-1.5 h-[2.25rem] px-3 rounded-lg text-white text-sm font-medium border border-white/10 bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWaveReverse_3s_linear_infinite] hover:brightness-110 transition"
                   >
                     Search
                   </button>
