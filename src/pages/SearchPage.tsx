@@ -34,7 +34,10 @@ export default function SearchPage() {
         q: term,
       });
     } catch {}
-    navigate(`/search?q=${encodeURIComponent(term)}`);
+    navigate(`/search?q=${encodeURIComponent(term)}`, {
+      replace: true,
+      state: (location.state as any) || undefined,
+    });
   }
 
   const serviceResults =
@@ -73,6 +76,12 @@ export default function SearchPage() {
     }, 250);
     return () => window.clearTimeout(t);
   }, [q, resultsCount]);
+
+  React.useEffect(() => {
+    if ((location.state as any)?.fromFooter) {
+      try { sessionStorage.setItem("cameFromFooter", "1"); } catch {}
+    }
+  }, [location.state]);
 
   const showEmptyPrompt = !q || q.length < 2;
   const showNoResults = q && q.length >= 2 && resultsCount === 0;
@@ -116,11 +125,21 @@ export default function SearchPage() {
                     destination: "/",
                   });
                 } catch {}
-                const fromFooter = (location?.state as any)?.fromFooter === true;
+                const cameFromFooter =
+                  ((location.state as any)?.fromFooter === true) ||
+                  (typeof window !== "undefined" &&
+                   sessionStorage.getItem("cameFromFooter") === "1");
+
                 navigate("/", {
                   replace: true,
-                  state: fromFooter ? { scrollTo: "footer" } : { restorePosition: true, fromSearch: true },
+                  state: cameFromFooter
+                    ? { scrollTo: "footer", fromSearch: true }
+                    : { restorePosition: true, fromSearch: true },
                 });
+
+                if (cameFromFooter) {
+                  try { sessionStorage.removeItem("cameFromFooter"); } catch {}
+                }
               }}
               className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-110 transition duration-300 ease-in-out"
               aria-label="Back to Home"
