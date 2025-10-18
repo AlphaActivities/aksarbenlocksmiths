@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useSearchParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { posts as BLOG_POSTS } from "../data/posts";
@@ -15,6 +15,27 @@ export default function SearchPage() {
   const pageSection = "search_results";
   const navigate = useNavigate();
   const location = useLocation();
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      if ((q || "").length > 0) inputRef.current.focus();
+    }
+  }, [q]);
+
+  function handleInlineSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const term = (new FormData(form).get("q") as string) ?? "";
+    try {
+      trackClick?.("search_page_search_submit", form as unknown as HTMLElement, {
+        source_page: "search",
+        page_section: "inline_search",
+        q: term,
+      });
+    } catch {}
+    navigate(`/search?q=${encodeURIComponent(term)}`);
+  }
 
   const serviceResults =
     q.length < 2
@@ -115,6 +136,29 @@ export default function SearchPage() {
               <p className="sr-only">Find services and blog posts on Aksarben Locksmiths.</p>
             </div>
           </section>
+
+          <form
+            onSubmit={handleInlineSubmit}
+            className="max-w-3xl mx-auto px-6 md:px-0 mt-4 flex items-center gap-2"
+            aria-label="Refine your search"
+          >
+            <label htmlFor="search-inline" className="sr-only">Search</label>
+            <input
+              id="search-inline"
+              name="q"
+              ref={inputRef}
+              defaultValue={q || ""}
+              placeholder="Search services & blog…"
+              className="w-full rounded-xl bg-white/10 text-white placeholder-white/60 border border-white/20 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white/40"
+              autoComplete="off"
+            />
+            <button
+              type="submit"
+              className="rounded-xl px-4 py-2 text-sm font-medium text-white bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] hover:brightness-110 transition border border-white/10 shrink-0"
+            >
+              Search
+            </button>
+          </form>
 
           <main className="max-w-4xl mx-auto px-4 py-8">
             {!q || q.length < 2 ? (
