@@ -5,6 +5,20 @@ const GA_ID = import.meta.env.VITE_GA4_MEASUREMENT_ID || 'G-R5H0MX6FR2';
 export const DEBUG_ANALYTICS = import.meta.env.DEV && !!localStorage.getItem('DEBUG_ANALYTICS');
 const dbg = (...args: any[]) => { if (DEBUG_ANALYTICS) console.log('[ANALYTICS]', ...args); };
 
+let __PAGEVIEW_ID: string | null = null;
+
+export function getPageviewId(): string {
+  if (__PAGEVIEW_ID) return __PAGEVIEW_ID;
+  try {
+    __PAGEVIEW_ID = (crypto && 'randomUUID' in crypto)
+      ? (crypto as any).randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  } catch {
+    __PAGEVIEW_ID = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  }
+  return __PAGEVIEW_ID;
+}
+
 // --- Attribution keys and storage ---
 const ATTR_LS_KEY = "attr_first_touch";
 const ATTR_SS_KEY = "attr_last_touch";

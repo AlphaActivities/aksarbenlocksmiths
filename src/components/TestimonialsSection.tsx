@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import PillBadge from './ui/PillBadge';
-import { trackClick, trackEvent } from '../utils/analytics';
+import { trackClick, trackEvent, getPageviewId } from '../utils/analytics';
 
 // Real Google Maps reviews
 const testimonials = [
@@ -48,6 +48,12 @@ const TestimonialsSection: React.FC = () => {
   const [autoplay, setAutoplay] = useState(true);
   const [hasTrackedView, setHasTrackedView] = useState(false);
 
+  const containerRef = useRef<HTMLElement | null>(null);
+  const isInViewRef = useRef(false);
+  const isDocVisibleRef = useRef(true);
+  const pageviewIdRef = useRef<string>(getPageviewId());
+  const cycleKeysRef = useRef<Set<string>>(new Set());
+
   // Analytics session refs
   const viewStartTsRef = useRef<number | null>(null);
   const cyclesTotalRef = useRef(0);
@@ -60,11 +66,14 @@ const TestimonialsSection: React.FC = () => {
   useEffect(() => {
     if (!autoplay) return;
 
-    const interval = setInterval(() => {
-      lastMethodRef.current = 'autoplay';
-      setActiveIndex((current) => (current + 1) % testimonials.length);
-    }, 5000);
+    const tick = () => {
+      if (isDocVisibleRef.current && isInViewRef.current) {
+        lastMethodRef.current = 'autoplay';
+        setActiveIndex((current) => (current + 1) % testimonials.length);
+      }
+    };
 
+    const interval = setInterval(tick, 5000);
     return () => clearInterval(interval);
   }, [autoplay]);
 
@@ -94,11 +103,39 @@ const TestimonialsSection: React.FC = () => {
     setActiveIndex((current) => (current + 1) % testimonials.length);
   };
 
-  // Track cycle on every slide change
+  useEffect(() => {
+    const onVis = () => {
+      const visible = document.visibilityState === 'visible';
+      isDocVisibleRef.current = visible;
+      if (!visible) {
+        setAutoplay(false);
+      } else {
+        if (isInViewRef.current) setAutoplay(true);
+      }
+    };
+    isDocVisibleRef.current = document.visibilityState === 'visible';
+    document.addEventListener('visibilitychange', onVis);
+    return () => document.removeEventListener('visibilitychange', onVis);
+  }, []);
+
   useEffect(() => {
     const from = lastIndexRef.current;
     const to = activeIndex;
     if (from === to) return;
+
+    if (!isDocVisibleRef.current || !isInViewRef.current) {
+      lastIndexRef.current = to;
+      lastMethodRef.current = null;
+      return;
+    }
+
+    const key = `${pageviewIdRef.current}:${to}`;
+    if (cycleKeysRef.current.has(key)) {
+      lastIndexRef.current = to;
+      lastMethodRef.current = null;
+      return;
+    }
+    cycleKeysRef.current.add(key);
 
     const method = lastMethodRef.current ?? 'autoplay';
 
@@ -117,6 +154,7 @@ const TestimonialsSection: React.FC = () => {
         to_index: to,
         page_section: 'testimonials',
         total_slides: testimonials.length,
+        pageview_id: pageviewIdRef.current,
       });
     } catch {}
 
@@ -129,10 +167,10 @@ const TestimonialsSection: React.FC = () => {
     lastIndexRef.current = 0;
   }, []);
 
-  // View session analytics
   useEffect(() => {
     const el = document.getElementById('testimonials');
     if (!el) return;
+    containerRef.current = el;
 
     const handleEnter = () => {
       if (viewStartTsRef.current == null) {
@@ -142,6 +180,7 @@ const TestimonialsSection: React.FC = () => {
             page_section: 'testimonials',
             initial_index: activeIndex,
             total_slides: testimonials.length,
+            pageview_id: pageviewIdRef.current,
           });
         } catch {}
       }
@@ -159,6 +198,7 @@ const TestimonialsSection: React.FC = () => {
             cycles_manual: cyclesManualRef.current,
             unique_slides_viewed: seenSlidesRef.current.size,
             last_index: lastIndexRef.current,
+            pageview_id: pageviewIdRef.current,
           });
         } catch {}
         viewStartTsRef.current = null;
@@ -171,9 +211,14 @@ const TestimonialsSection: React.FC = () => {
 
     const io = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        const inView = entry && entry.intersectionRatio >= 0.5;
+        isInViewRef.current = inView;
+
+        if (inView && isDocVisibleRef.current) {
+          setAutoplay(true);
           handleEnter();
         } else {
+          setAutoplay(false);
           handleExit();
         }
       },
@@ -182,39 +227,44 @@ const TestimonialsSection: React.FC = () => {
 
     io.observe(el);
     return () => {
-      io.unobserve(el);
+      io.disconnect();
       handleExit();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Track testimonial view only when section becomes visible and user has interacted
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    const el = containerRef.current;
+    if (!el) return;
+
+    let hasTrackedLocal = false;
+
+    const io = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !autoplay && !hasTrackedView) {
-          const currentTestimonial = testimonials[activeIndex];
-          trackEvent('testimonial_view', {
-            testimonial_name: currentTestimonial.name,
-            testimonial_position: currentTestimonial.position,
-            testimonial_index: activeIndex,
-            source: currentTestimonial.source
-          });
-          setHasTrackedView(true);
+        const inView = entry && entry.intersectionRatio >= 0.5;
+        if (inView && !autoplay && !hasTrackedLocal) {
+          try {
+            const t = testimonials[activeIndex];
+            trackEvent('testimonial_view', {
+              testimonial_name: t?.name ?? 'unknown',
+              testimonial_position: t?.position ?? 'unknown',
+              testimonial_index: activeIndex,
+              source: t?.source ?? 'unknown',
+            });
+          } catch {}
+          hasTrackedLocal = true;
+        }
+        if (!inView) {
+          hasTrackedLocal = false;
         }
       },
       { threshold: 0.5 }
     );
 
-    const testimonialsSection = document.getElementById('testimonials');
-    if (testimonialsSection) {
-      observer.observe(testimonialsSection);
-    }
-
-    return () => {
-      if (testimonialsSection) observer.unobserve(testimonialsSection);
-    };
-  }, [activeIndex, autoplay, hasTrackedView]);
+    io.observe(el);
+    return () => io.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <section id="testimonials" className="py-24 scroll-mt-[38px]">
