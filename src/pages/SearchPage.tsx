@@ -182,7 +182,7 @@ export default function SearchPage() {
 
                 <div className="relative mx-auto max-w-3xl mt-6">
                   <div className="relative search-glass search-noise rounded-2xl border border-white/10 overflow-hidden">
-                    <div className="aurora-sheen"></div>
+                    <div className="aurora-sheen results-aurora-static"></div>
 
                     <div className="relative z-[1] p-4 sm:p-6">
                       {serviceResults.length > 0 && (

@@ -716,6 +716,13 @@ html, body, #root {
   .aurora-sheen { animation: none; }
 }
 
+.results-aurora-static {
+  background-position: 50% 50% !important;
+  background-repeat: no-repeat !important;
+  background-size: 160% 160% !important;
+  animation: none !important;
+}
+
 .search-noise::after {
   content: "";
   position: absolute; inset: 0;
