@@ -723,6 +723,35 @@ html, body, #root {
   animation: none !important;
 }
 
+.results-aurora-boost {
+  filter: brightness(1.15) contrast(1.05);
+  position: relative;
+}
+.results-aurora-boost::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  background: radial-gradient(60% 60% at 50% 45%,
+               rgba(255,255,255,0.10) 0%,
+               rgba(255,255,255,0.06) 35%,
+               rgba(0,0,0,0.10) 100%);
+  mix-blend-mode: overlay;
+  border-radius: inherit;
+}
+.results-aurora-boost::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background-image:
+    radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity: .35;
+  mix-blend-mode: soft-light;
+}
+
 .search-noise::after {
   content: "";
   position: absolute; inset: 0;
