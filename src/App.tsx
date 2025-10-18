@@ -105,6 +105,18 @@ function App() {
           delete clean.scrollFx;
           window.history.replaceState(clean, "", location.pathname + location.search + location.hash);
         } catch {}
+      } else if (location?.state?.scrollTo === "footer") {
+        const el = document.querySelector("#footer");
+        if (el && el.getBoundingClientRect().height > 0) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        try {
+          const clean = { ...(location.state || {}) };
+          delete clean.restorePosition;
+          delete clean.scrollTo;
+          delete clean.scrollFx;
+          window.history.replaceState(clean, "", location.pathname + location.search + location.hash);
+        } catch {}
       }
     };
 

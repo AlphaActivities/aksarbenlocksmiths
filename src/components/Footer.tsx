@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
   const navigate = useNavigate();
   return (
   <div className="relative overflow-hidden">
-    <footer className="relative border-t border-white/10">
+    <footer id="footer" className="relative border-t border-white/10 scroll-mt-[38px]">
       <div className="animated-footer-bg" />
       <div className="footer-glass-effect" />
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 pt-16 pb-8">
@@ -359,7 +359,7 @@ const Footer: React.FC = () => {
                         q,
                       });
                     } catch {}
-                    navigate(`/search${q ? `?q=${encodeURIComponent(q)}` : ''}`);
+                    navigate(`/search${q ? `?q=${encodeURIComponent(q)}` : ''}`, { state: { fromFooter: true } });
                   }}
                 >
                   <label htmlFor="footer-search" className="sr-only">Search services & blog</label>

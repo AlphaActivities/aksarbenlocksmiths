@@ -116,10 +116,10 @@ export default function SearchPage() {
                     destination: "/",
                   });
                 } catch {}
-
+                const fromFooter = (location?.state as any)?.fromFooter === true;
                 navigate("/", {
                   replace: true,
-                  state: { restorePosition: true, fromSearch: true },
+                  state: fromFooter ? { scrollTo: "footer" } : { restorePosition: true, fromSearch: true },
                 });
               }}
               className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-110 transition duration-300 ease-in-out"
@@ -140,7 +140,7 @@ export default function SearchPage() {
 
           <form
             onSubmit={handleInlineSubmit}
-            className="max-w-3xl mx-auto px-6 md:px-0 mt-4 flex items-center gap-2"
+            className="max-w-lg w-full mx-auto px-6 md:px-0 mt-4 flex items-center gap-2"
             aria-label="Refine your search"
           >
             <label htmlFor="search-inline" className="sr-only">Search</label>
