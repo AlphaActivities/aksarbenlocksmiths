@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Facebook, MapPin, Phone, Mail, Twitter } from 'lucide-react';
 import { trackClick, trackEvent, buildEventName } from '../utils/analytics';
 import { openWithAppFallback } from '../utils/openWithAppFallback';
@@ -13,7 +13,9 @@ const serviceLinks = [
   { name: 'Security Consultation', slug: 'consultation' }
 ];
 
-const Footer: React.FC = () => (
+const Footer: React.FC = () => {
+  const navigate = useNavigate();
+  return (
   <div className="relative overflow-hidden">
     <footer className="relative border-t border-white/10">
       <div className="animated-footer-bg" />
@@ -343,12 +345,13 @@ const Footer: React.FC = () => (
               </li>
               <li className="mt-0">
                 <form
-                  action="/search"
-                  method="get"
+                  role="search"
+                  aria-label="Site search"
                   className="relative"
                   onSubmit={(e) => {
+                    e.preventDefault();
                     const form = e.currentTarget;
-                    const q = (new FormData(form).get('q') as string) ?? '';
+                    const q = (new FormData(form).get('q') as string | null) ?? '';
                     try {
                       trackClick('footer_search_submit', form as unknown as HTMLElement, {
                         source: 'footer',
@@ -356,6 +359,7 @@ const Footer: React.FC = () => (
                         q,
                       });
                     } catch {}
+                    navigate(`/search${q ? `?q=${encodeURIComponent(q)}` : ''}`);
                   }}
                 >
                   <label htmlFor="footer-search" className="sr-only">Search services & blog</label>
@@ -386,6 +390,7 @@ const Footer: React.FC = () => (
       </div>
     </footer>
   </div>
-);
+  );
+};
 
 export default Footer;

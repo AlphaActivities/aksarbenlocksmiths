@@ -38,28 +38,21 @@ export default function SearchPage() {
     if (!q || q.length < 2) return;
     const t = window.setTimeout(() => {
       const attr = (typeof getAttributionParams === "function" ? getAttributionParams() : {}) || {};
-      trackEvent("site_search", {
-        query: q,
-        results_count: resultsCount,
-        source: "onsite",
-        page_section: pageSection,
-        ...attr,
-      });
-    }, 400); // debounce
+      try {
+        trackEvent("search_results_view", {
+          ...attr,
+          source_page: "search",
+          page_section: pageSection,
+          q,
+          results_count: resultsCount
+        });
+      } catch {}
+    }, 250);
     return () => window.clearTimeout(t);
   }, [q, resultsCount]);
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    const attr = (typeof getAttributionParams === "function" ? getAttributionParams() : {}) || {};
-    const form = e.currentTarget as HTMLFormElement;
-    const val = (form.querySelector("#q") as HTMLInputElement)?.value || "";
-    trackEvent("site_search_submit", {
-      query: val,
-      source: "onsite",
-      page_section: pageSection,
-      ...attr,
-    });
-  };
+  const showEmptyPrompt = !q || q.length < 2;
+  const showNoResults = q && q.length >= 2 && resultsCount === 0;
 
   return (
     <>
@@ -82,46 +75,62 @@ export default function SearchPage() {
         />
       </Helmet>
 
-      <main className="container mx-auto px-4 py-10">
-        <h1 className="sr-only">Site Search</h1>
+      <main className="max-w-5xl mx-auto px-4 py-10">
+        <h1 className="text-2xl md:text-3xl font-bold text-white mb-4">Search</h1>
 
-        {/* Hidden form is optional; we keep the endpoint clean for SEO without adding visible UI */}
-        <form action="/search" method="get" hidden onSubmit={onSubmit}>
-          <input id="q" name="q" defaultValue={params.get("q") || ""} />
-        </form>
+        <div className="bg-black/40 border border-white/10 rounded-2xl p-6 backdrop-blur-md text-white">
+          {showEmptyPrompt && (
+            <div className="text-white/80">
+              <p className="mb-2">Type at least <strong>2 characters</strong> to search services and blog posts.</p>
+              <p className="text-sm opacity-80">Examples: <em>lockouts</em>, <em>rekey</em>, <em>keys</em>, <em>programming</em></p>
+            </div>
+          )}
 
-        {/* Results only render when a query is present; nothing visible otherwise */}
-        {q && (
-          <>
-            <p className="sr-only">
-              Showing {resultsCount} result{resultsCount === 1 ? "" : "s"} for "{q}"
-            </p>
+          {!showEmptyPrompt && (
+            <>
+              <p className="mb-4 text-white/80">
+                Showing results for <span className="font-semibold">{q}</span>.{" "}
+                {resultsCount} result{resultsCount === 1 ? "" : "s"} found.
+              </p>
 
-            {serviceResults.length > 0 && (
-              <section aria-label="Service results">
-                <ul>
-                  {serviceResults.map((s: any) => (
-                    <li key={s.slug}>
-                      <Link to={`/services/${s.slug}`}>{s.title}</Link>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
+              {serviceResults.length > 0 && (
+                <section aria-label="Service results" className="mb-6">
+                  <h2 className="text-lg font-semibold mb-2">Services</h2>
+                  <ul className="grid gap-2">
+                    {serviceResults.map((s: any) => (
+                      <li key={s.slug} className="bg-white/5 hover:bg-white/10 rounded-lg px-4 py-3 transition">
+                        <Link to={`/services/${s.slug}`} className="text-white">
+                          {s.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
 
-            {blogResults.length > 0 && (
-              <section aria-label="Blog results">
-                <ul>
-                  {blogResults.map((p: any) => (
-                    <li key={p.slug}>
-                      <Link to={`/blog/${p.slug}`}>{p.title}</Link>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
-          </>
-        )}
+              {blogResults.length > 0 && (
+                <section aria-label="Blog results">
+                  <h2 className="text-lg font-semibold mb-2">Blog</h2>
+                  <ul className="grid gap-2">
+                    {blogResults.map((p: any) => (
+                      <li key={p.slug} className="bg-white/5 hover:bg-white/10 rounded-lg px-4 py-3 transition">
+                        <Link to={`/blog/${p.slug}`} className="text-white">
+                          {p.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
+              {showNoResults && (
+                <div className="text-white/80">
+                  <p>No results found. Try a different term.</p>
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </main>
     </>
   );
