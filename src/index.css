@@ -451,6 +451,15 @@ video:fullscreen {
   }
 }
 
+@keyframes redHeatWaveReverse {
+  0% {
+    background-position: 800% 0;
+  }
+  100% {
+    background-position: 0% 0;
+  }
+}
+
 @keyframes requestPulse {
   0% {
     box-shadow: 0 0 0px rgba(239, 68, 68, 0.5);

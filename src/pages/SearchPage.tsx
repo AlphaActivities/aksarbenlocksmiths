@@ -122,7 +122,7 @@ export default function SearchPage() {
                   state: { restorePosition: true, fromSearch: true },
                 });
               }}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-110 transition duration-300 ease-in-out"
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[linear-gradient(to_right,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWaveReverse_3s_linear_infinite] text-white text-sm shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-110 transition duration-300 ease-in-out"
               aria-label="Back to Home"
               title="Back to Home"
             >
@@ -155,7 +155,7 @@ export default function SearchPage() {
             />
             <button
               type="submit"
-              className="rounded-xl px-4 py-2 text-sm font-medium text-white bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] hover:brightness-110 transition border border-white/10 shrink-0"
+              className="rounded-xl px-4 py-2 text-sm font-medium text-white bg-[linear-gradient(to_right,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWaveReverse_3s_linear_infinite] hover:brightness-110 transition border border-white/10 shrink-0"
             >
               Search
             </button>
