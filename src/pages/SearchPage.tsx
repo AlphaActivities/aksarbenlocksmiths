@@ -180,62 +180,80 @@ export default function SearchPage() {
                   </p>
                 </div>
 
-                <div className="max-w-3xl mx-auto mt-4 bg-black/40 border border-white/10 rounded-2xl overflow-hidden p-2 md:p-4 backdrop-blur-md">
-                  {serviceResults.length > 0 && (
-                    <section aria-label="Service results" className="mb-4">
-                      <h2 className="text-white/90 font-semibold px-2 md:px-3 mb-2">Services</h2>
-                      <ul className="space-y-2">
-                        {serviceResults.map((s: any) => (
-                          <li key={s.slug}>
-                            <Link
-                              to={`/services/${s.slug}`}
-                              className="block rounded-xl px-3 py-3 bg-white/5 hover:bg-white/10 transition"
-                              onClick={(e) => {
-                                trackClick?.(
-                                  buildEventName({ base: "search_service", slug: s.slug, action: "result_click" }),
-                                  e.currentTarget as unknown as HTMLElement,
-                                  { source_page: "search", q, destination: `/services/${s.slug}` }
-                                );
-                              }}
-                            >
-                              {s.title}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </section>
-                  )}
+                <div className="relative mx-auto max-w-3xl mt-6">
+                  <div className="relative search-glass search-noise rounded-2xl border border-white/10 overflow-hidden">
+                    <div className="aurora-sheen"></div>
 
-                  {blogResults.length > 0 && (
-                    <section aria-label="Blog results" className="mt-4">
-                      <h2 className="text-white/90 font-semibold px-2 md:px-3 mb-2">Blog</h2>
-                      <ul className="space-y-2">
-                        {blogResults.map((p: any) => (
-                          <li key={p.slug}>
-                            <Link
-                              to={`/blog/${p.slug}`}
-                              className="block rounded-xl px-3 py-3 bg-white/5 hover:bg-white/10 transition"
-                              onClick={(e) => {
-                                trackClick?.(
-                                  buildEventName({ base: "search_blog", slug: p.slug, action: "result_click" }),
-                                  e.currentTarget as unknown as HTMLElement,
-                                  { source_page: "search", q, destination: `/blog/${p.slug}`, category: p.category }
-                                );
-                              }}
-                            >
-                              {p.title}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </section>
-                  )}
+                    <div className="relative z-[1] p-4 sm:p-6">
+                      {serviceResults.length > 0 && (
+                        <section aria-label="Service results" className="mb-5">
+                          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full pill-services text-white/90 text-sm mb-3">
+                            <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-300/90"></span>
+                            <span className="font-semibold tracking-wide">Services</span>
+                          </div>
 
-                  {serviceResults.length + blogResults.length === 0 && (
-                    <div className="px-3 py-6">
-                      <p className="text-white/80">No results for "{q}". Try another term.</p>
+                          <ul className="space-y-2">
+                            {serviceResults.map((s: any) => (
+                              <li key={s.slug}>
+                                <Link
+                                  to={`/services/${s.slug}`}
+                                  onClick={(e) => {
+                                    try {
+                                      const ev = buildEventName({ base: "search_service", slug: s.slug, action: "result_click" });
+                                      trackClick?.(ev, e.currentTarget, { source_page: "search", page_section: "services", slug: s.slug });
+                                    } catch {}
+                                  }}
+                                  className="group block w-full rounded-xl border border-white/10 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12] transition px-4 py-3 text-white/90 shadow-[inset_0_1px_0_rgba(255,255,255,.07)]"
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <span className="font-medium">{s.title}</span>
+                                    <span className="opacity-60 text-xs">View</span>
+                                  </div>
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </section>
+                      )}
+
+                      {blogResults.length > 0 && (
+                        <section aria-label="Blog results">
+                          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full pill-blog text-white/90 text-sm mb-3">
+                            <span className="inline-block w-1.5 h-1.5 rounded-full bg-fuchsia-300/90"></span>
+                            <span className="font-semibold tracking-wide">Blog</span>
+                          </div>
+
+                          <ul className="space-y-2">
+                            {blogResults.map((p: any) => (
+                              <li key={p.slug}>
+                                <Link
+                                  to={`/blog/${p.slug}`}
+                                  onClick={(e) => {
+                                    try {
+                                      const ev = buildEventName({ base: "search_blog", slug: p.slug, action: "result_click" });
+                                      trackClick?.(ev, e.currentTarget, { source_page: "search", page_section: "blog", slug: p.slug });
+                                    } catch {}
+                                  }}
+                                  className="group block w-full rounded-xl border border-white/10 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12] transition px-4 py-3 text-white/90 shadow-[inset_0_1px_0_rgba(255,255,255,.07)]"
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <span className="font-medium">{p.title}</span>
+                                    <span className="opacity-60 text-xs">Read</span>
+                                  </div>
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </section>
+                      )}
+
+                      {q && serviceResults.length === 0 && blogResults.length === 0 && (
+                        <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-6 text-white/80">
+                          No results for <span className="underline">({q})</span>. Try a different term.
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
               </>
             )}
