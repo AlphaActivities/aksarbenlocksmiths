@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { posts as BLOG_POSTS, findPost } from "../data/posts";
 import { BLOG_CATEGORIES } from "../data/blogCategories";
@@ -14,6 +14,7 @@ const BLOG_PLACEHOLDER =
 
 export default function BlogPostPage() {
   const { slug } = useParams();
+  const location = useLocation();
   const post = useMemo(() => (slug ? findPost(slug) : undefined), [slug]);
   const articleRef = useRef<HTMLElement | null>(null);
   const lastTrackedSlug = useRef<string | null>(null);
@@ -40,6 +41,28 @@ export default function BlogPostPage() {
       return undefined;
     }
   }, [paragraphs, post]);
+
+  React.useEffect(() => {
+    if (location?.state?.scrollFx !== "bottomThenTop") return;
+    const prefersReduced = typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) return;
+
+    const toBottom = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    window.scrollTo({ top: toBottom, behavior: "auto" });
+    const id = window.setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 60);
+
+    try {
+      const clean = { ...(location.state || {}) };
+      delete (clean as any).scrollFx;
+      window.history.replaceState(clean, "", location.pathname + location.search + location.hash);
+    } catch {}
+
+    return () => window.clearTimeout(id);
+  }, [location]);
 
   useEffect(() => {
     if (!post) return;
