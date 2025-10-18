@@ -110,10 +110,8 @@ export default function SearchPage() {
           </div>
 
           <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-10">
-            <div className="purple-heat bg-opacity-60 backdrop-blur-lg rounded-3xl border border-white/10 shadow-2xl ring-1 ring-white/20 max-w-3xl mx-auto px-6 md:px-8 py-5 md:py-7">
-              <h1 className="text-center text-2xl md:text-4xl font-extrabold tracking-tight">
-                Search
-              </h1>
+            <div className="search-hero-gradient max-w-3xl mx-auto rounded-3xl px-6 py-5 text-center text-white border border-white/10 shadow-2xl">
+              <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">Search</h1>
               <p className="sr-only">Find services and blog posts on Aksarben Locksmiths.</p>
             </div>
           </section>
@@ -127,12 +125,17 @@ export default function SearchPage() {
               </div>
             ) : (
               <>
-                <p className="text-white/80 mb-4">
-                  Showing results for <span className="font-semibold">{q}</span>.{" "}
-                  {serviceResults.length + blogResults.length} results found.
-                </p>
+                <div className="max-w-3xl mx-auto px-6 md:px-0 mt-4">
+                  <p className="text-white/80">
+                    Showing results for (
+                    <span className="underline underline-offset-2 decoration-white/70">
+                      {q || ''}
+                    </span>
+                    ). {serviceResults.length + blogResults.length} result{serviceResults.length + blogResults.length === 1 ? '' : 's'} found.
+                  </p>
+                </div>
 
-                <div className="bg-black/40 border border-white/10 rounded-2xl p-2 md:p-4 backdrop-blur-md max-w-3xl mx-auto">
+                <div className="max-w-3xl mx-auto mt-4 bg-black/40 border border-white/10 rounded-2xl overflow-hidden p-2 md:p-4 backdrop-blur-md">
                   {serviceResults.length > 0 && (
                     <section aria-label="Service results" className="mb-4">
                       <h2 className="text-white/90 font-semibold px-2 md:px-3 mb-2">Services</h2>
