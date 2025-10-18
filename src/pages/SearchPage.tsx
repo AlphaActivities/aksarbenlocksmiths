@@ -155,7 +155,7 @@ export default function SearchPage() {
             />
             <button
               type="submit"
-              className="rounded-xl px-4 py-2 text-sm font-medium text-white bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWave_3s_linear_infinite] hover:brightness-110 transition border border-white/10 shrink-0"
+              className="rounded-xl px-4 py-2 text-sm font-medium text-white bg-[linear-gradient(to_left,_#7f1d1d,_#991b1b,_#ef4444,_#b91c1c,_#991b1b,_#7f1d1d)] bg-[length:800%_100%] animate-[redHeatWaveReverse_3s_linear_infinite] hover:brightness-110 transition border border-white/10 shrink-0"
             >
               Search
             </button>
