@@ -629,3 +629,28 @@ video:fullscreen {
   .hero-video { display: block !important; }
   .hero-poster { display: none !important; }
 }
+
+/* ---- Search hero animated purple heat-wave ---- */
+.purple-heat {
+  background: linear-gradient(
+    to left,
+    #2a1645,
+    #4a2974,
+    #7c3aed,
+    #4a2974,
+    #2a1645
+  );
+  background-size: 800% 100%;
+  animation: purpleHeatWave 6s linear infinite;
+}
+
+/* keyframes for purple-heat */
+@keyframes purpleHeatWave {
+  0%   { background-position:   0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* ---- Prevent accidental horizontal scrolling sitewide ---- */
+html, body, #root {
+  overflow-x: hidden;
+}

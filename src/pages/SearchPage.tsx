@@ -110,7 +110,7 @@ export default function SearchPage() {
           </div>
 
           <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-10">
-            <div className="bg-gradient-to-br from-[#32114a] via-[#2a1645] to-[#10233d] bg-opacity-40 backdrop-blur-lg rounded-3xl p-6 md:p-8 border border-white/10 shadow-2xl ring-1 ring-white/20">
+            <div className="purple-heat bg-opacity-60 backdrop-blur-lg rounded-3xl border border-white/10 shadow-2xl ring-1 ring-white/20 max-w-3xl mx-auto px-6 md:px-8 py-5 md:py-7">
               <h1 className="text-center text-2xl md:text-4xl font-extrabold tracking-tight">
                 Search
               </h1>
@@ -118,7 +118,7 @@ export default function SearchPage() {
             </div>
           </section>
 
-          <main className="max-w-5xl mx-auto px-4 py-8">
+          <main className="max-w-4xl mx-auto px-4 py-8">
             {!q || q.length < 2 ? (
               <div className="mt-6 bg-black/40 border border-white/10 rounded-2xl p-6 backdrop-blur-md">
                 <p className="text-white/90">
@@ -132,7 +132,7 @@ export default function SearchPage() {
                   {serviceResults.length + blogResults.length} results found.
                 </p>
 
-                <div className="bg-black/40 border border-white/10 rounded-2xl p-2 md:p-4 backdrop-blur-md">
+                <div className="bg-black/40 border border-white/10 rounded-2xl p-2 md:p-4 backdrop-blur-md max-w-3xl mx-auto">
                   {serviceResults.length > 0 && (
                     <section aria-label="Service results" className="mb-4">
                       <h2 className="text-white/90 font-semibold px-2 md:px-3 mb-2">Services</h2>
