@@ -1,5 +1,5 @@
 import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { ArrowLeft, Phone, MapPin } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { trackVideoEvent, trackClick, buildEventName } from "../utils/analytics";
@@ -144,18 +144,30 @@ export default function DynamicServicePage() {
     consultation: "from-emerald-900/80 via-green-800/80 to-teal-900/80",
   };
 
-useEffect(() => {
-    const wantsBottomThenTop = (location.state as any)?.scrollFx === "bottomThenTop";
+const didRunFx = React.useRef(false);
+  useEffect(() => {
+    if (didRunFx.current) return;
+    const fx = (location.state as any)?.scrollFx;
+    const prefersReduced =
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (wantsBottomThenTop) {
-      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "auto" });
-
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }, 100);
+    if (fx === "bottomThenTop") {
+      didRunFx.current = true;
+      window.scrollTo({
+        top: Math.max(document.documentElement.scrollHeight - window.innerHeight, 0),
+        behavior: "auto"
       });
-    } else {
+      if (!prefersReduced) {
+        requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
+      } else {
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }
+      return;
+    }
+
+    if (!fx) {
       setTimeout(() => {
         window.scrollTo({
           top: document.documentElement.scrollHeight,
@@ -163,7 +175,7 @@ useEffect(() => {
         });
       }, 100);
     }
-  }, [slug]);
+  }, [slug, location.state]);
 
 
   // Video event handlers
