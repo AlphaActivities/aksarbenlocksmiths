@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { Link, useParams, useLocation } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { posts as BLOG_POSTS, findPost } from "../data/posts";
 import { BLOG_CATEGORIES } from "../data/blogCategories";
@@ -14,11 +14,9 @@ const BLOG_PLACEHOLDER =
 
 export default function BlogPostPage() {
   const { slug } = useParams();
-  const location = useLocation();
   const post = useMemo(() => (slug ? findPost(slug) : undefined), [slug]);
   const articleRef = useRef<HTMLElement | null>(null);
   const lastTrackedSlug = useRef<string | null>(null);
-  const didRunFx = useRef(false);
 
   // Schema and URL helpers - compute before any returns
   const origin = typeof window !== "undefined" ? window.location.origin : "https://aksarbenlocksmiths.com";
@@ -58,28 +56,6 @@ export default function BlogPostPage() {
       // intentional no-op: analytics best-effort
     }
   }, [post]);
-
-  useEffect(() => {
-    if (didRunFx.current) return;
-    const fx = (location?.state as any)?.scrollFx;
-    if (fx !== "bottomThenTop") return;
-    didRunFx.current = true;
-
-    const prefersReduced =
-      typeof window !== "undefined" &&
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (prefersReduced) {
-      window.scrollTo({ top: 0, behavior: "auto" });
-      return;
-    }
-
-    window.scrollTo({ top: Math.max(document.body.scrollHeight - window.innerHeight, 0), behavior: "auto" });
-    requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }, [location?.state]);
 
   if (!post) {
     return (
