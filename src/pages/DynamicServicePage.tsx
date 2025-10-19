@@ -153,17 +153,37 @@ const didRunFx = React.useRef(false);
       window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (fx === "bottomThenTop") {
-      didRunFx.current = true;
-      window.scrollTo({
-        top: Math.max(document.documentElement.scrollHeight - window.innerHeight, 0),
-        behavior: "auto"
+    const waitForTallPage = (maxTries = 8, delayMs = 60) =>
+      new Promise<void>((resolve) => {
+        let tries = 0;
+        const check = () => {
+          const doc = document.documentElement;
+          const ready = (doc.scrollHeight - window.innerHeight) > 8;
+          if (ready || tries >= maxTries) {
+            resolve();
+          } else {
+            tries++;
+            setTimeout(check, delayMs);
+          }
+        };
+        requestAnimationFrame(() => requestAnimationFrame(check));
       });
+
+    const runBottomThenTop = async () => {
+      didRunFx.current = true;
+      await waitForTallPage();
+      const doc = document.documentElement;
+      const toBottom = Math.max(doc.scrollHeight - window.innerHeight, 0);
+      window.scrollTo({ top: toBottom, behavior: "auto" });
       if (!prefersReduced) {
         requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
       } else {
         window.scrollTo({ top: 0, behavior: "auto" });
       }
+    };
+
+    if (fx === "bottomThenTop") {
+      runBottomThenTop();
       return;
     }
 
