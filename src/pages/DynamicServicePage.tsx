@@ -100,7 +100,6 @@ export default function DynamicServicePage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [playing, setPlaying] = useState(false);
-  const [forceTall, setForceTall] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const data = serviceData[slug] ?? serviceData[slug as keyof typeof serviceData];
 
@@ -172,7 +171,6 @@ const didRunFx = React.useRef(false);
 
     const runBottomThenTop = async () => {
       didRunFx.current = true;
-      setForceTall(true);
       await waitForTallPage();
       const doc = document.documentElement;
       const toBottom = Math.max(doc.scrollHeight - window.innerHeight, 0);
@@ -182,7 +180,6 @@ const didRunFx = React.useRef(false);
       } else {
         window.scrollTo({ top: 0, behavior: "auto" });
       }
-      window.setTimeout(() => setForceTall(false), 600);
     };
 
     if (fx === "bottomThenTop") {
@@ -308,7 +305,7 @@ const didRunFx = React.useRef(false);
   } : null;
 
   return (
-    <div className={`relative overflow-hidden ${forceTall ? 'min-h-[140vh]' : 'min-h-screen'}`}>
+    <div className="relative min-h-screen overflow-hidden">
       <Helmet>
         {meta && <title>{meta.title}</title>}
         {meta && <meta name="description" content={meta.metaDescription || meta.description?.replace(/\s+/g, ' ').trim().slice(0, 155)} />}
