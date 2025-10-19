@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { posts as BLOG_POSTS, findPost } from "../data/posts";
 import { BLOG_CATEGORIES } from "../data/blogCategories";
@@ -14,9 +14,11 @@ const BLOG_PLACEHOLDER =
 
 export default function BlogPostPage() {
   const { slug } = useParams();
+  const location = useLocation();
   const post = useMemo(() => (slug ? findPost(slug) : undefined), [slug]);
   const articleRef = useRef<HTMLElement | null>(null);
   const lastTrackedSlug = useRef<string | null>(null);
+  const didRunFx = React.useRef(false);
 
   // Schema and URL helpers - compute before any returns
   const origin = typeof window !== "undefined" ? window.location.origin : "https://aksarbenlocksmiths.com";
@@ -56,6 +58,28 @@ export default function BlogPostPage() {
       // intentional no-op: analytics best-effort
     }
   }, [post]);
+
+  React.useEffect(() => {
+    if (didRunFx.current) return;
+    const fx = (location.state as any)?.scrollFx;
+    if (fx !== "bottomThenTop") return;
+    didRunFx.current = true;
+    const prefersReduced =
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: Math.max(document.documentElement.scrollHeight - window.innerHeight, 0), behavior: "auto" });
+    if (!prefersReduced) {
+      requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
+    } else {
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+    try {
+      const clean = { ...(location.state || {}) } as any;
+      delete clean.scrollFx;
+      window.history.replaceState(clean, "", location.pathname + location.search + location.hash);
+    } catch {}
+  }, [location]);
 
   if (!post) {
     return (
