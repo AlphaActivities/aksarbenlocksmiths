@@ -216,7 +216,6 @@ export default function SearchPage() {
                               <li key={s.slug}>
                                 <Link
                                   to={`/services/${s.slug}`}
-                                  state={{ scrollFx: "bottomThenTop" }}
                                   onClick={(e) => {
                                     try {
                                       const ev = buildEventName({ base: "search_service", slug: s.slug, action: "result_click" });

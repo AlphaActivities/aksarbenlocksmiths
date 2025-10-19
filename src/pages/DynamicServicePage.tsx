@@ -1,5 +1,5 @@
 import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ArrowLeft, Phone, MapPin } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { trackVideoEvent, trackClick, buildEventName } from "../utils/analytics";
@@ -100,7 +100,6 @@ export default function DynamicServicePage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [playing, setPlaying] = useState(false);
-  const [forceTall, setForceTall] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const data = serviceData[slug] ?? serviceData[slug as keyof typeof serviceData];
 
@@ -145,60 +144,18 @@ export default function DynamicServicePage() {
     consultation: "from-emerald-900/80 via-green-800/80 to-teal-900/80",
   };
 
-const didRunFx = React.useRef(false);
-  const sawFxRef = React.useRef<boolean>(false);
-  useEffect(() => {
-    if (didRunFx.current) return;
-    const fx = (location.state as any)?.scrollFx;
-    if (fx) sawFxRef.current = true;
-    const prefersReduced =
-      typeof window !== "undefined" &&
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+useEffect(() => {
+    const wantsBottomThenTop = (location.state as any)?.scrollFx === "bottomThenTop";
 
-    const waitForTallPage = (maxTries = 8, delayMs = 60) =>
-      new Promise<void>((resolve) => {
-        let tries = 0;
-        const check = () => {
-          const doc = document.documentElement;
-          const ready = (doc.scrollHeight - window.innerHeight) > 8;
-          if (ready || tries >= maxTries) {
-            resolve();
-          } else {
-            tries++;
-            setTimeout(check, delayMs);
-          }
-        };
-        requestAnimationFrame(() => requestAnimationFrame(check));
+    if (wantsBottomThenTop) {
+      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "auto" });
+
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }, 100);
       });
-
-    const runBottomThenTop = async () => {
-      didRunFx.current = true;
-      await waitForTallPage();
-      const doc = document.documentElement;
-      let toBottom = Math.max(doc.scrollHeight - window.innerHeight, 0);
-
-      if (toBottom < 64) {
-        setForceTall(true);
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-        toBottom = Math.max(document.documentElement.scrollHeight - window.innerHeight, 0);
-      }
-
-      window.scrollTo({ top: toBottom, behavior: "auto" });
-      if (!prefersReduced) {
-        requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
-      } else {
-        window.scrollTo({ top: 0, behavior: "auto" });
-      }
-      window.setTimeout(() => setForceTall(false), 600);
-    };
-
-    if (fx === "bottomThenTop") {
-      runBottomThenTop();
-      return;
-    }
-
-    if (!fx && !sawFxRef.current && !didRunFx.current) {
+    } else {
       setTimeout(() => {
         window.scrollTo({
           top: document.documentElement.scrollHeight,
@@ -206,7 +163,7 @@ const didRunFx = React.useRef(false);
         });
       }, 100);
     }
-  }, [slug, location.state]);
+  }, [slug]);
 
 
   // Video event handlers
@@ -316,7 +273,7 @@ const didRunFx = React.useRef(false);
   } : null;
 
   return (
-    <div className={`relative overflow-hidden ${forceTall ? 'min-h-[140vh]' : 'min-h-screen'}`}>
+    <div className="relative min-h-screen overflow-hidden">
       <Helmet>
         {meta && <title>{meta.title}</title>}
         {meta && <meta name="description" content={meta.metaDescription || meta.description?.replace(/\s+/g, ' ').trim().slice(0, 155)} />}
