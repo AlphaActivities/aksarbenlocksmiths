@@ -4,8 +4,8 @@
   publish = "dist"
 
 [[redirects]]
-  from = "/google42f56cd90490587.html"
-  to = "/google42f56cd90490587.html"
+  from = "/google42f56cd9d0940587.html"
+  to = "/google42f56cd9d0940587.html"
   status = 200
 
 [[redirects]]
