@@ -145,9 +145,11 @@ export default function DynamicServicePage() {
   };
 
 const didRunFx = React.useRef(false);
+  const sawFxRef = React.useRef<boolean>(false);
   useEffect(() => {
     if (didRunFx.current) return;
     const fx = (location.state as any)?.scrollFx;
+    if (fx) sawFxRef.current = true;
     const prefersReduced =
       typeof window !== "undefined" &&
       window.matchMedia &&
@@ -187,7 +189,7 @@ const didRunFx = React.useRef(false);
       return;
     }
 
-    if (!fx) {
+    if (!fx && !sawFxRef.current && !didRunFx.current) {
       setTimeout(() => {
         window.scrollTo({
           top: document.documentElement.scrollHeight,
