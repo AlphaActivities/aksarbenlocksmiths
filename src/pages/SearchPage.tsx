@@ -18,7 +18,7 @@ export default function SearchPage() {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    try { inputRef.current?.blur(); } catch {}
+    try { (document.body as HTMLElement)?.focus?.(); } catch {}
   }, []);
 
   function handleInlineSubmit(e: React.FormEvent<HTMLFormElement>) {
