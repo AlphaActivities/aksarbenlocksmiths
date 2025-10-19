@@ -18,10 +18,8 @@ export default function SearchPage() {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (inputRef.current) {
-      if ((q || "").length > 0) inputRef.current.focus();
-    }
-  }, [q]);
+    try { inputRef.current?.blur(); } catch {}
+  }, []);
 
   function handleInlineSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

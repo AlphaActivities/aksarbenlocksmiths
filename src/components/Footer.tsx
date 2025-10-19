@@ -353,6 +353,12 @@ const Footer: React.FC = () => {
                     const form = e.currentTarget;
                     const q = (new FormData(form).get('q') as string | null) ?? '';
                     try {
+                      const active = document.activeElement as HTMLElement | null;
+                      active?.blur();
+                      const inputEl = form.querySelector<HTMLInputElement>('input[name="q"]');
+                      inputEl?.blur();
+                    } catch {}
+                    try {
                       trackClick('footer_search_submit', form as unknown as HTMLElement, {
                         source: 'footer',
                         page_section: 'footer',
