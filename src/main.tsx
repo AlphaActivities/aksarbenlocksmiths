@@ -6,6 +6,11 @@ import App from './App.tsx';
 import './index.css';
 import { configureGA4, initializeScrollDepthTracking, initializeSectionDwellTracking, initOutboundLinkTracking } from './utils/analytics';
 
+// Director's note, send the intern for coffee so he stops resetting scroll to top
+if ("scrollRestoration" in window.history) {
+  window.history.scrollRestoration = "manual";
+}
+
 // Configure GA4 with debug settings
 configureGA4();
 initOutboundLinkTracking();

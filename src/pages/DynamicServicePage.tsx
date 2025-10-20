@@ -1,5 +1,5 @@
 import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useLayoutEffect, useState, useRef } from "react";
 import { ArrowLeft, Phone, MapPin } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { trackVideoEvent, trackClick, buildEventName } from "../utils/analytics";
@@ -144,26 +144,48 @@ export default function DynamicServicePage() {
     consultation: "from-emerald-900/80 via-green-800/80 to-teal-900/80",
   };
 
-useEffect(() => {
-    const wantsBottomThenTop = (location.state as any)?.scrollFx === "bottomThenTop";
+  const wantsBottomThenTop = (location.state as any)?.scrollFx === "bottomThenTop";
 
+  // 2a) PRE-PAINT SNAP, run before first paint so the first visible frame is already at the bottom
+  useLayoutEffect(() => {
+    if (!wantsBottomThenTop) return;
+
+    // Director's note, hush Brenda for one frame, we need an instant snap, not smoothing
+    const html = document.documentElement;
+    const prevInline = html.style.scrollBehavior;
+    html.style.scrollBehavior = "auto";
+
+    // Snap to bottom immediately, before paint
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: "auto",
+    });
+
+    // Restore previous inline value, let global CSS resume control
+    queueMicrotask(() => {
+      html.style.scrollBehavior = prevInline;
+    });
+  }, [slug, wantsBottomThenTop]);
+
+  // 2b) POST-PAINT LUXURY RISE, keep the elegant smooth scroll up, timing unchanged
+  useEffect(() => {
     if (wantsBottomThenTop) {
-      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "auto" });
-
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }, 100);
-      });
-    } else {
-      setTimeout(() => {
-        window.scrollTo({
-          top: document.documentElement.scrollHeight,
-          behavior: "smooth",
-        });
+      // Director's note, camera is already at the bottom, now perform the graceful rise
+      const t = setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }, 100);
+      return () => clearTimeout(t);
     }
-  }, [slug]);
+
+    // Fallback for routes without the special flag, your existing default stays the same
+    const t = setTimeout(() => {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: "smooth",
+      });
+    }, 100);
+    return () => clearTimeout(t);
+  }, [slug, wantsBottomThenTop]);
 
 
   // Video event handlers
