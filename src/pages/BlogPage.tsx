@@ -288,6 +288,7 @@ export default function BlogPage() {
                     >
                       <Link
                         to={`/blog/${post.slug}`}
+                        state={{ scrollFx: "bottomThenTop" }}
                         aria-label={`Read post: ${post.title}`}
                         onClick={(e) => {
                           try {

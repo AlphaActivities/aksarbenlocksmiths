@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { Link, useParams, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { posts as BLOG_POSTS, findPost } from "../data/posts";
 import { BLOG_CATEGORIES } from "../data/blogCategories";
@@ -14,9 +14,12 @@ const BLOG_PLACEHOLDER =
 
 export default function BlogPostPage() {
   const { slug } = useParams();
+  const location = useLocation();
   const post = useMemo(() => (slug ? findPost(slug) : undefined), [slug]);
   const articleRef = useRef<HTMLElement | null>(null);
   const lastTrackedSlug = useRef<string | null>(null);
+
+  const wantsBottomThenTop = (location.state as any)?.scrollFx === "bottomThenTop";
 
   // Schema and URL helpers - compute before any returns
   const origin = typeof window !== "undefined" ? window.location.origin : "https://aksarbenlocksmiths.com";
@@ -40,6 +43,39 @@ export default function BlogPostPage() {
       return undefined;
     }
   }, [paragraphs, post]);
+
+  // PRE-PAINT SNAP to bottom (eliminates any top flash)
+  useLayoutEffect(() => {
+    if (!wantsBottomThenTop) return;
+    const html = document.documentElement;
+    const prevInline = html.style.scrollBehavior;
+    html.style.scrollBehavior = "auto";
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: "auto",
+    });
+    queueMicrotask(() => {
+      html.style.scrollBehavior = prevInline;
+    });
+  }, [wantsBottomThenTop]);
+
+  // POST-PAINT LUXURY RISE to top (same feel as Services)
+  useEffect(() => {
+    if (wantsBottomThenTop) {
+      const t = setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 100);
+      return () => clearTimeout(t);
+    }
+    // Fallback for direct loads (keep signature motion): top → bottom
+    const t = setTimeout(() => {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: "smooth",
+      });
+    }, 100);
+    return () => clearTimeout(t);
+  }, [wantsBottomThenTop]);
 
   useEffect(() => {
     if (!post) return;
