@@ -328,25 +328,6 @@ export default function ServiceAreasPage() {
           </ul>
         </div>
 
-        {/* Bottom CTA */}
-        <div className="flex justify-center mt-12 md:mt-14 lg:mt-16">
-          <a
-            href="tel:+14025566715"
-            className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-base font-semibold shadow-[0_0_30px_rgba(255,77,64,0.35)] bg-gradient-to-r from-red-500 to-orange-500 hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-400 transition"
-            aria-label="Call Aksarben Locksmiths"
-            title="Call Aksarben Locksmiths"
-            onClick={(e) =>
-              trackClick("cta_service_areas_call_click", e.currentTarget, {
-                source_page: "service_areas",
-                page_section: "page_footer_cta",
-                call_reason: "local_dispatch",
-              })
-            }
-          >
-            <span>📞 Call Now</span>
-          </a>
-        </div>
-
         {/* Crawlable copy block */}
         <div className="bg-white/10 backdrop-blur-2xl rounded-xl px-6 py-5 text-white/90 text-base leading-relaxed shadow-[0_0_24px_rgba(255,255,255,0.5)] max-w-4xl w-full mx-auto mt-8 border border-white/10 ring-1 ring-white/10">
           <div className="space-y-3 text-base leading-relaxed text-gray-200">
@@ -371,6 +352,25 @@ export default function ServiceAreasPage() {
               Call now for dependable service.
             </p>
           </div>
+        </div>
+
+        {/* Bottom CTA */}
+        <div className="flex justify-center mt-12 md:mt-14 lg:mt-16">
+          <a
+            href="tel:+14025566715"
+            className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-base font-semibold shadow-[0_0_30px_rgba(255,77,64,0.35)] bg-gradient-to-r from-red-500 to-orange-500 hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-400 transition"
+            aria-label="Call Aksarben Locksmiths"
+            title="Call Aksarben Locksmiths"
+            onClick={(e) =>
+              trackClick("cta_service_areas_call_click", e.currentTarget, {
+                source_page: "service_areas",
+                page_section: "page_footer_cta",
+                call_reason: "local_dispatch",
+              })
+            }
+          >
+            <span>📞 Call Now</span>
+          </a>
         </div>
 
         {/* Hidden FAQ Section (schema remains in <Helmet>, but block invisible) */}
