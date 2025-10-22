@@ -355,7 +355,7 @@ export default function ServiceAreasPage() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="flex justify-center mt-12 md:mt-14 lg:mt-16">
+        <div className="flex justify-center mt-8 md:mt-10 lg:mt-12">
           <a
             href="tel:+14025566715"
             className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-base font-semibold shadow-[0_0_30px_rgba(255,77,64,0.35)] bg-gradient-to-r from-red-500 to-orange-500 hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-400 transition"
