@@ -355,10 +355,10 @@ export default function ServiceAreasPage() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="flex justify-center mt-8 md:mt-10 lg:mt-12">
+        <div className="flex justify-center mt-8">
           <a
             href="tel:+14025566715"
-            className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-base font-semibold shadow-[0_0_30px_rgba(255,77,64,0.35)] bg-red-600 hover:bg-red-700 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-400 transition"
+            className="bg-gradient-to-l from-red-900 via-red-600 to-red-800 text-white py-3 px-6 rounded-full shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out animate-[pulseRedGlow_3s_ease-in-out_infinite] inline-block focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-400"
             aria-label="Call Aksarben Locksmiths"
             title="Call Aksarben Locksmiths"
             onClick={(e) =>
@@ -369,7 +369,7 @@ export default function ServiceAreasPage() {
               })
             }
           >
-            <span>📞 Call Now</span>
+            <span>Call Now</span>
           </a>
         </div>
 
