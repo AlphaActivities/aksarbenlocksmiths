@@ -358,7 +358,7 @@ export default function ServiceAreasPage() {
         <div className="relative z-20 flex justify-center mt-8">
           <a
             href="tel:+14025566715"
-            className="bg-gradient-to-l from-red-900 via-red-600 to-red-800 text-white py-3 px-6 rounded-full shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out animate-[pulseRedGlow_3s_ease-in-out_infinite] inline-block mix-blend-normal focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-400"
+            className="bg-gradient-to-l from-red-900 via-red-600 to-red-800 text-white py-3 px-6 rounded-full shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out animate-[pulseRedGlow_3s_ease-in-out_infinite] inline-flex items-center gap-2 mix-blend-normal focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-400"
             aria-label="Call Aksarben Locksmiths"
             title="Call Aksarben Locksmiths"
             onClick={(e) =>
@@ -369,7 +369,10 @@ export default function ServiceAreasPage() {
               })
             }
           >
-            <span>Call Now</span>
+            <>
+              <Phone className="h-4 w-4" aria-hidden="true" />
+              <span>Call Now</span>
+            </>
           </a>
         </div>
 
