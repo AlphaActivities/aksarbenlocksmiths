@@ -289,26 +289,6 @@ export default function ServiceAreasPage() {
           <p className="mt-3 text-white/80">
             We come to you across the Omaha metro. Explore the main cities we cover and the surrounding communities we serve every day.
           </p>
-
-          {/* CTA inside hero card */}
-          <div className="flex justify-center mt-6">
-            <a
-              href="tel:+14025566715"
-              onClick={(e) =>
-                trackClick("cta_service_areas_call_click", e.currentTarget, {
-                  source_page: "service_areas",
-                  page_section: "hero_cta",
-                  call_reason: "local_dispatch",
-                })
-              }
-              className="inline-flex items-center gap-2 bg-gradient-to-l from-red-900 via-red-600 to-red-800 text-white py-3 px-6 rounded-full shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out animate-[pulseRedGlow_3s_ease-in-out_infinite] focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-              aria-label="Call Aksarben Locksmiths"
-              title="Call Aksarben Locksmiths"
-            >
-              <Phone className="h-4 w-4" />
-              <span>Call Now</span>
-            </a>
-          </div>
         </div>
         {/* Main cities, blue gradient chips */}
         <div className="mt-8 rounded-3xl p-6 backdrop-blur-md border border-white/10 ring-1 ring-blue-400/25 shadow-[0_10px_40px_-10px_rgba(59,130,246,0.35)] bg-[radial-gradient(120%_120%_at_50%_0%,rgba(59,130,246,0.18),rgba(17,24,39,0.2)_70%)]">
@@ -346,6 +326,25 @@ export default function ServiceAreasPage() {
               </li>
             ))}
           </ul>
+        </div>
+
+        {/* Bottom CTA */}
+        <div className="flex justify-center mt-12 md:mt-14 lg:mt-16">
+          <a
+            href="tel:+14025566715"
+            className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-base font-semibold shadow-[0_0_30px_rgba(255,77,64,0.35)] bg-gradient-to-r from-red-500 to-orange-500 hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-400 transition"
+            aria-label="Call Aksarben Locksmiths"
+            title="Call Aksarben Locksmiths"
+            onClick={(e) =>
+              trackClick("cta_service_areas_call_click", e.currentTarget, {
+                source_page: "service_areas",
+                page_section: "page_footer_cta",
+                call_reason: "local_dispatch",
+              })
+            }
+          >
+            <span>📞 Call Now</span>
+          </a>
         </div>
 
         {/* Crawlable copy block */}
