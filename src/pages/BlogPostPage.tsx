@@ -23,7 +23,7 @@ export default function BlogPostPage() {
 
   // Schema and URL helpers - compute before any returns
   const origin = typeof window !== "undefined" ? window.location.origin : "https://aksarbenlocksmiths.com";
-  const imageUrl = `${origin}${post?.coverImage || ""}`;
+  const GLOBAL_OG = origin + "/images/og/home-1200x630.webp";
   const canonicalPath = `/blog/${post?.slug || slug}`;
   const canonicalAbs = origin + canonicalPath;
   const logoAbs = origin + "/images/shield-logo.webp";
@@ -192,7 +192,7 @@ export default function BlogPostPage() {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
-    image: imageUrl,
+    image: post?.coverImage ? `${origin}${post.coverImage}` : GLOBAL_OG,
     datePublished: post.date,
     dateModified: post.updatedAt || post.date,
     url: canonicalAbs,
@@ -262,10 +262,10 @@ export default function BlogPostPage() {
               <meta property="og:site_name" content="Aksarben Locksmiths" />
               <meta property="article:section" content={categoryLabel} />
               <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
-              <meta property="og:image" content={imageUrl} />
+              <meta property="og:image" content={GLOBAL_OG} />
               <meta property="og:image:width" content="1200" />
               <meta property="og:image:height" content="630" />
-              <meta name="twitter:image" content={imageUrl} />
+              <meta name="twitter:image" content={GLOBAL_OG} />
               <meta name="twitter:image:width" content="1200" />
               <meta name="twitter:image:height" content="630" />
               <script type="application/ld+json">{JSON.stringify(breadcrumbsLd)}</script>

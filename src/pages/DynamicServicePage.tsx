@@ -263,7 +263,7 @@ export default function DynamicServicePage() {
   } : null;
 
   const meta = SERVICE_META[slug as string];
-  const ogImage = data?.thumbnail ? `${origin}${data.thumbnail}` : `${origin}/images/shield-logo.webp`;
+  const GLOBAL_OG = origin + "/images/og/home-1200x630.webp";
 
   // ISO-8601 with Omaha timezone
   const videoUploadDate = "2025-09-25T12:00:00-05:00";
@@ -306,12 +306,14 @@ export default function DynamicServicePage() {
         {meta && <meta property="og:description" content={meta.metaDescription || meta.description?.replace(/\s+/g, ' ').trim().slice(0, 155)} />}
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonicalUrl} />
-        <meta property="og:image" content={ogImage} />
+        <meta property="og:image" content={GLOBAL_OG} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
 
         <meta name="twitter:card" content="summary_large_image" />
         {meta && <meta name="twitter:title" content={meta.title} />}
         {meta && <meta name="twitter:description" content={meta.metaDescription || meta.description?.replace(/\s+/g, ' ').trim().slice(0, 155)} />}
-        <meta name="twitter:image" content={ogImage} />
+        <meta name="twitter:image" content={GLOBAL_OG} />
 
         {serviceLd && (
           <script type="application/ld+json">
