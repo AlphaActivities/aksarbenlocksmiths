@@ -72,3 +72,11 @@ Date | Change | Author | Status
 - Removed obsolete generic events (scroll_depth, navigation_click, navigate_menu, engagement, old click_call_button alias)
 - Verified GA4 realtime and DebugView integrity – all events readable and context-specific
 - Build Health ✅ 339.33 kB | Console Errors 0 | Analytics Precision 100 % | Readability 100 %
+
+2025-10-24 | Sitemap regenerated and submitted to GSC | Josh Applied Improvements | Deployed
+- Regenerated sitemap using /scripts/generate-sitemap.mjs (25 URLs total)
+- Added <lastmod> timestamps to all URLs
+- Verified canonical parity and HTTPS consistency
+- robots.txt confirmed with Sitemap directive
+- Valid XML, no duplicates
+- Sitemap now reflects global OG, canonical, and category updates
