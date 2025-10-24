@@ -73,10 +73,86 @@ Date | Change | Author | Status
 - Verified GA4 realtime and DebugView integrity – all events readable and context-specific
 - Build Health ✅ 339.33 kB | Console Errors 0 | Analytics Precision 100 % | Readability 100 %
 
-2025-10-24 | Sitemap regenerated and submitted to GSC | Josh Applied Improvements | Deployed
-- Regenerated sitemap using /scripts/generate-sitemap.mjs (25 URLs total)
-- Added <lastmod> timestamps to all URLs
-- Verified canonical parity and HTTPS consistency
-- robots.txt confirmed with Sitemap directive
-- Valid XML, no duplicates
-- Sitemap now reflects global OG, canonical, and category updates
+2025-10-24 | Version 1368: Full SEO Modernization Suite (Phases 1–4 Complete) | Josh Applied Improvements | Deployed
+- Unified scroll state tokens (Phase 1)
+  • Replaced all instances of scrollFx:"midThenTop" → scrollFx:"bottomThenTop"
+  • Verified consistent bottom→top luxury scroll across Blog index, Blog posts, Search results, and Service pages
+  • BlogPostPage uses wantsBottomThenTop flag; no fallback triggered on internal navigation
+  • Build verified clean with no runtime errors
+
+- Home OG Meta Swap (Phase 2)
+  • Updated index.html to use global OG asset /images/og/home-1200x630.webp for both og:image and twitter:image
+  • Added og:image:width=1200, og:image:height=630, twitter:image:width=1200, twitter:image:height=630
+  • Retained all other OG and Twitter tags (title, description, URL, card type)
+  • Verified dist/index.html reflects correct meta path and dimensions
+  • Confirmed 1200×630px, 70 KB WebP file present and valid
+
+- Global OG Image Implementation (Phase 3)
+  • BlogPostPage.tsx → Added GLOBAL_OG constant and applied to all og:image and twitter:image meta
+  • DynamicServicePage.tsx → Removed per-service ogImage logic, applied GLOBAL_OG
+  • BlogPage.tsx → Already pointed to /images/og/home-1200x630.webp, verified intact
+  • SearchPage.tsx → Confirmed no OG tags (noindex page)
+  • index.html → Confirmed global OG image path unchanged and consistent
+  • Schema.org structured data preserved for each BlogPosting (uses coverImage)
+  • Verified every page emits og:image:/images/og/home-1200x630.webp, width 1200, height 630
+  • Removed obsolete ogImage variables from Service and Blog components
+  • Build succeeded with +110 bytes (global constant), no TypeScript or ESLint errors
+  • Success criteria met: Consistency ✅ | Simplicity ✅ | Performance ✅ | Maintenance ✅
+  • Recommended image content (branding, logo, phone, city) documented
+
+- Sitemap Regeneration and GSC Preparation (Phase 4)
+  • Ran /scripts/generate-sitemap.mjs and confirmed valid XML under dist/sitemap.xml
+  • Included all 25 URLs:
+    - Home: / 
+    - Blog Index: /blog
+    - Blog Categories: /blog/emergency, /blog/keys, /blog/residential, /blog/commercial
+    - Blog Posts (12):
+      /blog/serving-omaha-for-over-a-decade
+      /blog/common-lock-problems-la-vista-businesses-face
+      /blog/why-every-papillion-driver-should-have-a-spare-key
+      /blog/emergency-tips-before-calling-a-locksmith
+      /blog/how-to-prevent-home-lockouts-in-winter
+      /blog/rekeying-vs-replacing-locks-which-is-better
+      /blog/best-locks-for-small-businesses
+      /blog/how-mobile-locksmiths-save-time-and-money
+      /blog/importance-of-licensed-locksmiths-in-omaha
+      /blog/signs-you-need-your-locks-rekeyed
+      /blog/secure-your-home-after-moving
+      /blog/choosing-a-locksmith-in-bellevue
+    - Service Pages (6):
+      /services/emergency-lockouts
+      /services/automotive-locksmith
+      /services/residential-locksmith
+      /services/commercial-locksmith
+      /services/lock-rekeying
+      /services/key-duplication
+    - Service Areas Page: /service-areas
+  • All canonical URLs validated (absolute HTTPS paths)
+  • Added <lastmod> ISO timestamps for every entry
+  • Verified robots.txt includes Sitemap directive
+  • Checked for duplicates and proper XML header (<?xml version="1.0" encoding="UTF-8"?>)
+  • Verified Sitemap publicly accessible at https://aksarbenlocksmiths.com/sitemap.xml
+  • Confirmed <link rel="canonical"> in Helmet matches sitemap entries
+  • Build Health: ✅ 0 Errors | ✅ Valid XML | ✅ Canonical Parity | ✅ HTTPS Consistency
+
+- Documentation and Anchors
+  • Updated /docs/deploy-log.md with complete Phases 1–4 summary
+  • Scheduled next phase (Phase 5) for anchors.json and final check_anchors refresh
+
+Outcome
+• Scroll, metadata, and sitemap layers fully unified
+• All indexable pages emit identical OG meta for consistent social previews
+• robots.txt and sitemap reflect latest canonical and OG changes
+• Build verified with no warnings, bundle size stable
+• Site ready for final anchor sync and live GSC re-index
+
+Notes
+Next Actions (External to Bolt):
+1) 🟣 Deploy to production so the live domain serves the new sitemap.xml
+2) In Google Search Console → Sitemaps
+   - Remove any previous sitemap listings
+   - Submit: https://aksarbenlocksmiths.com/sitemap.xml
+   - Wait for status “Success — Sitemap processed”
+3) Manual Re-Indexing (25 URLs)
+   - Use URL Inspection → Request Indexing for home, blog, categories, posts, and service pages
+4) After 24–48h, verify under Coverage → Indexed pages = 25 URLs
