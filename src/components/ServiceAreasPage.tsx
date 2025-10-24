@@ -19,7 +19,7 @@ export default function ServiceAreasPage() {
     if (state?.restorePosition) return;
     // Fresh entry to Service Areas, scroll to top. Do NOT clear lastScrollY here.
     // Special entry from Blog with effect requested
-    if ((state?.fromBlog || state?.scrollFx === "midThenTop") && !didBlogFx.current) {
+    if ((state?.fromBlog || state?.scrollFx === "bottomThenTop") && !didBlogFx.current) {
       didBlogFx.current = true;
 
       // Force an instant jump to mid before first paint, then restore smooth and scroll to top
