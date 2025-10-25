@@ -22,6 +22,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import { Helmet } from 'react-helmet-async';
 import { trackClick, captureAttributionFromURL, resetScrollTracking } from './utils/analytics';
 import GlobalBackgroundVideo from './components/GlobalBackgroundVideo';
+import GlobalVideoSchema from './components/seo/GlobalVideoSchema';
 
 function PageViewTracker() {
   const loc = useLocation();
@@ -242,6 +243,7 @@ function App() {
                   }
                 `}</script>
               </Helmet>
+              <GlobalVideoSchema />
               <Footer />
             </div>
           }

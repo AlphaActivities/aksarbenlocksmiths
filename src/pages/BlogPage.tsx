@@ -8,6 +8,7 @@ import { isValidCategory } from "../data/blogCategories";
 import { trackClick, buildEventName } from "../utils/analytics";
 import { ArrowLeft, Phone, MapPin } from "lucide-react";
 import type { BlogCategory } from "../data/posts";
+import GlobalVideoSchema from "../components/seo/GlobalVideoSchema";
 
 const BLOG_PLACEHOLDER =
   "data:image/svg+xml;utf8," +
@@ -198,6 +199,7 @@ export default function BlogPage() {
                   }}
                 />
               </Helmet>
+              <GlobalVideoSchema />
 
               <section className="mx-auto max-w-5xl">
                 {/* Back to Home button, matches Dynamic Service styles */}

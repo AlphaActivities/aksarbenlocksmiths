@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Phone } from "lucide-react";
 import { trackClick, trackEvent } from "../utils/analytics";
+import GlobalVideoSchema from "./seo/GlobalVideoSchema";
 
 export default function ServiceAreasPage() {
   const didBlogFx = useRef(false);
@@ -211,6 +212,7 @@ export default function ServiceAreasPage() {
           })}
         </script>
       </Helmet>
+      <GlobalVideoSchema />
 
       <div className="fixed top-0 w-full z-50 bg-black backdrop-blur-md shadow-lg text-sm px-4 py-1 flex justify-between items-center">
         <span className="text-white motion-safe:animate-pulse">24/7 Emergency Service</span>

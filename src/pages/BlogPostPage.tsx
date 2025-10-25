@@ -5,6 +5,7 @@ import { posts as BLOG_POSTS, findPost } from "../data/posts";
 import { BLOG_CATEGORIES } from "../data/blogCategories";
 import { trackClick, buildEventName } from "../utils/analytics";
 import { ArrowLeft, Phone } from "lucide-react";
+import GlobalVideoSchema from "../components/seo/GlobalVideoSchema";
 
 const BLOG_PLACEHOLDER =
   "data:image/svg+xml;utf8," +
@@ -270,6 +271,7 @@ export default function BlogPostPage() {
               <meta name="twitter:image:height" content="630" />
               <script type="application/ld+json">{JSON.stringify(breadcrumbsLd)}</script>
             </Helmet>
+            <GlobalVideoSchema />
 
             <div className="w-full px-6">
               <div className="mx-auto max-w-5xl pt-4 pb-6 md:pt-6 md:pb-8">
