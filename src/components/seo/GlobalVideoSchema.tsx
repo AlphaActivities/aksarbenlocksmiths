@@ -13,7 +13,7 @@ export default function GlobalVideoSchema() {
     "name": "Aksarben Locksmiths — On-Site Locksmith Service",
     "description": "Fast, mobile locksmith service for Omaha and nearby areas. Rekeys, extractions, duplication and more — we come to you.",
     "thumbnailUrl": THUMB_URL,
-    "uploadDate": "2025-04-03",
+    "uploadDate": "2025-04-03T09:00:00-05:00",
     "contentUrl": VIDEO_URL,
     "embedUrl": EMBED_URL,
     "publisher": {
