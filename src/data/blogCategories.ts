@@ -33,7 +33,7 @@ export const BLOG_CATEGORIES: Record<BlogCategorySlug, {
   },
   commercial: {
     slug: 'commercial',
-    title: 'Business & Commercial Locking Systems | Aksarben Locksmiths Blog',
+    title: 'Commercial Locks & Access | Aksarben Blog',
     h1: 'Commercial Doors, Hardware & Access',
     description: 'Master key systems, storefront repairs and door hardware guidance for Omaha shops, offices and facilities.',
     intro:

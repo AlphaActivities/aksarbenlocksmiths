@@ -104,6 +104,9 @@ export default function ServiceAreasPage() {
   };
 
 
+  const ORIGIN = typeof window !== "undefined" ? window.location.origin : "https://aksarbenlocksmiths.com";
+  const OG = `${ORIGIN}/images/og/home-1200x630.webp`;
+
   const title = "Service Areas, Aksarben Locksmiths, Omaha and Nearby Cities";
   const description =
     "Aksarben Locksmiths serves Omaha, the core metro, and surrounding communities with fast, professional mobile locksmith service.";
@@ -117,6 +120,21 @@ export default function ServiceAreasPage() {
         <meta name="description" content={description} />
         <link rel="canonical" href="https://aksarbenlocksmiths.com/service-areas" />
         <meta name="robots" content="index, follow" />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content="https://aksarbenlocksmiths.com/service-areas" />
+        <meta property="og:image" content={OG} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={OG} />
+        <meta name="twitter:image:width" content="1200" />
+        <meta name="twitter:image:height" content="630" />
 
         {/* LocalBusiness + Service JSON-LD */}
         <script type="application/ld+json">

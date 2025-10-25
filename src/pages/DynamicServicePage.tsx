@@ -16,7 +16,7 @@ const SERVICE_META: Record<string, { title: string; metaDescription: string; des
     description: "Locked out of your house or need your home locks rekeyed? Our residential locksmith services keep your family safe and secure.\n\nWe handle fast, damage-free lockouts, rekeying for new homeowners or tenants, and upgrading your hardware to high-security locks.\n\nOne call gets you a mobile locksmith at your door ready to restore access, match multiple locks to one key, or advise on affordable security improvements.\n\nOur team is trusted across Omaha for clear pricing, dependable service, and professional workmanship."
   },
   automotive: {
-    title: "Automotive Lockouts & Car Key Help | Aksarben Locksmiths Omaha",
+    title: "Automotive Lockouts & Car Keys | Aksarben Locksmiths",
     metaDescription: "Quick, non-destructive car entry plus key cutting and transponder/fob programming for most makes and models.",
     serviceType: "Automotive Lockouts",
     description: "Car lockouts and key problems can happen anytime, anywhere. Our automotive locksmiths provide quick, non-destructive vehicle entry so you can get back on the road.\n\nWe cut and program car keys, fobs, and transponders on-site for most makes and models, even if you've lost all keys.\n\nWhether you're locked out, have a broken key in the ignition, or need a spare remote, our mobile team arrives with the tools to solve the problem right away.\n\nDrivers across Omaha count on us for speed, skill, and fair prices."
@@ -28,7 +28,7 @@ const SERVICE_META: Record<string, { title: string; metaDescription: string; des
     description: "Snapped a key inside your lock or ignition? Don't risk damage with DIY tricks. Our locksmiths specialize in careful broken key extraction using professional tools that protect your hardware.\n\nOnce the fragment is removed, we cut and test a replacement key on-site to restore full use of your lock or ignition.\n\nBroken keys are stressful, but we make the process fast and straightforward.\n\nFrom house doors to commercial locks and car ignitions, our extraction service saves time, money, and avoids costly repairs."
   },
   duplication: {
-    title: "Key Duplication, High-Security & Transponder | Aksarben Locksmiths",
+    title: "Key Duplication & High-Security | Aksarben Locksmiths",
     metaDescription: "Precise key duplication for home, office, and vehicle keys, including high-security and modern transponders.",
     serviceType: "Key Duplication",
     description: "Need a spare key that works the first time? Our locksmiths provide accurate key duplication for homes, offices, and vehicles, including high-security keys and modern transponders.\n\nEvery duplicate is cut and tested to ensure smooth operation.\n\nWe also offer restricted key systems for businesses that require extra security and control.\n\nHaving a spare on hand saves stress during lockouts, and our mobile locksmiths can duplicate keys on-site when it's most convenient.\n\nTrust us for reliable key duplication done right."
@@ -40,8 +40,8 @@ const SERVICE_META: Record<string, { title: string; metaDescription: string; des
     description: "Rekeying is the smart way to change access without replacing your entire lock. Whether you've moved into a new property, lost a key, or need to restrict former access, our locksmiths re-pin your cylinders to work with new keys.\n\nWe can also key-alike multiple locks so one key controls your whole home or office.\n\nThis service is quick, affordable, and boosts peace of mind.\n\nOmaha residents and businesses rely on our rekeying to keep their spaces secure while avoiding the cost of new hardware."
   },
   consultation: {
-    title: "Security Consultation for Homes & Businesses | Aksarben Locksmiths",
-    metaDescription: "Professional lock and door hardware assessment with clear, cost-effective upgrade recommendations.",
+    title: "Security Consultation for Homes & Businesses | Aksarben",
+    metaDescription: "Get on-site hardware assessment, master keying guidance, and clear upgrade recommendations tailored to your Omaha home or business.",
     serviceType: "Security Consultation",
     description: "Every property has unique security needs. Our consultation service gives you professional locksmith advice tailored to your home or business.\n\nWe assess your doors, locks, and entry points, then recommend upgrades such as high-security cylinders, master key systems, or keyless entry options.\n\nConsultations ensure you make smart, cost-effective improvements with a clear plan.\n\nFrom residential safety upgrades to commercial access control, our locksmith experts provide honest guidance backed by years of hands-on experience in Omaha."
   }

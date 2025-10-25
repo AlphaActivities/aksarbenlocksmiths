@@ -6,7 +6,7 @@ const post: BlogPost = {
   category: "commercial",
   city: "Omaha",
   date: "2025-08-28T00:00:00Z",
-  excerpt: "For over a decade, Aksarben Locksmiths has served Omaha with mobile service, fair pricing, and friendly help. See how our team supports drivers, homeowners, and local businesses.",
+  excerpt: "For over a decade, Aksarben Locksmiths has helped Omaha with mobile service, fair pricing, and friendly support for drivers, homeowners, and local businesses.",
   updatedAt: "2025-09-25T17:30:00Z",
   coverImage: "/images/blog/house-key-duplication.webp",
   altText: "Experienced Omaha locksmith providing decade of trusted service",

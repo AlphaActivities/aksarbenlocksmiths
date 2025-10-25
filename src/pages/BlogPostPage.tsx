@@ -262,10 +262,16 @@ export default function BlogPostPage() {
               <meta property="og:type" content="article" />
               <meta property="og:site_name" content="Aksarben Locksmiths" />
               <meta property="article:section" content={categoryLabel} />
+              <meta property="og:title" content={title} />
+              <meta property="og:description" content={description} />
+              <meta property="og:url" content={canonicalAbs} />
               <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
               <meta property="og:image" content={GLOBAL_OG} />
               <meta property="og:image:width" content="1200" />
               <meta property="og:image:height" content="630" />
+              <meta name="twitter:card" content="summary_large_image" />
+              <meta name="twitter:title" content={title} />
+              <meta name="twitter:description" content={description} />
               <meta name="twitter:image" content={GLOBAL_OG} />
               <meta name="twitter:image:width" content="1200" />
               <meta name="twitter:image:height" content="630" />
