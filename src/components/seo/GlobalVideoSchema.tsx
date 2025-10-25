@@ -21,7 +21,7 @@ export default function GlobalVideoSchema() {
       "name": "Aksarben Locksmiths LLC",
       "logo": {
         "@type": "ImageObject",
-        "url": `${ORIGIN}/images/logo.png`
+        "url": `${ORIGIN}/images/shield-logo.webp`
       }
     }
   };
