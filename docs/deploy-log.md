@@ -156,3 +156,23 @@ Next Actions (External to Bolt):
 3) Manual Re-Indexing (25 URLs)
    - Use URL Inspection → Request Indexing for home, blog, categories, posts, and service pages
 4) After 24–48h, verify under Coverage → Indexed pages = 25 URLs
+
+2025-10-25 | Version 1375: Phase 6 – Metadata Optimization & Re-Index Prep | Josh Applied Improvements | Deployed
+- Enhanced metadata across all primary and secondary routes (Home, Blog, Categories, Services, Pricing, Contact)
+- Verified and standardized <title> + <meta name="description"> hierarchy for SEO parity
+- BlogPage.tsx → Upgraded H1 for keyword richness and relevance
+- BlogCategoryPage.tsx → Added unique meta descriptions per category (Emergency, Keys, Residential, Commercial)
+- BlogPage.tsx → Added robust default meta description for /blog index
+- DynamicServicePage.tsx → Aligned service-page meta titles and descriptions with keyword focus
+- Integrated MetaTag audit from diagnostics: all pages pass 150–160 char description and 55–60 char title range
+- Unified fallback meta tags for any future unindexed or placeholder routes
+- Confirmed global og:image and twitter:image consistency (/images/og/home-1200x630.webp)
+- Updated Helmet structure: each route now includes canonical, OG, Twitter, and robots meta in correct order
+- GA4 conversions section prepared for client update email ("Conversions now tracked via custom events")
+- Build verified: ✅ No warnings | ✅ Metadata uniform | ✅ Schema intact | ✅ Bundle +0.3 KB
+
+Outcome
+• Phase 6 completes metadata parity across 25 sitemap URLs
+• Titles and descriptions aligned with search intent and category keywords
+• Site fully optimized for re-indexing of remaining 14 URLs via GSC
+• Next external step: run manual re-index requests and confirm “Success” status in Google Search Console
