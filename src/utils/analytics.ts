@@ -158,10 +158,27 @@ function normalizeEventName(name: string, params: Record<string, any>, pathname:
     return `${toSnake(p.form_name)}_input_focus`;
   }
 
-  // Social clicks
+  // --- Level-3 Social Intent Enrichment ---
   if (name === 'footer_social_click' && p.platform) {
-    return `social_click_${toSnake(p.platform)}`;
+    const platformSlug = toSnake(p.platform);
+
+    // Map each platform to its behavioral intent stage
+    const intentMap: Record<string, string> = {
+      'facebook': 'interest',
+      'twitter': 'awareness',
+      'google_maps': 'review_intent',
+      'yelp': 'review_intent',
+    };
+
+    const intentStage = intentMap[platformSlug] || 'engagement';
+
+    // ✅ Safe mutation: persist intent_stage for both primary & secondary events
+    params.intent_stage = intentStage;
+
+    // Return upgraded event name with intent suffix
+    return `social_click_${platformSlug}_${intentStage}`;
   }
+  // --- End Social Intent Enrichment ---
 
   // Service tile clicks
   if (name === 'service_tile_click' && p.service_slug) {
