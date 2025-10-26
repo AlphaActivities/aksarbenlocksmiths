@@ -1,4 +1,21 @@
 // Google Analytics 4 utility functions
+//
+// GA4 Event Naming Standard:
+// Format: {context}_{action}_{object}_{qualifier}
+// Examples:
+//   - homepage_scroll_25
+//   - service_rekeying_scroll_75
+//   - service_tile_click_residential
+//   - cta_call_click_top_bar
+//   - contact_form_submit
+//   - blog_post_page_view_car_key_programming_omaha_guide
+//   - social_click_yelp
+//   - dwell_testimonials
+//
+// Required Params on send:
+//   - page_context, page_section
+//   - Optional: service_slug, blog_slug, category_slug, plan_title, plan_price,
+//     platform, nav_item, domain, contact_method
 
 const GA_ID = import.meta.env.VITE_GA4_MEASUREMENT_ID || 'G-R5H0MX6FR2';
 
@@ -96,6 +113,105 @@ function getBlogCategoryFromPath(pathname: string): string | undefined {
   const pattern = /^\/blog\/([^/?#]+)\/([^/?#]+)/i;
   const m = pathname.match(pattern);
   return m ? toSnake(decodeURIComponent(m[1])) : undefined;
+}
+
+// Returns a standardized page context string from pathname (never "other" or "unknown" for indexable pages)
+function getPageContext(pathname: string): string {
+  if (pathname === '/') return 'homepage';
+  if (pathname === '/pricing') return 'pricing';
+  if (pathname === '/contact') return 'contact';
+  if (pathname === '/service-areas') return 'service_areas';
+  if (pathname === '/blog') return 'blog_index';
+
+  const serviceSlug = getServiceSlugFromPath(pathname);
+  if (serviceSlug) return `service_${serviceSlug}`;
+
+  const blogSlug = getBlogSlugFromPath(pathname);
+  if (blogSlug) return `blog_post_${blogSlug}`;
+
+  const categorySlug = getBlogCategoryFromPath(pathname);
+  if (categorySlug) return `blog_category_${categorySlug}`;
+
+  return 'other';
+}
+
+// Returns page_section from element or falls back to page context (never "unknown" for indexable pages)
+function getPageSectionSafe(element?: HTMLElement): string {
+  if (!element) return getPageContext(window.location.pathname);
+
+  const section = element.closest('section')?.id || element.closest('[id]')?.id;
+  if (section) return section;
+
+  return getPageContext(window.location.pathname);
+}
+
+// Normalizes event names using params and page context to avoid generic names in reports
+function normalizeEventName(name: string, params: Record<string, any>, pathname: string): string {
+  const ctx = getPageContext(pathname);
+  const p = params || {};
+
+  // Form events
+  if (name === 'form_submit' && p.form_name) {
+    return `${toSnake(p.form_name)}_submit`;
+  }
+  if (name === 'form_input_focus' && p.form_name) {
+    return `${toSnake(p.form_name)}_input_focus`;
+  }
+
+  // Social clicks
+  if (name === 'footer_social_click' && p.platform) {
+    return `social_click_${toSnake(p.platform)}`;
+  }
+
+  // Service tile clicks
+  if (name === 'service_tile_click' && p.service_slug) {
+    return `service_tile_click_${toSnake(p.service_slug)}`;
+  }
+
+  // Page views with slugs
+  if (name === 'service_page_view' && p.service_slug) {
+    return `service_page_view_${toSnake(p.service_slug)}`;
+  }
+  if (name === 'blog_post_page_view' && p.blog_slug) {
+    return `blog_post_page_view_${toSnake(p.blog_slug)}`;
+  }
+  if (name === 'blog_category_page_view' && p.category_slug) {
+    return `blog_category_page_view_${toSnake(p.category_slug)}`;
+  }
+
+  // Scroll events - replace "other" prefix with actual context
+  if (name.includes('_scroll_')) {
+    const scrollMatch = name.match(/(\d+)$/);
+    if (scrollMatch) {
+      const percent = scrollMatch[1];
+      return `${ctx}_scroll_${percent}`;
+    }
+  }
+
+  // Dwell events
+  if (name === 'section_dwell_time' && p.section_name) {
+    return `dwell_${toSnake(p.section_name)}`;
+  }
+  if (name === 'section_dwell_time') {
+    return `dwell_${ctx}`;
+  }
+
+  // CTA standardization
+  if (name === 'top_bar_phone_click') {
+    return 'cta_call_click_top_bar';
+  }
+
+  // Nav clicks with nav_item
+  if ((name === 'header_nav_click' || name === 'mobile_nav_click') && p.nav_item) {
+    return `nav_click_${toSnake(p.nav_item)}`;
+  }
+
+  // Keep outbound_click with domain as is
+  if (name.startsWith('outbound_click_')) {
+    return name;
+  }
+
+  return name;
 }
 
 // Build an attribution object from the current URL and referrer
@@ -219,6 +335,12 @@ export const configureGA4 = () => {
     user_type: 'general_visitor',
     visit_intent: 'locksmith_service',
     platform: navigator.platform || 'unknown',
+    viewport_width: window.innerWidth.toString(),
+    viewport_height: window.innerHeight.toString(),
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    language: navigator.language,
+    is_mobile: window.matchMedia('(max-width: 767px)').matches ? 'true' : 'false',
+    has_touch: ('ontouchstart' in window) ? 'true' : 'false',
   };
 
   if (import.meta.env.DEV) {
@@ -345,7 +467,23 @@ export const initOutboundLinkTracking = () => {
 
 export const trackEvent = (eventName: string, parameters?: Record<string, any>) => {
   if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', eventName, parameters);
+    const params = parameters || {};
+    const pathname = window.location.pathname;
+
+    const pageContext = getPageContext(pathname);
+    const pageSection = params.page_section || getPageSectionSafe(undefined);
+
+    const enrichedParams = {
+      page_context: pageContext,
+      page_section: pageSection,
+      ...params,
+    };
+
+    const normalizedName = normalizeEventName(eventName, enrichedParams, pathname);
+
+    dbg('trackEvent', { original: eventName, normalized: normalizedName, params: enrichedParams });
+
+    window.gtag('event', normalizedName, enrichedParams);
   }
 };
 
@@ -359,21 +497,32 @@ export const trackClick = (
 
     if (typeof window === 'undefined' || typeof window.gtag !== 'function') return;
 
+    const pathname = window.location.pathname;
+    const pageContext = getPageContext(pathname);
+
     const elementData = element ? {
       element_text: element.innerText || element.textContent || '',
       target_url: element.getAttribute('href') || undefined,
-      page_section: element.closest('section')?.id || element.closest('[id]')?.id || 'unknown'
+      page_section: getPageSectionSafe(element)
     } : {};
 
     const attribution = getAttributionParams();
 
-    window.gtag('event', eventName, {
+    const allParams = {
       event_category: 'click',
-      page_type: getPageType(window.location.pathname),
+      page_type: getPageType(pathname),
+      page_context: pageContext,
+      page_section: elementData.page_section || additionalParams.page_section || pageContext,
       ...elementData,
       ...attribution,
       ...additionalParams,
-    });
+    };
+
+    const normalizedName = normalizeEventName(eventName, allParams, pathname);
+
+    dbg('trackClick', { original: eventName, normalized: normalizedName, params: allParams });
+
+    window.gtag('event', normalizedName, allParams);
 
     const emailEvents = ['footer_email_click', 'contact_email_click'];
     const pricingEvents = ['pricing_cta_click'];
@@ -388,87 +537,78 @@ export const trackClick = (
     if (emailEvents.includes(eventName)) {
       window.gtag('event', 'click_email_button', {
         event_category: 'click',
-        service_type: additionalParams.service_type || additionalParams.service_name || 'unknown',
-        phone_number: additionalParams.phone_number || undefined,
-        page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-        ...elementData,
-        ...additionalParams,
+        service_type: allParams.service_type || allParams.service_name || 'unknown',
+        phone_number: allParams.phone_number || undefined,
+        page_section: allParams.page_section,
+        ...allParams,
       });
     }
 
     if (pricingEvents.includes(eventName)) {
       window.gtag('event', 'click_pricing_button', {
         event_category: 'click',
-        service_type: additionalParams.service_type || additionalParams.service_name || 'unknown',
-        phone_number: additionalParams.phone_number || undefined,
-        page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-        ...elementData,
-        ...additionalParams,
+        service_type: allParams.service_type || allParams.service_name || 'unknown',
+        phone_number: allParams.phone_number || undefined,
+        page_section: allParams.page_section,
+        ...allParams,
       });
     }
 
     if (serviceViewEvents.includes(eventName)) {
       window.gtag('event', 'view_service', {
         event_category: 'engagement',
-        service_type: additionalParams.service_type || additionalParams.service_name || 'unknown',
-        page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-        ...elementData,
-        ...additionalParams,
+        service_type: allParams.service_type || allParams.service_name || 'unknown',
+        page_section: allParams.page_section,
+        ...allParams,
       });
     }
 
     if (testimonialEvents.includes(eventName)) {
       window.gtag('event', 'engage_testimonial', {
         event_category: 'engagement',
-        page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-        ...elementData,
-        ...additionalParams,
+        page_section: allParams.page_section,
+        ...allParams,
       });
     }
 
     if (videoEngagementEvents.includes(eventName)) {
       window.gtag('event', 'engage_video', {
         event_category: 'engagement',
-        service_type: additionalParams.service_type || additionalParams.service_name || 'unknown',
-        page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-        ...elementData,
-        ...additionalParams,
+        service_type: allParams.service_type || allParams.service_name || 'unknown',
+        page_section: allParams.page_section,
+        ...allParams,
       });
     }
 
     if (scrollEvents.includes(eventName)) {
       window.gtag('event', 'scroll_milestone', {
         event_category: 'engagement',
-        page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-        ...elementData,
-        ...additionalParams,
+        page_section: allParams.page_section,
+        ...allParams,
       });
     }
 
     if (dwellEvents.includes(eventName)) {
       window.gtag('event', 'dwell_section', {
         event_category: 'engagement',
-        page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-        ...elementData,
-        ...additionalParams,
+        page_section: allParams.page_section,
+        ...allParams,
       });
     }
 
     if (socialEvents.includes(eventName)) {
       window.gtag('event', 'click_social', {
         event_category: 'click',
-        page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-        ...elementData,
-        ...additionalParams,
+        page_section: allParams.page_section,
+        ...allParams,
       });
     }
 
     if (logoEvents.includes(eventName)) {
       window.gtag('event', 'click_logo', {
         event_category: 'click',
-        page_section: additionalParams.page_section || elementData.page_section || 'unknown',
-        ...elementData,
-        ...additionalParams,
+        page_section: allParams.page_section,
+        ...allParams,
       });
     }
   } catch (err) {
