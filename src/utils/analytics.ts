@@ -145,6 +145,32 @@ function getPageSectionSafe(element?: HTMLElement): string {
   return getPageContext(window.location.pathname);
 }
 
+// Maps key event patterns to behavioral intent stages
+function inferIntentStage(eventName: string, params: Record<string, any> = {}): string {
+  const name = eventName.toLowerCase();
+
+  // Awareness: early page exposure & shallow scroll
+  if (name.includes('page_view') || name.includes('scroll_25')) return 'awareness';
+
+  // Interest: service exploration, pricing reads, testimonial interactions
+  if (name.includes('service_tile_click') || name.includes('pricing_scroll_50') || name.includes('testimonial'))
+    return 'interest';
+
+  // Intent: deep engagement or form focus
+  if (name.includes('scroll_75') || name.includes('form_open') || name.includes('faq_expand'))
+    return 'intent';
+
+  // Conversion: completed contact actions
+  if (name.includes('form_submit') || name.includes('call_button_click') || name.includes('email_click'))
+    return 'conversion';
+
+  // Loyalty: review & repeat behaviors
+  if (name.includes('review') || name.includes('returning') || name.includes('google_maps') || name.includes('yelp'))
+    return 'loyalty';
+
+  return 'engagement';
+}
+
 // Normalizes event names using params and page context to avoid generic names in reports
 function normalizeEventName(name: string, params: Record<string, any>, pathname: string): string {
   const ctx = getPageContext(pathname);
@@ -180,10 +206,30 @@ function normalizeEventName(name: string, params: Record<string, any>, pathname:
   }
   // --- End Social Intent Enrichment ---
 
-  // Service tile clicks
-  if (name === 'service_tile_click' && p.service_slug) {
-    return `service_tile_click_${toSnake(p.service_slug)}`;
+  // --- Level-3 Global Intent Enrichment ---
+  const inferredIntent = inferIntentStage(name, params);
+  if (!params.intent_stage && inferredIntent) {
+    params.intent_stage = inferredIntent;
   }
+
+  // Upgrade naming for high-value interactions
+  if (name === 'service_tile_click' && p.service_slug) {
+    return `service_tile_click_${p.service_slug}_${params.intent_stage}`;
+  }
+
+  if (name.startsWith('form_submit')) {
+    const formName = p.form_name || 'contact_form';
+    return `${formName}_submit_${params.intent_stage}`;
+  }
+
+  if (name.includes('call_button_click')) {
+    return `${name}_${params.intent_stage}`;
+  }
+
+  if (name.includes('scroll_25') || name.includes('scroll_50') || name.includes('scroll_75')) {
+    return `${getPageContext(pathname)}_${name}_${params.intent_stage}`;
+  }
+  // --- End Global Intent Enrichment ---
 
   // Page views with slugs
   if (name === 'service_page_view' && p.service_slug) {
