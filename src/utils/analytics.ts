@@ -482,9 +482,16 @@ export const trackPageView = (extra: Record<string, any> = {}) => {
     slug: serviceSlug || blogSlug || categorySlug,
   });
 
-  window.gtag('event', finalName, enhanced);
+  const pathname = window.location.pathname;
+  enhanced.page_context = getPageContext(pathname);
+  if (!enhanced.page_section) enhanced.page_section = enhanced.page_context;
 
-  dbg('events_fired', { events: [finalName], params: enhanced });
+  const intentStage = inferIntentStage(finalName, enhanced);
+  const finalWithIntent = `${finalName}_${intentStage}`;
+
+  window.gtag('event', finalWithIntent, enhanced);
+
+  dbg('events_fired', { events: [finalWithIntent], params: enhanced });
 };
 
 // ---- Outbound link tracking (one-time document listener) ----
