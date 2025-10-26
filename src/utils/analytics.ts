@@ -260,6 +260,34 @@ function normalizeEventName(name: string, params: Record<string, any>, pathname:
     return `dwell_${ctx}`;
   }
 
+  // Normalizes search results view into intent-aware events with helpful params
+  if (name === 'search_results_view') {
+    const q = (params.q || params.query || '').toString();
+    const resultsCount = Number(params.results_count ?? params.count ?? 0);
+
+    params.query_length = q.length;
+    params.has_results = Number.isFinite(resultsCount) ? resultsCount > 0 : undefined;
+    params.search_source = params.search_source || (params.page_context?.includes('search') ? 'page' : 'unknown');
+
+    if (!params.intent_stage) {
+      params.intent_stage = resultsCount > 0 ? 'interest' : 'awareness';
+    }
+
+    return `search_results_view_${params.intent_stage}`;
+  }
+
+  // Collapses redundant floating CTA name and enforces conversion suffix
+  if (name === 'floating_call_button_call_button_click') {
+    params.intent_stage = 'conversion';
+    return 'floating_call_button_click_conversion';
+  }
+
+  if (name.includes('_call_button_call_button_')) {
+    const fixed = name.replace('_call_button_call_button_', '_call_button_');
+    params.intent_stage = params.intent_stage || 'conversion';
+    return fixed.endsWith(`_${params.intent_stage}`) ? fixed : `${fixed}_${params.intent_stage}`;
+  }
+
   // CTA standardization
   if (name === 'top_bar_phone_click') {
     return 'cta_call_click_top_bar';
@@ -525,11 +553,13 @@ export const initOutboundLinkTracking = () => {
       const attr = (typeof getAttributionParams === 'function' ? getAttributionParams() : {}) || {};
       const domain = toSnake(url.hostname.replace(/^www\./, ''));
       const eventName = buildEventName({ base: 'outbound_click', slug: domain });
+      // Improves outbound reliability using GA beacon transport
       window.gtag('event', eventName, {
         event_category: 'navigation',
         target_url: url.href,
         target_domain: url.hostname,
         link_text: el.textContent || '',
+        transport_type: 'beacon',
         ...attr,
       });
     }
