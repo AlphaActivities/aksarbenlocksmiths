@@ -192,6 +192,7 @@ function normalizeEventName(name: string, params: Record<string, any>, pathname:
     const intentMap: Record<string, string> = {
       'facebook': 'interest',
       'twitter': 'awareness',
+      'instagram': 'interest',
       'google_maps': 'review_intent',
       'yelp': 'review_intent',
     };

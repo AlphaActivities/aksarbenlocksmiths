@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Facebook, MapPin, Phone, Mail, Twitter } from 'lucide-react';
+import { Facebook, MapPin, Phone, Mail, Twitter, Instagram } from 'lucide-react';
 import { trackClick, trackEvent, buildEventName } from '../utils/analytics';
 import { openWithAppFallback } from '../utils/openWithAppFallback';
 
@@ -140,6 +140,47 @@ const Footer: React.FC = () => {
                 }}
               >
                 <Twitter className="w-5 h-5 text-white" />
+              </a>
+
+              {/* Instagram with app deep link + fallback */}
+              <a
+                href="https://www.instagram.com/aksarbenlocksmiths/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram page"
+                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500 transition focus:outline-none focus:ring-2 focus:ring-red-500/60"
+                onClick={(e) => {
+                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
+                    return;
+                  }
+
+                  trackClick('footer_social_click', e.currentTarget, {
+                    platform: 'Instagram',
+                    url: 'https://www.instagram.com/aksarbenlocksmiths/',
+                    page_section: 'footer',
+                    intent: 'app_fallback',
+                  });
+
+                  e.preventDefault();
+
+                  const ua = navigator.userAgent || '';
+                  const isMobile = /(android|iphone|ipad|mobile)/i.test(ua);
+
+                  const appUrl = 'instagram://user?username=aksarbenlocksmiths';
+                  const webUrl = 'https://www.instagram.com/aksarbenlocksmiths/';
+
+                  if (isMobile) {
+                    openWithAppFallback({
+                      appUrl,
+                      webUrl,
+                      timeoutMs: 600,
+                    });
+                  } else {
+                    window.open(webUrl, '_blank');
+                  }
+                }}
+              >
+                <Instagram className="w-5 h-5 text-white" />
               </a>
 
               {/* Google Maps with app deep link + smart link fallback */}
