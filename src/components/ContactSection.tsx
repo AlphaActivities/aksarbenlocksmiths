@@ -16,6 +16,9 @@ const ContactSection: React.FC = () => {
     message: ''
   });
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -42,25 +45,74 @@ const ContactSection: React.FC = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    // Track form submission
-    trackFormEvent('form_submit', 'contact_form', {
-      service_type: formData.service,
-      has_phone: !!formData.phone,
-      has_email: !!formData.email,
-      message_length: formData.message.length
+    setErrorMsg(null);
+    setSuccessMsg(null);
+
+    const shouldSend = import.meta.env.VITE_ENABLE_FORM_SEND === 'true';
+    const formEl = e.currentTarget;
+    const formData = new FormData(formEl);
+    if (!formData.get('form-name')) formData.set('form-name', 'contact');
+
+    const serviceType = String(formData.get('service') || '').trim();
+
+    const successPayload = {
+      service_type: serviceType || 'unspecified',
+      submission_method: 'netlify_forms',
+    };
+    const errorPayload = (err: any) => ({
+      error_message: String(err?.message || 'unknown'),
+      service_type: serviceType || 'unspecified',
+      submission_method: 'netlify_forms',
     });
-    
-    alert('Form submitted! In a real application, this would send your request to our team.');
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      service: 'Residential',
-      message: ''
-    });
+
+    const trackSuccess =
+      typeof (window as any).trackEvent === 'function'
+        ? (p: any) => (window as any).trackEvent('contact_form_submit_success', p)
+        : () => {};
+
+    const trackError =
+      typeof (window as any).trackEvent === 'function'
+        ? (p: any) => (window as any).trackEvent('contact_form_submit_error', p)
+        : () => {};
+
+    if (!shouldSend) {
+      setSuccessMsg("✓ Message sent. We'll be in touch shortly.");
+      trackSuccess(successPayload);
+      formEl.reset();
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        service: 'Residential',
+        message: ''
+      });
+      setTimeout(() => setSuccessMsg(null), 5000);
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      await fetch('/', { method: 'POST', body: formData });
+      setSuccessMsg("✓ Message sent. We'll be in touch shortly.");
+      trackSuccess(successPayload);
+      formEl.reset();
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        service: 'Residential',
+        message: ''
+      });
+      setTimeout(() => setSuccessMsg(null), 5000);
+    } catch (err: any) {
+      setErrorMsg("There was an error sending your message. Please try again.");
+      trackError(errorPayload(err));
+      setTimeout(() => setErrorMsg(null), 8000);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleInputFocus = (fieldName: string) => {
@@ -209,8 +261,17 @@ const ContactSection: React.FC = () => {
           
           <div className="bg-gradient-to-br from-[#0f1f4c] via-[#1e3267] to-[#0a112e] bg-opacity-40 backdrop-blur-lg rounded-3xl p-8 border border-white/10 shadow-2xl ring-1 ring-white/20 transition-all duration-500 hover:scale-[1.02] hover:shadow-3xl">
             <h3 className="text-2xl font-bold mb-6">Send Us a Message</h3>
-            
-            <form onSubmit={handleSubmit} className="space-y-6">
+
+            <form
+              name="contact"
+              method="POST"
+              data-netlify="true"
+              data-netlify-honeypot="bot-field"
+              onSubmit={handleSubmit}
+              className="relative space-y-6"
+            >
+              <input type="hidden" name="form-name" value="contact" />
+              <input type="hidden" name="bot-field" />
               <div>
                 <label htmlFor="name" className="block text-white/80 mb-2">Name</label>
                 <input
@@ -263,6 +324,7 @@ const ContactSection: React.FC = () => {
               
               <div>
                 <label htmlFor="service" className="block text-white/80 mb-2">Service Needed</label>
+                <input type="hidden" name="service" value={formData.service} />
                 <div className="relative w-full">
                   <button
                     type="button"
@@ -314,10 +376,30 @@ const ContactSection: React.FC = () => {
               
               <button
                 type="submit"
-                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full transition-colors font-medium w-full"
+                disabled={submitting}
+                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full transition-colors font-medium w-full disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Send Message
+                {submitting ? 'Sending...' : 'Send Message'}
               </button>
+
+              <div
+                className={`pointer-events-none absolute left-0 right-0 bottom-4 px-4 transition-opacity duration-300 ${
+                  successMsg || errorMsg ? 'opacity-100' : 'opacity-0'
+                }`}
+                aria-live="polite"
+                data-status
+              >
+                {successMsg && (
+                  <div className="bg-green-600/20 border border-green-500/40 text-white rounded-lg px-4 py-2 w-fit mx-auto">
+                    {successMsg}
+                  </div>
+                )}
+                {errorMsg && (
+                  <div className="bg-red-600/20 border border-red-500/40 text-white rounded-lg px-4 py-2 w-fit mx-auto">
+                    {errorMsg}
+                  </div>
+                )}
+              </div>
             </form>
           </div>
         </div>
