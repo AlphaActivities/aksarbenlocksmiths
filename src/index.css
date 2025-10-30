@@ -770,8 +770,3 @@ html, body, #root {
   background: linear-gradient(90deg, rgba(168,85,247,.25), rgba(236,72,153,.25));
   border: 1px solid rgba(192,132,252,.35);
 }
-
-@keyframes progress-6s {
-  from { width: 0%; }
-  to   { width: 100%; }
-}

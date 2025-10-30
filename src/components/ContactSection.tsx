@@ -16,9 +16,6 @@ const ContactSection: React.FC = () => {
     message: ''
   });
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [isSending, setIsSending] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [ariaStatus, setAriaStatus] = useState<string>('');
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -47,59 +44,23 @@ const ContactSection: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
+    
+    // Track form submission
     trackFormEvent('form_submit', 'contact_form', {
       service_type: formData.service,
       has_phone: !!formData.phone,
       has_email: !!formData.email,
       message_length: formData.message.length
     });
-
-    const fake = import.meta.env.VITE_FAKE_SUCCESS_FLOW === 'true';
-
-    setIsSending(true);
-    setIsSuccess(false);
-    setAriaStatus('Sending');
-
-    if (fake) {
-      setTimeout(() => {
-        setIsSending(false);
-        setIsSuccess(true);
-        setAriaStatus('Message sent');
-
-        setTimeout(() => {
-          setIsSuccess(false);
-          setAriaStatus('');
-          setFormData({
-            name: '',
-            email: '',
-            phone: '',
-            service: 'Residential',
-            message: ''
-          });
-        }, 6000);
-      }, 300);
-
-      return;
-    }
-
-    setTimeout(() => {
-      setIsSending(false);
-      setIsSuccess(true);
-      setAriaStatus('Message sent');
-
-      setTimeout(() => {
-        setIsSuccess(false);
-        setAriaStatus('');
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          service: 'Residential',
-          message: ''
-        });
-      }, 6000);
-    }, 300);
+    
+    alert('Form submitted! In a real application, this would send your request to our team.');
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      service: 'Residential',
+      message: ''
+    });
   };
 
   const handleInputFocus = (fieldName: string) => {
@@ -353,38 +314,9 @@ const ContactSection: React.FC = () => {
               
               <button
                 type="submit"
-                aria-busy={isSending ? 'true' : undefined}
-                className={[
-                  'relative w-full overflow-hidden rounded-full px-6 py-3 font-medium transition-colors',
-                  isSuccess
-                    ? 'bg-emerald-600 hover:bg-emerald-600 text-white'
-                    : 'bg-red-600 hover:bg-red-700 text-white',
-                  isSending ? 'cursor-not-allowed opacity-90' : ''
-                ].join(' ')}
-                disabled={isSending}
+                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full transition-colors font-medium w-full"
               >
-                <span aria-live="polite" className="sr-only">{ariaStatus}</span>
-
-                <span
-                  className={[
-                    'absolute left-0 top-0 h-full bg-emerald-400/35',
-                    isSuccess ? 'motion-reduce:w-full animate-[progress-6s_6s_linear_forwards]' : 'w-0'
-                  ].join(' ')}
-                />
-
-                <span className="relative z-10 inline-flex items-center justify-center gap-2">
-                  {isSending && (
-                    <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-white" />
-                  )}
-                  {isSuccess && (
-                    <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-7.25 7.25a1 1 0 01-1.414 0l-3-3a1 1 0 111.414-1.414l2.293 2.293 6.543-6.543a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  )}
-                  <span>
-                    {isSending ? 'Sending…' : isSuccess ? 'Sent!' : 'Send Message'}
-                  </span>
-                </span>
+                Send Message
               </button>
             </form>
           </div>
