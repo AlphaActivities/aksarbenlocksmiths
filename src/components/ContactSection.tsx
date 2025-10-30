@@ -64,7 +64,7 @@ const ContactSection: React.FC = () => {
     const startSuccessPhase = () => {
       setIsSending(false);
       setIsSuccess(true);
-      setAriaStatus('Message sent');
+      setAriaStatus("Message Sent. We'll be in touch shortly.");
 
       setTimeout(() => {
         setIsSuccess(false);
@@ -77,7 +77,7 @@ const ContactSection: React.FC = () => {
           service: 'Residential',
           message: ''
         });
-      }, 6000);
+      }, 4000);
     };
 
     setTimeout(() => {
@@ -357,13 +357,6 @@ const ContactSection: React.FC = () => {
                   ].join(' ')}
                 />
 
-                <span
-                  className={[
-                    'absolute left-0 top-0 h-full bg-emerald-400/35',
-                    (isSuccess && !isSending) ? 'animate-[success-progress-6s_6s_linear_forwards]' : 'w-0'
-                  ].join(' ')}
-                />
-
                 <span className="relative z-10 inline-flex items-center justify-center gap-2 w-full">
                   {isSending && (
                     <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-white" />
@@ -375,7 +368,7 @@ const ContactSection: React.FC = () => {
                   )}
                   <span>
                     {isSending ? 'Sending…'
-                      : (isSuccess ? 'Sent!' : 'Send Message')}
+                      : (isSuccess ? "Message Sent. We'll be in touch shortly." : 'Send Message')}
                   </span>
                 </span>
               </button>
