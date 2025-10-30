@@ -354,16 +354,16 @@ const Footer: React.FC = () => {
               </li>
               <li className="flex items-center space-x-5">
                 <Mail className="w-6 h-6 text-red-500" />
-                <a 
-                  href="mailto:Aksarbenlocks@gmail.com" 
-                  onClick={(e) => trackClick('footer_email_click', e.currentTarget, { 
-                    email: 'info@aksarbenlocksmiths.com',
+                <a
+                  href="mailto:AksarbenLocksmiths@gmail.com"
+                  onClick={(e) => trackClick('footer_email_click', e.currentTarget, {
+                    email: 'AksarbenLocksmiths@gmail.com',
                     source: 'footer',
                     page_section: 'footer'
                   })}
                   className="text-lg font-medium hover:text-red-500 transition-colors"
                 >
-                  info@aksarbenlocksmiths.com
+                  AksarbenLocksmiths@gmail.com
                 </a>
               </li>
               <li className="flex items-start space-x-5">
