@@ -381,14 +381,26 @@ const ContactSection: React.FC = () => {
                 aria-atomic="true"
               >
                 {successMsg && (
-                  <span className="text-green-400 text-sm opacity-100 transition-opacity duration-300">
-                    ✓ {successMsg}
-                  </span>
+                  <div
+                    className="inline-flex items-center gap-2 rounded-md bg-green-600/20 border border-green-500/40 px-3 py-1 text-green-300 text-sm leading-none shadow-[0_0_0_1px_rgba(34,197,94,0.15)] opacity-100 transition-opacity duration-300"
+                    role="status"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-7.25 7.25a1 1 0 01-1.414 0l-3-3a1 1 0 111.414-1.414l2.293 2.293 6.543-6.543a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    <span>Message sent. We'll be in touch shortly.</span>
+                  </div>
                 )}
                 {errorMsg && (
-                  <span className="text-red-400 text-sm opacity-100 transition-opacity duration-300">
-                    {errorMsg}
-                  </span>
+                  <div
+                    className="inline-flex items-center gap-2 rounded-md bg-red-600/20 border border-red-500/40 px-3 py-1 text-red-300 text-sm leading-none shadow-[0_0_0_1px_rgba(239,68,68,0.15)] opacity-100 transition-opacity duration-300"
+                    role="alert"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.72-1.36 3.485 0l6.518 11.59c.75 1.335-.214 2.99-1.742 2.99H3.48c-1.528 0-2.492-1.655-1.742-2.99L8.257 3.1zM11 14a1 1 0 10-2 0 1 1 0 002 0zm-1-2a1 1 0 01-1-1V7a1 1 0 112 0v4a1 1 0 01-1 1z" clipRule="evenodd" />
+                    </svg>
+                    <span>There was an error sending your message. Please try again.</span>
+                  </div>
                 )}
               </div>
             </form>
