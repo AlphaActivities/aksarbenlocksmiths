@@ -398,7 +398,7 @@ const ContactSection: React.FC = () => {
                 <div
                   ref={actionsRowRef}
                   className={[
-                    'relative w-full flex items-center gap-3',
+                    'relative w-full flex items-stretch gap-3',
                     (actionsStage === 'pre' || actionsStage === 'split') ? 'pointer-events-none' : 'pointer-events-auto'
                   ].join(' ')}
                 >
@@ -406,10 +406,12 @@ const ContactSection: React.FC = () => {
                     ref={sendBtnRef}
                     type="submit"
                     className={[
-                      'overflow-hidden rounded-full px-6 py-3 font-medium text-white transition-[width,background-color] ease-out',
+                      'overflow-hidden rounded-full px-6 py-0 font-medium text-white transition-[width,background-color] ease-out',
                       'bg-red-600 hover:bg-red-700',
                       'whitespace-nowrap',
                       'text-sm md:text-base',
+                      'h-12 leading-none box-border',
+                      'flex items-center justify-center gap-2',
                       actionsStage === 'pre'
                         ? 'w-full'
                         : (actionsStage === 'split' || actionsStage === 'done')
@@ -422,21 +424,20 @@ const ContactSection: React.FC = () => {
                     disabled={actionsStage === 'pre' || actionsStage === 'split'}
                     aria-label="Send another Message"
                   >
-                    <span className="inline-flex items-center justify-center gap-2 w-full">
-                      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-                      </svg>
-                      <span>Send another Message</span>
-                    </span>
+                    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                    </svg>
+                    <span>Send another Message</span>
                   </button>
 
                   <a
                     href="tel:+14025566715"
                     className={[
-                      'overflow-hidden rounded-full px-6 py-3 font-medium text-white bg-red-600 hover:bg-red-700',
+                      'overflow-hidden rounded-full px-6 py-0 font-medium text-white bg-red-600 hover:bg-red-700',
                       'flex items-center justify-center gap-2',
                       'whitespace-nowrap',
                       'text-sm md:text-base',
+                      'h-12 leading-none box-border',
                       (actionsStage === 'pre')
                         ? 'opacity-0 translate-x-[100px]'
                         : (actionsStage === 'split' || actionsStage === 'done')
