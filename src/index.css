@@ -716,6 +716,17 @@ html, body, #root {
   .aurora-sheen { animation: none; }
 }
 
+@keyframes send-progress-4s {
+  0%   { width: 0%; }
+  50%  { width: 35%; }
+  100% { width: 100%; }
+}
+
+@keyframes success-progress-6s {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
 .results-aurora-static {
   background-position: 50% 50% !important;
   background-repeat: no-repeat !important;

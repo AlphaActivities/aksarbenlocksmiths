@@ -7,6 +7,9 @@ import { trackFormEvent, trackClick, trackEvent, buildEventName } from '../utils
 const ContactSection: React.FC = () => {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const [hasAnimated, setHasAnimated] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [ariaStatus, setAriaStatus] = useState<string>('');
 
   const [formData, setFormData] = useState({
     name: '',
@@ -44,23 +47,42 @@ const ContactSection: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Track form submission
+
     trackFormEvent('form_submit', 'contact_form', {
       service_type: formData.service,
       has_phone: !!formData.phone,
       has_email: !!formData.email,
       message_length: formData.message.length
     });
-    
-    alert('Form submitted! In a real application, this would send your request to our team.');
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      service: 'Residential',
-      message: ''
-    });
+
+    const fake = import.meta.env.VITE_FAKE_SUCCESS_FLOW === 'true';
+
+    setIsSending(true);
+    setIsSuccess(false);
+    setAriaStatus('Sending message');
+
+    const startSuccessPhase = () => {
+      setIsSending(false);
+      setIsSuccess(true);
+      setAriaStatus('Message sent');
+
+      setTimeout(() => {
+        setIsSuccess(false);
+        setAriaStatus('');
+
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          service: 'Residential',
+          message: ''
+        });
+      }, 6000);
+    };
+
+    setTimeout(() => {
+      startSuccessPhase();
+    }, 4000);
   };
 
   const handleInputFocus = (fieldName: string) => {
@@ -314,9 +336,48 @@ const ContactSection: React.FC = () => {
               
               <button
                 type="submit"
-                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full transition-colors font-medium w-full"
+                aria-busy={isSending ? 'true' : undefined}
+                className={[
+                  'relative w-full overflow-hidden rounded-full px-6 py-3 font-medium transition-colors',
+                  isSuccess
+                    ? 'bg-emerald-600 hover:bg-emerald-600 text-white'
+                    : (isSending
+                        ? 'bg-neutral-600 hover:bg-neutral-600 text-white'
+                        : 'bg-red-600 hover:bg-red-700 text-white'),
+                  (isSending ? 'cursor-wait' : '')
+                ].join(' ')}
+                disabled={isSending}
               >
-                Send Message
+                <span aria-live="polite" className="sr-only">{ariaStatus}</span>
+
+                <span
+                  className={[
+                    'absolute left-0 top-0 h-full bg-neutral-300/35',
+                    isSending ? 'animate-[send-progress-4s_4s_linear_forwards]' : 'w-0'
+                  ].join(' ')}
+                />
+
+                <span
+                  className={[
+                    'absolute left-0 top-0 h-full bg-emerald-400/35',
+                    (isSuccess && !isSending) ? 'animate-[success-progress-6s_6s_linear_forwards]' : 'w-0'
+                  ].join(' ')}
+                />
+
+                <span className="relative z-10 inline-flex items-center justify-center gap-2 w-full">
+                  {isSending && (
+                    <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-white" />
+                  )}
+                  {isSuccess && !isSending && (
+                    <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-7.25 7.25a1 1 0 01-1.414 0l-3-3a1 1 0 111.414-1.414l2.293 2.293 6.543-6.543a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                  <span>
+                    {isSending ? 'Sending…'
+                      : (isSuccess ? 'Sent!' : 'Send Message')}
+                  </span>
+                </span>
               </button>
             </form>
           </div>
