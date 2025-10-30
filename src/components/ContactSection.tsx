@@ -415,13 +415,13 @@ const ContactSection: React.FC = () => {
                       (actionsStage === 'pre' || actionsStage === 'split') ? 'cursor-not-allowed opacity-90' : ''
                     ].join(' ')}
                     disabled={actionsStage === 'pre' || actionsStage === 'split'}
-                    aria-label="Send Message"
+                    aria-label="Send another Message"
                   >
                     <span className="inline-flex items-center justify-center gap-2 w-full">
                       <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
                       </svg>
-                      <span>Send Message</span>
+                      <span>Send another Message</span>
                     </span>
                   </button>
 
@@ -458,7 +458,7 @@ const ContactSection: React.FC = () => {
                   </a>
 
                   <span className="sr-only" aria-live="polite">
-                    {actionsStage !== 'hidden' ? 'Actions available: Send Message or Call Now.' : ''}
+                    {actionsStage !== 'hidden' ? 'Actions available, Send another Message or Call Now.' : ''}
                   </span>
                 </div>
               )}
