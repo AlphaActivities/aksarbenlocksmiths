@@ -376,7 +376,7 @@ const ContactSection: React.FC = () => {
 
               <div
                 id="statusSlot"
-                className="-mt-3 h-10 w-full flex items-center justify-center"
+                className="-mt-5 h-10 w-full flex items-center justify-center"
                 aria-live="polite"
                 aria-atomic="true"
               >
