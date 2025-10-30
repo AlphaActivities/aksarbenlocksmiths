@@ -127,6 +127,11 @@ const ContactSection: React.FC = () => {
 
     setActionsStage('hidden');
 
+    console.log('[Contact] ENV', {
+      ENABLE: import.meta.env.VITE_ENABLE_FORM_SEND,
+      FAKE: import.meta.env.VITE_FAKE_SUCCESS_FLOW
+    });
+
     trackFormEvent('form_submit', 'contact_form', {
       service_type: formData.service,
       has_phone: !!formData.phone,
@@ -151,14 +156,20 @@ const ContactSection: React.FC = () => {
 
     try {
       if (shouldSend) {
+        console.log('[Contact] Will POST body', body.toString());
+
         const response = await fetch('/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: body.toString()
         });
+
+        console.log('[Contact] Response', response.status, response.statusText);
+        const responseText = await response.text();
+        console.log('[Contact] Response body', responseText);
+
         if (!response.ok) {
-          const text = await response.text().catch(() => '');
-          throw new Error(`Netlify submit failed: ${response.status} ${response.statusText} ${text}`.slice(0, 400));
+          throw new Error(`Netlify submit failed: ${response.status} ${response.statusText} ${responseText}`.slice(0, 400));
         }
       } else {
         await new Promise(resolve => setTimeout(resolve, 4000));
@@ -175,7 +186,7 @@ const ContactSection: React.FC = () => {
       });
 
     } catch (err: any) {
-      console.error('[ContactForm] Submission failed:', err);
+      console.error('[Contact] POST failed', err);
       setIsSending(false);
       setIsSuccess(false);
       setAriaStatus('Submission failed. Please try again.');
