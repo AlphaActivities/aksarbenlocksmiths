@@ -95,21 +95,37 @@ const ContactSection: React.FC = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const startSuccessPhase = () => {
+    setIsSending(false);
+    setIsSuccess(true);
+    setAriaStatus("Message Sent. We'll be in touch shortly.");
+
+    setTimeout(() => {
+      setIsSuccess(false);
+      setAriaStatus("Actions available: Send Message or Call Now.");
+
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        service: 'Residential',
+        message: ''
+      });
+
+      setActionsStage('pre');
+      setTimeout(() => {
+        setActionsStage('split');
+        setTimeout(() => {
+          setActionsStage('done');
+        }, 350);
+      }, 150);
+    }, 4000);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     setActionsStage('hidden');
-
-    const isResubmit = actionsStage !== 'hidden';
-    if (isResubmit) {
-      trackEvent('contact_resubmit_attempt', {
-        ...contactContext,
-        service_type: formData.service,
-        has_phone: !!formData.phone,
-        has_email: !!formData.email,
-        message_length: formData.message.length
-      });
-    }
 
     trackFormEvent('form_submit', 'contact_form', {
       service_type: formData.service,
@@ -118,49 +134,59 @@ const ContactSection: React.FC = () => {
       message_length: formData.message.length
     });
 
-    const fake = import.meta.env.VITE_FAKE_SUCCESS_FLOW === 'true';
-
     setIsSending(true);
     setIsSuccess(false);
     setAriaStatus('Sending message');
 
-    const startSuccessPhase = () => {
-      setIsSending(false);
-      setIsSuccess(true);
-      setAriaStatus("Message Sent. We'll be in touch shortly.");
+    const shouldSend = import.meta.env.VITE_ENABLE_FORM_SEND === 'true';
 
-      if (isResubmit) {
-        trackEvent('contact_resubmit_success', {
-          ...contactContext,
-          service_type: formData.service
+    const body = new URLSearchParams({
+      'form-name': 'contact',
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      service: formData.service,
+      message: formData.message
+    });
+
+    try {
+      if (shouldSend) {
+        const response = await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: body.toString()
         });
+        if (!response.ok) {
+          const text = await response.text().catch(() => '');
+          throw new Error(`Netlify submit failed: ${response.status} ${response.statusText} ${text}`.slice(0, 400));
+        }
+      } else {
+        await new Promise(resolve => setTimeout(resolve, 4000));
       }
 
-      setTimeout(() => {
-        setIsSuccess(false);
-        setAriaStatus("Actions available: Send Message or Call Now.");
-
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          service: 'Residential',
-          message: ''
-        });
-
-        setActionsStage('pre');
-        setTimeout(() => {
-          setActionsStage('split');
-          setTimeout(() => {
-            setActionsStage('done');
-          }, 350);
-        }, 150);
-      }, 4000);
-    };
-
-    setTimeout(() => {
       startSuccessPhase();
-    }, 4000);
+
+      trackEvent('contact_form_submit_success', {
+        ...contactContext,
+        service_type: formData.service,
+        submission_method: shouldSend ? 'netlify_forms' : 'visual_only_dev',
+        has_phone: !!formData.phone,
+        has_email: !!formData.email
+      });
+
+    } catch (err: any) {
+      console.error('[ContactForm] Submission failed:', err);
+      setIsSending(false);
+      setIsSuccess(false);
+      setAriaStatus('Submission failed. Please try again.');
+
+      trackEvent('contact_form_submit_error', {
+        ...contactContext,
+        error_message: String(err?.message || err),
+        service_type: formData.service,
+        submission_method: shouldSend ? 'netlify_forms' : 'visual_only_dev'
+      });
+    }
   };
 
   const handleInputFocus = (fieldName: string) => {
@@ -310,7 +336,17 @@ const ContactSection: React.FC = () => {
           <div className="bg-gradient-to-br from-[#0f1f4c] via-[#1e3267] to-[#0a112e] bg-opacity-40 backdrop-blur-lg rounded-3xl p-8 border border-white/10 shadow-2xl ring-1 ring-white/20 transition-all duration-500 hover:scale-[1.02] hover:shadow-3xl">
             <h3 className="text-2xl font-bold mb-6">Send Us a Message</h3>
             
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-6"
+              name="contact"
+              method="POST"
+              data-netlify="true"
+              data-netlify-honeypot="bot-field"
+            >
+              <input type="hidden" name="form-name" value="contact" />
+              <input type="hidden" name="bot-field" />
+              <input type="hidden" name="service" value={formData.service} />
               <div>
                 <label htmlFor="name" className="block text-white/80 mb-2">Name</label>
                 <input
