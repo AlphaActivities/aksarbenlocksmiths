@@ -718,7 +718,9 @@ html, body, #root {
 
 @keyframes send-progress-4s {
   0%   { width: 0%; }
-  50%  { width: 35%; }
+  40%  { width: 25%; }
+  60%  { width: 70%; }
+  75%  { width: 90%; }
   100% { width: 100%; }
 }
 
