@@ -25,6 +25,17 @@ const ContactSection: React.FC = () => {
   });
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const pagePath = typeof window !== 'undefined' ? window.location.pathname : '';
+  const contactContext = { page_section: 'contact_form', page_path: pagePath, origin: 'contact_contact_section' };
+
+  const actionsShownRef = useRef(false);
+  const successAnnouncedRef = useRef(false);
+
+  const resetAnalyticsGuards = React.useCallback(() => {
+    actionsShownRef.current = false;
+    successAnnouncedRef.current = false;
+  }, []);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -51,6 +62,34 @@ const ContactSection: React.FC = () => {
     }
   }, [actionsStage]);
 
+  useEffect(() => {
+    if (isSuccess && !successAnnouncedRef.current) {
+      successAnnouncedRef.current = true;
+      trackEvent('contact_submit_visual_success', {
+        ...contactContext,
+        submission_method: 'netlify_forms_pending',
+        service_type: formData.service,
+        has_phone: !!formData.phone,
+        has_email: !!formData.email,
+        message_length: formData.message.length
+      });
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    const isRowVisible = actionsStage === 'split' || actionsStage === 'done';
+    if (isRowVisible && !actionsShownRef.current) {
+      actionsShownRef.current = true;
+      trackEvent('contact_success_actions_shown', {
+        ...contactContext,
+        layout: '70_30',
+        left_label: 'Send another Message',
+        right_label: 'Call Now',
+        service_type: formData.service
+      });
+    }
+  }, [actionsStage]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -60,6 +99,17 @@ const ContactSection: React.FC = () => {
     e.preventDefault();
 
     setActionsStage('hidden');
+
+    const isResubmit = actionsStage !== 'hidden';
+    if (isResubmit) {
+      trackEvent('contact_resubmit_attempt', {
+        ...contactContext,
+        service_type: formData.service,
+        has_phone: !!formData.phone,
+        has_email: !!formData.email,
+        message_length: formData.message.length
+      });
+    }
 
     trackFormEvent('form_submit', 'contact_form', {
       service_type: formData.service,
@@ -78,6 +128,13 @@ const ContactSection: React.FC = () => {
       setIsSending(false);
       setIsSuccess(true);
       setAriaStatus("Message Sent. We'll be in touch shortly.");
+
+      if (isResubmit) {
+        trackEvent('contact_resubmit_success', {
+          ...contactContext,
+          service_type: formData.service
+        });
+      }
 
       setTimeout(() => {
         setIsSuccess(false);
@@ -404,7 +461,7 @@ const ContactSection: React.FC = () => {
                 >
                   <button
                     ref={sendBtnRef}
-                    type="submit"
+                    type="button"
                     className={[
                       'overflow-hidden rounded-full px-6 py-0 font-medium text-white transition-[width,background-color] ease-out',
                       'bg-red-600 hover:bg-red-700',
@@ -423,6 +480,17 @@ const ContactSection: React.FC = () => {
                     ].join(' ')}
                     disabled={actionsStage === 'pre' || actionsStage === 'split'}
                     aria-label="Send another Message"
+                    onClick={(e) => {
+                      const eventName = buildEventName({ base: 'contact', action: 'send_another_click' });
+                      trackClick(eventName, e.currentTarget, {
+                        ...contactContext,
+                        service_type: formData.service,
+                        after_submit: true,
+                        actions_stage: actionsStage
+                      });
+                      resetAnalyticsGuards();
+                      setActionsStage('hidden');
+                    }}
                   >
                     <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                       <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
@@ -451,11 +519,13 @@ const ContactSection: React.FC = () => {
                         e.preventDefault();
                         return;
                       }
-                      const eventName = buildEventName({ base: 'inline_call_button', action: 'call_button_click' });
+                      const eventName = buildEventName({ base: 'contact', action: 'call_after_submit_click' });
                       trackClick(eventName, e.currentTarget, {
+                        ...contactContext,
                         phone_number: '+14025566715',
-                        page_section: 'contact_form',
-                        origin: 'inline_call_button'
+                        service_type: formData.service,
+                        after_submit: true,
+                        actions_stage: actionsStage
                       });
                     }}
                   >
