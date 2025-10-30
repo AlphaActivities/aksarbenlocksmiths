@@ -344,9 +344,9 @@ const ContactSection: React.FC = () => {
                     : (isSending
                         ? 'bg-neutral-600 hover:bg-neutral-600 text-white'
                         : 'bg-red-600 hover:bg-red-700 text-white'),
-                  (isSending ? 'cursor-wait' : '')
+                  ((isSending || isSuccess) ? 'cursor-not-allowed opacity-90' : '')
                 ].join(' ')}
-                disabled={isSending}
+                disabled={isSending || isSuccess}
               >
                 <span aria-live="polite" className="sr-only">{ariaStatus}</span>
 
