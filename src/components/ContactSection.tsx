@@ -376,13 +376,13 @@ const ContactSection: React.FC = () => {
 
               <div
                 id="statusSlot"
-                className="-mt-6 h-8 w-full flex items-center justify-center"
+                className="-mt-3 h-10 w-full flex items-center justify-center"
                 aria-live="polite"
                 aria-atomic="true"
               >
                 {successMsg && (
                   <div
-                    className="inline-flex items-center gap-2 rounded-md bg-green-600/20 border border-green-500/40 px-3 py-1 text-green-300 text-sm leading-none shadow-[0_0_0_1px_rgba(34,197,94,0.15)] opacity-100 transition-opacity duration-300"
+                    className="inline-flex items-center gap-2 rounded-md bg-green-600/25 border border-green-400/50 px-4 py-2 text-green-200 text-base leading-tight font-medium shadow-[0_0_4px_rgba(34,197,94,0.4)] opacity-100 transition-all duration-300"
                     role="status"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -393,7 +393,7 @@ const ContactSection: React.FC = () => {
                 )}
                 {errorMsg && (
                   <div
-                    className="inline-flex items-center gap-2 rounded-md bg-red-600/20 border border-red-500/40 px-3 py-1 text-red-300 text-sm leading-none shadow-[0_0_0_1px_rgba(239,68,68,0.15)] opacity-100 transition-opacity duration-300"
+                    className="inline-flex items-center gap-2 rounded-md bg-red-600/25 border border-red-400/50 px-4 py-2 text-red-200 text-base leading-tight font-medium shadow-[0_0_4px_rgba(239,68,68,0.4)] opacity-100 transition-all duration-300"
                     role="alert"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
