@@ -4,12 +4,17 @@ import { Phone, MapPin, Mail, Clock } from 'lucide-react';
 import PillBadge from './ui/PillBadge';
 import { trackFormEvent, trackClick, trackEvent, buildEventName } from '../utils/analytics';
 
+type ActionsStage = 'hidden' | 'pre' | 'split' | 'done';
+
 const ContactSection: React.FC = () => {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [ariaStatus, setAriaStatus] = useState<string>('');
+  const [actionsStage, setActionsStage] = useState<ActionsStage>('hidden');
+  const actionsRowRef = useRef<HTMLDivElement | null>(null);
+  const sendBtnRef = useRef<HTMLButtonElement | null>(null);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -40,6 +45,12 @@ const ContactSection: React.FC = () => {
     };
   }, [hasAnimated]);
 
+  useEffect(() => {
+    if (actionsStage === 'done' && sendBtnRef.current) {
+      sendBtnRef.current.focus();
+    }
+  }, [actionsStage]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -47,6 +58,8 @@ const ContactSection: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    setActionsStage('hidden');
 
     trackFormEvent('form_submit', 'contact_form', {
       service_type: formData.service,
@@ -68,7 +81,7 @@ const ContactSection: React.FC = () => {
 
       setTimeout(() => {
         setIsSuccess(false);
-        setAriaStatus('');
+        setAriaStatus("Actions available: Send Message or Call Now.");
 
         setFormData({
           name: '',
@@ -77,6 +90,14 @@ const ContactSection: React.FC = () => {
           service: 'Residential',
           message: ''
         });
+
+        setActionsStage('pre');
+        setTimeout(() => {
+          setActionsStage('split');
+          setTimeout(() => {
+            setActionsStage('done');
+          }, 350);
+        }, 150);
       }, 4000);
     };
 
@@ -333,45 +354,114 @@ const ContactSection: React.FC = () => {
                   placeholder="Describe what you need..."
                 ></textarea>
               </div>
-              
-              <button
-                type="submit"
-                aria-busy={isSending ? 'true' : undefined}
-                className={[
-                  'relative w-full overflow-hidden rounded-full px-6 py-3 font-medium transition-colors',
-                  isSuccess
-                    ? 'bg-emerald-600 hover:bg-emerald-600 text-white'
-                    : (isSending
-                        ? 'bg-neutral-600 hover:bg-neutral-600 text-white'
-                        : 'bg-red-600 hover:bg-red-700 text-white'),
-                  ((isSending || isSuccess) ? 'cursor-not-allowed opacity-90' : '')
-                ].join(' ')}
-                disabled={isSending || isSuccess}
-              >
-                <span aria-live="polite" className="sr-only">{ariaStatus}</span>
 
-                <span
+              {actionsStage === 'hidden' ? (
+                <button
+                  type="submit"
+                  aria-busy={isSending ? 'true' : undefined}
                   className={[
-                    'absolute left-0 top-0 h-full bg-neutral-300/35',
-                    isSending ? 'animate-[send-progress-4s_4s_linear_forwards]' : 'w-0'
+                    'relative w-full overflow-hidden rounded-full px-6 py-3 font-medium transition-colors',
+                    isSuccess
+                      ? 'bg-emerald-600 hover:bg-emerald-600 text-white'
+                      : (isSending
+                          ? 'bg-neutral-600 hover:bg-neutral-600 text-white'
+                          : 'bg-red-600 hover:bg-red-700 text-white'),
+                    ((isSending || isSuccess) ? 'cursor-not-allowed opacity-90' : '')
                   ].join(' ')}
-                />
+                  disabled={isSending || isSuccess}
+                >
+                  <span aria-live="polite" className="sr-only">{ariaStatus}</span>
 
-                <span className="relative z-10 inline-flex items-center justify-center gap-2 w-full">
-                  {isSending && (
-                    <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-white" />
-                  )}
-                  {isSuccess && !isSending && (
-                    <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-7.25 7.25a1 1 0 01-1.414 0l-3-3a1 1 0 111.414-1.414l2.293 2.293 6.543-6.543a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  )}
-                  <span>
-                    {isSending ? 'Sending…'
-                      : (isSuccess ? "Message Sent. We'll be in touch shortly." : 'Send Message')}
+                  <span
+                    className={[
+                      'absolute left-0 top-0 h-full bg-neutral-300/35',
+                      isSending ? 'animate-[send-progress-4s_4s_linear_forwards]' : 'w-0'
+                    ].join(' ')}
+                  />
+
+                  <span className="relative z-10 inline-flex items-center justify-center gap-2 w-full">
+                    {isSending && (
+                      <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-white" />
+                    )}
+                    {isSuccess && !isSending && (
+                      <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-7.25 7.25a1 1 0 01-1.414 0l-3-3a1 1 0 111.414-1.414l2.293 2.293 6.543-6.543a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                    <span>
+                      {isSending ? 'Sending…'
+                        : (isSuccess ? "Message Sent. We'll be in touch shortly." : 'Send Message')}
+                    </span>
                   </span>
-                </span>
-              </button>
+                </button>
+              ) : (
+                <div
+                  ref={actionsRowRef}
+                  className={[
+                    'relative w-full flex items-center gap-3',
+                    (actionsStage === 'pre' || actionsStage === 'split') ? 'pointer-events-none' : 'pointer-events-auto'
+                  ].join(' ')}
+                >
+                  <button
+                    ref={sendBtnRef}
+                    type="submit"
+                    className={[
+                      'overflow-hidden rounded-full px-6 py-3 font-medium text-white transition-[width,background-color] ease-out',
+                      'bg-red-600 hover:bg-red-700',
+                      actionsStage === 'pre' ? 'w-full'
+                        : (actionsStage === 'split' || actionsStage === 'done') ? 'w-1/2' : 'w-full',
+                      (actionsStage === 'split') ? 'duration-[350ms]' : '',
+                      (actionsStage === 'pre') ? 'duration-[150ms]' : '',
+                      (actionsStage === 'pre' || actionsStage === 'split') ? 'cursor-not-allowed opacity-90' : ''
+                    ].join(' ')}
+                    disabled={actionsStage === 'pre' || actionsStage === 'split'}
+                    aria-label="Send Message"
+                  >
+                    <span className="inline-flex items-center justify-center gap-2 w-full">
+                      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                      </svg>
+                      <span>Send Message</span>
+                    </span>
+                  </button>
+
+                  <a
+                    href="tel:+14025566715"
+                    className={[
+                      'overflow-hidden rounded-full px-6 py-3 font-medium text-white bg-red-600 hover:bg-red-700',
+                      'flex items-center justify-center gap-2',
+                      (actionsStage === 'pre')
+                        ? 'opacity-0 translate-x-[100px]'
+                        : (actionsStage === 'split' || actionsStage === 'done')
+                          ? 'opacity-100 translate-x-0 transition-[transform,opacity] duration-[350ms] ease-out'
+                          : 'opacity-0',
+                      (actionsStage === 'split' || actionsStage === 'done') ? 'w-1/2' : 'w-1/2'
+                    ].join(' ')}
+                    aria-label="Call Now"
+                    onClick={(e) => {
+                      if (actionsStage === 'pre' || actionsStage === 'split') {
+                        e.preventDefault();
+                        return;
+                      }
+                      const eventName = buildEventName({ base: 'inline_call_button', action: 'call_button_click' });
+                      trackClick(eventName, e.currentTarget, {
+                        phone_number: '+14025566715',
+                        page_section: 'contact_form',
+                        origin: 'inline_call_button'
+                      });
+                    }}
+                  >
+                    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h2.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.24 1.01l-2.2 2.2z"/>
+                    </svg>
+                    <span>Call Now</span>
+                  </a>
+
+                  <span className="sr-only" aria-live="polite">
+                    {actionsStage !== 'hidden' ? 'Actions available: Send Message or Call Now.' : ''}
+                  </span>
+                </div>
+              )}
             </form>
           </div>
         </div>
