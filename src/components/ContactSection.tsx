@@ -16,9 +16,6 @@ const ContactSection: React.FC = () => {
     message: ''
   });
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -45,67 +42,25 @@ const ContactSection: React.FC = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitting(true);
-    setSuccessMsg(null);
-    setErrorMsg(null);
-
-    const enableFormSend = import.meta.env.VITE_ENABLE_FORM_SEND === 'true';
-
+    
+    // Track form submission
     trackFormEvent('form_submit', 'contact_form', {
       service_type: formData.service,
       has_phone: !!formData.phone,
       has_email: !!formData.email,
       message_length: formData.message.length
     });
-
-    if (!enableFormSend) {
-      setTimeout(() => {
-        setSubmitting(false);
-        setSuccessMsg('Message sent. We\'ll be in touch shortly.');
-        setTimeout(() => setSuccessMsg(null), 5000);
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          service: 'Residential',
-          message: ''
-        });
-      }, 1000);
-      return;
-    }
-
-    try {
-      const form = e.currentTarget;
-      const formDataToSend = new FormData(form);
-
-      const response = await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(formDataToSend as any).toString()
-      });
-
-      if (response.ok) {
-        setSuccessMsg('Message sent. We\'ll be in touch shortly.');
-        setTimeout(() => setSuccessMsg(null), 5000);
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          service: 'Residential',
-          message: ''
-        });
-      } else {
-        setErrorMsg('There was an error sending your message. Please try again.');
-        setTimeout(() => setErrorMsg(null), 8000);
-      }
-    } catch (error) {
-      setErrorMsg('There was an error sending your message. Please try again.');
-      setTimeout(() => setErrorMsg(null), 8000);
-    } finally {
-      setSubmitting(false);
-    }
+    
+    alert('Form submitted! In a real application, this would send your request to our team.');
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      service: 'Residential',
+      message: ''
+    });
   };
 
   const handleInputFocus = (fieldName: string) => {
@@ -252,19 +207,10 @@ const ContactSection: React.FC = () => {
             </div>
           </div>
           
-          <div className="bg-gradient-to-br from-[#0f1f4c] via-[#1e3267] to-[#0a112e] bg-opacity-40 backdrop-blur-lg rounded-3xl pt-8 pr-8 pl-8 pb-0 border border-white/10 shadow-2xl ring-1 ring-white/20 transition-all duration-500 hover:scale-[1.02] hover:shadow-3xl">
+          <div className="bg-gradient-to-br from-[#0f1f4c] via-[#1e3267] to-[#0a112e] bg-opacity-40 backdrop-blur-lg rounded-3xl p-8 border border-white/10 shadow-2xl ring-1 ring-white/20 transition-all duration-500 hover:scale-[1.02] hover:shadow-3xl">
             <h3 className="text-2xl font-bold mb-6">Send Us a Message</h3>
             
-            <form
-              name="contact"
-              method="POST"
-              data-netlify="true"
-              data-netlify-honeypot="bot-field"
-              onSubmit={handleSubmit}
-              className="space-y-6"
-            >
-              <input type="hidden" name="form-name" value="contact" />
-              <input type="hidden" name="bot-field" />
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-white/80 mb-2">Name</label>
                 <input
@@ -368,41 +314,10 @@ const ContactSection: React.FC = () => {
               
               <button
                 type="submit"
-                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full transition-colors font-medium w-full disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={submitting}
+                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full transition-colors font-medium w-full"
               >
-                {submitting ? 'Sending...' : 'Send Message'}
+                Send Message
               </button>
-
-              <div
-                id="statusSlot"
-                className="-mt-5 h-10 w-full flex items-center justify-center"
-                aria-live="polite"
-                aria-atomic="true"
-              >
-                {successMsg && (
-                  <div
-                    className="inline-flex items-center gap-2 rounded-md bg-green-600/25 border border-green-400/50 px-4 py-2 text-green-200 text-base leading-tight font-medium shadow-[0_0_4px_rgba(34,197,94,0.4)] opacity-100 transition-all duration-300"
-                    role="status"
-                  >
-                    <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-7.25 7.25a1 1 0 01-1.414 0l-3-3a1 1 0 111.414-1.414l2.293 2.293 6.543-6.543a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>Message sent. We'll be in touch shortly.</span>
-                  </div>
-                )}
-                {errorMsg && (
-                  <div
-                    className="inline-flex items-center gap-2 rounded-md bg-red-600/25 border border-red-400/50 px-4 py-2 text-red-200 text-base leading-tight font-medium shadow-[0_0_4px_rgba(239,68,68,0.4)] opacity-100 transition-all duration-300"
-                    role="alert"
-                  >
-                    <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.72-1.36 3.485 0l6.518 11.59c.75 1.335-.214 2.99-1.742 2.99H3.48c-1.528 0-2.492-1.655-1.742-2.99L8.257 3.1zM11 14a1 1 0 10-2 0 1 1 0 002 0zm-1-2a1 1 0 01-1-1V7a1 1 0 112 0v4a1 1 0 01-1 1z" clipRule="evenodd" />
-                    </svg>
-                    <span>There was an error sending your message. Please try again.</span>
-                  </div>
-                )}
-              </div>
             </form>
           </div>
         </div>
