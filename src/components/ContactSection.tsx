@@ -408,8 +408,13 @@ const ContactSection: React.FC = () => {
                     className={[
                       'overflow-hidden rounded-full px-6 py-3 font-medium text-white transition-[width,background-color] ease-out',
                       'bg-red-600 hover:bg-red-700',
-                      actionsStage === 'pre' ? 'w-full'
-                        : (actionsStage === 'split' || actionsStage === 'done') ? 'w-1/2' : 'w-full',
+                      'whitespace-nowrap',
+                      'text-sm md:text-base',
+                      actionsStage === 'pre'
+                        ? 'w-full'
+                        : (actionsStage === 'split' || actionsStage === 'done')
+                          ? 'w-[calc(70%-0.375rem)]'
+                          : 'w-full',
                       (actionsStage === 'split') ? 'duration-[350ms]' : '',
                       (actionsStage === 'pre') ? 'duration-[150ms]' : '',
                       (actionsStage === 'pre' || actionsStage === 'split') ? 'cursor-not-allowed opacity-90' : ''
@@ -430,12 +435,14 @@ const ContactSection: React.FC = () => {
                     className={[
                       'overflow-hidden rounded-full px-6 py-3 font-medium text-white bg-red-600 hover:bg-red-700',
                       'flex items-center justify-center gap-2',
+                      'whitespace-nowrap',
+                      'text-sm md:text-base',
                       (actionsStage === 'pre')
                         ? 'opacity-0 translate-x-[100px]'
                         : (actionsStage === 'split' || actionsStage === 'done')
                           ? 'opacity-100 translate-x-0 transition-[transform,opacity] duration-[350ms] ease-out'
                           : 'opacity-0',
-                      (actionsStage === 'split' || actionsStage === 'done') ? 'w-1/2' : 'w-1/2'
+                      (actionsStage === 'split' || actionsStage === 'done') ? 'w-[calc(30%-0.375rem)]' : 'w-[calc(30%-0.375rem)]'
                     ].join(' ')}
                     aria-label="Call Now"
                     onClick={(e) => {
