@@ -16,6 +16,9 @@ const ContactSection: React.FC = () => {
     message: ''
   });
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -42,25 +45,67 @@ const ContactSection: React.FC = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    // Track form submission
+    setSubmitting(true);
+    setSuccessMsg(null);
+    setErrorMsg(null);
+
+    const enableFormSend = import.meta.env.VITE_ENABLE_FORM_SEND === 'true';
+
     trackFormEvent('form_submit', 'contact_form', {
       service_type: formData.service,
       has_phone: !!formData.phone,
       has_email: !!formData.email,
       message_length: formData.message.length
     });
-    
-    alert('Form submitted! In a real application, this would send your request to our team.');
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      service: 'Residential',
-      message: ''
-    });
+
+    if (!enableFormSend) {
+      setTimeout(() => {
+        setSubmitting(false);
+        setSuccessMsg('Message sent. We\'ll be in touch shortly.');
+        setTimeout(() => setSuccessMsg(null), 5000);
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          service: 'Residential',
+          message: ''
+        });
+      }, 1000);
+      return;
+    }
+
+    try {
+      const form = e.currentTarget;
+      const formDataToSend = new FormData(form);
+
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formDataToSend as any).toString()
+      });
+
+      if (response.ok) {
+        setSuccessMsg('Message sent. We\'ll be in touch shortly.');
+        setTimeout(() => setSuccessMsg(null), 5000);
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          service: 'Residential',
+          message: ''
+        });
+      } else {
+        setErrorMsg('There was an error sending your message. Please try again.');
+        setTimeout(() => setErrorMsg(null), 8000);
+      }
+    } catch (error) {
+      setErrorMsg('There was an error sending your message. Please try again.');
+      setTimeout(() => setErrorMsg(null), 8000);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleInputFocus = (fieldName: string) => {
@@ -207,10 +252,19 @@ const ContactSection: React.FC = () => {
             </div>
           </div>
           
-          <div className="bg-gradient-to-br from-[#0f1f4c] via-[#1e3267] to-[#0a112e] bg-opacity-40 backdrop-blur-lg rounded-3xl p-8 border border-white/10 shadow-2xl ring-1 ring-white/20 transition-all duration-500 hover:scale-[1.02] hover:shadow-3xl">
+          <div className="bg-gradient-to-br from-[#0f1f4c] via-[#1e3267] to-[#0a112e] bg-opacity-40 backdrop-blur-lg rounded-3xl pt-8 pr-8 pl-8 pb-0 border border-white/10 shadow-2xl ring-1 ring-white/20 transition-all duration-500 hover:scale-[1.02] hover:shadow-3xl">
             <h3 className="text-2xl font-bold mb-6">Send Us a Message</h3>
             
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form
+              name="contact"
+              method="POST"
+              data-netlify="true"
+              data-netlify-honeypot="bot-field"
+              onSubmit={handleSubmit}
+              className="space-y-6"
+            >
+              <input type="hidden" name="form-name" value="contact" />
+              <input type="hidden" name="bot-field" />
               <div>
                 <label htmlFor="name" className="block text-white/80 mb-2">Name</label>
                 <input
@@ -314,10 +368,29 @@ const ContactSection: React.FC = () => {
               
               <button
                 type="submit"
-                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full transition-colors font-medium w-full"
+                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full transition-colors font-medium w-full disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={submitting}
               >
-                Send Message
+                {submitting ? 'Sending...' : 'Send Message'}
               </button>
+
+              <div
+                id="statusSlot"
+                className="-mt-6 h-8 w-full flex items-center justify-center"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                {successMsg && (
+                  <span className="text-green-400 text-sm opacity-100 transition-opacity duration-300">
+                    ✓ {successMsg}
+                  </span>
+                )}
+                {errorMsg && (
+                  <span className="text-red-400 text-sm opacity-100 transition-opacity duration-300">
+                    {errorMsg}
+                  </span>
+                )}
+              </div>
             </form>
           </div>
         </div>
