@@ -125,6 +125,8 @@ const ContactSection: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const startTime = performance.now();
+
     setActionsStage('hidden');
 
     console.log('[Contact] ENV', {
@@ -170,6 +172,12 @@ const ContactSection: React.FC = () => {
 
         if (!response.ok) {
           throw new Error(`Netlify submit failed: ${response.status} ${response.statusText} ${responseText}`.slice(0, 400));
+        }
+
+        const elapsed = performance.now() - startTime;
+        const remaining = Math.max(0, 4000 - elapsed);
+        if (remaining > 0) {
+          await new Promise(res => setTimeout(res, remaining));
         }
       } else {
         await new Promise(resolve => setTimeout(resolve, 4000));
