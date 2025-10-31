@@ -472,7 +472,8 @@ const ContactSection: React.FC = () => {
                   type="submit"
                   aria-busy={isSending ? 'true' : undefined}
                   className={[
-                    'relative w-full overflow-hidden rounded-full px-6 py-3 font-medium transition-colors',
+                    'relative w-full overflow-hidden rounded-full font-medium transition-colors',
+                    isSuccess ? 'px-5 py-3 sm:px-6 sm:py-3.5' : 'px-6 py-3',
                     isSuccess
                       ? 'bg-emerald-600 hover:bg-emerald-600 text-white'
                       : (isSending
@@ -491,20 +492,37 @@ const ContactSection: React.FC = () => {
                     ].join(' ')}
                   />
 
-                  <span className="relative z-10 inline-flex items-center justify-center gap-2 w-full">
-                    {isSending && (
-                      <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-white" />
-                    )}
-                    {isSuccess && !isSending && (
-                      <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-7.25 7.25a1 1 0 01-1.414 0l-3-3a1 1 0 111.414-1.414l2.293 2.293 6.543-6.543a1 1 0 011.414 0z" clipRule="evenodd" />
+                  {isSuccess && !isSending ? (
+                    <div
+                      role="status"
+                      aria-live="polite"
+                      aria-label="Message sent confirmation"
+                      className="flex items-start gap-3 text-white text-base leading-tight text-left"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        className="h-5 w-5 mt-0.5 flex-shrink-0"
+                        aria-hidden="true"
+                      >
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16Zm3.857-9.809a.75.75 0 10-1.214-.882l-3.12 4.292-1.518-1.518a.75.75 0 10-1.06 1.06l2.143 2.143a.75.75 0 001.154-.093l3.615-5.002z" clipRule="evenodd" />
                       </svg>
-                    )}
-                    <span>
-                      {isSending ? 'Sending…'
-                        : (isSuccess ? "Message Sent. We'll be in touch shortly." : 'Send Message')}
+                      <div className="leading-tight">
+                        <div className="font-medium">Message Sent.</div>
+                        <div className="opacity-90">We&rsquo;ll be in touch shortly.</div>
+                      </div>
+                    </div>
+                  ) : (
+                    <span className="relative z-10 inline-flex items-center justify-center gap-2 w-full">
+                      {isSending && (
+                        <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-white" />
+                      )}
+                      <span>
+                        {isSending ? 'Sending…' : 'Send Message'}
+                      </span>
                     </span>
-                  </span>
+                  )}
                 </button>
               ) : (
                 <div
