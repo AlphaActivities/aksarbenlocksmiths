@@ -497,19 +497,19 @@ const ContactSection: React.FC = () => {
                       role="status"
                       aria-live="polite"
                       aria-label="Message sent confirmation"
-                      className="flex items-start gap-3 text-white text-base leading-tight text-left"
+                      className="flex items-center justify-center gap-3 text-white text-base sm:text-[17px] leading-tight text-center"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
+                        viewBox="0 0 24 24"
                         fill="currentColor"
-                        className="h-5 w-5 mt-0.5 flex-shrink-0"
+                        className="h-5 w-5 shrink-0"
                         aria-hidden="true"
                       >
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16Zm3.857-9.809a.75.75 0 10-1.214-.882l-3.12 4.292-1.518-1.518a.75.75 0 10-1.06 1.06l2.143 2.143a.75.75 0 001.154-.093l3.615-5.002z" clipRule="evenodd" />
+                        <path d="M3.4 11.1l16.6-7a1 1 0 011.3 1.3l-7 16.6a1 1 0 01-1.8.1l-3.1-6.2-6.2-3.1a1 1 0 01.2-1.7zM9.7 13.2l2.6 5.2 5.3-12.5-12.5 5.3 5.2 2.6-.6 1.4.6-1.4z"/>
                       </svg>
                       <div className="leading-tight">
-                        <div className="font-medium">Message Sent.</div>
+                        <div className="font-semibold">Message Sent.</div>
                         <div className="opacity-90">We&rsquo;ll be in touch shortly.</div>
                       </div>
                     </div>
