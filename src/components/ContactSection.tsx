@@ -500,7 +500,8 @@ const ContactSection: React.FC = () => {
                     >
                       <div className="flex items-center justify-center gap-2 whitespace-nowrap">
                         <svg
-                          className="w-5 h-5 -rotate-45 shrink-0"
+                          className="w-5 h-5 rotate-12 shrink-0"
+                          xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
                           fill="currentColor"
                           aria-hidden="true"
