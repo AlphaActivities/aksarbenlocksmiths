@@ -473,7 +473,7 @@ const ContactSection: React.FC = () => {
                   aria-busy={isSending ? 'true' : undefined}
                   className={[
                     'relative w-full max-w-[720px] mx-auto overflow-hidden rounded-full font-medium transition-colors h-16',
-                    isSuccess ? 'px-5 sm:px-6' : 'px-6',
+                    'px-6',
                     isSuccess
                       ? 'bg-emerald-600 hover:bg-emerald-600 text-white shadow-[0_8px_30px_rgba(0,0,0,0.12)]'
                       : (isSending
@@ -530,7 +530,7 @@ const ContactSection: React.FC = () => {
                 <div
                   ref={actionsRowRef}
                   className={[
-                    'relative w-full flex items-stretch gap-3',
+                    'relative w-full h-16 flex items-center gap-3',
                     (actionsStage === 'pre' || actionsStage === 'split') ? 'pointer-events-none' : 'pointer-events-auto'
                   ].join(' ')}
                 >
@@ -542,7 +542,7 @@ const ContactSection: React.FC = () => {
                       'bg-red-600 hover:bg-red-700',
                       'whitespace-nowrap',
                       'text-sm md:text-base',
-                      'h-12 leading-none box-border',
+                      'h-full leading-none box-border',
                       'flex items-center justify-center gap-2',
                       actionsStage === 'pre'
                         ? 'w-full'
@@ -580,7 +580,7 @@ const ContactSection: React.FC = () => {
                       'flex items-center justify-center gap-2',
                       'whitespace-nowrap',
                       'text-sm md:text-base',
-                      'h-12 leading-none box-border',
+                      'h-full leading-none box-border',
                       (actionsStage === 'pre')
                         ? 'opacity-0 translate-x-[100px]'
                         : (actionsStage === 'split' || actionsStage === 'done')
