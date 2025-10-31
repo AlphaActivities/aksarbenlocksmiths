@@ -472,12 +472,12 @@ const ContactSection: React.FC = () => {
                   type="submit"
                   aria-busy={isSending ? 'true' : undefined}
                   className={[
-                    'relative w-full overflow-hidden rounded-full font-medium transition-colors',
-                    isSuccess ? 'px-5 py-3 sm:px-6 sm:py-3.5' : 'px-6 py-3',
+                    'relative w-full max-w-[720px] mx-auto overflow-hidden rounded-full font-medium transition-colors h-16',
+                    isSuccess ? 'px-5 sm:px-6' : 'px-6',
                     isSuccess
-                      ? 'bg-emerald-600 hover:bg-emerald-600 text-white'
+                      ? 'bg-emerald-600 hover:bg-emerald-600 text-white shadow-[0_8px_30px_rgba(0,0,0,0.12)]'
                       : (isSending
-                          ? 'bg-neutral-600 hover:bg-neutral-600 text-white'
+                          ? 'bg-neutral-700/90 hover:bg-neutral-700/90 text-white'
                           : 'bg-red-600 hover:bg-red-700 text-white'),
                     ((isSending || isSuccess) ? 'cursor-not-allowed opacity-90' : '')
                   ].join(' ')}
@@ -494,27 +494,28 @@ const ContactSection: React.FC = () => {
 
                   {isSuccess && !isSending ? (
                     <div
+                      className="absolute inset-0 flex flex-col items-center justify-center leading-tight text-center"
                       role="status"
                       aria-live="polite"
-                      aria-label="Message sent confirmation"
-                      className="flex items-center justify-center gap-3 text-white text-base sm:text-[17px] leading-tight text-center"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="h-5 w-5 shrink-0"
-                        aria-hidden="true"
-                      >
-                        <path d="M3.4 11.1l16.6-7a1 1 0 011.3 1.3l-7 16.6a1 1 0 01-1.8.1l-3.1-6.2-6.2-3.1a1 1 0 01.2-1.7zM9.7 13.2l2.6 5.2 5.3-12.5-12.5 5.3 5.2 2.6-.6 1.4.6-1.4z"/>
-                      </svg>
-                      <div className="leading-tight">
-                        <div className="font-semibold">Message Sent.</div>
-                        <div className="opacity-90">We&rsquo;ll be in touch shortly.</div>
+                      <div className="flex items-center justify-center gap-2 whitespace-nowrap">
+                        <svg
+                          className="w-5 h-5 -rotate-45 shrink-0"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path d="M2.94 12.66c-.66-.27-.66-1.05 0-1.32L19.3 4.47c.7-.28 1.39.41 1.11 1.11l-6.87 16.37c-.27.66-1.05.66-1.32 0l-2.52-6.01a1 1 0 0 0-.53-.53l-6.01-2.52Z"/>
+                          <path d="M10.3 13.7 19.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        </svg>
+                        <span className="text-[15px] sm:text-base font-semibold">Message Sent.</span>
+                      </div>
+                      <div className="text-[14px] sm:text-[15px] opacity-95 mt-0.5">
+                        We'll be in touch shortly.
                       </div>
                     </div>
                   ) : (
-                    <span className="relative z-10 inline-flex items-center justify-center gap-2 w-full">
+                    <span className="relative z-10 inline-flex items-center justify-center gap-2 w-full h-full">
                       {isSending && (
                         <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-white" />
                       )}
