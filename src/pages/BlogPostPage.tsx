@@ -414,6 +414,7 @@ export default function BlogPostPage() {
                       <li key={p.slug}>
                         <Link
                           to={`/blog/${p.slug}`}
+                          state={{ scrollFx: "bottomThenTop" }}
                           onClick={(e) =>
                             trackClick(
                               buildEventName({
