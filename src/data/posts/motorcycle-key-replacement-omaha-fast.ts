@@ -20,45 +20,25 @@ const post: BlogPost = {
     "Aksarben Locksmiths"
   ],
   body: `
-## Lost your bike key? Start here
-It happens after a ride or during storage—one missing motorcycle key can stall your entire week. The good news: in most cases you **do not** need a dealer tow. A professional **mobile locksmith in Omaha** can come to you and cut or program a working key the same day.
+Lost your bike key? Start here. It happens after a ride or during storage when one missing motorcycle key can stall your entire week. The good news is that in most cases you do not need a dealer tow. A mobile locksmith in Omaha can come to you and cut or program a working key the same day.
 
-## What determines speed and price
-- **Bike make & year** — Older bikes often use standard metal keys. Newer models may use transponder or chipped keys.
-- **Key type available** — If you still have a **working copy**, duplicating is cheapest and fastest. If **all keys are lost**, we decode at the bike or at the ignition.
-- **Ignition condition** — Worn or replaced ignitions may require on-site decoding before cutting.
-- **Proof of ownership** — Have registration/ID ready so we can start right away.
+What determines speed and price. Bike make and year, key type, and ignition condition all matter. Older bikes often use standard metal keys. Newer models may use transponder or chipped keys. If you still have a working copy, duplicating is fastest and least expensive. If all keys are lost, we decode at the bike or at the ignition. Worn or replaced ignitions may require on-site decoding before cutting. Have registration or ID ready so we can get started immediately.
 
-## Fastest options in Omaha
-1. **Duplicate from an existing key**
-   Bring or show your working key. We cut and test in minutes.
-2. **Cut by code**
-   Some bikes have a key code (on a tag or stamped). With that code, we cut a factory-spec key quickly.
-3. **Impressioning / decoding on-site**
-   When all keys are lost, we read the lock pins, then cut a precise key without damaging the bike.
-4. **Transponder programming (when required)**
-   For chipped systems, we program the new key to your bike so it starts the engine reliably.
+Fastest options in Omaha.
+1) Duplicate from an existing key. Bring or show your working key and we cut and test it in minutes.
+2) Cut by code. Many bikes have a key code on a tag or stamped on parts. With that code we cut a factory-spec key quickly.
+3) Impressioning or decoding on site. When all keys are lost, we read the lock pins and cut a precise key without causing any damage.
+4) Transponder programming when required. For chipped systems we program the new key so the bike starts reliably.
 
-## What to have ready
-- Bike make, model, **year**
-- VIN (if accessible) and **proof of ownership**
-- Location of the bike and any alarm/immobilizer details
-- Any **key code** or a clear photo of your ignition
+What to have ready. Provide the bike make, model, year, VIN if accessible, and proof of ownership. Also share the location of the bike, any alarm or immobilizer details, and a key code or clear photo of the ignition if available.
 
-## Prevent it happening again
-- Ask for **two** working keys at the end of the appointment
-- Store one key on a separate ring; consider a **hidden spare** solution
-- Add your bike to a **maintenance checklist** so spares are verified before trips
+Prevent the repeat. Ask for two working keys at the end of the appointment. Store one on a separate key ring and consider a hidden spare solution. Add the bike to a maintenance checklist so spares are verified before trips.
 
-## Service areas we cover
-We help riders across **Omaha, Bellevue, Papillion, La Vista, Gretna, and Council Bluffs** with mobile service.
+Service area. We help riders across Omaha, Bellevue, Papillion, La Vista, Gretna, and Council Bluffs with mobile locksmith service.
 
-## When a dealer is still best
-- ECU or cluster replacements that require brand-specific online coding only a dealer can access
-- Warranty situations where the dealer must document the repair
+When a dealer still makes sense. ECU or cluster replacements that require brand-specific online coding should still be handled at a dealership. Warranty situations where the dealer must document the repair are also better suited for the dealer.
 
-## Ready when you are
-If you lost your motorcycle key, **call (402) 556-6715** for the fastest options in the metro.
+Ready when you are. If you lost your motorcycle key, call (402) 556-6715 and we will give you the fastest options in the Omaha metro.
   `
 };
 

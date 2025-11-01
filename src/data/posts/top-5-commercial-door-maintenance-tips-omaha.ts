@@ -20,42 +20,23 @@ const post: BlogPost = {
     "Aksarben Locksmiths"
   ],
   body: `
-## Why door maintenance matters
-Front doors, employee entrances, and stockroom exits take a beating. A few small checks prevent costly downtime, ADA complaints, and emergency calls.
+Why door maintenance matters. Front doors, employee entrances, and stockroom exits take daily wear. A few small checks prevent costly downtime, ADA complaints, and emergency calls.
 
-## 1) Check door closers quarterly
-- **Symptoms:** slamming, drifting, or doors that will not latch
-- **Quick fix:** adjust sweep and latch speed; tighten loose mounting screws
-- **When to call:** oil leaks or sprung arms → replace before it damages frames
+1) Check door closers quarterly. Watch for slamming, drifting, or doors that will not latch. Quick fix: adjust sweep and latch speed and tighten loose mounting screws. Call a professional for oil leaks or sprung arms to prevent frame damage.
 
-## 2) Keep hinges and pivots tight
-- **Symptoms:** door rubs the threshold or frame, visible sag
-- **Quick fix:** tighten hinge screws; replace missing sex bolts
-- **Upgrade:** heavy-duty continuous hinges on high-traffic aluminum doors
+2) Keep hinges and pivots tight. If the door rubs on the threshold or sags visibly, tighten hinge screws and replace missing hardware. Upgrade to heavy-duty continuous hinges on high-traffic aluminum doors.
 
-## 3) Test panic bars and exit hardware
-- **Do a 10-second drill:** door must open freely with one motion; relock correctly after tests
-- **Fire/life safety:** failed hardware risks citations and insurance issues
+3) Test panic bars and exit hardware. Do a ten second drill. The door must open freely with one motion and relock correctly after testing. Failed hardware risks citations and insurance issues.
 
-## 4) Protect your key control
-- Move managers and turnover? **Rekey**, do not duplicate keys endlessly.
-- Use labeled, **restricted** keys for departments and vendors.
-- Keep a simple log of who has what; audit twice per year.
+4) Protect key control. During manager changes and turnover, rekey instead of duplicating keys endlessly. Use labeled and restricted keys for departments and vendors. Keep a simple log of who has which keys and audit twice per year.
 
-## 5) Keep weatherstripping and strikes aligned
-- **Signs:** air gaps, visible daylight, latch barely catching the strike
-- **Benefit:** better latch reliability plus lower heating/cooling costs
+5) Align weatherstripping and strikes. Air gaps and visible daylight mean energy loss and weak latching. Adjust strikes and seals for better latch reliability and lower heating or cooling costs.
 
-## Plan a simple schedule
-- **Monthly:** visual check of hinges, closers, latches
-- **Quarterly:** adjust closers, tighten hardware, test panic devices
-- **During staff changes:** rekey appropriate cylinders and update key logs
+Plan a simple schedule. Each month, do a visual check of hinges, closers, and latches. Every quarter, adjust closers, tighten hardware, and test panic devices. During staff changes, rekey appropriate cylinders and update key logs.
 
-## We service the whole metro
-**Omaha, Bellevue, Papillion, La Vista, Gretna, Council Bluffs** — mobile technicians come to you and work around business hours.
+Metro coverage. We serve Omaha, Bellevue, Papillion, La Vista, Gretna, and Council Bluffs. Our mobile technicians work around business hours for convenience.
 
-## Need help?
-Set up a fast on-site check or a **rekey + closer tune-up** visit. Call **(402) 556-6715** and we will keep your doors smooth, safe, and compliant.
+Need help. Set up an on-site check or a rekey and closer tune-up. Call (402) 556-6715 and we will keep your doors smooth, safe, and compliant.
   `
 };
 
