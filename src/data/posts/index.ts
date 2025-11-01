@@ -14,6 +14,7 @@ import avoidCouncilBluffs from "./avoid-late-night-lockouts-in-council-bluffs";
 import servingOmaha from "./serving-omaha-for-over-a-decade";
 import motorcycleKeyReplacement from "./motorcycle-key-replacement-omaha-fast";
 import commercialDoorMaintenance from "./top-5-commercial-door-maintenance-tips-omaha";
+import protectSpareKeys from "./how-to-protect-your-spare-keys-from-thieves-and-digital-scanners";
 
 // Build the combined list: all posts now migrated to per-file modules
 const migrated = [
@@ -31,6 +32,7 @@ const migrated = [
   servingOmaha,
   motorcycleKeyReplacement,
   commercialDoorMaintenance,
+  protectSpareKeys,
 ];
 
 export const posts: BlogPost[] = migrated;
