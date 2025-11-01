@@ -293,6 +293,7 @@ export default function BlogPage() {
                         state={{ scrollFx: "bottomThenTop" }}
                         aria-label={`Read post: ${post.title}`}
                         onClick={(e) => {
+                          console.log("[Link] category card click → set intent bottomThenTop →", post.slug);
                           try {
                             const eventName = buildEventName({ base: 'blog', slug: post.slug, action: 'card_click' });
                             trackClick?.(eventName, e.currentTarget, {

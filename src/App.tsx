@@ -48,6 +48,7 @@ function App() {
 
   // Only scroll to top on real route changes, never on hash-only changes
   useEffect(() => {
+    console.log("[ScrollMgr] route:", location.pathname, "intent:", (location?.state as any)?.scrollFx || "none");
     if ((location?.state as any)?.scrollFx) {
       return;
     }
@@ -56,6 +57,7 @@ function App() {
       const lastY = sessionStorage.getItem("lastScrollY");
 
       if (!location?.state?.restorePosition && !location?.state?.scrollTo && !location?.state?.scrollFx) {
+        console.log("[ScrollMgr] default scrollTo(0)");
         window.scrollTo({ top: 0, behavior: "auto" });
         try {
           if (location?.state) {

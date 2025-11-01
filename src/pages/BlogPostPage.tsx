@@ -47,6 +47,7 @@ export default function BlogPostPage() {
 
   // PRE-PAINT SNAP to bottom (eliminates any top flash)
   useLayoutEffect(() => {
+    console.log("[BlogPost] useLayoutEffect pre-paint → snapToBottom", slug, "wantsBottomThenTop:", wantsBottomThenTop, "scrollY:", window.scrollY);
     if (!wantsBottomThenTop) return;
     const html = document.documentElement;
     const prevInline = html.style.scrollBehavior;
@@ -58,17 +59,20 @@ export default function BlogPostPage() {
     queueMicrotask(() => {
       html.style.scrollBehavior = prevInline;
     });
-  }, [wantsBottomThenTop]);
+  }, [wantsBottomThenTop, slug]);
 
   // POST-PAINT LUXURY RISE to top (same feel as Services)
   useEffect(() => {
+    console.log("[BlogPost] useEffect post-paint → smoothToTop", slug, "wantsBottomThenTop:", wantsBottomThenTop);
     if (wantsBottomThenTop) {
       const t = setTimeout(() => {
+        console.log("[BlogPost] executing smoothToTop");
         window.scrollTo({ top: 0, behavior: "smooth" });
       }, 100);
       return () => clearTimeout(t);
     }
     // Fallback for direct loads (keep signature motion): top → bottom
+    console.log("[BlogPost] fallback: top → bottom");
     const t = setTimeout(() => {
       window.scrollTo({
         top: document.documentElement.scrollHeight,
@@ -76,7 +80,7 @@ export default function BlogPostPage() {
       });
     }, 100);
     return () => clearTimeout(t);
-  }, [wantsBottomThenTop]);
+  }, [wantsBottomThenTop, slug]);
 
   useEffect(() => {
     if (!post) return;
@@ -286,6 +290,7 @@ export default function BlogPostPage() {
                 <Link
                   to={`/blog/${post.category}`}
                   onClick={(e) => {
+                    console.log("[Link] back to blog click → NO STATE SET →", `/blog/${post.category}`);
                     trackClick("back_to_blog", e.currentTarget as unknown as HTMLElement, {
                       source_page: "blog_post",
                       page_section: "header",
