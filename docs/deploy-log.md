@@ -242,3 +242,17 @@ Outcome
 • Visual, behavioral, and timing consistency achieved across mobile and desktop
 • Deployment verified under Netlify production (aksarbenlocksmiths.com)
 • Project ready for next-phase follow-up (Contact metrics & GA4 event mapping integration)
+
+2025-11-01 | Version 1429: Blog Expansion + Scroll Behavior Parity | Josh Applied Improvements | Deployed
+- Added two new SEO-optimized blog posts:
+  • /blog/motorcycle-key-replacement-omaha-fast — Category: Keys, Cutting & Programming
+  • /blog/top-5-commercial-door-maintenance-tips-omaha — Category: Commercial Doors, Hardware & Access
+- Posts include full metadata (title, description, keywords, JSON-LD BlogPosting & BreadcrumbList) and plain human-readable content
+- Verified category balance: Keys = 3 posts, Commercial = 4 posts
+- Sitemap auto-regenerated (27 URLs total) with correct ISO timestamps
+- GA4 tracking, schema, and related-links logic confirmed identical to prior posts
+- Fixed scroll direction inconsistency on related-post navigation
+  • Added state={{ scrollFx:"bottomThenTop" }} to BlogPostPage related links
+  • All blog cross-links now animate bottom→top consistently
+- Build Health: ✅ 0 Errors | ✅ 0 Warnings | ✅ Scroll + SEO layers unified
+- Ready for Google Search Console re-crawl (auto-indexed via sitemap)
