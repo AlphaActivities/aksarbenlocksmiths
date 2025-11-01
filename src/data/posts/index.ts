@@ -12,6 +12,8 @@ import tipsBellevue from "./5-tips-to-keep-your-bellevue-home-secure";
 import commonLaVista from "./common-lock-problems-la-vista-businesses-face";
 import avoidCouncilBluffs from "./avoid-late-night-lockouts-in-council-bluffs";
 import servingOmaha from "./serving-omaha-for-over-a-decade";
+import motorcycleKeyReplacement from "./motorcycle-key-replacement-omaha-fast";
+import commercialDoorMaintenance from "./top-5-commercial-door-maintenance-tips-omaha";
 
 // Build the combined list: all posts now migrated to per-file modules
 const migrated = [
@@ -27,6 +29,8 @@ const migrated = [
   commonLaVista,
   avoidCouncilBluffs,
   servingOmaha,
+  motorcycleKeyReplacement,
+  commercialDoorMaintenance,
 ];
 
 export const posts: BlogPost[] = migrated;
