@@ -174,6 +174,16 @@ const ContactSection: React.FC = () => {
           throw new Error(`Netlify submit failed: ${response.status} ${response.statusText} ${responseText}`.slice(0, 400));
         }
 
+        trackEvent('contact_success_action', {
+          form_name: 'contact',
+          submission_method: 'netlify_post',
+          page_path: window.location.pathname,
+          page_title: document.title,
+          has_phone: Boolean(formData.phone),
+          has_email: Boolean(formData.email),
+          intent_stage: 'conversion',
+        });
+
         const elapsed = performance.now() - startTime;
         const remaining = Math.max(0, 4000 - elapsed);
         if (remaining > 0) {

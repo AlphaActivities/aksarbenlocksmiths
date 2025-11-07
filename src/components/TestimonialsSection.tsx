@@ -80,10 +80,15 @@ const TestimonialsSection: React.FC = () => {
   const handlePrev = () => {
     setAutoplay(false);
     try {
+      const current = testimonials[activeIndex];
       trackClick('testimonial_arrow_click', undefined, {
         direction: 'previous',
         page_section: 'testimonials',
-        element_text: 'Previous'
+        element_text: 'Previous',
+        testimonial_index: activeIndex,
+        testimonial_name: current?.name || '',
+        rating: current?.rating || 0,
+        intent_stage: 'interest'
       });
     } catch {}
     lastMethodRef.current = 'prev';
@@ -93,10 +98,15 @@ const TestimonialsSection: React.FC = () => {
   const handleNext = () => {
     setAutoplay(false);
     try {
+      const current = testimonials[activeIndex];
       trackClick('testimonial_arrow_click', undefined, {
         direction: 'next',
         page_section: 'testimonials',
-        element_text: 'Next'
+        element_text: 'Next',
+        testimonial_index: activeIndex,
+        testimonial_name: current?.name || '',
+        rating: current?.rating || 0,
+        intent_stage: 'interest'
       });
     } catch {}
     lastMethodRef.current = 'next';
@@ -148,6 +158,7 @@ const TestimonialsSection: React.FC = () => {
     seenSlidesRef.current.add(to);
 
     try {
+      const current = testimonials[to];
       trackEvent('testimonial_cycle', {
         method,
         from_index: from,
@@ -155,6 +166,10 @@ const TestimonialsSection: React.FC = () => {
         page_section: 'testimonials',
         total_slides: testimonials.length,
         pageview_id: pageviewIdRef.current,
+        testimonial_index: to,
+        testimonial_name: current?.name || '',
+        rating: current?.rating || 0,
+        intent_stage: 'interest'
       });
     } catch {}
 
@@ -250,6 +265,8 @@ const TestimonialsSection: React.FC = () => {
               testimonial_position: t?.position ?? 'unknown',
               testimonial_index: activeIndex,
               source: t?.source ?? 'unknown',
+              rating: t?.rating || 0,
+              intent_stage: 'interest',
             });
           } catch {}
           hasTrackedLocal = true;
@@ -366,10 +383,13 @@ const TestimonialsSection: React.FC = () => {
               onClick={(e) => {
                 setAutoplay(false);
                 try {
+                  const t = testimonials[index];
                   trackClick('testimonial_dot_click', e.currentTarget, {
                     testimonial_index: index,
-                    testimonial_name: testimonials[index].name,
-                    page_section: 'testimonials'
+                    testimonial_name: t?.name || '',
+                    rating: t?.rating || 0,
+                    page_section: 'testimonials',
+                    intent_stage: 'interest'
                   });
                 } catch {}
                 lastMethodRef.current = 'dot';

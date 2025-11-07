@@ -135,6 +135,27 @@ function getPageContext(pathname: string): string {
   return 'other';
 }
 
+const ANALYTICS_EVENT_BLOCKLIST = new Set<string>(['scroll']);
+
+function safeGtag(...args: any[]) {
+  try {
+    const [type, name] = args as [string, string];
+    if (type === 'event' && typeof name === 'string') {
+      if (ANALYTICS_EVENT_BLOCKLIST.has(name)) return;
+    }
+    return window.__gtagOriginal__ ? window.__gtagOriginal__(...args) : undefined;
+  } catch {
+    /* no-op */
+  }
+}
+
+function installGtagGuard() {
+  if (!window.__gtagOriginal__ && typeof window.gtag === 'function') {
+    window.__gtagOriginal__ = window.gtag;
+    window.gtag = safeGtag;
+  }
+}
+
 // Returns page_section from element or falls back to page context (never "unknown" for indexable pages)
 function getPageSectionSafe(element?: HTMLElement): string {
   if (!element) return getPageContext(window.location.pathname);
@@ -386,6 +407,7 @@ declare global {
   interface Window {
     dataLayer: any[];
     gtag: (...args: any[]) => void;
+    __gtagOriginal__?: (...args: any[]) => void;
   }
 }
 
@@ -415,6 +437,8 @@ export function ensureGA4Loaded() {
 
   __gaLoaded = true;
   dbg('GA4 loaded programmatically', GA_ID);
+
+  setTimeout(installGtagGuard, 0);
 }
 
 // Configure GA4 with debug user ID in development
@@ -566,8 +590,12 @@ export const initOutboundLinkTracking = () => {
   }, { capture: true });
 };
 
+const STRICT_EVENT_ALLOWLIST: string[] | null = null;
+
 export const trackEvent = (eventName: string, parameters?: Record<string, any>) => {
   if (typeof window !== 'undefined' && window.gtag) {
+    if (STRICT_EVENT_ALLOWLIST && !STRICT_EVENT_ALLOWLIST.includes(eventName)) return;
+
     const params = parameters || {};
     const pathname = window.location.pathname;
 

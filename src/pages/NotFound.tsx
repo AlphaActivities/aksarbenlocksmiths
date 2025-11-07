@@ -7,8 +7,10 @@ import { trackClick, trackEvent } from "../utils/analytics";
 export default function NotFound() {
   useEffect(() => {
     trackEvent("error_page_view", {
-      path: window.location.pathname,
-      referrer: document.referrer || ""
+      page_path: window.location.pathname,
+      referrer: document.referrer || "",
+      attempted_url: window.location.href,
+      page_type: "error_404",
     });
   }, []);
 
