@@ -36,7 +36,7 @@ Plan a simple schedule. Each month, do a visual check of hinges, closers, and la
 
 Metro coverage. We serve Omaha, Bellevue, Papillion, La Vista, Gretna, and Council Bluffs. Our mobile technicians work around business hours for convenience.
 
-Need help. Set up an on-site check or a rekey and closer tune-up. Call (402) 556-6715 and we will keep your doors smooth, safe, and compliant.
+Need help. Set up an on-site check or a rekey and closer tune-up. Call (402) 350-7534 and we will keep your doors smooth, safe, and compliant.
   `
 };
 

@@ -38,7 +38,7 @@ Service area. We help riders across Omaha, Bellevue, Papillion, La Vista, Gretna
 
 When a dealer still makes sense. ECU or cluster replacements that require brand-specific online coding should still be handled at a dealership. Warranty situations where the dealer must document the repair are also better suited for the dealer.
 
-Ready when you are. If you lost your motorcycle key, call (402) 556-6715 and we will give you the fastest options in the Omaha metro.
+Ready when you are. If you lost your motorcycle key, call (402) 350-7534 and we will give you the fastest options in the Omaha metro.
   `
 };
 

@@ -281,7 +281,7 @@ export default function DynamicServicePage() {
       "@type": "LocalBusiness",
       "name": "Aksarben Locksmiths",
       "image": `${origin}/images/shield-logo.webp`,
-      "telephone": "+14025566715",
+      "telephone": "+14023507534",
       "url": origin
     },
     "offers": {
@@ -348,11 +348,11 @@ export default function DynamicServicePage() {
       <div className="fixed top-0 w-full z-50 bg-black backdrop-blur-md shadow-lg text-sm px-4 py-1 flex justify-between items-center">
         <span className="text-white motion-safe:animate-pulse">24/7 Emergency Service</span>
         <a
-          href="tel:+14025566715"
+          href="tel:+14023507534"
           className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition motion-safe:animate-pulse"
         >
           <Phone className="h-4 w-4" />
-          (402) 556-6715
+          (402) 350-7534
         </a>
       </div>
 
@@ -474,14 +474,14 @@ export default function DynamicServicePage() {
         
         <div className="flex justify-center mt-8">
           <a 
-            href="tel:+14025566715" 
+            href="tel:+14023507534" 
             onClick={(e) => {
               const eventName = buildEventName({ base: 'service_page_cta', action: 'call_button_click' });
               trackClick(eventName, e.currentTarget, {
                 service: data.title,
                 service_name: data.title,
                 service_slug: slug,
-                phone_number: '+14025566715',
+                phone_number: '+14023507534',
                 page_section: 'service_page',
                 origin: 'service_page_cta'
               });

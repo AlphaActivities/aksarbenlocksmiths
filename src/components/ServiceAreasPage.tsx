@@ -144,7 +144,7 @@ export default function ServiceAreasPage() {
             "@id": "https://aksarbenlocksmiths.com/#localbusiness",
             "name": "Aksarben Locksmiths",
             "url": "https://aksarbenlocksmiths.com",
-            "telephone": "+14025566715",
+            "telephone": "+14023507534",
             "image": "https://aksarbenlocksmiths.com/images/services-thumbnails/map-service-area.png",
             "address": {
               "@type": "PostalAddress",
@@ -211,7 +211,7 @@ export default function ServiceAreasPage() {
             "@type": "Locksmith",
             "name": "Aksarben Locksmiths",
             "url": "https://aksarbenlocksmiths.com/",
-            "telephone": "+14025566715",
+            "telephone": "+14023507534",
             "image": "https://aksarbenlocksmiths.com/images/services-thumbnails/map-service-area.png",
             "areaServed": ALL_CITIES.map((city) => ({
               "@type": "City",
@@ -235,19 +235,19 @@ export default function ServiceAreasPage() {
       <div className="fixed top-0 w-full z-50 bg-black backdrop-blur-md shadow-lg text-sm px-4 py-1 flex justify-between items-center">
         <span className="text-white motion-safe:animate-pulse">24/7 Emergency Service</span>
         <a
-          href="tel:+14025566715"
+          href="tel:+14023507534"
           onClick={(e) =>
             trackClick("header_phone_click", e.currentTarget as HTMLElement, {
-              phone_number: "+14025566715",
+              phone_number: "+14023507534",
               source: "service_areas_top_bar",
               page_section: "service_areas",
             })
           }
-          aria-label="Call Aksarben Locksmiths emergency line at 402 556 6715"
+          aria-label="Call Aksarben Locksmiths emergency line at 402 350 7534"
           className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition motion-safe:animate-pulse focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-black"
         >
           <Phone className="h-4 w-4" />
-          (402) 556-6715
+          (402) 350-7534
         </a>
       </div>
 
@@ -377,7 +377,7 @@ export default function ServiceAreasPage() {
         {/* Bottom CTA */}
         <div className="relative z-20 flex justify-center mt-8">
           <a
-            href="tel:+14025566715"
+            href="tel:+14023507534"
             className="bg-gradient-to-l from-red-900 via-red-600 to-red-800 text-white py-3 px-6 rounded-full shadow-[0_0_24px_rgba(255,255,255,0.5)] hover:brightness-125 hover:scale-105 transition duration-300 ease-in-out animate-[pulseRedGlow_3s_ease-in-out_infinite] inline-flex items-center gap-2 mix-blend-normal focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-400"
             aria-label="Call Aksarben Locksmiths"
             title="Call Aksarben Locksmiths"

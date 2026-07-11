@@ -20,11 +20,11 @@ const EmergencyButton: React.FC = () => {
 
   return (
     <a
-      href="tel:+14025566715"
+      href="tel:+14023507534"
       onClick={(e) => {
         const eventName = buildEventName({ base: 'floating_call_button', action: 'call_button_click' });
         trackClick(eventName, e.currentTarget, {
-          phone_number: '+14025566715',
+          phone_number: '+14023507534',
           page_section: 'floating_call',
           origin: 'floating_call_button'
         });

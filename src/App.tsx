@@ -148,16 +148,16 @@ function App() {
               <div className="fixed top-0 w-full z-50 bg-black backdrop-blur-md shadow-lg text-sm px-4 py-1 flex justify-between items-center">
                 <span className="text-white animate-pulse">24/7 Emergency Service</span>
                 <a
-                  href="tel:+14025566715"
+                  href="tel:+14023507534"
                   onClick={(e) => trackClick('top_bar_phone_click', e.currentTarget, { 
-                    phone_number: '+14025566715',
+                    phone_number: '+14023507534',
                     source: 'top_emergency_bar',
                     page_section: 'emergency_top_bar'
                   })}
                   className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition animate-pulse"
                 >
                   <Phone className="h-4 w-4" />
-                  (402) 556-6715
+                  (402) 350-7534
                 </a>
               </div>
               <Navbar />

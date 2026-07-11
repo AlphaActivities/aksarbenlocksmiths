@@ -273,11 +273,11 @@ const ContactSection: React.FC = () => {
                   <div>
                     <p className="font-medium text-white mb-1">Phone</p>
                     <a
-                      href="tel:+14025566715"
+                      href="tel:+14023507534"
                       onClick={(e) => {
                         const eventName = buildEventName({ base: 'contact_section', action: 'call_button_click' });
                         trackClick(eventName, e.currentTarget, {
-                          phone_number: '+14025566715',
+                          phone_number: '+14023507534',
                           source: 'contact_section',
                           page_section: 'contact',
                           origin: 'contact_section'
@@ -285,7 +285,7 @@ const ContactSection: React.FC = () => {
                       }}
                       className="text-white/70 hover:text-red-500 transition-colors"
                     >
-                      (402) 556-6715
+                      (402) 350-7534
                     </a>
                   </div>
                 </div>
@@ -584,7 +584,7 @@ const ContactSection: React.FC = () => {
                   </button>
 
                   <a
-                    href="tel:+14025566715"
+                    href="tel:+14023507534"
                     className={[
                       'overflow-hidden rounded-full px-6 py-0 font-medium text-white bg-red-600 hover:bg-red-700',
                       'flex items-center justify-center gap-2',
@@ -607,7 +607,7 @@ const ContactSection: React.FC = () => {
                       const eventName = buildEventName({ base: 'contact', action: 'call_after_submit_click' });
                       trackClick(eventName, e.currentTarget, {
                         ...contactContext,
-                        phone_number: '+14025566715',
+                        phone_number: '+14023507534',
                         service_type: formData.service,
                         after_submit: true,
                         actions_stage: actionsStage
