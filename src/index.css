@@ -681,7 +681,7 @@ video:fullscreen {
 }
 
 /* ---- Prevent accidental horizontal scrolling sitewide ---- */
-html, body, #root {
+html, body {
   overflow-x: hidden;
 }
 
