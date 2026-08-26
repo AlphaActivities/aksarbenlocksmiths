@@ -338,18 +338,18 @@ const Footer: React.FC = () => {
               <li className="flex items-center space-x-5">
                 <Phone className="w-6 h-6 text-red-500" />
                 <a
-                  href="tel:+14023507534"
+                  href="tel:+14025566715"
                   onClick={(e) => {
                     const eventName = buildEventName({ base: 'footer', action: 'call_button_click' });
                     trackClick(eventName, e.currentTarget, {
-                      phone_number: '+14023507534',
+                      phone_number: '+14025566715',
                       page_section: 'footer',
                       origin: 'footer'
                     });
                   }}
                   className="text-lg font-medium hover:text-red-500 transition-colors"
                 >
-                  (402) 350-7534
+                  (402) 556-6715
                 </a>
               </li>
               <li className="flex items-center space-x-5">

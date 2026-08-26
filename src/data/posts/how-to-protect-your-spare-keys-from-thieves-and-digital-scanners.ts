@@ -35,5 +35,5 @@ Create a simple household key policy. Decide where spares live, who may check th
 
 When to upgrade hardware. On vehicles with chronic relay attacks in the neighborhood, consider a steering-wheel lock as a visible deterrent. For homes, upgrade to deadbolts with restricted keys that cannot be duplicated at kiosks and require an ID card at a locksmith shop. Ask about high-security cylinders for small businesses with staff turnover.
 
-Service areas and help. Our mobile team serves Council Bluffs, Omaha, Bellevue, Papillion, La Vista, Gretna, and nearby communities. If you lost a key, need fobs reprogrammed, or want your home or business rekeyed, call (402) 350-7534 and we will recommend the fastest, safest option.`,
+Service areas and help. Our mobile team serves Council Bluffs, Omaha, Bellevue, Papillion, La Vista, Gretna, and nearby communities. If you lost a key, need fobs reprogrammed, or want your home or business rekeyed, call (402) 556-6715 and we will recommend the fastest, safest option.`,
 } as const;

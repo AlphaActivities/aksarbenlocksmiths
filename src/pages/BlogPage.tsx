@@ -96,10 +96,10 @@ export default function BlogPage() {
       <div className="fixed top-0 w-full z-50 bg-black backdrop-blur-md shadow-lg text-sm px-4 py-1 flex justify-between items-center">
         <span className="text-white motion-safe:animate-pulse">24/7 Emergency Service</span>
         <a
-          href="tel:+14023507534"
+          href="tel:+14025566715"
           onClick={(e) =>
             trackClick("top_bar_phone_click", e.currentTarget, {
-              phone_number: "+14023507534",
+              phone_number: "+14025566715",
               source: "top_emergency_bar",
               page_section: "emergency_top_bar",
             })
@@ -107,7 +107,7 @@ export default function BlogPage() {
           className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition motion-safe:animate-pulse"
         >
           <Phone className="h-4 w-4" />
-          (402) 350-7534
+          (402) 556-6715
         </a>
       </div>
 
@@ -340,7 +340,7 @@ export default function BlogPage() {
 
                 <div className="flex justify-center mt-10">
                   <a
-                    href="tel:+14023507534"
+                    href="tel:+14025566715"
                     onClick={(e) =>
                       trackClick("cta_blog_call_click", e.currentTarget, {
                         source_page: "blog_index",

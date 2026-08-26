@@ -130,11 +130,11 @@ const Navbar: React.FC = () => {
           </div>
 
           <a
-            href="tel:+14023507534"
+            href="tel:+14025566715"
             onClick={(e) => {
               const eventName = buildEventName({ base: 'header', action: 'call_button_click' });
               trackClick(eventName, e.currentTarget, {
-                phone_number: '+14023507534',
+                phone_number: '+14025566715',
                 origin: 'header',
                 page_section: 'header_cta'
               });
@@ -198,10 +198,10 @@ const Navbar: React.FC = () => {
                         page_section: 'mobile_menu',
                         nav_item: 'emergency_call',
                         origin: 'mobile_emergency',
-                        phone_number: '+14023507534'
+                        phone_number: '+14025566715'
                       });
                       trackNavigation('emergency_call', 'mobile_menu');
-                      window.location.href = 'tel:+14023507534';
+                      window.location.href = 'tel:+14025566715';
                       return;
                     }
 
