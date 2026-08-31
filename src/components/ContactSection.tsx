@@ -324,6 +324,28 @@ const ContactSection: React.FC = () => {
                 
                 <div className="flex items-start">
                   <div className="bg-red-600/20 p-3 rounded-full mr-4">
+                    <MapPin className="h-6 w-6 text-red-500" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-white mb-1">Address</p>
+                    <a
+                      href="https://maps.app.goo.gl/wEUyPutcxoth9yat8"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => trackClick('address_click', e.currentTarget, {
+                        page_section: 'contact',
+                        source: 'contact_section',
+                        destination: 'https://maps.app.goo.gl/wEUyPutcxoth9yat8'
+                      })}
+                      className="text-white/70 hover:text-red-500 transition-colors"
+                    >
+                      3413 S 122nd St<br />Omaha, NE 68144
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <div className="bg-red-600/20 p-3 rounded-full mr-4">
                     <Clock className="h-6 w-6 text-red-500" />
                   </div>
                   <div>

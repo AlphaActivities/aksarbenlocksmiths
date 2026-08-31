@@ -368,22 +368,41 @@ const Footer: React.FC = () => {
               </li>
               <li className="flex items-start space-x-5">
                 <MapPin className="w-6 h-6 text-red-500 mt-1" />
-                <Link
-                  to="/service-areas"
-                  state={{ fromFooter: true }}
-                  onClick={(e) =>
-                    trackClick('footer_service_areas_click', e.currentTarget as unknown as HTMLElement, {
-                      source: 'footer',
+                <a
+                  href="https://maps.app.goo.gl/wEUyPutcxoth9yat8"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => {
+                    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
+                      return;
+                    }
+                    trackClick('address_click', e.currentTarget, {
                       page_section: 'footer',
-                      destination: '/service-areas',
-                    })
-                  }
+                      source: 'footer',
+                      destination: 'https://maps.app.goo.gl/wEUyPutcxoth9yat8',
+                    });
+                    e.preventDefault();
+                    const ua = navigator.userAgent || '';
+                    const isIOS = /iPad|iPhone|iPod/.test(ua);
+                    const isAndroid = /Android/.test(ua);
+                    const webUrl = 'https://maps.app.goo.gl/wEUyPutcxoth9yat8';
+                    const appUrl = 'comgooglemaps://?center=41.320272,-96.1460354&q=Aksarben+Locksmiths+LLC';
+                    if (isIOS || isAndroid) {
+                      openWithAppFallback({
+                        appUrl,
+                        webUrl,
+                        timeoutMs: 600,
+                      });
+                    } else {
+                      window.location.href = webUrl;
+                    }
+                  }}
                   className="text-lg font-medium leading-relaxed hover:text-red-500 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 rounded-md"
-                  aria-label="View our Service Areas"
-                  title="View our Service Areas"
+                  aria-label="View our location on Google Maps"
+                  title="View our location on Google Maps"
                 >
-                  Omaha, Nebraska & All<br />Surrounding Cities
-                </Link>
+                  3413 S 122nd St<br />Omaha, NE 68144<br />& Surrounding Cities
+                </a>
               </li>
               <li className="mt-0">
                 <form

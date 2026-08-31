@@ -148,8 +148,10 @@ export default function ServiceAreasPage() {
             "image": "https://aksarbenlocksmiths.com/images/services-thumbnails/map-service-area.png",
             "address": {
               "@type": "PostalAddress",
+              "streetAddress": "3413 S 122nd St",
               "addressLocality": "Omaha",
               "addressRegion": "NE",
+              "postalCode": "68144",
               "addressCountry": "US"
             }
           })}
