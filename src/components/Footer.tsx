@@ -401,7 +401,7 @@ const Footer: React.FC = () => {
                   aria-label="View our location on Google Maps"
                   title="View our location on Google Maps"
                 >
-                  <span className="leading-[1.05]">3413 S 122nd St<br />Omaha, NE 68144</span>
+                  <span className="leading-[1.05]"><span className="inline-block translate-y-[3px]">3413 S 122nd St</span><br />Omaha, NE 68144</span>
                 </a>
               </li>
               <li className="mt-0">
