@@ -397,11 +397,11 @@ const Footer: React.FC = () => {
                       window.location.href = webUrl;
                     }
                   }}
-                  className="text-lg font-medium leading-none hover:text-red-500 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 rounded-md"
+                  className="text-lg font-medium leading-relaxed hover:text-red-500 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 rounded-md"
                   aria-label="View our location on Google Maps"
                   title="View our location on Google Maps"
                 >
-                  3413 S 122nd St<br />Omaha, NE 68144
+                  <span className="leading-[1.05]">3413 S 122nd St<br />Omaha, NE 68144</span>
                 </a>
               </li>
               <li className="mt-0">
