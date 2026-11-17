@@ -17,6 +17,8 @@ test("password recovery entry, generic confirmation, invalid link and voluntary 
   await page.getByRole('button',{name:'Email password reset link'}).click();
   await expect(page.getByRole('status')).toContainText('If this address has an eligible account');
   await page.goto('/admin/reset-password#error=access_denied&error_code=otp_expired');
+  // A provider redirect is a fresh document; a same-document hash change alone is not.
+  await page.reload();
   await expect(page.getByRole('alert')).toContainText('invalid or has expired');
   await expect(page).toHaveURL(/\/admin\/reset-password$/);
   await page.goto('/admin/reset-password?code='+ 'a'.repeat(64));
