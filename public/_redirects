@@ -8,6 +8,11 @@ https://www.aksarbenlocksmiths.com/* https://aksarbenlocksmiths.com/:splat 301!
 /services/emergency   /   301!
 /services/lock-repair /services/rekeying 301!
 
+# Private CRM routes must precede the public SPA catch-all.
+/api/crm/* /.netlify/functions/crm/:splat 200!
+/admin /admin/index.html 200
+/admin/* /admin/index.html 200
+
 # SPA
 /sitemap.xml   /sitemap.xml   200
 /robots.txt    /robots.txt    200
