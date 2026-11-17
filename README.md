@@ -64,3 +64,10 @@ Email: (gta.alpha.activities@gmail.com/ringtheboss@gmail.com)
 ---
 
 > *“Built for trust, optimized for speed, and forged in the fire of real results.”*
+
+
+## Private callback queue
+
+The separate `/admin` application supports authorized C1 staff accounts, callback outcomes, follow ups, reviewed History and per-device notification settings. Emergency calling and the existing Netlify `contact` form remain public. Intake synchronization and push default to disabled until the dedicated server bindings and live checks are complete; VoIP.ms is deferred.
+
+See [the operational runbook](docs/crm/RUNBOOK.md), [verified targets and baseline](docs/crm/PREFLIGHT.md), and [implementation evidence](docs/crm/RESULTS.md) before deployment. Local commits alone are not a production release.
