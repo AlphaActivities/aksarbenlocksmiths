@@ -1,0 +1,12 @@
+project_id = "c1-aksarben-local"
+[api]
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+[db]
+port = 54322
+major_version = 15
+[auth]
+site_url = "http://localhost:5173/admin"
+additional_redirect_urls = ["http://localhost:5173/admin"]
+enable_signup = false
