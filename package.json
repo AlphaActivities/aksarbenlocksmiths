@@ -24,7 +24,12 @@
     "axe:service": "npx @axe-core/cli http://localhost:4173/services/rekeying --save docs/axe-service.json",
     "qa:all": "npm run lh:home && npm run lh:blog && npm run lh:service && npm run axe:home && npm run axe:blog && npm run axe:service",
     "qa:summary": "node scripts/summarize-qa.mjs",
-    "browserslist:update": "npx update-browserslist-db@latest"
+    "browserslist:update": "npx update-browserslist-db@latest",
+    "test:crm": "node --test tests/crm/*.test.mjs",
+    "test:crm:db": "bash scripts/crm/test-db.sh",
+    "check:crm": "eslint src/admin src/components/CallbackAssistant.tsx src/utils/analyticsPrivacy.ts && tsc -p tsconfig.crm.json",
+    "history:export": "node scripts/crm/export-history.mjs",
+    "history:import": "node scripts/crm/import-history.mjs"
   },
   "dependencies": {
     "clsx": "^2.0.0",
@@ -33,10 +38,12 @@
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",
     "react-router-dom": "^6.8.1",
-    "tailwind-merge": "^2.0.0"
+    "tailwind-merge": "^2.0.0",
+    "web-push": "3.6.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
+    "@playwright/test": "1.56.1",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.2.1",
