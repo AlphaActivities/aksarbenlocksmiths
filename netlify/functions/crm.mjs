@@ -10,6 +10,7 @@ import {
   newKey,
 } from "./lib/core.mjs";
 import { syncIntake } from "./lib/intake.mjs";
+import { recovery } from "./lib/recovery.mjs";
 const cookieName = "c1_access",
   refreshName = "c1_refresh";
 const cookie = (name, value, age) =>
@@ -66,6 +67,8 @@ export function createHandler(deps = {}) {
       if ((event.body || "").length > 24000)
         throw new Fault(413, "request_too_large");
       const body = method === "GET" ? {} : JSON.parse(event.body || "{}");
+      const recovered = await recovery({ path, method, body, headers, cfg, request, deps: { ...deps, env }, reply, cookie, parseCookies });
+      if (recovered) return recovered;
       const auth = async (route, payload, token) => {
         const res = await request(`${cfg.url}/auth/v1/${route}`, {
           method: payload ? "POST" : "GET",
@@ -373,8 +376,14 @@ export function createHandler(deps = {}) {
           return reply(200, { ok: true }, cookies);
         }
       }
-      if (path === "business" || path === "reconcile") {
+      if (path === "business" || path === "reconcile" || path === "team") {
         if (role !== "josh_admin") throw new Fault(403, "admin_required");
+        if (path === "team" && method === "GET")
+          return reply(200, await rpc("crm_team", {}, { token }, deps), cookies);
+        if (path === "team" && method === "POST") {
+          if (!["staff", "client"].includes(body.role) || typeof body.remove !== "boolean") throw new Fault(422, "invalid_fields");
+          return reply(200, await rpc("crm_manage_member", { p_email: bounded(body.email, 254, true), p_role: body.role, p_remove: body.remove }, { token }, deps), cookies);
+        }
         if (path === "business" && method === "GET")
           return reply(
             200,

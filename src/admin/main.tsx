@@ -28,6 +28,8 @@ import {
 import Settings from "./Settings";
 import Detail from "./Detail";
 import Entrance from "./Entrance";
+import Recovery from "./Recovery";
+import Team from "./Team";
 import "./admin.css";
 function Login({ signedIn }: { signedIn: () => void }) {
   const [email, setEmail] = useState(""),
@@ -77,6 +79,7 @@ function Login({ signedIn }: { signedIn: () => void }) {
         <p role="alert">{error}</p>
         <button disabled={busy}>{busy ? "Signing in…" : "Sign in"}</button>
       </form>
+      <p><Link to="/admin/reset-password">Forgot password?</Link></p>
       <a href="tel:+14025566715">
         <Phone size={18} /> Emergency: (402) 556-6715
       </a>
@@ -330,11 +333,13 @@ function Business() {
       >
         Reconcile website submissions
       </button>
+      <Team />
     </section>
   );
 }
 export function App() {
   const location = useLocation();
+  const isRecovery = location.pathname === "/admin/reset-password";
   const queueSequence = useRef(0);
   const [session, setSession] = useState<Session | null>(null),
     [checking, setChecking] = useState(true),
@@ -375,6 +380,7 @@ export function App() {
       });
   }, [from, to, service]);
   useEffect(() => {
+    if (isRecovery) { setChecking(false); return; }
     loadSession();
     const logout = () => {
       queueSequence.current++;
@@ -384,7 +390,7 @@ export function App() {
     };
     window.addEventListener("c1-signed-out", logout);
     return () => window.removeEventListener("c1-signed-out", logout);
-  }, [loadSession]);
+  }, [loadSession, isRecovery]);
   useEffect(() => {
     if (!session) return;
     refresh();
@@ -417,6 +423,7 @@ export function App() {
   useEffect(() => {
     document.title = "Aksarben | Private callback queue";
   }, [location.pathname]);
+  if (location.pathname === "/admin/reset-password") return <Recovery />;
   if (checking)
     return (
       <main className="c1-login" role="status">
