@@ -9,6 +9,7 @@ import AboutSection from './components/AboutSection';
 import TestimonialsSection from './components/TestimonialsSection';
 import PricingSection from './components/PricingSection';
 import ContactSection from './components/ContactSection';
+import CallbackAssistant from './components/CallbackAssistant';
 import Footer from './components/Footer';
 import EmergencyButton from './components/EmergencyButton';
 import BackToTop from './components/BackToTop';
@@ -168,6 +169,7 @@ function App() {
                 <TestimonialsSection />
                 <PricingSection />
                 <ContactSection />
+                <CallbackAssistant />
               </main>
               <EmergencyButton />
               <BackToTop />

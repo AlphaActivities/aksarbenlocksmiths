@@ -21,7 +21,9 @@ const ContactSection: React.FC = () => {
     email: '',
     phone: '',
     service: 'Residential',
-    message: ''
+    message: '',
+    area: '',
+    urgency: 'quote'
   });
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -109,7 +111,9 @@ const ContactSection: React.FC = () => {
         email: '',
         phone: '',
         service: 'Residential',
-        message: ''
+        message: '',
+        area: '',
+        urgency: 'quote'
       });
 
       setActionsStage('pre');
@@ -128,11 +132,6 @@ const ContactSection: React.FC = () => {
     const startTime = performance.now();
 
     setActionsStage('hidden');
-
-    console.log('[Contact] ENV', {
-      ENABLE: import.meta.env.VITE_ENABLE_FORM_SEND,
-      FAKE: import.meta.env.VITE_FAKE_SUCCESS_FLOW
-    });
 
     trackFormEvent('form_submit', 'contact_form', {
       service_type: formData.service,
@@ -153,35 +152,33 @@ const ContactSection: React.FC = () => {
       email: formData.email,
       phone: formData.phone,
       service: formData.service,
-      message: formData.message
+      message: formData.message,
+      area: formData.area,
+      urgency: formData.urgency,
+      source: 'website'
     });
 
     try {
       if (shouldSend) {
-        console.log('[Contact] Will POST body', body.toString());
-
         const response = await fetch('/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: body.toString()
         });
 
-        console.log('[Contact] Response', response.status, response.statusText);
-        const responseText = await response.text();
-        console.log('[Contact] Response body', responseText);
 
         if (!response.ok) {
-          throw new Error(`Netlify submit failed: ${response.status} ${response.statusText} ${responseText}`.slice(0, 400));
+          throw new Error('netlify_acceptance_failed');
         }
 
-        trackEvent('contact_success_action', {
+        trackEvent('website_submission_accepted', {
           form_name: 'contact',
           submission_method: 'netlify_post',
           page_path: window.location.pathname,
           page_title: document.title,
           has_phone: Boolean(formData.phone),
           has_email: Boolean(formData.email),
-          intent_stage: 'conversion',
+          intent_stage: 'intent',
         });
 
         const elapsed = performance.now() - startTime;
@@ -195,7 +192,7 @@ const ContactSection: React.FC = () => {
 
       startSuccessPhase();
 
-      trackEvent('contact_form_submit_success', {
+      trackEvent('contact_intake_flow_finished', {
         ...contactContext,
         service_type: formData.service,
         submission_method: shouldSend ? 'netlify_forms' : 'visual_only_dev',
@@ -203,15 +200,15 @@ const ContactSection: React.FC = () => {
         has_email: !!formData.email
       });
 
-    } catch (err: any) {
-      console.error('[Contact] POST failed', err);
+    } catch {
+      console.warn('[Contact] submission_not_confirmed');
       setIsSending(false);
       setIsSuccess(false);
       setAriaStatus('Submission failed. Please try again.');
 
       trackEvent('contact_form_submit_error', {
         ...contactContext,
-        error_message: String(err?.message || err),
+        error_code: 'submission_not_confirmed',
         service_type: formData.service,
         submission_method: shouldSend ? 'netlify_forms' : 'visual_only_dev'
       });
@@ -403,6 +400,7 @@ const ContactSection: React.FC = () => {
                 <input
                   type="text"
                   id="name"
+                  maxLength={120}
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
@@ -420,6 +418,7 @@ const ContactSection: React.FC = () => {
                   <input
                     type="email"
                     id="email"
+                    maxLength={254}
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
@@ -436,6 +435,8 @@ const ContactSection: React.FC = () => {
                   <input
                     type="tel"
                     id="phone"
+                    maxLength={40}
+                    pattern="[+0-9() .-]{7,40}"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
@@ -485,9 +486,21 @@ const ContactSection: React.FC = () => {
               </div>
               
               <div>
+                <label htmlFor="callback-area" className="block text-white/80 mb-2">Service area or ZIP</label>
+                <input id="callback-area" name="area" value={formData.area} onChange={handleChange} required maxLength={120} className="w-full bg-white/10 border border-white/20 rounded-lg p-3 text-white" autoComplete="postal-code" />
+              </div>
+              <div>
+                <label htmlFor="callback-urgency" className="block text-white/80 mb-2">When do you need help?</label>
+                <select id="callback-urgency" name="urgency" value={formData.urgency} onChange={e => setFormData({ ...formData, urgency: e.target.value })} className="w-full bg-[#0d152b] border border-white/20 rounded-lg p-3 text-white">
+                  <option value="urgent">Emergency lockout — please call for immediate help</option><option value="scheduled">Scheduled rekey or auto key work</option><option value="quote">Quote request</option>
+                </select>
+                {formData.urgency === 'urgent' && <a className="inline-block mt-3 underline" href="tel:+14025566715">Emergency: call (402) 556-6715 now</a>}
+              </div>
+              <div>
                 <label htmlFor="message" className="block text-white/80 mb-2">Message</label>
                 <textarea
                   id="message"
+                  maxLength={6000}
                   name="message"
                   value={formData.message}
                   onChange={handleChange}

@@ -53,14 +53,13 @@ export function createHandler(deps = {}) {
       if (!["GET", "POST", "DELETE"].includes(method))
         throw new Fault(405, "method_not_allowed");
       if (method !== "GET") {
-        if (
-          headers.origin !== "https://aksarbenlocksmiths.com" &&
-          !(
-            env.NETLIFY_DEV === "true" &&
-            headers.origin === "http://localhost:8888"
-          )
-        )
-          throw new Fault(403, "origin_rejected");
+        const allowed = new Set(["https://aksarbenlocksmiths.com"]);
+        if (env.DEPLOY_PRIME_URL) {
+          const preview = new URL(env.DEPLOY_PRIME_URL);
+          if (preview.protocol === "https:" && /^(?:[a-z0-9-]+--)?aksarbenlocksmiths\.netlify\.app$/.test(preview.hostname)) allowed.add(preview.origin);
+        }
+        if (env.NETLIFY_DEV === "true") allowed.add("http://localhost:8888");
+        if (!allowed.has(headers.origin)) throw new Fault(403, "origin_rejected");
         if (!headers["content-type"]?.startsWith("application/json"))
           throw new Fault(415, "json_required");
       }
@@ -219,12 +218,15 @@ export function createHandler(deps = {}) {
       if (path === "manual" && method === "POST") {
         if (!UUID.test(body.request_key || ""))
           throw new Fault(422, "invalid_request_key");
+        const phone = bounded(body.phone || "", 40, true);
+        if (!/^\+?\d{7,15}$/.test(phone.replace(/[^\d+]/g, "")))
+          throw new Fault(422, "invalid_callback_number");
         const r = {
           source: "manual",
           provider_id: body.request_key,
           created_at: new Date().toISOString(),
           name: bounded(body.name, 120, true),
-          phone: bounded(body.phone || "", 40),
+          phone,
           email: "",
           service: bounded(body.service, 100, true),
           area: bounded(body.area || "", 120),

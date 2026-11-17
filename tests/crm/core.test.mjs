@@ -393,3 +393,19 @@ test("push dispatch respects preferences, deduplicates accepted delivery and cle
   });
   assert.equal(removed.length, 1);
 });
+
+test('only the authorized Netlify site preview origin can make authenticated writes',async()=>{
+ const preview='https://qa--aksarbenlocksmiths.netlify.app';
+ const handler=createHandler({env:{...env,DEPLOY_PRIME_URL:preview},fetch:authFetch('staff')});
+ assert.equal((await handler(event('logout','POST',{}, {origin:preview}))).statusCode,200);
+ assert.equal((await handler(event('logout','POST',{}, {origin:'https://other--different-client.netlify.app'}))).statusCode,403);
+});
+
+test('analytics scrubs contact details, free text, queries and private URLs',async()=>{
+ const ts=await import('typescript');
+ const code=ts.transpileModule(readFileSync('src/utils/analyticsPrivacy.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2020}}).outputText;
+ const context={exports:{},window:{location:{origin:'https://aksarbenlocksmiths.com'}},URL};vm.runInNewContext(code,context);
+ const clean=context.exports.scrubAnalytics({name:'Synthetic QA',phone:'+14025550101',email:'qa@example.invalid',chat_content:'private',message:'private',query:'private',page_path:'/?email=qa@example.invalid',page_location:'/admin/leads/'+id,service_slug:'rekeying',count:2});
+ assert.deepEqual(JSON.parse(JSON.stringify(clean)),{service_slug:'rekeying',count:2});
+ const url=context.exports.scrubAnalytics({page_path:'/?q=private',service_slug:'rekeying'});assert.equal(url.page_path,'/');
+});

@@ -1,3 +1,4 @@
+import { scrubAnalytics } from './analyticsPrivacy';
 // Google Analytics 4 utility functions
 //
 // GA4 Event Naming Standard:
@@ -169,6 +170,7 @@ function getPageSectionSafe(element?: HTMLElement): string {
 // Maps key event patterns to behavioral intent stages
 function inferIntentStage(eventName: string, params: Record<string, any> = {}): string {
   const name = eventName.toLowerCase();
+  if (/call|phone|email|form_submit|submission_accepted/.test(name)) return 'intent';
 
   // Awareness: early page exposure & shallow scroll
   if (name.includes('page_view') || name.includes('scroll_25')) return 'awareness';
@@ -196,6 +198,11 @@ function inferIntentStage(eventName: string, params: Record<string, any> = {}): 
 function normalizeEventName(name: string, params: Record<string, any>, pathname: string): string {
   const ctx = getPageContext(pathname);
   const p = params || {};
+
+  if (/call|phone|email/.test(name) && /click|tap/.test(name)) {
+    params.intent_stage = 'intent';
+    return name.replace(/_conversion$/, '').replace('_call_button_call_button_', '_call_button_') + '_intent';
+  }
 
   // Form events
   if (name === 'form_submit' && p.form_name) {
@@ -414,7 +421,7 @@ declare global {
 // Load GA4 script and initialize (called once)
 let __gaLoaded = false;
 export function ensureGA4Loaded() {
-  if (typeof window === 'undefined' || __gaLoaded) return;
+  if (typeof window === 'undefined' || /^\/admin(?:\/|$)/.test(window.location.pathname) || __gaLoaded) return;
   if (!GA_ID) {
     console.warn('GA4 ID missing, set VITE_GA4_MEASUREMENT_ID in .env');
     return;
@@ -426,7 +433,11 @@ export function ensureGA4Loaded() {
   document.head.appendChild(s);
 
   window.dataLayer = window.dataLayer || [];
-  window.gtag = function gtag() { window.dataLayer.push(arguments as any); };
+  window.gtag = (...args: unknown[]) => {
+    if (/^\/admin(?:\/|$)/.test(window.location.pathname)) return;
+    if (args[0] === 'event' && args[2] && typeof args[2] === 'object') args[2] = scrubAnalytics(args[2] as Record<string, unknown>);
+    window.dataLayer.push(args);
+  };
 
   window.gtag('js', new Date());
   window.gtag('config', GA_ID, {
