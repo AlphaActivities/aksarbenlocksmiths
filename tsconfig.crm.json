@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.app.json",
+  "include": [
+    "src/admin",
+    "src/utils/analyticsPrivacy.ts",
+    "src/components/CallbackAssistant.tsx",
+    "src/vite-env.d.ts"
+  ]
+}

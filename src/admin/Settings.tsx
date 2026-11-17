@@ -1,0 +1,197 @@
+import { useEffect, useState } from "react";
+import { api, date, type Settings as SettingsData } from "./api";
+function keyBytes(value: string): Uint8Array {
+  const raw = atob(
+    (value + "=".repeat((4 - (value.length % 4)) % 4))
+      .replace(/-/g, "+")
+      .replace(/_/g, "/"),
+  );
+  return Uint8Array.from(raw, (c) => c.charCodeAt(0));
+}
+export default function Settings() {
+  const [data, setData] = useState<SettingsData | null>(null);
+  const [notice, setNotice] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [label, setLabel] = useState("My device");
+  const load = () => api<SettingsData>("settings").then(setData);
+  useEffect(() => {
+    void load().catch((e) => setNotice(e.message));
+  }, []);
+  const act = async (fn: () => Promise<unknown>, message: string) => {
+    setBusy(true);
+    setNotice("");
+    try {
+      await fn();
+      await load();
+      setNotice(message);
+    } catch (e) {
+      setNotice((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  };
+  const enroll = () =>
+    act(async () => {
+      if (
+        !("Notification" in window) ||
+        !("serviceWorker" in navigator) ||
+        !("PushManager" in window)
+      )
+        throw new Error(
+          "Push is not supported here. On iPhone, first add this app to the Home Screen.",
+        );
+      if (!data?.push_enabled || !data.vapid_public_key)
+        throw new Error(
+          "Push delivery is not enabled for this installation yet.",
+        );
+      // Permission follows the user's tap; never prompt on page load.
+      if ((await Notification.requestPermission()) !== "granted")
+        throw new Error(
+          "Notifications are blocked. Change this app’s permission in your device settings.",
+        );
+      const registration = await navigator.serviceWorker.ready;
+      const subscription =
+        (await registration.pushManager.getSubscription()) ||
+        (await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: keyBytes(data.vapid_public_key),
+        }));
+      await api("devices", { label, subscription: subscription.toJSON() });
+    }, "This device is registered. Send a test and confirm that you saw it.");
+  return (
+    <section>
+      <h1>My Settings</h1>
+      <p>Device settings belong to your individual account.</p>
+      <p role="status">{notice}</p>
+      {data && (
+        <>
+          <fieldset disabled={busy}>
+            <legend>Notify me about</legend>
+            {(["inquiries", "handoffs", "follow_ups"] as const).map((key) => (
+              <label className="c1-check" key={key}>
+                <input
+                  type="checkbox"
+                  checked={data.preferences[key]}
+                  onChange={(e) => {
+                    const preferences = {
+                      ...data.preferences,
+                      [key]: e.target.checked,
+                    };
+                    void act(
+                      () => api("settings", preferences),
+                      "Preferences saved.",
+                    );
+                  }}
+                />
+                {
+                  {
+                    inquiries: "New website inquiries",
+                    handoffs: "Chatbot handoffs",
+                    follow_ups: "Follow ups due",
+                  }[key]
+                }
+              </label>
+            ))}
+          </fieldset>
+          <section className="c1-card">
+            <h2>Install the private app</h2>
+            <p>
+              Android: open Chrome’s menu and choose Install app. iPhone: Safari
+              → Share → Add to Home Screen. Desktop Chrome: menu → Cast, save
+              and share → Install page as app.
+            </p>
+            <p>
+              Sign in remains required. Notification permission and registration
+              are separate for every device. Offline access to customer records
+              is disabled.
+            </p>
+          </section>
+          <h2>My Devices</h2>
+          <label>
+            Device name
+            <input
+              maxLength={80}
+              value={label}
+              onChange={(e) => setLabel(e.target.value)}
+            />
+          </label>
+          <div className="c1-actions">
+            <button disabled={busy} onClick={() => void enroll()}>
+              Enable Notifications / refresh device
+            </button>
+            <button
+              disabled={busy}
+              onClick={() => void act(load, "Device status refreshed.")}
+            >
+              Refresh status
+            </button>
+          </div>
+          {!data.push_enabled && (
+            <p>
+              Push is currently disabled. Register and test after delivery has
+              been enabled.
+            </p>
+          )}
+          {data.devices.map((device) => (
+            <article className="c1-card" key={device.id}>
+              <h3>{device.label}</h3>
+              <p>Registered {date(device.refreshed_at)}</p>
+              <div className="c1-actions">
+                <button
+                  disabled={busy}
+                  onClick={() =>
+                    void act(
+                      () => api(`devices/${device.id}/test`, {}),
+                      "Test queued. Provider acceptance does not confirm that you saw an alert.",
+                    )
+                  }
+                >
+                  Send test to this device
+                </button>
+                <button
+                  disabled={busy}
+                  onClick={() =>
+                    void act(async () => {
+                      await api(`devices/${device.id}`, {}, "DELETE");
+                    }, "Device registration removed.")
+                  }
+                >
+                  Remove
+                </button>
+              </div>
+              {data.receipts
+                .filter((r) => r.device_id === device.id)
+                .map((r) => (
+                  <p key={r.outbox_id}>
+                    {r.confirmed_at ? (
+                      `Receipt confirmed ${date(r.confirmed_at)}`
+                    ) : r.state === "accepted" ? (
+                      <>
+                        Provider accepted the alert.{" "}
+                        <button
+                          disabled={busy}
+                          onClick={() =>
+                            void act(
+                              () =>
+                                api(`devices/${device.id}/confirm`, {
+                                  outbox_id: r.outbox_id,
+                                }),
+                              "Visual receipt recorded.",
+                            )
+                          }
+                        >
+                          I saw this alert on {device.label}
+                        </button>
+                      </>
+                    ) : (
+                      "Delivery failed."
+                    )}
+                  </p>
+                ))}
+            </article>
+          ))}
+        </>
+      )}
+    </section>
+  );
+}

@@ -1,0 +1,86 @@
+import { useEffect, useRef, useState } from "react";
+import { Bell } from "lucide-react";
+// Timing and measured logo flight follow Missy's read-only 232babd reference.
+export default function Entrance({ attention }: { attention: number | null }) {
+  const logo = useRef<HTMLDivElement>(null);
+  const [phase, setPhase] = useState("welcome");
+  const [greeted, setGreeted] = useState(false);
+  useEffect(() => {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setPhase("done");
+      return;
+    }
+    const greeting = setTimeout(() => setGreeted(true), 850);
+    const flight = setTimeout(() => {
+      const destination = document
+        .querySelector("[data-brand-target]")
+        ?.getBoundingClientRect();
+      const origin = logo.current?.getBoundingClientRect();
+      if (destination && origin) {
+        logo.current?.animate(
+          [
+            { transform: "translate(0,0) scale(1)" },
+            {
+              transform: `translate(${destination.x + destination.width / 2 - origin.x - origin.width / 2}px,${destination.y + destination.height / 2 - origin.y - origin.height / 2}px) scale(${destination.width / origin.width})`,
+            },
+          ],
+          {
+            duration: 820,
+            fill: "forwards",
+            easing: "cubic-bezier(.22,1,.36,1)",
+          },
+        );
+      }
+      setPhase("fly");
+    }, 4000);
+    const fade = setTimeout(() => setPhase("fade"), 4820);
+    const finish = setTimeout(() => setPhase("done"), 5140);
+    return () => {
+      clearTimeout(greeting);
+      clearTimeout(flight);
+      clearTimeout(fade);
+      clearTimeout(finish);
+    };
+  }, []);
+  useEffect(() => {
+    if (phase === "done") document.documentElement.dataset.c1Ready = "true";
+  }, [phase]);
+  if (phase === "done") return null;
+  return (
+    <div
+      className={`c1-entrance ${phase}`}
+      role="status"
+      aria-label="Opening your private callback queue"
+    >
+      <p className="c1-greeting">Welcome to Aksarben</p>
+      {greeted && attention !== null && attention > 0 && (
+        <span className="c1-launch-bell">
+          <Bell size={16} aria-hidden="true" /> {attention} need attention
+        </span>
+      )}
+      <div className="c1-launch-logo" ref={logo}>
+        <img src="/images/shield-logo.webp" alt="" />
+        <span />
+      </div>
+      <div className="c1-launch-copy">
+        <span className="c1-ring" />
+        <p>
+          Entering your
+          <br />
+          callback dashboard
+        </p>
+        <p className="c1-typed-date">
+          {new Intl.DateTimeFormat(navigator.language, {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          }).format(new Date())}
+        </p>
+      </div>
+      <button type="button" onClick={() => setPhase("done")}>
+        Skip introduction
+      </button>
+    </div>
+  );
+}

@@ -29,7 +29,9 @@
     "test:crm:db": "bash scripts/crm/test-db.sh",
     "check:crm": "eslint src/admin src/components/CallbackAssistant.tsx src/utils/analyticsPrivacy.ts && tsc -p tsconfig.crm.json",
     "history:export": "node scripts/crm/export-history.mjs",
-    "history:import": "node scripts/crm/import-history.mjs"
+    "history:import": "node scripts/crm/import-history.mjs",
+    "test:crm:http": "bash scripts/crm/test-http.sh",
+    "test:crm:browser": "playwright test"
   },
   "dependencies": {
     "clsx": "^2.0.0",
@@ -44,6 +46,7 @@
   "devDependencies": {
     "@eslint/js": "^9.9.1",
     "@playwright/test": "1.56.1",
+    "@types/node": "18.19.76",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.2.1",
