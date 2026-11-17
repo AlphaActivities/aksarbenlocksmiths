@@ -49,7 +49,7 @@ export async function dispatchPush(deps = {}) {
     (l) =>
       l.status === "new" ||
       (["callback", "scheduled"].includes(l.status) &&
-        Date.parse(l.follow_up_at) <= Date.now()),
+        (!l.follow_up_at || Date.parse(l.follow_up_at) <= Date.now())),
   ).length;
   let accepted = 0,
     failed = 0;

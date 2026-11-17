@@ -49,12 +49,15 @@ do $$declare l crm_leads; r jsonb;begin
  perform crm_work(l.id,'unanswered','Synthetic unanswered',null,l.version,'synthetic-call-1');
  perform crm_work(l.id,'unanswered','Synthetic retry',null,l.version,'synthetic-call-1');
  assert (select count(*) from crm_events where request_key='synthetic-call-1')=1,'call retry duplicated';
+ assert crm_attention_count()=2,'unscheduled unanswered callback lost attention';
  begin perform crm_work(l.id,'booked','',null,l.version,'synthetic-stale');raise exception 'stale write allowed';exception when serialization_failure then null;end;
  select * into l from crm_leads where id=l.id;
  perform crm_work(l.id,'schedule','',now()+interval '1 day',l.version,'synthetic-schedule');
  select * into l from crm_leads where id=l.id;
  perform crm_work(l.id,'callback_completed','Synthetic callback completed',null,l.version,'synthetic-completed');
  select * into l from crm_leads where id=l.id;
+ perform crm_work(l.id,'callback_completed','Synthetic duplicate completion',null,l.version,'synthetic-completed-2');
+ assert (select count(*) from crm_events where kind='callback_completed')=1,'callback completion counted twice';
  perform crm_work(l.id,'booked','Synthetic booked',null,l.version,'synthetic-booked');
  select * into l from crm_leads where id=l.id;
  perform crm_work(l.id,'booked','Synthetic duplicate booked',null,l.version,'synthetic-booked-2');

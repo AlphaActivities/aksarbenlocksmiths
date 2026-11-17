@@ -80,11 +80,11 @@ create policy receipts_self on public.crm_deliveries for select to authenticated
 -- No browser write grants for lead, event, membership, sync or outbox tables.
 grant select on public.crm_projects,public.crm_memberships,public.crm_leads,public.crm_events,public.crm_deliveries to authenticated;
 grant select,insert,update,delete on public.crm_preferences,public.crm_devices to authenticated;
-grant all on all tables in schema public to service_role;
+grant all on public.crm_projects,public.crm_memberships,public.crm_leads,public.crm_events,public.crm_preferences,public.crm_devices,public.crm_outbox,public.crm_deliveries,public.crm_sync_state to service_role;
 
 create function public.crm_attention_count() returns integer language sql stable security definer set search_path=public,pg_temp as $$
  select count(*)::integer from crm_leads where crm_role() is not null and not historical and
- (status='new' or (status in ('callback','scheduled') and follow_up_at<=now()))
+ (status='new' or (status in ('callback','scheduled') and (follow_up_at is null or follow_up_at<=now())))
 $$;
 create function public.crm_snapshot(p_from timestamptz default null,p_to timestamptz default null,p_service text default null)
 returns jsonb language plpgsql security definer set search_path=public,pg_temp as $$
@@ -125,6 +125,7 @@ begin
  if exists(select 1 from crm_events where lead_id=p_id and request_key=p_key) then return to_jsonb(l); end if;
  if p_key is null or length(p_key)<8 or length(p_key)>100 then raise exception 'invalid_request_key'; end if;
  if l.version<>p_version then raise exception 'stale_version' using errcode='40001'; end if;
+ if p_action='callback_completed' and l.status='closed' then return to_jsonb(l); end if;
  if p_action='booked' and exists(select 1 from crm_events where lead_id=p_id and kind='booked') then return to_jsonb(l); end if;
  if p_action not in ('note','answered','unanswered','voicemail','callback_completed','booked','closed','schedule','claim','return_to_bot') then raise exception 'invalid_action'; end if;
  if p_action='note' and length(trim(coalesce(p_note,'')))=0 then raise exception 'note_required'; end if;
