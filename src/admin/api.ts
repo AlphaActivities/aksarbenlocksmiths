@@ -61,6 +61,13 @@ export async function api<T>(
   }
   const result = await r.json().catch(() => ({ error: "server_unavailable" }));
   if (!r.ok) {
+    const recoveryErrors: Record<string, string> = {
+      recovery_link_invalid: "This recovery link is invalid or has expired. Request a new link.",
+      password_requirements: "Use a new password between 12 and 256 characters.",
+      password_update_failed: "The password could not be updated. Choose a different password or request a new recovery link.",
+      invalid_email: "Enter a valid email address.",
+    };
+    if (path.startsWith("recovery/") && recoveryErrors[result.error]) throw new Error(recoveryErrors[result.error]);
     if (r.status === 401) window.dispatchEvent(new Event("c1-signed-out"));
     throw new Error(
       r.status === 409

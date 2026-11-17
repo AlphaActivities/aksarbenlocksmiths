@@ -12,7 +12,7 @@ for attempt in {1..30}; do if docker exec "$pg" pg_isready -h 127.0.0.1 -U postg
 docker exec -i "$pg" psql -U postgres -v ON_ERROR_STOP=1 < tests/crm/bootstrap.sql >/dev/null
 for migration in supabase/migrations/*.sql; do docker exec -i "$pg" psql -U postgres -v ON_ERROR_STOP=1 < "$migration" >/dev/null; done
 docker exec -i "$pg" psql -U postgres -v ON_ERROR_STOP=1 <<'SQL' >/dev/null
-insert into auth.users values ('10000000-0000-4000-8000-000000000002'),('10000000-0000-4000-8000-000000000003'),('10000000-0000-4000-8000-000000000004');
+insert into auth.users(id) values ('10000000-0000-4000-8000-000000000002'),('10000000-0000-4000-8000-000000000003'),('10000000-0000-4000-8000-000000000004');
 SQL
 docker run -d --name "$rest" --network "$network" -p 127.0.0.1::3000 -e PGRST_DB_URI=postgres://postgres@db:5432/postgres -e PGRST_DB_SCHEMAS=public -e PGRST_DB_ANON_ROLE=anon -e PGRST_JWT_SECRET=c1-disposable-local-test-signing-key-never-production postgrest/postgrest:v12.2.3 >/dev/null
 port=$(docker inspect --format '{{(index (index .NetworkSettings.Ports "3000/tcp") 0).HostPort}}' "$rest")

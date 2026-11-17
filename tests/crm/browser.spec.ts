@@ -4,6 +4,34 @@ test.beforeEach(async ({ page }) => {
   await page.route('**/*google-analytics.com/**', route => route.abort());
   await page.route('**/*googletagmanager.com/**', route => route.abort());
 });
+test("password recovery entry, generic confirmation, invalid link and voluntary update", async ({page})=>{
+  await page.route("**/api/crm/**",async route=>{
+    const path=new URL(route.request().url()).pathname;
+    const data=path.endsWith("/request")?{message:"If this address has an eligible account, a password reset email will arrive shortly."}:path.endsWith("/verify")?{verified:true}:path.endsWith("/update")?{updated:true}:{error:"sign_in_required"};
+    await route.fulfill({status:path.endsWith("/session")?401:200,contentType:"application/json",body:JSON.stringify(data)});
+  });
+  await page.goto('/admin');
+  await page.getByRole('link',{name:'Forgot password?'}).click();
+  await expect(page.getByRole('heading',{name:'Reset your password'})).toBeVisible();
+  await page.getByLabel('Email',{exact:true}).fill('qa@example.invalid');
+  await page.getByRole('button',{name:'Email password reset link'}).click();
+  await expect(page.getByRole('status')).toContainText('If this address has an eligible account');
+  await page.goto('/admin/reset-password#error=access_denied&error_code=otp_expired');
+  // A provider redirect is a fresh document; a same-document hash change alone is not.
+  await page.reload();
+  await expect(page.getByRole('alert')).toContainText('invalid or has expired');
+  await expect(page).toHaveURL(/\/admin\/reset-password$/);
+  await page.goto('/admin/reset-password?code='+ 'a'.repeat(64));
+  await expect(page).toHaveURL(/\/admin\/reset-password$/);
+  await page.getByRole('button',{name:'Continue with recovery link'}).click();
+  await page.getByLabel('New password',{exact:true}).fill('Synthetic recovery only');
+  await page.getByLabel('Confirm new password',{exact:true}).fill('Different synthetic value');
+  await page.getByRole('button',{name:'Save new password'}).click();
+  await expect(page.getByRole('alert')).toHaveText('Passwords do not match.');
+  await page.getByLabel('Confirm new password',{exact:true}).fill('Synthetic recovery only');
+  await page.getByRole('button',{name:'Save new password'}).click();
+  await expect(page.getByRole('heading',{name:'Password updated'})).toBeVisible();
+});
 const liveId = "10000000-0000-4000-8000-000000000001",
   historyId = "10000000-0000-4000-8000-000000000002",
   chatId = "10000000-0000-4000-8000-000000000003";

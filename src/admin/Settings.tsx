@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { api, date, type Settings as SettingsData } from "./api";
-function keyBytes(value: string): Uint8Array {
+function keyBytes(value: string): ArrayBuffer {
   const raw = atob(
     (value + "=".repeat((4 - (value.length % 4)) % 4))
       .replace(/-/g, "+")
       .replace(/_/g, "/"),
   );
-  return Uint8Array.from(raw, (c) => c.charCodeAt(0));
+  return Uint8Array.from(raw, (c) => c.charCodeAt(0)).buffer as ArrayBuffer;
 }
 export default function Settings() {
   const [data, setData] = useState<SettingsData | null>(null);
@@ -62,6 +63,7 @@ export default function Settings() {
     <section>
       <h1>My Settings</h1>
       <p>Device settings belong to your individual account.</p>
+      <p><Link to="/admin/reset-password">Change my password using an email recovery link</Link></p>
       <p role="status">{notice}</p>
       {data && (
         <>

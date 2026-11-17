@@ -18,6 +18,7 @@ for run in 1 2; do
     docker exec -i "$container" psql -U postgres -v ON_ERROR_STOP=1 < "$migration" >/dev/null
   done
   docker exec -i "$container" psql -U postgres -v ON_ERROR_STOP=1 < tests/crm/policies.sql
+  docker exec -i "$container" psql -U postgres -v ON_ERROR_STOP=1 < tests/crm/owner-policies.sql
   cleanup
   trap - EXIT
   echo "Fresh migration/policy run $run passed"
