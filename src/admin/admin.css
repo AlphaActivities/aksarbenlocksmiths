@@ -208,6 +208,16 @@ dd {
 .c1-filters button {
   margin-bottom: 12px;
 }
+.c1-filters input,
+.c1-filters select {
+  min-width: 0;
+  max-width: 100%;
+}
+.c1-filters input[type="date"] {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-inline: 8px;
+}
 .c1-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 275px), 1fr));
@@ -423,6 +433,20 @@ summary {
   }
 }
 @media (max-width: 800px) {
+  .c1-filters {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .c1-filters label,
+  .c1-filters button {
+    min-width: 0;
+    margin: 0;
+  }
+  .c1-filters label:has(select),
+  .c1-filters button {
+    grid-column: 1 / -1;
+  }
   .c1-shell {
     display: block;
   }

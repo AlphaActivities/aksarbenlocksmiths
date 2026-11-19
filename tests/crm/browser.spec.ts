@@ -318,3 +318,70 @@ test("manifest, direct entries, worker scope and public emergency path survive r
     page.getByRole("heading", { name: "Lock Rekeying", exact: true }),
   ).toBeVisible();
 });
+
+test("preview filter layout keeps From/Through readable in two columns without narrow-screen overflow", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await mockService(page, "staff", true);
+  await page.goto("/admin");
+  await expect(
+    page.getByRole("heading", { name: "Your callback queue" }),
+  ).toBeVisible();
+  await page.getByLabel("From", { exact: true }).fill("2026-11-19");
+  await page.getByLabel("Through", { exact: true }).fill("2026-11-20");
+  for (const width of [320, 375, 393, 800]) {
+    await page.setViewportSize({ width, height: 900 });
+    const layout = await page.locator(".c1-filters").evaluate((element) => {
+      const controls = [
+        ...element.querySelectorAll<HTMLInputElement | HTMLSelectElement>(
+          "input,select",
+        ),
+      ];
+      const rect = element.getBoundingClientRect();
+      const labels = [...element.querySelectorAll("label")].map((label) =>
+        label.getBoundingClientRect().toJSON(),
+      );
+      const button = element.querySelector("button")!.getBoundingClientRect();
+      return {
+        display: getComputedStyle(element).display,
+        gap: getComputedStyle(element).gap,
+        width: rect.width,
+        labels,
+        buttonWidth: button.width,
+        margins: [...element.querySelectorAll("label,button")].map(
+          (node) => getComputedStyle(node).margin,
+        ),
+        controls: controls.map((node) => ({
+          right: node.getBoundingClientRect().right,
+          left: node.getBoundingClientRect().left,
+          minWidth: getComputedStyle(node).minWidth,
+          maxWidth: getComputedStyle(node).maxWidth,
+          appearance: getComputedStyle(node).appearance,
+          padding: getComputedStyle(node).paddingInlineStart,
+        })),
+        values: controls.slice(0, 2).map((node) => node.value),
+      };
+    });
+    expect(layout.display).toBe("grid");
+    expect(layout.gap).toBe("12px");
+    expect(Math.abs(layout.labels[0].y - layout.labels[1].y)).toBeLessThan(1);
+    expect(
+      Math.abs(layout.labels[0].width - layout.labels[1].width),
+    ).toBeLessThan(1);
+    expect(Math.abs(layout.labels[2].width - layout.width)).toBeLessThan(1);
+    expect(Math.abs(layout.buttonWidth - layout.width)).toBeLessThan(1);
+    expect(layout.margins.every((margin) => margin === "0px")).toBe(true);
+    for (const control of layout.controls) {
+      expect(control.left).toBeGreaterThanOrEqual(0);
+      expect(control.right).toBeLessThanOrEqual(width);
+      expect(control.minWidth).toBe("0px");
+      expect(control.maxWidth).toBe("100%");
+    }
+    for (const date of layout.controls.slice(0, 2)) {
+      expect(date.appearance).toBe("none");
+      expect(date.padding).toBe("8px");
+    }
+    expect(layout.values).toEqual(["2026-11-19", "2026-11-20"]);
+  }
+});
