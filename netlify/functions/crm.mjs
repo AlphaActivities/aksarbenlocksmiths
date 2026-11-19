@@ -9,7 +9,7 @@ import {
   checkSubscription,
   newKey,
 } from "./lib/core.mjs";
-import { syncIntake } from "./lib/intake.mjs";
+import { syncIntake, inspectIntake } from "./lib/intake.mjs";
 import { recovery } from "./lib/recovery.mjs";
 const cookieName = "c1_access",
   refreshName = "c1_refresh";
@@ -396,6 +396,8 @@ export function createHandler(deps = {}) {
             },
             cookies,
           );
+        if (path === "reconcile" && method === "GET")
+          return reply(200, await inspectIntake(deps), cookies);
         if (path === "reconcile" && method === "POST")
           return reply(200, await syncIntake(deps), cookies);
       }

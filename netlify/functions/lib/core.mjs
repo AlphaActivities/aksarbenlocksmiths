@@ -71,14 +71,18 @@ export function bounded(value, max, required = false) {
   return value.trim();
 }
 export function normalizeSubmission(raw) {
-  if (
-    !raw?.id ||
-    !raw.created_at ||
-    !Number.isFinite(Date.parse(raw.created_at))
-  )
+  if (typeof raw?.id !== "string" || !/^[A-Za-z0-9_-]{1,128}$/.test(raw.id))
     throw new Fault(422, "invalid_provider_record");
-  const d = raw.data || {};
-  if (raw.spam === true || d["bot-field"]) return null;
+  const createdAt = parseInstant(raw.created_at, "invalid_provider_date");
+  if (raw.spam !== undefined && typeof raw.spam !== "boolean")
+    throw new Fault(422, "invalid_provider_spam_flag");
+  if (raw.spam === true) return null;
+  if (!raw.data || typeof raw.data !== "object" || Array.isArray(raw.data))
+    throw new Fault(422, "invalid_provider_record");
+  const d = raw.data;
+  if (d["bot-field"]) return null;
+  if (d.source === "chat" && !UUID.test(d.handoff_id || ""))
+    throw new Fault(422, "invalid_handoff_identity");
   const chat = d.source === "chat" && UUID.test(d.handoff_id || "");
   const urgency = ["urgent", "scheduled", "quote"].includes(d.urgency)
     ? d.urgency
@@ -87,7 +91,7 @@ export function normalizeSubmission(raw) {
     source: chat ? "chat" : "netlify",
     provider_id: chat ? d.handoff_id : String(raw.id),
     provider_submission_id: String(raw.id),
-    created_at: new Date(raw.created_at).toISOString(),
+    created_at: new Date(createdAt).toISOString(),
     name: bounded(d.name, 120, true),
     email: bounded(d.email || "", 254),
     phone: bounded(d.phone || "", 40),
@@ -105,6 +109,46 @@ export function normalizeSubmission(raw) {
         ]
       : [],
   };
+}
+// Date.parse alone accepts date-only strings and normalizes invalid calendar days.
+export function parseInstant(value, code = "invalid_timestamp") {
+  const match =
+    typeof value === "string" &&
+    value.match(
+      /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d{1,9})?(Z|[+-](\d{2}):(\d{2}))$/,
+    );
+  if (!match) throw new Fault(422, code);
+  const [
+    ,
+    year,
+    month,
+    day,
+    hour,
+    minute,
+    second,
+    zone,
+    offsetHour,
+    offsetMinute,
+  ] = match;
+  const days = new Date(Date.UTC(Number(year), Number(month), 0)).getUTCDate();
+  if (
+    Number(year) < 1000 ||
+    Number(month) < 1 ||
+    Number(month) > 12 ||
+    Number(day) < 1 ||
+    Number(day) > days ||
+    Number(hour) > 23 ||
+    Number(minute) > 59 ||
+    Number(second) > 59 ||
+    (zone !== "Z" &&
+      (Number(offsetHour) > 14 ||
+        Number(offsetMinute) > 59 ||
+        (Number(offsetHour) === 14 && Number(offsetMinute) !== 0)))
+  )
+    throw new Fault(422, code);
+  const instant = Date.parse(value);
+  if (!Number.isFinite(instant)) throw new Fault(422, code);
+  return instant;
 }
 export function checkSubscription(value) {
   const endpoint = new URL(value?.endpoint || "invalid");

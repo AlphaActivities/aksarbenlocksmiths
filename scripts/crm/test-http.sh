@@ -18,3 +18,5 @@ docker run -d --name "$rest" --network "$network" -p 127.0.0.1::3000 -e PGRST_DB
 port=$(docker inspect --format '{{(index (index .NetworkSettings.Ports "3000/tcp") 0).HostPort}}' "$rest")
 for attempt in {1..30}; do if curl -s -o /dev/null "http://127.0.0.1:$port/"; then break; fi; sleep 1; done
 CRM_TEST_REST_URL="http://127.0.0.1:$port" node tests/crm/http-integration.mjs
+
+CRM_TEST_REST_URL="http://127.0.0.1:$port" node tests/crm/intake-http-integration.mjs
