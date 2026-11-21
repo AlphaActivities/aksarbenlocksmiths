@@ -350,6 +350,8 @@ test("notification filters and record navigation keep attention intact", async (
   await page.goto("/admin");
   await page.getByRole("link", { name: "2 pending attention items" }).click();
   await expect(page.getByRole("button", { name: "Active (2)" })).toBeVisible();
+  await page.getByRole("button", { name: "Follow-ups", exact: true }).click();
+  await expect(page.getByRole("status").filter({ hasText: "No follow-ups need attention." })).toBeVisible();
   await page.getByRole("button", { name: "Urgent", exact: true }).click();
   await expect(page.getByRole("link", { name: /Open record for Synthetic Callback/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /Open record for Synthetic Handoff/ })).toHaveCount(0);

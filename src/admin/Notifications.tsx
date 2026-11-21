@@ -35,6 +35,16 @@ export default function Notifications({ inbox, error, refresh }: {
       (filter === "Inquiries" && row.category === "inquiry") ||
       (filter === "Follow-ups" && row.category === "follow_up"));
 
+  const canLoadOlder = history && hasMore && inbox?.history.length === 50;
+  const emptyMessage = {
+    Active: "No customer work needs attention.",
+    Urgent: "No urgent callbacks are waiting.",
+    Inquiries: "No inquiries need attention.",
+    "Follow-ups": "No follow-ups need attention.",
+    "Staff activity": canLoadOlder ? "No staff updates in the activity loaded so far." : "No staff activity to show.",
+    History: "No notification history yet.",
+  }[filter];
+
   async function loadOlder() {
     setLoading(true);
     setPageError("");
@@ -67,7 +77,7 @@ export default function Notifications({ inbox, error, refresh }: {
       {error && <p role="alert">{error}</p>}
       {pageError && <p role="alert">{pageError}</p>}
       {!inbox && !error && <p role="status">Loading notifications…</p>}
-      {inbox && !rows.length && <p className="c1-card" role="status">No notifications in this view.</p>}
+      {inbox && !rows.length && <p className="c1-card" role="status">{emptyMessage}</p>}
       <ul className="c1-alert-list">
         {rows.map(row => {
           const Icon = row.urgent ? ShieldAlert : icons[row.category];
@@ -84,7 +94,7 @@ export default function Notifications({ inbox, error, refresh }: {
           );
         })}
       </ul>
-      {history && hasMore && inbox?.history.length === 50 &&
+      {canLoadOlder &&
         <button onClick={() => void loadOlder()} disabled={loading}>{loading ? "Loading…" : "Load older activity"}</button>}
     </section>
   );
