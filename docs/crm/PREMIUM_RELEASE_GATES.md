@@ -56,3 +56,7 @@ Prerequisites: passing CI, approved physical acceptance, build capacity, confirm
 ## Completion accounting
 
 The prior 82% figure is a weighted project estimate including VoIP, which is explicitly excluded from this premium dashboard release. Do not declare 100% of the full scope while VoIP remains unimplemented or physical acceptance is outstanding.
+
+## Additional Calls migration
+
+Apply the notification inbox migration and then the additive inbound calls migration before publishing the corresponding app commit. Both were designed for the same C1 project, with no production data copies. Verify the owner-only server import and member read policies against disposable fixtures. Leave CRM_VOIP_ENABLED unset during the first release and keep provider credentials out of any hosted preview. For rollback, disable imports, restore the previously deployed app and preserve the additive tables. Review stored call retention separately before enabling live ingestion.

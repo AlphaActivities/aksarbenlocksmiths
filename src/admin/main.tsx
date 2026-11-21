@@ -26,6 +26,7 @@ import {
   type Lead,
 } from "./api";
 import Settings from "./Settings";
+import Calls from "./Calls";
 import Notifications, { type InboxData } from "./Notifications";
 import { playTone, soundChoices } from "./sounds";
 import Detail from "./Detail";
@@ -519,6 +520,7 @@ export function App() {
     }}>
       <NavLink end to="/admin">Queue</NavLink>
       <NavLink to="/admin/notifications">Notifications</NavLink>
+      <NavLink to="/admin/calls">Calls</NavLink>
       <NavLink to="/admin/history">History</NavLink>
       <NavLink to="/admin/reports">Reports</NavLink>
       <NavLink to="/admin/settings">My Settings</NavLink>
@@ -637,6 +639,7 @@ export function App() {
               path="/admin/history"
               element={<Queue data={data} history refresh={refresh} />}
             />
+            <Route path="/admin/calls" element={<Calls owner={session.role === "josh_admin"} />} />
             <Route path="/admin/reports" element={<Reports data={data} />} />
             <Route
               path="/admin/leads/:id"

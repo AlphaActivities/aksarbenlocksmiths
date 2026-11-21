@@ -59,3 +59,13 @@ No external calls or API keys may be made from the browser. Provider credentials
 7. Production activation is separate from code review and requires approval.
 
 Until these gates pass, show VoIP.ms as 'not connected' rather than inventing call counts or claiming completed integration.
+
+## Implementation and account evidence
+
+The existing portal inspection verified DID +15314308880, the three-level Aksarben keypad IVR, keys 1–4 forwarding to Mike, no configured AI agents, and an empty call recordings view. The carrier handoff from the public number ending 6715 remains unverified. The inspected API setting was disabled. The new browser session reached the sign-in form. Use an owner-controlled sign-in to recheck account settings.
+
+The CRM adapter uses the documented HTTPS getCDR method for one UTC day per import. It accepts only records with an inbound description, inbound destination type, exact verified business DID and stable provider ID. It stores only the fields used by the Calls view. The CRM preserves VoIP.ms disposition without attributing it to the human forward destination. IVR selections, forwarding legs, recordings and call logs are outside this import.
+
+Configure CRM_VOIP_ENABLED, VOIP_MS_USERNAME, VOIP_MS_API_PASSWORD and VOIP_MS_BUSINESS_DID only in the approved server environment. Confirm VoIP.ms API credential scope and a stable allowlisted egress address before approving activation. Use a provider account or scoped credential with the least available access. The provider's documented REST format places credentials in the request query, so disable request URL logging for provider calls. The application never returns that URL and rejects redirects. Reconcile one already-existing UTC date with the portal as the first live probe. No call origination is required.
+
+An owner explicitly chooses each UTC day. The RPC records the highest successfully submitted day as an audit watermark. It does not imply coverage of earlier dates. Rerun the same day for late entries. Imported dates before today UTC are historical. No call import emits alerts, updates leads, or adds booking events. An optional lead link requires exactly one matching non-historical CRM phone. To pause ingestion, disable CRM_VOIP_ENABLED. Existing Calls rows remain readable to authorized CRM members.

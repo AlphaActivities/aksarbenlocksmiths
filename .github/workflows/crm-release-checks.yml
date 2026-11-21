@@ -1,6 +1,8 @@
 name: Premium CRM release checks
 
 on:
+  push:
+    branches: [premium-dashboard]
   pull_request:
     branches: [main]
     paths:
@@ -43,6 +45,8 @@ jobs:
         run: npm run test:crm
       - name: Embedded database policy tests
         run: npm run test:crm:db:wasm
+      - name: Disposable PostgreSQL and PostgREST integration
+        run: npm run test:crm:http
       - name: Build and SEO checks
         run: npm run build:ci
       - name: Install Chromium and dependencies

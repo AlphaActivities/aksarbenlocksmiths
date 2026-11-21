@@ -106,6 +106,32 @@ do $$declare first_count integer;second_count integer;begin
  select count(*) into second_count from crm_claim_outbox('40000000-0000-4000-8000-000000000002');
  assert first_count=2 and second_count=0,'outbox claim was not exclusive';
 end$$;
+do $$
+declare
+  batch jsonb := '[{"provider_call_id":"test-cdr","occurred_at":"2026-11-16T10:00:00Z","caller_phone":"+14025550101","business_did":"+15315550100","disposition":"ANSWERED","duration_seconds":12,"historical":true}]';
+  baseline_leads integer := (select count(*) from crm_leads);
+  baseline_events integer := (select count(*) from crm_events);
+  baseline_outbox integer := (select count(*) from crm_outbox);
+begin
+  assert (crm_ingest_voip(batch, '2026-11-16')->>'inserted')::integer = 1;
+  assert (crm_ingest_voip(batch, '2026-11-16')->>'duplicates')::integer = 1;
+  assert (select count(*) from crm_leads) = baseline_leads;
+  assert (select count(*) from crm_events) = baseline_events;
+  assert (select count(*) from crm_outbox) = baseline_outbox;
+end $$;
+reset role;
+set local role authenticated;
+do $$begin
+  assert (select count(*) from crm_inbound_calls) = 1;
+  assert (select historical and related_lead_id is not null from crm_inbound_calls);
+  assert not exists (select 1 from jsonb_array_elements(crm_notification_inbox()->'history') h where h->>'id' = 'test-cdr');
+  begin
+    perform crm_ingest_voip('[]', current_date);
+    raise exception 'authenticated direct call ingestion allowed';
+  exception when insufficient_privilege then null; end;
+end$$;
+set local request.jwt.claim.sub='10000000-0000-4000-8000-000000000003';
+do $$begin assert (select count(*) from crm_inbound_calls) = 0; end$$;
 reset role;
 rollback;
 \echo 'PASS: transactional intake, replay, silent History, dates, roles, project isolation, callbacks, booking, handoff, device isolation and outbox leases'
