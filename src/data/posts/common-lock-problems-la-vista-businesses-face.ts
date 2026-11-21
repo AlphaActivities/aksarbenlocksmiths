@@ -23,7 +23,7 @@ const post: BlogPost = {
 5) Lost keys and uncontrolled duplicates. Staff turnover and untracked copies can leave a business unsure who still has access. Rekeying affected locks restores key control without requiring every door and lock to be replaced.
 
 La Vista businesses should inspect high-use entrances, stockroom doors, and employee access points regularly. When a lock repeatedly sticks, fails to latch, or shows visible damage, professional service can prevent downtime and help restore reliable access.`,
-  keywords: ["La Vista commercial locksmith", "business locks La Vista", "commercial door repair La Vista", "commercial lock repair La Vista", "broken key extraction La Vista", "door alignment repair La Vista", "worn lock cylinder La Vista", "commercial rekey La Vista", "panic bar repair La Vista", "Aksarben Locksmiths"]
+  keywords: ["La Vista commercial locksmith", "commercial door repair La Vista", "commercial lock repair La Vista", "broken key extraction La Vista", "door alignment repair La Vista", "worn lock cylinder La Vista", "commercial rekey La Vista", "panic bar repair La Vista"]
 };
 
 export default post;
