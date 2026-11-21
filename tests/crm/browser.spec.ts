@@ -408,6 +408,11 @@ test("the dashboard fits the configured viewport", async ({ page }, testInfo) =>
   else await expect(menu).not.toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await expect(page.getByRole("button", { name: "Active (2)" })).toBeVisible();
+  const urgentLabel = page.locator('[data-category="urgent"] strong');
+  for (const colorScheme of ["light", "dark"] as const) {
+    await page.emulateMedia({ reducedMotion: "reduce", colorScheme });
+    await expect(urgentLabel).toHaveCSS("color", "rgb(255, 155, 133)");
+  }
   const path = testInfo.outputPath("notification-inbox.png");
   await page.screenshot({ path });
   await testInfo.attach("notification-inbox", { path, contentType: "image/png" });

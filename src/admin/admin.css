@@ -688,12 +688,6 @@ body:has(.c1-mobile-menu[open]) { overflow: hidden; }
   .c1-alert-card { grid-template-columns: auto minmax(0, 1fr); }
   .c1-alert-card a { grid-column: 2; }
 }
-@media (prefers-color-scheme: light) {
-  .c1-top { color: #f5f7ff; }
-  .c1-alert-card[data-category="urgent"] { --c1-alert: #aa3a21; }
-  .c1-alert-card[data-category="follow_up"] { --c1-alert: #245b90; }
-  .c1-alert-card[data-category="staff"] { --c1-alert: #236d59; }
-}
 .c1-shell nav a:hover { background: #253755; text-decoration: none; }
 .c1-shell nav a.active { border-inline-start-color: var(--c1-brass); }
 .c1-inbox-filters button, .c1-inbox-heading button, .c1-mobile-panel > button:first-child {
