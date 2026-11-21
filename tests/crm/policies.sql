@@ -25,6 +25,7 @@ end$$;
 reset role;
 set local role anon;
 do $$begin
+ begin perform crm_notification_inbox();raise exception 'anon inbox read allowed';exception when insufficient_privilege then null;end;
  begin perform crm_snapshot();raise exception 'anon read allowed';exception when insufficient_privilege then null;end;
  begin perform crm_ingest('[]');raise exception 'anon ingestion allowed';exception when insufficient_privilege then null;end;
 end$$;
@@ -33,6 +34,7 @@ set local request.jwt.claim.sub='10000000-0000-4000-8000-000000000003';
 set local role authenticated;
 do $$begin
  assert (select count(*) from crm_leads)=0,'wrong project read allowed';
+ begin perform crm_notification_inbox();raise exception 'wrong project inbox read allowed';exception when insufficient_privilege then null;end;
  begin perform crm_snapshot();raise exception 'wrong project snapshot allowed';exception when insufficient_privilege then null;end;
  begin perform crm_work(gen_random_uuid(),'note','synthetic',null,1,'wrong-project');raise exception 'wrong project mutation allowed';exception when insufficient_privilege then null;end;
 end$$;
@@ -41,6 +43,10 @@ set local request.jwt.claim.sub='10000000-0000-4000-8000-000000000002';
 set local role authenticated;
 do $$declare l crm_leads; r jsonb;begin
  assert crm_role()='staff';assert crm_attention_count()=2,'count must exclude History';
+ r:=crm_notification_inbox();
+ assert (r->>'attention')::integer=crm_attention_count(),'inbox count disagrees with badge';
+ assert jsonb_array_length(r->'active')=2,'active inbox duplicated or omitted leads';
+ assert jsonb_array_length(r->'history')=0,'history import appeared in notification history';
  assert (crm_snapshot()->'metrics'->>'inquiry_confirmed')::integer=2,'History counted as new inquiry';
  assert (select count(*) from crm_leads)=3;
  begin update crm_memberships set role='josh_admin';raise exception 'role escalation allowed';exception when insufficient_privilege then null;end;
@@ -50,9 +56,13 @@ do $$declare l crm_leads; r jsonb;begin
  perform crm_work(l.id,'unanswered','Synthetic retry',null,l.version,'synthetic-call-1');
  assert (select count(*) from crm_events where request_key='synthetic-call-1')=1,'call retry duplicated';
  assert crm_attention_count()=2,'unscheduled unanswered callback lost attention';
+ r:=crm_notification_inbox();
+ assert jsonb_array_length(r->'active')=2;
+ assert jsonb_array_length(r->'history')=1,'staff activity duplicated on retry';
  begin perform crm_work(l.id,'booked','',null,l.version,'synthetic-stale');raise exception 'stale write allowed';exception when serialization_failure then null;end;
  select * into l from crm_leads where id=l.id;
  perform crm_work(l.id,'schedule','',now()+interval '1 day',l.version,'synthetic-schedule');
+ assert jsonb_array_length(crm_notification_inbox()->'active')=1,'future callback should leave active inbox';
  select * into l from crm_leads where id=l.id;
  perform crm_work(l.id,'callback_completed','Synthetic callback completed',null,l.version,'synthetic-completed');
  select * into l from crm_leads where id=l.id;
@@ -96,6 +106,32 @@ do $$declare first_count integer;second_count integer;begin
  select count(*) into second_count from crm_claim_outbox('40000000-0000-4000-8000-000000000002');
  assert first_count=2 and second_count=0,'outbox claim was not exclusive';
 end$$;
+do $$
+declare
+  batch jsonb := '[{"provider_call_id":"test-cdr","occurred_at":"2026-11-16T10:00:00Z","caller_phone":"+14025550101","business_did":"+15315550100","disposition":"ANSWERED","duration_seconds":12,"historical":true}]';
+  baseline_leads integer := (select count(*) from crm_leads);
+  baseline_events integer := (select count(*) from crm_events);
+  baseline_outbox integer := (select count(*) from crm_outbox);
+begin
+  assert (crm_ingest_voip(batch, '2026-11-16')->>'inserted')::integer = 1;
+  assert (crm_ingest_voip(batch, '2026-11-16')->>'duplicates')::integer = 1;
+  assert (select count(*) from crm_leads) = baseline_leads;
+  assert (select count(*) from crm_events) = baseline_events;
+  assert (select count(*) from crm_outbox) = baseline_outbox;
+end $$;
+reset role;
+set local role authenticated;
+do $$begin
+  assert (select count(*) from crm_inbound_calls) = 1;
+  assert (select historical and related_lead_id is not null from crm_inbound_calls);
+  assert not exists (select 1 from jsonb_array_elements(crm_notification_inbox()->'history') h where h->>'id' = 'test-cdr');
+  begin
+    perform crm_ingest_voip('[]', current_date);
+    raise exception 'authenticated direct call ingestion allowed';
+  exception when insufficient_privilege then null; end;
+end$$;
+set local request.jwt.claim.sub='10000000-0000-4000-8000-000000000003';
+do $$begin assert (select count(*) from crm_inbound_calls) = 0; end$$;
 reset role;
 rollback;
 \echo 'PASS: transactional intake, replay, silent History, dates, roles, project isolation, callbacks, booking, handoff, device isolation and outbox leases'

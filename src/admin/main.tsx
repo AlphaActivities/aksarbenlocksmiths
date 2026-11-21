@@ -1,3 +1,4 @@
+import Backdrop from "./Backdrop";
 import {
   StrictMode,
   useCallback,
@@ -15,7 +16,7 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
-import { Bell, LogOut, Phone } from "lucide-react";
+import { Bell, BarChart3, ClipboardList, History, LogOut, Menu, Phone, Settings2, Shield, X } from "lucide-react";
 import {
   api,
   age,
@@ -26,6 +27,9 @@ import {
   type Lead,
 } from "./api";
 import Settings from "./Settings";
+import Calls from "./Calls";
+import Notifications, { type InboxData } from "./Notifications";
+import { playTone, soundChoices } from "./sounds";
 import Detail from "./Detail";
 import Entrance from "./Entrance";
 import Recovery from "./Recovery";
@@ -129,7 +133,7 @@ function Manual({ saved }: { saved: () => void }) {
             type="tel"
             required
             maxLength={40}
-            pattern="[+0-9() .-]{7,40}"
+            pattern="[+0-9\(\) .\-]{7,40}"
           />
         </label>
         <label>
@@ -344,6 +348,13 @@ export function App() {
   const location = useLocation();
   const isRecovery = location.pathname === "/admin/reset-password";
   const queueSequence = useRef(0);
+  const inboxSequence = useRef(0);
+  const menu = useRef<HTMLDialogElement>(null);
+  const opener = useRef<HTMLButtonElement>(null);
+  const heard = useRef<Set<string> | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [inbox, setInbox] = useState<InboxData | null>(null);
+  const [inboxError, setInboxError] = useState("");
   const [session, setSession] = useState<Session | null>(null),
     [checking, setChecking] = useState(true),
     [data, setData] = useState<Snapshot | null>(null),
@@ -375,18 +386,61 @@ export function App() {
       .then((r) => {
         if (sequence !== queueSequence.current) return;
         setData(r);
-        updateBadge(r.attention);
         setError("");
       })
       .catch((e) => {
         if (sequence === queueSequence.current) setError(e.message);
       });
   }, [from, to, service]);
+  const refreshInbox = useCallback(() => {
+    if (!session) return;
+    const sequence = ++inboxSequence.current;
+    void api<InboxData>("notifications").then(result => {
+      if (sequence !== inboxSequence.current) return;
+      const items = [...result.active, ...result.history.filter(item => item.category === "staff")];
+      const key = (item: (typeof items)[number]) => `${item.category}:${item.id}:${item.occurred_at}`;
+      if (heard.current) {
+        const previous = heard.current;
+        if (document.visibilityState === "visible") {
+          const choices = soundChoices(session.user_id);
+          const tone = items.filter(item => !previous.has(key(item))).map(item =>
+            choices[item.category === "staff" ? "staff" : item.urgent ? "urgent" : "inquiry"]
+          ).find(value => value !== "silent");
+          if (tone) void playTone(tone);
+        }
+        items.forEach(item => previous.add(key(item)));
+      } else {
+        heard.current = new Set(items.map(key));
+      }
+      setInbox(result);
+      setInboxError("");
+    }).catch(cause => {
+      if (sequence === inboxSequence.current) setInboxError(cause.message);
+    });
+  }, [session]);
+  const attention = inbox?.attention ?? data?.attention;
+  useEffect(() => {
+    if (session && attention !== undefined) updateBadge(attention);
+  }, [session, attention, inbox]);
+  useEffect(() => {
+    menu.current?.close();
+  }, [location.pathname]);
+  useEffect(() => {
+    const desktop = matchMedia("(min-width: 901px)");
+    const closeMenu = () => { if (desktop.matches) menu.current?.close(); };
+    desktop.addEventListener("change", closeMenu);
+    return () => desktop.removeEventListener("change", closeMenu);
+  }, []);
   useEffect(() => {
     if (isRecovery) { setChecking(false); return; }
     loadSession();
     const logout = () => {
       queueSequence.current++;
+      inboxSequence.current++;
+      heard.current = null;
+      setInbox(null);
+      setInboxError("");
+      setMenuOpen(false);
       setSession(null);
       setData(null);
       updateBadge(0);
@@ -396,33 +450,48 @@ export function App() {
   }, [loadSession, isRecovery]);
   useEffect(() => {
     if (!session) return;
-    refresh();
-    const timer = setInterval(refresh, 30000);
-    const visible = () => {
-      if (document.visibilityState === "visible") refresh();
+    const refreshDashboard = () => {
+      refresh();
+      refreshInbox();
     };
-    window.addEventListener("focus", refresh);
+    refreshDashboard();
+    const timer = setInterval(refreshDashboard, 30000);
+    const visible = () => {
+      if (document.visibilityState === "visible") refreshDashboard();
+    };
+    window.addEventListener("focus", refreshDashboard);
     document.addEventListener("visibilitychange", visible);
-    navigator.serviceWorker?.addEventListener("message", refresh);
+    navigator.serviceWorker?.addEventListener("message", refreshDashboard);
     return () => {
       clearInterval(timer);
-      window.removeEventListener("focus", refresh);
+      window.removeEventListener("focus", refreshDashboard);
       document.removeEventListener("visibilitychange", visible);
-      navigator.serviceWorker?.removeEventListener("message", refresh);
+      navigator.serviceWorker?.removeEventListener("message", refreshDashboard);
     };
-  }, [session, refresh]);
+  }, [session, refresh, refreshInbox]);
   useEffect(() => {
     const feedback = (e: MouseEvent) => {
       if (
         e.detail &&
-        (e.target as Element).closest(".c1-shell button,.c1-shell a") &&
+        e.target instanceof Element &&
+        e.target.closest(".c1-shell button:not(:disabled),.c1-shell a") &&
         !matchMedia("(prefers-reduced-motion: reduce)").matches
       )
         navigator.vibrate?.(9);
     };
+    const unlock = () => {
+      if (session && Object.values(soundChoices(session.user_id)).some(tone => tone !== "silent"))
+        void playTone("silent", true);
+    };
     document.addEventListener("click", feedback);
-    return () => document.removeEventListener("click", feedback);
-  }, []);
+    document.addEventListener("pointerdown", unlock);
+    document.addEventListener("keydown", unlock);
+    return () => {
+      document.removeEventListener("click", feedback);
+      document.removeEventListener("pointerdown", unlock);
+      document.removeEventListener("keydown", unlock);
+    };
+  }, [session]);
   useEffect(() => {
     document.title = "Aksarben | Private callback queue";
   }, [location.pathname]);
@@ -446,61 +515,80 @@ export function App() {
         )}
       </>
     );
+  const navigation = (
+    <nav aria-label="Private dashboard" onClick={event => {
+      if ((event.target as HTMLElement).closest("a")) menu.current?.close();
+    }}>
+      <Link to="/admin" aria-current={/^\/admin\/?$/.test(location.pathname) ? "page" : undefined}><ClipboardList aria-hidden="true" />Queue</Link>
+      <NavLink to="/admin/notifications"><Bell aria-hidden="true" />Notifications</NavLink>
+      <NavLink to="/admin/calls"><Phone aria-hidden="true" />Calls</NavLink>
+      <NavLink to="/admin/history"><History aria-hidden="true" />History</NavLink>
+      <NavLink to="/admin/reports"><BarChart3 aria-hidden="true" />Reports</NavLink>
+      <NavLink to="/admin/settings"><Settings2 aria-hidden="true" />My Settings</NavLink>
+      {session.role === "josh_admin" && <NavLink to="/admin/business"><Shield aria-hidden="true" />Admin</NavLink>}
+    </nav>
+  );
+  const signOut = (
+    <button onClick={() => void api("logout", {}).then(() => {
+      updateBadge(0);
+      window.location.replace("/admin");
+    }).catch(cause => setError(cause.message))}>
+      <LogOut size={18} /> Sign out
+    </button>
+  );
   return (
     <div className="c1-shell">
-      <Entrance attention={data?.attention ?? null} />
+      {["/admin", "/admin/"].includes(location.pathname) && <Entrance attention={attention ?? null} />}
       <a className="c1-skip" href="#c1-content">
-        Skip to queue
+        Skip to content
       </a>
-      <aside>
+      <aside className="c1-desktop-rail">
         <Link className="c1-brand" to="/admin">
-          <span data-brand-target>
-            <img src="/images/shield-logo.webp" alt="Aksarben Locksmiths" />
-          </span>
+          <span data-brand-target><img src="/images/shield-logo.webp" alt="Aksarben Locksmiths" /></span>
           <strong>Callback queue</strong>
         </Link>
-        <nav aria-label="Private dashboard">
-          <NavLink end to="/admin">
-            Queue
-          </NavLink>
-          <NavLink to="/admin/history">History</NavLink>
-          <NavLink to="/admin/reports">Reports</NavLink>
-          <NavLink to="/admin/settings">My Settings</NavLink>
-          {session.role === "josh_admin" && (
-            <NavLink to="/admin/business">Admin</NavLink>
-          )}
-        </nav>
+        {navigation}
         <p>{session.email}</p>
-        <button
-          onClick={() =>
-            void api("logout", {})
-              .then(() => {
-                updateBadge(0);
-                window.location.replace("/admin");
-              })
-              .catch((e) => setError(e.message))
-          }
-        >
-          <LogOut size={18} /> Sign out
-        </button>
+        {signOut}
       </aside>
+      <dialog
+        ref={menu}
+        id="c1-mobile-menu"
+        className="c1-mobile-menu"
+        aria-label="Dashboard navigation"
+        onClick={event => {
+          if (event.target === event.currentTarget) menu.current?.close();
+        }}
+        onClose={() => {
+          setMenuOpen(false);
+          opener.current?.focus();
+        }}
+      >
+        <div className="c1-mobile-panel">
+          <button type="button" onClick={() => menu.current?.close()} aria-label="Close navigation"><X aria-hidden="true" /></button>
+          {navigation}
+          {signOut}
+        </div>
+      </dialog>
       <div className="c1-workspace">
         <header className="c1-top">
-          <p>C1 · Aksarben Locksmiths</p>
-          {data && data.attention > 0 ? (
-            <Link
-              to="/admin"
-              aria-label={`${data.attention} pending attention items`}
-            >
-              <Bell size={20} /> {data.attention}
-            </Link>
-          ) : (
-            <span className="c1-muted">
-              {data ? "All caught up" : "Checking attention…"}
-            </span>
-          )}
+          <button ref={opener} type="button" className="c1-menu-button" aria-label="Open navigation"
+            aria-controls="c1-mobile-menu" aria-expanded={menuOpen}
+            onClick={() => { menu.current?.showModal(); setMenuOpen(true); }}>
+            <Menu aria-hidden="true" />
+          </button>
+          <Link to="/admin" className="c1-mobile-brand" aria-label="Callback queue">
+            <span data-brand-target><img src="/images/shield-logo.webp" alt="" /></span>
+          </Link>
+          <p className="c1-wordmark">Aksarben <span>Locksmiths</span></p>
+          <Backdrop />
+          <Link className="c1-bell" data-active={Boolean(attention)} to="/admin/notifications"
+            aria-label={attention ? `${attention} pending attention items` : "Notifications"}>
+            <Bell size={21} aria-hidden="true" />
+            {Boolean(attention) && <span aria-hidden="true">{attention}</span>}
+          </Link>
         </header>
-        <main id="c1-content">
+        <main id="c1-content" tabIndex={-1}>
           <p role="alert">{error}</p>
           {["/admin", "/admin/", "/admin/history", "/admin/reports"].includes(
             location.pathname,
@@ -547,18 +635,23 @@ export function App() {
           <Routes>
             <Route
               path="/admin"
-              element={<Queue data={data} refresh={refresh} />}
+              element={<Queue data={data} refresh={() => { refresh(); refreshInbox(); }} />}
             />
             <Route
               path="/admin/history"
               element={<Queue data={data} history refresh={refresh} />}
             />
+            <Route path="/admin/calls" element={<Calls owner={session.role === "josh_admin"} />} />
             <Route path="/admin/reports" element={<Reports data={data} />} />
             <Route
               path="/admin/leads/:id"
-              element={<Detail updated={refresh} />}
+              element={<Detail updated={() => { refresh(); refreshInbox(); }} />}
             />
-            <Route path="/admin/settings" element={<Settings />} />
+            <Route path="/admin/settings" element={<Settings userId={session.user_id} />} />
+            <Route path="/admin/notifications" element={<Notifications inbox={inbox} error={inboxError} refresh={() => {
+              refresh();
+              refreshInbox();
+            }} />} />
             <Route
               path="/admin/business"
               element={

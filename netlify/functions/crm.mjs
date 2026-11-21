@@ -10,6 +10,7 @@ import {
   newKey,
 } from "./lib/core.mjs";
 import { syncIntake } from "./lib/intake.mjs";
+import { syncVoip, voipConfigured } from "./lib/voip.mjs";
 import { recovery } from "./lib/recovery.mjs";
 const cookieName = "c1_access",
   refreshName = "c1_refresh";
@@ -163,6 +164,28 @@ export function createHandler(deps = {}) {
           { attention: await rpc("crm_attention_count", {}, { token }, deps) },
           cookies,
         );
+      if (path === "calls" && method === "GET") {
+        const connected = voipConfigured(env);
+        const calls = await db(
+          `crm_inbound_calls?project_id=eq.${PROJECT}&select=provider_call_id,occurred_at,caller_phone,disposition,duration_seconds,historical,related_lead_id&order=occurred_at.desc,provider_call_id.desc&limit=100`,
+          { token }, deps,
+        );
+        return reply(200, { connected, calls }, cookies);
+      }
+      if (path === "calls/sync" && method === "POST") {
+        if (role !== "josh_admin") throw new Fault(403, "owner_required");
+        return reply(200, await syncVoip(body.day, deps), cookies);
+      }
+      if (path === "notifications" && method === "GET") {
+        const offset = Number(event.queryStringParameters?.offset ?? 0);
+        if (!Number.isSafeInteger(offset) || offset < 0)
+          throw new Fault(422, "invalid_offset");
+        return reply(
+          200,
+          await rpc("crm_notification_inbox", { p_offset: offset }, { token }, deps),
+          cookies,
+        );
+      }
       if (path === "queue" && method === "GET") {
         const q = event.queryStringParameters || {};
         for (const k of ["from", "to"])

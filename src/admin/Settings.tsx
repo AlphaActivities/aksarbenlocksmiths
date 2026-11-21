@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api, date, type Settings as SettingsData } from "./api";
+import { playTone, saveSoundChoices, soundChoices, tones, type SoundCategory } from "./sounds";
 function keyBytes(value: string): ArrayBuffer {
   const raw = atob(
     (value + "=".repeat((4 - (value.length % 4)) % 4))
@@ -9,7 +10,8 @@ function keyBytes(value: string): ArrayBuffer {
   );
   return Uint8Array.from(raw, (c) => c.charCodeAt(0)).buffer as ArrayBuffer;
 }
-export default function Settings() {
+export default function Settings({ userId }: { userId: string }) {
+  const [sounds, setSounds] = useState(() => soundChoices(userId));
   const [data, setData] = useState<SettingsData | null>(null);
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
@@ -65,6 +67,29 @@ export default function Settings() {
       <p>Device settings belong to your individual account.</p>
       <p><Link to="/admin/reset-password">Change my password using an email recovery link</Link></p>
       <p role="status">{notice}</p>
+      <fieldset className="c1-card c1-sound-settings">
+        <legend>In-app notification sounds</legend>
+        <p>Saved on this device for your account. Background notification sounds follow your device settings.</p>
+        {Object.entries({ inquiry: "Inquiries", urgent: "Urgent callbacks", staff: "Staff updates" }).map(([key, label]) => {
+          const category = key as SoundCategory;
+          return <div className="c1-sound-option" key={category}>
+            <label><span id={`c1-sound-${category}`}>{label}</span>
+              <select aria-labelledby={`c1-sound-${category}`} value={sounds[category]} onChange={event => {
+                const next = { ...sounds, [category]: event.target.value as keyof typeof tones };
+                if (saveSoundChoices(userId, next)) {
+                  setSounds(next);
+                  setNotice("Sound preferences saved on this device.");
+                  void playTone("silent", true);
+                } else setNotice("This browser could not save the sound preference.");
+              }}>
+                {Object.entries(tones).map(([value, title]) => <option key={value} value={value}>{title}</option>)}
+              </select>
+            </label>
+            <button type="button" onClick={() => void playTone(sounds[category], true)}
+              disabled={sounds[category] === "silent"} aria-label={`Preview ${label.toLowerCase()} sound`}>Preview</button>
+          </div>;
+        })}
+      </fieldset>
       {data && (
         <>
           <fieldset disabled={busy}>

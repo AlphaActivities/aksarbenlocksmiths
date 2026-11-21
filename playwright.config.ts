@@ -10,12 +10,23 @@ export default defineConfig({
     headless: true,
     launchOptions: {
       executablePath: process.env.CRM_CHROMIUM_PATH || undefined,
-      args: ["--no-sandbox", "--disable-dev-shm-usage"],
+      args: [
+        "--no-sandbox",
+        "--disable-dev-shm-usage",
+        ...(process.env.CRM_ISOLATED_CHROMIUM === "1"
+          ? ["--single-process", "--no-zygote", "--disable-gpu"]
+          : []),
+      ],
     },
     trace: "retain-on-failure",
   },
   // Android emulator runs first. These projects do not claim physical-device acceptance.
   projects: [
+    {
+      name: "iPhone viewport (WebKit)",
+      grep: /entrance spacing, logo destination and viewport coverage/,
+      use: { ...devices["iPhone 13"], browserName: "webkit", serviceWorkers: "block", launchOptions: {args: [], executablePath: undefined} },
+    },
     {
       name: "Android Chrome emulation",
       use: { ...devices["Pixel 7"], browserName: "chromium" },
@@ -23,6 +34,10 @@ export default defineConfig({
     {
       name: "iPhone viewport emulation (Chromium)",
       use: { ...devices["iPhone 13"], browserName: "chromium" },
+    },
+    {
+      name: "Tablet viewport emulation",
+      use: { ...devices["iPad Mini"], browserName: "chromium" },
     },
     {
       name: "Desktop Chromium",

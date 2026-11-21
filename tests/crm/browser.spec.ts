@@ -131,6 +131,19 @@ async function mockService(page: Page, role = "staff", startSignedIn = false) {
           ).length,
         },
       };
+    } else if (path === "notifications") {
+      result = {
+        attention: 2,
+        active: leads.filter(lead => !lead.historical).map(lead => ({
+          id: lead.id, lead_id: lead.id, name: lead.name,
+          title: "New inquiry", category: "inquiry",
+          urgent: lead.urgency === "urgent", occurred_at: lead.created_at,
+        })),
+        history: [{
+          id: "activity", lead_id: liveId, name: "Synthetic Callback", title: "Callback completed",
+          category: "staff", urgent: false, occurred_at: "2026-11-17T11:00:00Z",
+        }],
+      };
     } else if (path === "attention") result = { attention: 2 };
     else if (path === "logout") {
       signedIn = false;
@@ -233,6 +246,8 @@ test("History and filters do not change attention; staff cannot use Admin", asyn
   await expect(
     page.getByRole("link", { name: "2 pending attention items" }),
   ).toBeVisible();
+  const menu = page.getByRole("button", { name: "Open navigation" });
+  if (await menu.isVisible()) await menu.click();
   await page.getByRole("link", { name: "History", exact: true }).click();
   await expect(page.getByText("Synthetic Historical · 68103")).toBeVisible();
   await expect(
@@ -269,9 +284,14 @@ test("manifest, direct entries, worker scope and public emergency path survive r
   });
   await page.goto("/admin/");
   await page.reload();
+  const menu = page.getByRole("button", { name: "Open navigation" });
+  await expect(page.getByRole("navigation", { name: "Private dashboard" }).or(menu)).toBeVisible();
+  const mobile = await menu.isVisible();
+  if (mobile) await menu.click();
   await expect(
     page.getByRole("link", { name: "Admin", exact: true }),
   ).toBeVisible();
+  if (mobile) await page.keyboard.press("Escape");
   const pwa = await page.evaluate(async () => {
     const manifest = await (await fetch("/admin/manifest.webmanifest")).json();
     const reg = await navigator.serviceWorker.ready;
@@ -317,4 +337,182 @@ test("manifest, direct entries, worker scope and public emergency path survive r
   await expect(
     page.getByRole("heading", { name: "Lock Rekeying", exact: true }),
   ).toBeVisible();
+});
+
+
+test("notification filters and record navigation keep attention intact", async ({ page }) => {
+  const writes: string[] = [];
+  page.on("request", request => {
+    if (request.url().includes("/api/crm/") && request.method() !== "GET") writes.push(request.url());
+  });
+  await mockService(page, "staff", true);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/admin");
+  await page.getByRole("link", { name: "2 pending attention items" }).click();
+  await expect(page.getByRole("button", { name: "Active (2)" })).toBeVisible();
+  await page.getByRole("button", { name: "Follow-ups", exact: true }).click();
+  await expect(page.getByRole("status").filter({ hasText: "No follow-ups need attention." })).toBeVisible();
+  await page.getByRole("button", { name: "Urgent", exact: true }).click();
+  await expect(page.getByRole("link", { name: /Open record for Synthetic Callback/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Open record for Synthetic Handoff/ })).toHaveCount(0);
+  await page.getByRole("button", { name: "History", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Callback completed" })).toBeVisible();
+  await page.getByRole("link", { name: /Open record for Synthetic Callback/ }).click();
+  await expect(page).toHaveURL(new RegExp(`/admin/leads/${liveId}$`));
+  await expect(page.getByRole("link", { name: "2 pending attention items" })).toBeVisible();
+  expect(writes).toEqual([]);
+});
+
+test("managed mobile menu and device-local sound preferences", async ({ page }) => {
+  await mockService(page, "staff", true);
+  await page.addInitScript(() => {
+    const start = OscillatorNode.prototype.start;
+    OscillatorNode.prototype.start = function (when?: number) {
+      const root = document.documentElement;
+      root.dataset.testOscillators = String(Number(root.dataset.testOscillators ?? "0") + 1);
+      return start.call(this, when);
+    };
+  });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/admin/settings");
+  await expect(page.getByRole("heading", { name: "My Settings" })).toBeVisible();
+  const menu = page.getByRole("button", { name: "Open navigation" });
+  if (await menu.isVisible()) {
+    await menu.focus();
+    await page.keyboard.press("Enter");
+    const navigation = page.getByRole("dialog", { name: "Dashboard navigation" });
+    await expect(navigation).toBeVisible();
+    await expect(navigation.getByRole("link", { name: "Queue", exact: true })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(navigation).not.toBeVisible();
+    await expect(menu).toBeFocused();
+  }
+  await page.getByLabel("Urgent callbacks", { exact: true }).selectOption("Amber Pulse");
+  const preview = page.getByRole("button", { name: "Preview urgent callbacks sound" });
+  await expect(preview).toBeEnabled();
+  await preview.click();
+  await expect(page.locator("html")).toHaveAttribute("data-test-oscillators", "3");
+  await page.reload();
+  await expect(page.getByLabel("Urgent callbacks", { exact: true })).toHaveValue("amber");
+  await expect(page.getByLabel("Staff updates", { exact: true })).toHaveValue("silent");
+  await expect(page.locator(".c1-entrance")).toHaveCount(0);
+});
+
+
+test("the dashboard fits the configured viewport", async ({ page }, testInfo) => {
+  await mockService(page, "staff", true);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/admin/notifications");
+  await expect(page.getByRole("heading", { name: "Notifications" })).toBeVisible();
+  const width = page.viewportSize()!.width;
+  const menu = page.getByRole("button", { name: "Open navigation" });
+  if (width <= 900) await expect(menu).toBeVisible();
+  else await expect(menu).not.toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await expect(page.getByRole("button", { name: "Active (2)" })).toBeVisible();
+  const urgentLabel = page.locator('[data-category="urgent"] strong');
+  for (const colorScheme of ["light", "dark"] as const) {
+    await page.emulateMedia({ reducedMotion: "reduce", colorScheme });
+    await expect(urgentLabel).toHaveCSS("color", "rgb(255, 155, 133)");
+  }
+  const path = testInfo.outputPath("notification-inbox.png");
+  await page.screenshot({ path });
+  await testInfo.attach("notification-inbox", { path, contentType: "image/png" });
+});
+
+test("inbox, bell and app badge reconcile to the same count", async ({ page }) => {
+  await mockService(page, "staff", true);
+  await page.addInitScript(() => {
+    Object.defineProperties(navigator, {
+      setAppBadge: { value: async (count: number) => { document.documentElement.dataset.testBadge = String(count); } },
+      clearAppBadge: { value: async () => { document.documentElement.dataset.testBadge = "0"; } },
+    });
+  });
+  let count = 1;
+  await page.route("**/api/crm/notifications", route => route.fulfill({ json: {
+    attention: count,
+    active: count ? [{
+      id: liveId, lead_id: liveId, name: "Synthetic Callback", title: "New inquiry",
+      category: "inquiry", urgent: true, occurred_at: "2026-11-17T10:00:00Z",
+    }] : [],
+    history: [],
+  } }));
+  await page.goto("/admin/notifications");
+  await expect(page.getByRole("button", { name: "Active (1)" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "1 pending attention items" })).toBeVisible();
+  await expect(page.locator("html")).toHaveAttribute("data-test-badge", "1");
+  count = 0;
+  await page.getByRole("button", { name: "Refresh notifications" }).click();
+  await expect(page.getByRole("button", { name: "Active (0)" })).toBeVisible();
+  await expect(page.locator(".c1-bell")).toHaveAccessibleName("Notifications");
+  await expect(page.locator("html")).toHaveAttribute("data-test-badge", "0");
+});
+
+test("incoming calls stay separate from the queue and staff cannot sync", async ({ page }) => {
+  await mockService(page, "staff", true);
+  await page.route("**/api/crm/calls", route => route.fulfill({ json: {
+    connected: true,
+    calls: [{ provider_call_id: "fixture", occurred_at: "2026-11-17T10:00:00Z",
+      caller_phone: "+14025550101", disposition: "ANSWERED", duration_seconds: 22,
+      historical: true, related_lead_id: liveId }],
+  } }));
+  await page.goto("/admin/calls");
+  await expect(page.getByRole("heading", { name: "Incoming calls" })).toBeVisible();
+  await expect(page.getByText(/ANSWERED.*Historical/)).toBeVisible();
+  await expect(page.getByRole("button", { name: "Import call records" })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "2 pending attention items" })).toBeVisible();
+  await page.getByRole("link", { name: "Open matching lead" }).click();
+  await expect(page.getByRole("heading", { name: "Synthetic Callback" })).toBeVisible();
+});
+
+test("reduced motion keeps the branded still and the offline call log", async ({ page }) => {
+  await mockService(page, "staff", true);
+  const media: string[] = [];
+  page.on("request", req => { if (req.url().endsWith("/videos/wallpaper.mp4")) media.push(req.url()); });
+  await page.emulateMedia({reducedMotion: "reduce"});
+  await page.route("**/api/crm/calls", route => route.fulfill({json:{connected:false,calls:[]}}));
+  await page.goto("/admin/calls");
+  await expect(page.getByRole("heading", {name:"No imported calls."})).toBeVisible();
+  await expect(page.getByText("VoIP.ms is not connected.")).toBeVisible();
+  await expect(page.locator(".c1-backdrop")).toHaveCSS("background-image", /poster.webp/);
+  await expect(page.locator(".c1-backdrop video")).toHaveCount(0);
+  expect(media).toEqual([]);
+});
+
+test("entrance spacing, logo destination and viewport coverage", async ({page}) => {
+  await mockService(page, "staff", true);
+  await page.emulateMedia({reducedMotion:"no-preference"});
+  await page.goto("/admin/");
+  const bell = page.locator(".c1-launch-bell");
+  await expect(bell).toBeVisible();
+  const greeting = await page.locator(".c1-greeting").boundingBox();
+  const attention = await bell.boundingBox();
+  const logo = await page.locator(".c1-launch-logo").boundingBox();
+  expect(attention!.y - greeting!.y - greeting!.height).toBeGreaterThan(12);
+  expect(logo!.y - attention!.y - attention!.height).toBeGreaterThan(12);
+  const flying = page.locator(".c1-entrance.fly .c1-launch-logo");
+  await flying.waitFor();
+  const distance = await flying.evaluate(el => {
+    const flight = el.getAnimations().find(animation => animation.effect instanceof KeyframeEffect &&
+      animation.effect.getKeyframes().some(frame => frame.transform));
+    if (!flight) throw Error("Logo flight missing");
+    flight.finish();
+    const end = el.getBoundingClientRect();
+    const target = [...document.querySelectorAll("[data-brand-target]")].map(node=>node.getBoundingClientRect()).find(box=>box.width)!;
+    return Math.max(Math.abs(end.x-target.x),Math.abs(end.y-target.y),Math.abs(end.width-target.width));
+  });
+  expect(distance).toBeLessThan(1);
+  await expect(page.locator(".c1-entrance")).toHaveCount(0);
+  for (const height of [660,844,700]) {
+    await page.setViewportSize({width:390,height});
+    await page.evaluate(()=>window.scrollTo(0,document.body.scrollHeight));
+    // WebKit updates its visual viewport asynchronously after resizing and scrolling.
+    await expect.poll(() => page.locator(".c1-backdrop").evaluate(el=>{
+      const rect = el.getBoundingClientRect(), viewport = window.visualViewport;
+      const left = viewport?.offsetLeft ?? 0, top = viewport?.offsetTop ?? 0;
+      const right = left + (viewport?.width ?? window.innerWidth);
+      const bottom = top + (viewport?.height ?? window.innerHeight);
+      return Math.max(rect.left - left, rect.top - top, right - rect.right, bottom - rect.bottom);
+    })).toBeLessThanOrEqual(0.5);
+  }
 });
