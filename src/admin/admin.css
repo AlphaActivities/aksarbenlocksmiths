@@ -699,11 +699,12 @@ body:has(.c1-mobile-menu[open]) { overflow: hidden; }
 .c1-desktop-rail { overflow-y: auto; }
 
 /* Shared finish for the dispatch desk, record pages and staff tools. */
-body:has(.c1-shell) { isolation: isolate; }
-.c1-backdrop { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: #101822 url('/images/poster.webp') center / cover; }
-.c1-backdrop video { width: 100%; height: 100%; object-fit: cover; }
-.c1-backdrop::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, #091322ed, #0d1726ac 62%, #091321ba); }
-.c1-shell { color: #f5f2ea; --line: #b7a07849; --paper: linear-gradient(125deg,#1c2a3df5,#111d2ef5); }
+body:has(.c1-shell) { isolation: isolate; background: #09111e; }
+/* Keep the wallpaper in the viewport's own layer, not behind the opaque root. */
+.c1-backdrop { position: fixed; inset: 0; width: 100%; height: 100vh; height: 100dvh; z-index: 0; overflow: hidden; pointer-events: none; background: #101822 url('/images/poster.webp') center / cover no-repeat; }
+.c1-backdrop video { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 100%; object-fit: cover; object-position: center center; }
+.c1-backdrop::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, #06101cf5, #091320ed 62%, #07101cf4); }
+.c1-shell { position: relative; z-index: 1; background: transparent; color: #f5f2ea; --line: #b7a07849; --paper: linear-gradient(125deg,#1c2a3df5,#111d2ef5); }
 .c1-shell > aside, .c1-mobile-menu { background: linear-gradient(160deg,#19283b,#0b1626 78%); border-color: var(--line); }
 .c1-shell nav { gap: 3px; }
 .c1-shell nav a { padding: 11px 14px; border-radius: 7px; }
@@ -738,4 +739,12 @@ body:has(.c1-shell) { isolation: isolate; }
   .c1-alert-card { gap: 0 .7rem; }
   .c1-alert-card a { min-height: 36px; }
   .c1-top p { font-size: .9rem; }
+}
+
+/* Intro: retain the logo's measured destination and resting position. */
+.c1-greeting { top: calc(38% - 214px); margin: 0; line-height: 1.35; }
+.c1-launch-bell { top: calc(38% - 162px); line-height: 1.4; }
+@media (max-width: 800px) {
+  .c1-greeting { top: calc(38% - 234px); }
+  .c1-launch-bell { top: calc(38% - 178px); }
 }
