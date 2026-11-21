@@ -373,6 +373,7 @@ test("managed mobile menu and device-local sound preferences", async ({ page }) 
   });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/admin/settings");
+  await expect(page.getByRole("heading", { name: "My Settings" })).toBeVisible();
   const menu = page.getByRole("button", { name: "Open navigation" });
   if (await menu.isVisible()) {
     await menu.focus();
@@ -407,10 +408,9 @@ test("the dashboard fits the configured viewport", async ({ page }, testInfo) =>
   else await expect(menu).not.toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await expect(page.getByRole("button", { name: "Active (2)" })).toBeVisible();
-  await testInfo.attach("notification-inbox", {
-    body: await page.screenshot(),
-    contentType: "image/png",
-  });
+  const path = testInfo.outputPath("notification-inbox.png");
+  await page.screenshot({ path });
+  await testInfo.attach("notification-inbox", { path, contentType: "image/png" });
 });
 
 test("inbox, bell and app badge reconcile to the same count", async ({ page }) => {

@@ -73,8 +73,8 @@ export default function Settings({ userId }: { userId: string }) {
         {Object.entries({ inquiry: "Inquiries", urgent: "Urgent callbacks", staff: "Staff updates" }).map(([key, label]) => {
           const category = key as SoundCategory;
           return <div className="c1-sound-option" key={category}>
-            <label>{label}
-              <select value={sounds[category]} onChange={event => {
+            <label><span id={`c1-sound-${category}`}>{label}</span>
+              <select aria-labelledby={`c1-sound-${category}`} value={sounds[category]} onChange={event => {
                 const next = { ...sounds, [category]: event.target.value as keyof typeof tones };
                 if (saveSoundChoices(userId, next)) {
                   setSounds(next);
