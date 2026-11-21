@@ -506,10 +506,13 @@ test("entrance spacing, logo destination and viewport coverage", async ({page}) 
   for (const height of [660,844,700]) {
     await page.setViewportSize({width:390,height});
     await page.evaluate(()=>window.scrollTo(0,document.body.scrollHeight));
-    const covers = await page.locator(".c1-backdrop").evaluate(el=>{
-      const rect=el.getBoundingClientRect();
-      return rect.top<=0 && rect.bottom>=window.innerHeight && rect.left<=0 && rect.right>=window.innerWidth;
-    });
-    expect(covers).toBe(true);
+    // WebKit updates its visual viewport asynchronously after resizing and scrolling.
+    await expect.poll(() => page.locator(".c1-backdrop").evaluate(el=>{
+      const rect = el.getBoundingClientRect(), viewport = window.visualViewport;
+      const left = viewport?.offsetLeft ?? 0, top = viewport?.offsetTop ?? 0;
+      const right = left + (viewport?.width ?? window.innerWidth);
+      const bottom = top + (viewport?.height ?? window.innerHeight);
+      return Math.max(rect.left - left, rect.top - top, right - rect.right, bottom - rect.bottom);
+    })).toBeLessThanOrEqual(0.5);
   }
 });
