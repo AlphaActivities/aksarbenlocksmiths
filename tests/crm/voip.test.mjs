@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { normalizeCdr, syncVoip } from "../../netlify/functions/lib/voip.mjs";
+import { inspectVoipDay, normalizeCdr, syncVoip } from "../../netlify/functions/lib/voip.mjs";
 
 const day = "2025-11-20";
 const did = "+15315550100";
@@ -49,4 +49,28 @@ test("VoIP is opt-in and imports only through a bounded read and an isolated CRM
   } });
   assert.deepEqual(result, { inserted: 1, duplicates: 0, day });
   assert.deepEqual(requests, ["/api/v1/rest.php", "/rest/v1/rpc/crm_ingest_voip"]);
+});
+
+test("one-day inspection reports only field names and aggregates without a CRM write", async () => {
+  await assert.rejects(inspectVoipDay(day, { env: {}, fetch: () => assert.fail() }), /inbound_filter_required/);
+  const env = {
+    VOIP_MS_USERNAME: "synthetic", VOIP_MS_API_PASSWORD: "example",
+    VOIP_MS_BUSINESS_DID: did, VOIP_MS_INBOUND_CALL_TYPE: "verified-fixture",
+  };
+  let requests = 0;
+  const summary = await inspectVoipDay(day, { env, fetch: async address => {
+    requests++;
+    const url = new URL(address);
+    assert.equal(url.origin, "https://voip.ms");
+    assert.equal(url.searchParams.get("calltype"), "verified-fixture");
+    assert.equal(url.searchParams.get("date_from"), day);
+    assert.equal(url.searchParams.get("date_to"), day);
+    return Response.json({ status: "success", cdr: [record, record, { ...record, destination: "4025550102" }] });
+  } });
+  assert.equal(requests, 1);
+  assert.deepEqual(summary, {
+    day, returned: 3, matched: 2, duplicate_ids: 1, with_caller: 2, with_duration: 2,
+    fields: Object.keys(record).sort(),
+  });
+  assert.doesNotMatch(JSON.stringify(summary), /4025550101|fixture\.1|Synthetic|example/);
 });
