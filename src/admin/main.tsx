@@ -16,7 +16,7 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
-import { Bell, LogOut, Menu, Phone, X } from "lucide-react";
+import { Bell, BarChart3, ClipboardList, History, LogOut, Menu, Phone, Settings2, Shield, X } from "lucide-react";
 import {
   api,
   age,
@@ -519,13 +519,13 @@ export function App() {
     <nav aria-label="Private dashboard" onClick={event => {
       if ((event.target as HTMLElement).closest("a")) menu.current?.close();
     }}>
-      <NavLink end to="/admin">Queue</NavLink>
-      <NavLink to="/admin/notifications">Notifications</NavLink>
-      <NavLink to="/admin/calls">Calls</NavLink>
-      <NavLink to="/admin/history">History</NavLink>
-      <NavLink to="/admin/reports">Reports</NavLink>
-      <NavLink to="/admin/settings">My Settings</NavLink>
-      {session.role === "josh_admin" && <NavLink to="/admin/business">Admin</NavLink>}
+      <Link to="/admin" aria-current={/^\/admin\/?$/.test(location.pathname) ? "page" : undefined}><ClipboardList aria-hidden="true" />Queue</Link>
+      <NavLink to="/admin/notifications"><Bell aria-hidden="true" />Notifications</NavLink>
+      <NavLink to="/admin/calls"><Phone aria-hidden="true" />Calls</NavLink>
+      <NavLink to="/admin/history"><History aria-hidden="true" />History</NavLink>
+      <NavLink to="/admin/reports"><BarChart3 aria-hidden="true" />Reports</NavLink>
+      <NavLink to="/admin/settings"><Settings2 aria-hidden="true" />My Settings</NavLink>
+      {session.role === "josh_admin" && <NavLink to="/admin/business"><Shield aria-hidden="true" />Admin</NavLink>}
     </nav>
   );
   const signOut = (
