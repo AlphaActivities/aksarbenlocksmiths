@@ -132,7 +132,7 @@ function Manual({ saved }: { saved: () => void }) {
             type="tel"
             required
             maxLength={40}
-            pattern="[+0-9() .-]{7,40}"
+            pattern="[+0-9\(\) .\-]{7,40}"
           />
         </label>
         <label>
@@ -633,7 +633,7 @@ export function App() {
           <Routes>
             <Route
               path="/admin"
-              element={<Queue data={data} refresh={refresh} />}
+              element={<Queue data={data} refresh={() => { refresh(); refreshInbox(); }} />}
             />
             <Route
               path="/admin/history"

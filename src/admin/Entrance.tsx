@@ -81,7 +81,7 @@ export default function Entrance({ attention }: { attention: number | null }) {
           callback dashboard
         </p>
         <p className="c1-typed-date">
-          {new Intl.DateTimeFormat(navigator.language, {
+          {new Intl.DateTimeFormat(undefined, {
             weekday: "long",
             month: "long",
             day: "numeric",

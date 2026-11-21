@@ -33,6 +33,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -45,12 +47,14 @@ jobs:
         run: npm run test:crm
       - name: Embedded database policy tests
         run: npm run test:crm:db:wasm
-      - name: Disposable PostgreSQL and PostgREST integration
-        run: npm run test:crm:http
       - name: Build and SEO checks
         run: npm run build:ci
       - name: Install Chromium and dependencies
         run: npx playwright install --with-deps chromium
+      - name: Disposable PostgreSQL, authenticated browser, and rollback rehearsal
+        env:
+          CRM_TEST_AUTHENTICATED_BROWSER: "1"
+        run: npm run test:crm:http
       - name: CRM browser tests
         run: node scripts/crm/test-browser-isolated.mjs
       - name: Upload browser traces on failure

@@ -4,7 +4,7 @@ This runbook applies to draft PR #4, branch `premium-dashboard`. Do not merge or
 
 ## Verified source and tests
 
-- Run `.github/workflows/crm-release-checks.yml` against the release candidate for Chromium, CRM units, disposable PostgreSQL/PostgREST and build/SEO checks. [Run 14](https://github.com/AlphaActivities/aksarbenlocksmiths/actions/runs/44865556007) passed at commit `68c984a`. Record a successful run for the final candidate SHA.
+- Run `.github/workflows/crm-release-checks.yml` against the release candidate for Chromium, CRM units, disposable PostgreSQL/PostgREST, the populated-schema upgrade, application rollback, and build/SEO checks. [Run 16](https://github.com/AlphaActivities/aksarbenlocksmiths/actions/runs/44867645714) passed at commit `023a04c` before the upgrade and rollback checks were added. Record a successful run for the final candidate SHA.
 - Browser viewport emulation is not physical iPhone or Android acceptance.
 
 ## Existing production environment
@@ -18,8 +18,8 @@ This runbook applies to draft PR #4, branch `premium-dashboard`. Do not merge or
 ## Hosted preview
 
 1. Confirm Netlify build capacity and whether branch deploys can run. Do not purchase build minutes or upgrade the plan without approval.
-2. Keep preview Supabase environment variables unset until a safe isolated backend and test identities are configured. Never copy production service-role keys into preview contexts.
-3. If a test-only backend is unavailable, use the existing synthetic-data local preview for UI checks, but do not label hosted authenticated staging as passed.
+2. The CRM function is pinned to the production project. Keep the PR preview free of production Supabase bindings. For authenticated hosted staging, use a separate approved deployment, pin that deployment's server code to its own disposable backend, and use only that project's credentials. Verify the runtime target before signing in.
+3. For authenticated loopback acceptance, run `npm run build:ci` and then `CRM_TEST_AUTHENTICATED_BROWSER=1 npm run test:crm:http` with Docker and Playwright Chromium installed. The built dashboard goes through the real CRM handler and signed PostgREST JWTs into disposable PostgreSQL, using a synthetic Auth provider. Hosted Supabase Auth, hosted environment bindings, and physical-device acceptance are separate checks.
 4. Limit staging access to authorized reviewers. Ensure no real customer data, live intake, or production push dispatch enters the preview.
 5. Record preview URL, branch SHA, backend isolation evidence, and results.
 
@@ -43,14 +43,12 @@ Record device model, OS/browser, pass/fail and defects. Do not count emulated re
 
 Prerequisites: passing CI, approved physical acceptance, build capacity, confirmed production backup/recovery plan, and explicit deployment approval.
 
-1. Capture the deployed Netlify commit, current migration history and CRM attention baseline. Preserve the existing customer data.
-2. Review the additive migration SQL, privileges, RLS and schema compatibility once more.
-3. Apply the notification inbox migration to the existing production Supabase project using the migration mechanism, before publishing code that calls the new RPC.
-4. Verify the new RPC exists and has expected role access without creating or modifying customer records.
-5. Deploy the reviewed GitHub commit, verify the actual deployed SHA, then smoke-test owner, staff and client navigation and notification reads with authorized sessions.
-6. Confirm existing lead intake, callback actions, deep links, badge count and history remain correct.
-7. Leave production push disabled unless separately approved. Do not modify VoIP routing.
-8. If verification fails, stop new rollout, restore the prior app deploy where supported, and diagnose database compatibility. Do not blindly roll back database changes or delete customer data.
+1. Capture the current Netlify deploy ID and commit, including its last-known-good rollback candidate. At preflight the candidate was deploy `6b00e538bb927938de80a8ce` at `72a6d6a`. Recheck the current deploy and whether it can be republished before starting. Confirm a recoverable database backup and record its timestamp and recovery method.
+2. Capture migration history, CRM attention, schema, RLS, and grants. The local bootstrap version `202611170001` differs from the recorded production version `20261117202054`. Use an explicit reviewed selection of the two release migrations against the confirmed production project and record their production migration entries. Avoid a blanket push that tries to replay the bootstrap.
+3. Apply `202611210001_notification_inbox.sql` then `202611210002_inbound_calls.sql` before publishing the exact app revision in this PR. Check both migration records, new RPCs and policy grants before permitting app publication. Stop if either step fails and reconcile the recorded database state before retrying.
+4. Publish the reviewed GitHub commit, confirm the actual deployed SHA, and smoke-test authorized owner, staff, and client access, the queue and inbox attention count, deep links, history, and Calls with imports disabled. Confirm intake and callback workflows using the agreed production-safe checks.
+5. Keep push and VoIP activation outside this rollout.
+6. If the app smoke fails, restore the captured prior deploy and rerun role, queue, and attention reads. The rollback rehearsal runs the previously deployed CRM handler against the upgraded database and confirms callback notes and call records survive. Retain both additive migrations and preserve new data. Handle a failed migration or a database incident separately using the recorded migration state and backup plan.
 
 ## Completion accounting
 
