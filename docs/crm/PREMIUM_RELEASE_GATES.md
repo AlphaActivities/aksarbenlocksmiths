@@ -4,15 +4,14 @@ This runbook applies to draft PR #4, branch `premium-dashboard`. Do not merge or
 
 ## Verified source and tests
 
-- The development executor reported 32 Chromium browser checks, 19 CRM unit tests, disposable PostgreSQL/PostgREST migration tests, and build/SEO checks passing.
-- The repository includes `.github/workflows/crm-release-checks.yml` to repeat checks in GitHub Actions. Verify an actual successful run before treating CI as passed. A missing workflow run is not a pass.
+- Run `.github/workflows/crm-release-checks.yml` against the release candidate for Chromium, CRM units, disposable PostgreSQL/PostgREST and build/SEO checks. [Run 14](https://github.com/AlphaActivities/aksarbenlocksmiths/actions/runs/44865556007) passed at commit `68c984a`. Record a successful run for the final candidate SHA.
 - Browser viewport emulation is not physical iPhone or Android acceptance.
 
 ## Existing production environment
 
 - Netlify project: `aksarbenlocksmiths`
 - Supabase production project: `umnxslkgksqyqfwwdztg`
-- Production CRM migration history at preflight: `callback_queue`, `owner_memberships`.
+- Production CRM migration history at preflight: `20261117202054 callback_queue` and `20261117211153 owner_memberships`. Do not replay the repository's bootstrap migrations over those existing objects. Reconcile version history and confirm the deployed schema before applying the additive release migrations.
 - Premium release migration: `supabase/migrations/202611210001_notification_inbox.sql`.
 - Production customer data and existing authentication must remain intact.
 

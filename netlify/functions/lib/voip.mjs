@@ -1,3 +1,4 @@
+import { isIPv4 } from "node:net";
 import { Fault, rpc } from "./core.mjs";
 
 const endpoint = "https://voip.ms/api/v1/rest.php";
@@ -83,10 +84,25 @@ async function fetchVoipDay(day, env, request, callType) {
 
 export async function inspectVoipDay(day, deps = {}) {
   const env = deps.env || process.env;
+  if (env.CRM_VOIP_ENABLED === "true") throw new Fault(503, "voip_inspection_requires_imports_disabled");
   const callType = env.VOIP_MS_INBOUND_CALL_TYPE;
   if (!validCallType(callType))
     throw new Fault(503, "voip_inbound_filter_required");
-  const { matched, returned } = await fetchVoipDay(day, env, deps.fetch || fetch, callType);
+  const expectedIPv4 = env.VOIP_MS_INSPECTION_IPV4;
+  if (!isIPv4(expectedIPv4 ?? "")) throw new Fault(503, "voip_inspection_ipv4_required");
+  const request = deps.fetch || fetch;
+  let observedIPv4;
+  try {
+    const response = await request("https://checkip.amazonaws.com/", {
+      redirect: "error", signal: AbortSignal.timeout(5000), cache: "no-store",
+    });
+    if (!response.ok) throw new Error();
+    observedIPv4 = (await response.text()).trim();
+  } catch {
+    throw new Fault(502, "voip_inspection_egress_unavailable");
+  }
+  if (observedIPv4 !== expectedIPv4) throw new Fault(503, "voip_inspection_egress_mismatch");
+  const { matched, returned } = await fetchVoipDay(day, env, request, callType);
   const duplicates = callDuplicates(matched.map(({ normalized }) => normalized));
   return {
     day,
