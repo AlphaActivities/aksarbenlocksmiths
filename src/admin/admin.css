@@ -420,9 +420,9 @@ summary {
   text-align: center;
   font-size: 0.8rem;
 }
-.c1-entrance.fly .c1-launch-copy,
-.c1-entrance.fly .c1-greeting,
-.c1-entrance.fly .c1-launch-bell {
+.c1-entrance:is(.fly,.fade) .c1-launch-copy,
+.c1-entrance:is(.fly,.fade) .c1-greeting,
+.c1-entrance:is(.fly,.fade) .c1-launch-bell {
   opacity: 0;
   transition: opacity 0.22s;
 }
@@ -701,7 +701,7 @@ body:has(.c1-mobile-menu[open]) { overflow: hidden; }
 /* Shared finish for the dispatch desk, record pages and staff tools. */
 body:has(.c1-shell) { isolation: isolate; background: #09111e; }
 /* Keep the wallpaper in the viewport's own layer, not behind the opaque root. */
-.c1-backdrop { position: fixed; inset: 0; width: 100%; height: 100vh; height: 100dvh; z-index: 0; overflow: hidden; pointer-events: none; background: #101822 url('/images/poster.webp') center / cover no-repeat; }
+.c1-backdrop { position: fixed; inset: 0; width: 100%; height: 100vh; height: 100dvh; min-height: 100lvh; z-index: 0; overflow: hidden; pointer-events: none; background: #101822 url('/images/poster.webp') center / cover no-repeat; }
 .c1-backdrop video { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 100%; object-fit: cover; object-position: center center; }
 .c1-backdrop::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, #06101cf5, #091320ed 62%, #07101cf4); }
 .c1-shell { position: relative; z-index: 1; background: transparent; color: #f5f2ea; --line: #b7a07849; --paper: linear-gradient(125deg,#1c2a3df5,#111d2ef5); }
@@ -747,4 +747,9 @@ body:has(.c1-shell) { isolation: isolate; background: #09111e; }
 @media (max-width: 800px) {
   .c1-greeting { top: calc(38% - 234px); }
   .c1-launch-bell { top: calc(38% - 178px); }
+}
+
+@media (max-height: 640px) {
+  .c1-greeting { top: max(env(safe-area-inset-top), 4px); }
+  .c1-launch-bell { top: calc(max(env(safe-area-inset-top), 4px) + 30px); }
 }

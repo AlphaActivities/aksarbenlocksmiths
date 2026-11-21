@@ -49,8 +49,8 @@ jobs:
         run: npm run test:crm:db:wasm
       - name: Build and SEO checks
         run: npm run build:ci
-      - name: Install Chromium and dependencies
-        run: npx playwright install --with-deps chromium
+      - name: Install Chromium, WebKit and dependencies
+        run: npx playwright install --with-deps chromium webkit
       - name: Disposable PostgreSQL, authenticated browser, and rollback rehearsal
         env:
           CRM_TEST_AUTHENTICATED_BROWSER: "1"

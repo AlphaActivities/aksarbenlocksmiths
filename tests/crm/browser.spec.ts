@@ -478,3 +478,38 @@ test("reduced motion keeps the branded still and the offline call log", async ({
   await expect(page.locator(".c1-backdrop video")).toHaveCount(0);
   expect(media).toEqual([]);
 });
+
+test("entrance spacing, logo destination and viewport coverage", async ({page}) => {
+  await mockService(page, "staff", true);
+  await page.emulateMedia({reducedMotion:"no-preference"});
+  await page.goto("/admin/");
+  const bell = page.locator(".c1-launch-bell");
+  await expect(bell).toBeVisible();
+  const greeting = await page.locator(".c1-greeting").boundingBox();
+  const attention = await bell.boundingBox();
+  const logo = await page.locator(".c1-launch-logo").boundingBox();
+  expect(attention!.y - greeting!.y - greeting!.height).toBeGreaterThan(12);
+  expect(logo!.y - attention!.y - attention!.height).toBeGreaterThan(12);
+  const flying = page.locator(".c1-entrance.fly .c1-launch-logo");
+  await flying.waitFor();
+  const distance = await flying.evaluate(el => {
+    const flight = el.getAnimations().find(animation => animation.effect instanceof KeyframeEffect &&
+      animation.effect.getKeyframes().some(frame => frame.transform));
+    if (!flight) throw Error("Logo flight missing");
+    flight.finish();
+    const end = el.getBoundingClientRect();
+    const target = [...document.querySelectorAll("[data-brand-target]")].map(node=>node.getBoundingClientRect()).find(box=>box.width)!;
+    return Math.max(Math.abs(end.x-target.x),Math.abs(end.y-target.y),Math.abs(end.width-target.width));
+  });
+  expect(distance).toBeLessThan(1);
+  await expect(page.locator(".c1-entrance")).toHaveCount(0);
+  for (const height of [660,844,700]) {
+    await page.setViewportSize({width:390,height});
+    await page.evaluate(()=>window.scrollTo(0,document.body.scrollHeight));
+    const covers = await page.locator(".c1-backdrop").evaluate(el=>{
+      const rect=el.getBoundingClientRect();
+      return rect.top<=0 && rect.bottom>=window.innerHeight && rect.left<=0 && rect.right>=window.innerWidth;
+    });
+    expect(covers).toBe(true);
+  }
+});

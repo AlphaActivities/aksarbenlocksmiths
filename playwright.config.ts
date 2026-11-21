@@ -23,6 +23,11 @@ export default defineConfig({
   // Android emulator runs first. These projects do not claim physical-device acceptance.
   projects: [
     {
+      name: "iPhone viewport (WebKit)",
+      grep: /entrance spacing, logo destination and viewport coverage/,
+      use: { ...devices["iPhone 13"], browserName: "webkit", launchOptions: {args: [], executablePath: undefined} },
+    },
+    {
       name: "Android Chrome emulation",
       use: { ...devices["Pixel 7"], browserName: "chromium" },
     },

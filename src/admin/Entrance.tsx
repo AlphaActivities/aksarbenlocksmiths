@@ -10,8 +10,9 @@ export default function Entrance({ attention }: { attention: number | null }) {
   const complete = useRef(false);
   const initiallyDone = useRef(phase === "done");
   const [greeted, setGreeted] = useState(false);
+  const finished = phase === "done";
   useEffect(() => {
-    if (initiallyDone.current) return;
+    if (initiallyDone.current || finished) return;
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setPhase("done");
       return;
@@ -48,7 +49,7 @@ export default function Entrance({ attention }: { attention: number | null }) {
       clearTimeout(fade);
       clearTimeout(finish);
     };
-  }, []);
+  }, [finished]);
   useEffect(() => {
     if (phase === "done" && !complete.current) {
       complete.current = true;
