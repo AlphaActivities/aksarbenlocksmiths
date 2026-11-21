@@ -284,9 +284,14 @@ test("manifest, direct entries, worker scope and public emergency path survive r
   });
   await page.goto("/admin/");
   await page.reload();
+  const menu = page.getByRole("button", { name: "Open navigation" });
+  await expect(page.getByRole("navigation", { name: "Private dashboard" }).or(menu)).toBeVisible();
+  const mobile = await menu.isVisible();
+  if (mobile) await menu.click();
   await expect(
     page.getByRole("link", { name: "Admin", exact: true }),
   ).toBeVisible();
+  if (mobile) await page.keyboard.press("Escape");
   const pwa = await page.evaluate(async () => {
     const manifest = await (await fetch("/admin/manifest.webmanifest")).json();
     const reg = await navigator.serviceWorker.ready;
@@ -358,6 +363,14 @@ test("notification filters and record navigation keep attention intact", async (
 
 test("managed mobile menu and device-local sound preferences", async ({ page }) => {
   await mockService(page, "staff", true);
+  await page.addInitScript(() => {
+    const start = OscillatorNode.prototype.start;
+    OscillatorNode.prototype.start = function (when?: number) {
+      const root = document.documentElement;
+      root.dataset.testOscillators = String(Number(root.dataset.testOscillators ?? "0") + 1);
+      return start.call(this, when);
+    };
+  });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/admin/settings");
   const menu = page.getByRole("button", { name: "Open navigation" });
@@ -372,7 +385,10 @@ test("managed mobile menu and device-local sound preferences", async ({ page }) 
     await expect(menu).toBeFocused();
   }
   await page.getByLabel("Urgent callbacks", { exact: true }).selectOption("Amber Pulse");
-  await expect(page.getByRole("button", { name: "Preview urgent callbacks sound" })).toBeEnabled();
+  const preview = page.getByRole("button", { name: "Preview urgent callbacks sound" });
+  await expect(preview).toBeEnabled();
+  await preview.click();
+  await expect(page.locator("html")).toHaveAttribute("data-test-oscillators", "3");
   await page.reload();
   await expect(page.getByLabel("Urgent callbacks", { exact: true })).toHaveValue("amber");
   await expect(page.getByLabel("Staff updates", { exact: true })).toHaveValue("silent");
@@ -380,7 +396,7 @@ test("managed mobile menu and device-local sound preferences", async ({ page }) 
 });
 
 
-test("the dashboard fits the configured viewport", async ({ page }) => {
+test("the dashboard fits the configured viewport", async ({ page }, testInfo) => {
   await mockService(page, "staff", true);
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/admin/notifications");
@@ -390,6 +406,11 @@ test("the dashboard fits the configured viewport", async ({ page }) => {
   if (width <= 900) await expect(menu).toBeVisible();
   else await expect(menu).not.toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await expect(page.getByRole("button", { name: "Active (2)" })).toBeVisible();
+  await testInfo.attach("notification-inbox", {
+    body: await page.screenshot(),
+    contentType: "image/png",
+  });
 });
 
 test("inbox, bell and app badge reconcile to the same count", async ({ page }) => {
