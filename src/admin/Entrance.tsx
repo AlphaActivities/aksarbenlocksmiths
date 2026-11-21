@@ -25,22 +25,23 @@ export default function Entrance({ attention }: { attention: number | null }) {
       if (destination && origin) {
         logo.current?.animate(
           [
-            { transform: "translate(0,0) scale(1)" },
+            { transform: "translate(0,0) scale(1)", offset: 0 },
             {
               transform: `translate(${destination.x + destination.width / 2 - origin.x - origin.width / 2}px,${destination.y + destination.height / 2 - origin.y - origin.height / 2}px) scale(${destination.width / origin.width})`,
+              offset: 1,
             },
           ],
           {
-            duration: 820,
+            duration: 1060,
             fill: "forwards",
-            easing: "cubic-bezier(.22,1,.36,1)",
+            easing: "cubic-bezier(.33,0,.18,1)",
           },
         );
       }
       setPhase("fly");
     }, 4000);
-    const fade = setTimeout(() => setPhase("fade"), 4820);
-    const finish = setTimeout(() => setPhase("done"), 5140);
+    const fade = setTimeout(() => setPhase("fade"), 5060);
+    const finish = setTimeout(() => setPhase("done"), 5380);
     return () => {
       clearTimeout(greeting);
       clearTimeout(flight);
