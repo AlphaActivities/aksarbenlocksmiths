@@ -348,7 +348,7 @@ summary {
 .c1-entrance.fade {
   opacity: 0;
 }
-.c1-entrance > button {
+.c1-intro-copy-layer > button {
   pointer-events: auto;
   position: absolute;
   bottom: 30px;
@@ -420,12 +420,11 @@ summary {
   text-align: center;
   font-size: 0.8rem;
 }
-.c1-entrance:is(.fly,.fade) .c1-launch-copy,
-.c1-entrance:is(.fly,.fade) .c1-greeting,
-.c1-entrance:is(.fly,.fade) .c1-launch-bell {
-  opacity: 0;
-  transition: opacity 0.22s;
-}
+.c1-intro-copy-layer { position: absolute; inset: 0; transition: opacity 220ms ease-in; }
+.c1-entrance:is(.depart,.fly,.fade) .c1-intro-copy-layer { opacity: 0; pointer-events: none; }
+.c1-launch-bell { display: flex; align-items: center; justify-content: center; gap: .45rem; animation: c1-rise .48s ease-out both; }
+.c1-launch-bell svg { flex: none; color: #e4c48d; }
+.c1-launch-copy { animation: c1-rise .42s 1.05s both; }
 :root[data-c1-ready="true"] .c1-grid > .c1-card {
   animation: c1-rise 0.4s 0.05s both;
 }
@@ -710,7 +709,13 @@ body:has(.c1-shell) { isolation: isolate; background: #09111e; }
 .c1-shell nav a { padding: 11px 14px; border-radius: 7px; }
 .c1-shell nav a.active { background: linear-gradient(100deg,#ad874536,#233043); color: #ffe3ad; }
 .c1-top { background: #101d2eef; border-color: var(--line); }
-.c1-shell .c1-motion { background: transparent; color: #dbc69f; border: 0; width: 44px; padding: 0; }
+.c1-shell .c1-motion { display: inline-flex; align-items: center; justify-content: center; gap: .3rem; min-width: 44px; min-height: 44px; padding: 0 .48rem; background: #182739; color: #ead6af; border: 1px solid #74674f; border-radius: .65rem; font-size: .75rem; }
+.c1-top .c1-wordmark { font-family: Georgia, serif; letter-spacing: .025em; }
+@media (max-width: 540px) {
+  .c1-top .c1-wordmark { font-size: 1.05rem; line-height: 1.08; }
+  .c1-wordmark span { display: block; margin-top: .2rem; font: 600 .61rem/1.1 system-ui,sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #d7c39e; }
+}
+@media (max-width: 360px) { .c1-top { column-gap: 4px; } }
 .c1-workspace main { max-width: 76rem; margin-inline: auto; padding: clamp(1rem,3vw,2.4rem); }
 .c1-shell h1 { font-family: Georgia, 'Times New Roman', serif; font-weight: 500; letter-spacing: -.035em; font-size: clamp(1.95rem,3.4vw,3rem); line-height: 1.1; margin: .25em 0; }
 .c1-shell h2 { letter-spacing: -.015em; }

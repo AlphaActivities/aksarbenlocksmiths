@@ -18,6 +18,7 @@ export default function Entrance({ attention }: { attention: number | null }) {
       return;
     }
     const greeting = setTimeout(() => setGreeted(true), 850);
+    const departure = setTimeout(() => setPhase("depart"), 3540);
     const flight = setTimeout(() => {
       const destination = Array.from(document.querySelectorAll("[data-brand-target]"))
         .find(element => element.getBoundingClientRect().width)
@@ -45,6 +46,7 @@ export default function Entrance({ attention }: { attention: number | null }) {
     const finish = setTimeout(() => setPhase("done"), 5380);
     return () => {
       clearTimeout(greeting);
+      clearTimeout(departure);
       clearTimeout(flight);
       clearTimeout(fade);
       clearTimeout(finish);
@@ -65,35 +67,37 @@ export default function Entrance({ attention }: { attention: number | null }) {
       role="status"
       aria-label="Opening your private callback queue"
     >
-      <p className="c1-greeting">Welcome to Aksarben</p>
-      {greeted && attention !== null && attention > 0 && (
-        <span className="c1-launch-bell">
-          <Bell size={16} aria-hidden="true" /> {attention} need attention
-        </span>
-      )}
       <div className="c1-launch-logo" ref={logo}>
         <img src="/images/shield-logo.webp" alt="" />
         <span />
       </div>
-      <div className="c1-launch-copy">
-        <span className="c1-ring" />
-        <p>
-          Entering your
-          <br />
-          callback dashboard
-        </p>
-        <p className="c1-typed-date">
-          {new Intl.DateTimeFormat(undefined, {
-            weekday: "long",
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          }).format(new Date())}
-        </p>
+      <div className="c1-intro-copy-layer">
+        <p className="c1-greeting">Welcome to Aksarben</p>
+        {greeted && attention !== null && attention > 0 && (
+          <span className="c1-launch-bell">
+            <Bell size={16} aria-hidden="true" /> {attention} need attention
+          </span>
+        )}
+        <div className="c1-launch-copy">
+          <span className="c1-ring" />
+          <p>
+            Entering your
+            <br />
+            callback dashboard
+          </p>
+          <p className="c1-typed-date">
+            {new Intl.DateTimeFormat(undefined, {
+              weekday: "long",
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            }).format(new Date())}
+          </p>
+        </div>
+        <button type="button" onClick={() => setPhase("done")}>
+          Skip introduction
+        </button>
       </div>
-      <button type="button" onClick={() => setPhase("done")}>
-        Skip introduction
-      </button>
     </div>
   );
 }

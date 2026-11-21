@@ -33,6 +33,6 @@ export default function Backdrop() {
         poster="/images/poster.webp" src="/videos/wallpaper.mp4" onError={() => setEligible(false)} />}
     </div>, document.body)}
     {eligible && <button className="c1-motion" aria-label={paused ? "Play background video" : "Pause background video"}
-      onClick={() => setPaused(value => !value)}>{paused ? <Play size={16}/> : <Pause size={16}/>}</button>}
+      onClick={() => setPaused(value => !value)}>{paused ? <Play size={16}/> : <Pause size={16}/>}<span>Film</span></button>}
   </>;
 }

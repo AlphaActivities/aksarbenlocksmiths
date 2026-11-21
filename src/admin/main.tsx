@@ -580,7 +580,7 @@ export function App() {
           <Link to="/admin" className="c1-mobile-brand" aria-label="Callback queue">
             <span data-brand-target><img src="/images/shield-logo.webp" alt="" /></span>
           </Link>
-          <p>Aksarben Locksmiths</p>
+          <p className="c1-wordmark">Aksarben <span>Locksmiths</span></p>
           <Backdrop />
           <Link className="c1-bell" data-active={Boolean(attention)} to="/admin/notifications"
             aria-label={attention ? `${attention} pending attention items` : "Notifications"}>
