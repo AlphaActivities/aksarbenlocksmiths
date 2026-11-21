@@ -25,7 +25,7 @@ export default defineConfig({
     {
       name: "iPhone viewport (WebKit)",
       grep: /entrance spacing, logo destination and viewport coverage/,
-      use: { ...devices["iPhone 13"], browserName: "webkit", launchOptions: {args: [], executablePath: undefined} },
+      use: { ...devices["iPhone 13"], browserName: "webkit", serviceWorkers: "block", launchOptions: {args: [], executablePath: undefined} },
     },
     {
       name: "Android Chrome emulation",
