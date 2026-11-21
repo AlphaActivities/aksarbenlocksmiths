@@ -131,6 +131,19 @@ async function mockService(page: Page, role = "staff", startSignedIn = false) {
           ).length,
         },
       };
+    } else if (path === "notifications") {
+      result = {
+        attention: 2,
+        active: leads.filter(lead => !lead.historical).map(lead => ({
+          id: lead.id, lead_id: lead.id, name: lead.name,
+          title: "New inquiry", category: "inquiry",
+          urgent: lead.urgency === "urgent", occurred_at: lead.created_at,
+        })),
+        history: [{
+          id: "activity", lead_id: liveId, name: "Synthetic Callback", title: "Callback completed",
+          category: "staff", urgent: false, occurred_at: "2026-11-17T11:00:00Z",
+        }],
+      };
     } else if (path === "attention") result = { attention: 2 };
     else if (path === "logout") {
       signedIn = false;
@@ -233,6 +246,8 @@ test("History and filters do not change attention; staff cannot use Admin", asyn
   await expect(
     page.getByRole("link", { name: "2 pending attention items" }),
   ).toBeVisible();
+  const menu = page.getByRole("button", { name: "Open navigation" });
+  if (await menu.isVisible()) await menu.click();
   await page.getByRole("link", { name: "History", exact: true }).click();
   await expect(page.getByText("Synthetic Historical · 68103")).toBeVisible();
   await expect(
@@ -317,4 +332,90 @@ test("manifest, direct entries, worker scope and public emergency path survive r
   await expect(
     page.getByRole("heading", { name: "Lock Rekeying", exact: true }),
   ).toBeVisible();
+});
+
+
+test("notification filters and record navigation keep attention intact", async ({ page }) => {
+  const writes: string[] = [];
+  page.on("request", request => {
+    if (request.url().includes("/api/crm/") && request.method() !== "GET") writes.push(request.url());
+  });
+  await mockService(page, "staff", true);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/admin");
+  await page.getByRole("link", { name: "2 pending attention items" }).click();
+  await expect(page.getByRole("button", { name: "Active (2)" })).toBeVisible();
+  await page.getByRole("button", { name: "Urgent", exact: true }).click();
+  await expect(page.getByRole("link", { name: /Open record for Synthetic Callback/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Open record for Synthetic Handoff/ })).toHaveCount(0);
+  await page.getByRole("button", { name: "History", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Callback completed" })).toBeVisible();
+  await page.getByRole("link", { name: /Open record for Synthetic Callback/ }).click();
+  await expect(page).toHaveURL(new RegExp(`/admin/leads/${liveId}$`));
+  await expect(page.getByRole("link", { name: "2 pending attention items" })).toBeVisible();
+  expect(writes).toEqual([]);
+});
+
+test("managed mobile menu and device-local sound preferences", async ({ page }) => {
+  await mockService(page, "staff", true);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/admin/settings");
+  const menu = page.getByRole("button", { name: "Open navigation" });
+  if (await menu.isVisible()) {
+    await menu.focus();
+    await page.keyboard.press("Enter");
+    const navigation = page.getByRole("dialog", { name: "Dashboard navigation" });
+    await expect(navigation).toBeVisible();
+    await expect(navigation.getByRole("link", { name: "Queue", exact: true })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(navigation).not.toBeVisible();
+    await expect(menu).toBeFocused();
+  }
+  await page.getByLabel("Urgent callbacks", { exact: true }).selectOption("Amber Pulse");
+  await expect(page.getByRole("button", { name: "Preview urgent callbacks sound" })).toBeEnabled();
+  await page.reload();
+  await expect(page.getByLabel("Urgent callbacks", { exact: true })).toHaveValue("amber");
+  await expect(page.getByLabel("Staff updates", { exact: true })).toHaveValue("silent");
+  await expect(page.locator(".c1-entrance")).toHaveCount(0);
+});
+
+
+test("the dashboard fits the configured viewport", async ({ page }) => {
+  await mockService(page, "staff", true);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/admin/notifications");
+  await expect(page.getByRole("heading", { name: "Notifications" })).toBeVisible();
+  const width = page.viewportSize()!.width;
+  const menu = page.getByRole("button", { name: "Open navigation" });
+  if (width <= 900) await expect(menu).toBeVisible();
+  else await expect(menu).not.toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
+test("inbox, bell and app badge reconcile to the same count", async ({ page }) => {
+  await mockService(page, "staff", true);
+  await page.addInitScript(() => {
+    Object.defineProperties(navigator, {
+      setAppBadge: { value: async (count: number) => { document.documentElement.dataset.testBadge = String(count); } },
+      clearAppBadge: { value: async () => { document.documentElement.dataset.testBadge = "0"; } },
+    });
+  });
+  let count = 1;
+  await page.route("**/api/crm/notifications", route => route.fulfill({ json: {
+    attention: count,
+    active: count ? [{
+      id: liveId, lead_id: liveId, name: "Synthetic Callback", title: "New inquiry",
+      category: "inquiry", urgent: true, occurred_at: "2026-11-17T10:00:00Z",
+    }] : [],
+    history: [],
+  } }));
+  await page.goto("/admin/notifications");
+  await expect(page.getByRole("button", { name: "Active (1)" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "1 pending attention items" })).toBeVisible();
+  await expect(page.locator("html")).toHaveAttribute("data-test-badge", "1");
+  count = 0;
+  await page.getByRole("button", { name: "Refresh notifications" }).click();
+  await expect(page.getByRole("button", { name: "Active (0)" })).toBeVisible();
+  await expect(page.locator(".c1-bell")).toHaveAccessibleName("Notifications");
+  await expect(page.locator("html")).toHaveAttribute("data-test-badge", "0");
 });

@@ -103,6 +103,13 @@ assert.equal(r.statusCode, 200);
 const queue = JSON.parse(r.body);
 assert.equal(queue.attention, 1);
 assert.equal(queue.leads.length, 1);
+const inboxResponse = await invoke("notifications");
+assert.equal(inboxResponse.statusCode, 200);
+const inbox = JSON.parse(inboxResponse.body);
+assert.equal(inbox.attention, queue.attention);
+assert.equal(inbox.active[0].lead_id, queue.leads[0].id);
+assert.deepEqual(inbox.history, []);
+assert.equal((await invoke("notifications", { user: outsider })).statusCode, 403);
 const lead = queue.leads[0];
 r = await invoke(`leads/${lead.id}`, {
   method: "POST",

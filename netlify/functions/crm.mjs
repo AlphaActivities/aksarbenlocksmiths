@@ -163,6 +163,16 @@ export function createHandler(deps = {}) {
           { attention: await rpc("crm_attention_count", {}, { token }, deps) },
           cookies,
         );
+      if (path === "notifications" && method === "GET") {
+        const offset = Number(event.queryStringParameters?.offset ?? 0);
+        if (!Number.isSafeInteger(offset) || offset < 0)
+          throw new Fault(422, "invalid_offset");
+        return reply(
+          200,
+          await rpc("crm_notification_inbox", { p_offset: offset }, { token }, deps),
+          cookies,
+        );
+      }
       if (path === "queue" && method === "GET") {
         const q = event.queryStringParameters || {};
         for (const k of ["from", "to"])

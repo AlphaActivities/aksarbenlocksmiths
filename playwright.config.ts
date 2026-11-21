@@ -25,6 +25,10 @@ export default defineConfig({
       use: { ...devices["iPhone 13"], browserName: "chromium" },
     },
     {
+      name: "Tablet viewport emulation",
+      use: { ...devices["iPad Mini"], browserName: "chromium" },
+    },
+    {
       name: "Desktop Chromium",
       use: { ...devices["Desktop Chrome"], browserName: "chromium" },
     },

@@ -3,17 +3,23 @@ import { Bell } from "lucide-react";
 // Timing and measured logo flight follow Missy's read-only 232babd reference.
 export default function Entrance({ attention }: { attention: number | null }) {
   const logo = useRef<HTMLDivElement>(null);
-  const [phase, setPhase] = useState("welcome");
+  const [phase, setPhase] = useState(() => {
+    try { return sessionStorage.getItem("c1-intro-viewed") ? "done" : "welcome"; }
+    catch { return "welcome"; }
+  });
+  const complete = useRef(false);
+  const initiallyDone = useRef(phase === "done");
   const [greeted, setGreeted] = useState(false);
   useEffect(() => {
+    if (initiallyDone.current) return;
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setPhase("done");
       return;
     }
     const greeting = setTimeout(() => setGreeted(true), 850);
     const flight = setTimeout(() => {
-      const destination = document
-        .querySelector("[data-brand-target]")
+      const destination = Array.from(document.querySelectorAll("[data-brand-target]"))
+        .find(element => element.getBoundingClientRect().width)
         ?.getBoundingClientRect();
       const origin = logo.current?.getBoundingClientRect();
       if (destination && origin) {
@@ -43,7 +49,12 @@ export default function Entrance({ attention }: { attention: number | null }) {
     };
   }, []);
   useEffect(() => {
-    if (phase === "done") document.documentElement.dataset.c1Ready = "true";
+    if (phase === "done" && !complete.current) {
+      complete.current = true;
+      document.documentElement.dataset.c1Ready = "true";
+      try { sessionStorage.setItem("c1-intro-viewed", "1"); }
+      catch { /* The introduction still works when storage is unavailable. */ }
+    }
   }, [phase]);
   if (phase === "done") return null;
   return (

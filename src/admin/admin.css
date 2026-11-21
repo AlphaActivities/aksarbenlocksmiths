@@ -472,42 +472,6 @@ summary {
   }
 }
 @media (max-width: 800px) {
-  .c1-shell {
-    display: block;
-  }
-  .c1-shell > aside {
-    position: relative;
-    height: auto;
-    padding: 14px;
-  }
-  .c1-brand {
-    justify-content: center;
-  }
-  .c1-shell nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin: 14px 0;
-  }
-  .c1-shell nav a {
-    padding: 12px;
-    flex: 1;
-    text-align: center;
-    white-space: nowrap;
-  }
-  .c1-shell > aside > p {
-    display: none;
-  }
-  .c1-shell > aside > button {
-    position: absolute;
-    right: 10px;
-    top: 18px;
-    font-size: 0;
-    padding: 10px;
-  }
-  .c1-top {
-    padding: 8px 16px;
-  }
   .c1-workspace main {
     padding: 12px 16px 50px;
   }
@@ -579,3 +543,163 @@ summary {
     top: calc(38% - 92px);
   }
 }
+
+/* Premium admin shell and notification surfaces */
+.c1-shell {
+  --c1-brass: #d8aa58;
+  --c1-urgent: #ff9b85;
+  --c1-inquiry: #e2b868;
+  --c1-follow-up: #8fc8ff;
+  --c1-staff: #86d4bc;
+}
+.c1-top {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  min-height: 64px;
+  background: #101b33;
+  border-bottom: 1px solid #314266;
+  box-shadow: 0 4px 18px #0a122540;
+}
+.c1-top p {
+  flex: 1;
+  margin: 0;
+  font-weight: 650;
+}
+.c1-shell nav a, .c1-shell button, .c1-bell {
+  transition: background-color 160ms ease, border-color 160ms ease,
+    box-shadow 160ms ease, transform 160ms ease;
+}
+.c1-shell button:active, .c1-bell:active { transform: scale(.96); }
+.c1-shell .c1-bell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  min-height: 44px;
+  min-width: 44px;
+  padding: .5rem .7rem;
+  color: var(--c1-brass);
+  background: #172442;
+  border: 1px solid #d8aa5873;
+  border-radius: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.c1-shell .c1-bell:hover { box-shadow: 0 0 16px #d8aa5838; }
+.c1-bell[data-active="true"] svg {
+  transform-origin: top center;
+  animation: c1-bell-ring 640ms ease both;
+}
+@keyframes c1-bell-ring {
+  20%, 60% { transform: rotate(12deg); }
+  40%, 80% { transform: rotate(-10deg); }
+}
+.c1-top .c1-menu-button, .c1-top .c1-mobile-brand { display: none; }
+.c1-mobile-menu {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: min(82vw, 320px);
+  max-width: none;
+  max-height: none;
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: #f5f7ff;
+  background: #101b33;
+  transform: translateX(-100%);
+  transition: transform 260ms ease, display 260ms allow-discrete, overlay 260ms allow-discrete;
+}
+.c1-mobile-menu[open] { transform: translateX(0); }
+@starting-style {
+  .c1-mobile-menu[open] { transform: translateX(-100%); }
+}
+.c1-mobile-menu::backdrop {
+  background: #060b17b8;
+  backdrop-filter: blur(4px);
+}
+body:has(.c1-mobile-menu[open]) { overflow: hidden; }
+.c1-mobile-panel {
+  padding: max(18px, env(safe-area-inset-top)) 18px 18px max(18px, env(safe-area-inset-left));
+}
+.c1-mobile-panel nav { display: grid; gap: 6px; }
+.c1-mobile-panel button { min-height: 44px; }
+.c1-inbox { animation: c1-rise 220ms ease both; }
+.c1-inbox-heading, .c1-inbox-filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.c1-inbox-heading h1 { display: flex; align-items: center; gap: 10px; }
+.c1-inbox-heading svg { color: var(--c1-brass); }
+.c1-inbox-filters { justify-content: flex-start; }
+.c1-inbox-filters button { min-height: 44px; }
+.c1-inbox-filters [aria-pressed="true"] {
+  border-color: var(--c1-brass);
+  box-shadow: inset 0 -2px var(--c1-brass);
+}
+.c1-alert-list { display: grid; gap: 12px; padding: 0; list-style: none; }
+.c1-alert-card {
+  --c1-alert: var(--c1-inquiry);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  border-inline-start: 3px solid var(--c1-alert);
+  box-shadow: 0 5px 16px #070d1c35;
+}
+.c1-alert-card[data-category="urgent"] { --c1-alert: var(--c1-urgent); }
+.c1-alert-card[data-category="follow_up"] { --c1-alert: var(--c1-follow-up); }
+.c1-alert-card[data-category="staff"] { --c1-alert: var(--c1-staff); }
+.c1-alert-card > svg, .c1-alert-card strong { color: var(--c1-alert); }
+.c1-alert-card h2, .c1-alert-card p { margin: 0 0 4px; overflow-wrap: anywhere; }
+.c1-alert-card h2 { font-size: 1.08rem; }
+.c1-alert-card a { display: inline-flex; min-height: 44px; align-items: center; }
+.c1-sound-option { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; }
+.c1-sound-option label { flex: 1; min-width: 150px; }
+.c1-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+@media (max-width: 900px) {
+  .c1-shell { display: block; }
+  .c1-shell > .c1-desktop-rail { display: none; }
+  .c1-top { padding: max(8px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 8px max(12px, env(safe-area-inset-left)); gap: 8px; }
+  .c1-shell .c1-menu-button, .c1-shell .c1-mobile-brand {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .c1-mobile-brand span { display: block; width: 38px; height: 38px; }
+  .c1-mobile-brand img { display: block; width: 100%; height: 100%; object-fit: contain; }
+}
+@media (max-width: 480px) {
+  .c1-alert-card { grid-template-columns: auto minmax(0, 1fr); }
+  .c1-alert-card a { grid-column: 2; }
+}
+@media (prefers-color-scheme: light) {
+  .c1-top { color: #f5f7ff; }
+  .c1-alert-card[data-category="urgent"] { --c1-alert: #aa3a21; }
+  .c1-alert-card[data-category="follow_up"] { --c1-alert: #245b90; }
+  .c1-alert-card[data-category="staff"] { --c1-alert: #236d59; }
+}
+.c1-shell nav a:hover { background: #253755; text-decoration: none; }
+.c1-shell nav a.active { border-inline-start-color: var(--c1-brass); }
+.c1-inbox-filters button, .c1-inbox-heading button, .c1-mobile-panel > button:first-child {
+  background: #1c2c4b;
+  border-color: #526587;
+}
+.c1-inbox-filters button:hover, .c1-inbox-heading button:hover { background: #2a3e62; }
+.c1-inbox-filters [aria-pressed="true"] { border-color: var(--c1-brass); }
+.c1-desktop-rail { overflow-y: auto; }
