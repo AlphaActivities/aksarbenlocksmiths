@@ -27,7 +27,7 @@ test("VoIP is opt-in and imports only through a bounded read and an isolated CRM
   await assert.rejects(syncVoip(day, { env: {}, fetch: () => assert.fail() }), /not_connected/);
   const env = {
     CRM_VOIP_ENABLED: "true", VOIP_MS_USERNAME: "synthetic", VOIP_MS_API_PASSWORD: "example",
-    VOIP_MS_BUSINESS_DID: did, SUPABASE_URL: "https://umnxslkgksqyqfwwdztg.supabase.co",
+    VOIP_MS_BUSINESS_DID: did, VOIP_MS_INBOUND_CALL_TYPE: "synthetic-inbound", SUPABASE_URL: "https://umnxslkgksqyqfwwdztg.supabase.co",
     SUPABASE_ANON_KEY: "synthetic", SUPABASE_SERVICE_ROLE_KEY: "synthetic",
   };
   await assert.rejects(syncVoip("2025-02-30", { env, fetch: () => assert.fail() }), /invalid_day/);
@@ -40,6 +40,7 @@ test("VoIP is opt-in and imports only through a bounded read and an isolated CRM
       assert.equal(url.searchParams.get("date_from"), day);
       assert.equal(url.searchParams.get("date_to"), day);
       assert.equal(url.searchParams.get("timezone"), "0");
+      assert.equal(url.searchParams.get("calltype"), "synthetic-inbound");
       assert.equal(options.redirect, "error");
       return Response.json({ status: "success", cdr: [record] });
     }
@@ -69,8 +70,24 @@ test("one-day inspection reports only field names and aggregates without a CRM w
   } });
   assert.equal(requests, 1);
   assert.deepEqual(summary, {
-    day, returned: 3, matched: 2, duplicate_ids: 1, with_caller: 2, with_duration: 2,
+    day, returned: 3, matched: 2, duplicate_ids: 1, conflicting_duplicate_ids: 0, with_caller: 2, with_duration: 2,
     fields: Object.keys(record).sort(),
   });
   assert.doesNotMatch(JSON.stringify(summary), /4025550101|fixture\.1|Synthetic|example/);
+});
+
+test("sync fails closed on absent inbound filter, provider errors, and conflicting duplicate IDs", async () => {
+  const env = {
+    CRM_VOIP_ENABLED: "true", VOIP_MS_USERNAME: "synthetic", VOIP_MS_API_PASSWORD: "never-print-this",
+    VOIP_MS_BUSINESS_DID: did, VOIP_MS_INBOUND_CALL_TYPE: "synthetic-inbound",
+  };
+  await assert.rejects(syncVoip(day, {
+    env: { ...env, VOIP_MS_INBOUND_CALL_TYPE: "" }, fetch: () => assert.fail("unfiltered request"),
+  }), /voip_not_connected/);
+  await assert.rejects(syncVoip(day, { env, fetch: () => { throw new Error(env.VOIP_MS_API_PASSWORD); } }),
+    error => error.message === "voip_provider_unavailable" && !error.cause);
+  await assert.rejects(syncVoip(day, { env, fetch: (url) => {
+    assert.equal(new URL(url).hostname, "voip.ms");
+    return Response.json({ status: "success", cdr: [record, { ...record, seconds: "99" }] });
+  } }), /voip_conflicting_cdr/);
 });

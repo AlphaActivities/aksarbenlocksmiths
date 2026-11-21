@@ -19,8 +19,12 @@ function hasCredentials(env) {
   );
 }
 
+function validCallType(value) {
+  return typeof value === "string" && /^[\w:.-]{1,80}$/.test(value);
+}
+
 export function voipConfigured(env) {
-  return env.CRM_VOIP_ENABLED === "true" && hasCredentials(env);
+  return env.CRM_VOIP_ENABLED === "true" && hasCredentials(env) && validCallType(env.VOIP_MS_INBOUND_CALL_TYPE);
 }
 
 export function normalizeCdr(row, day, did, historical) {
@@ -56,7 +60,7 @@ async function fetchVoipDay(day, env, request, callType) {
     api_username: env.VOIP_MS_USERNAME, api_password: env.VOIP_MS_API_PASSWORD,
     method: "getCDR", content_type: "json", date_from: day, date_to: day,
     timezone: "0", answered: "1", noanswer: "1", busy: "1", failed: "1",
-    ...(callType ? { calltype: callType } : {}),
+    calltype: callType,
   });
   let payload;
   try {
@@ -80,19 +84,32 @@ async function fetchVoipDay(day, env, request, callType) {
 export async function inspectVoipDay(day, deps = {}) {
   const env = deps.env || process.env;
   const callType = env.VOIP_MS_INBOUND_CALL_TYPE;
-  if (typeof callType !== "string" || !/^[\w:.-]{1,80}$/.test(callType))
+  if (!validCallType(callType))
     throw new Fault(503, "voip_inbound_filter_required");
   const { matched, returned } = await fetchVoipDay(day, env, deps.fetch || fetch, callType);
-  const ids = new Set(matched.map(({ normalized }) => normalized.provider_call_id));
+  const duplicates = callDuplicates(matched.map(({ normalized }) => normalized));
   return {
     day,
     returned,
     matched: matched.length,
-    duplicate_ids: matched.length - ids.size,
+    duplicate_ids: duplicates.count,
+    conflicting_duplicate_ids: duplicates.conflicts,
     with_caller: matched.filter(({ normalized }) => normalized.caller_phone !== null).length,
     with_duration: matched.filter(({ normalized }) => normalized.duration_seconds !== null).length,
     fields: [...new Set(matched.flatMap(({ row }) => Object.keys(row)))].sort(),
   };
+}
+
+function callDuplicates(calls) {
+  const byId = new Map();
+  const conflicts = new Set();
+  for (const call of calls) {
+    const id = call.provider_call_id;
+    const shape = JSON.stringify(call);
+    if (!byId.has(id)) byId.set(id, shape);
+    else if (byId.get(id) !== shape) conflicts.add(id);
+  }
+  return { count: calls.length - byId.size, conflicts: conflicts.size };
 }
 
 export async function syncVoip(day, deps = {}) {
@@ -100,6 +117,7 @@ export async function syncVoip(day, deps = {}) {
   if (!voipConfigured(env)) throw new Fault(503, "voip_not_connected");
   const { matched, returned } = await fetchVoipDay(day, env, deps.fetch || fetch, env.VOIP_MS_INBOUND_CALL_TYPE);
   const calls = matched.map(({ normalized }) => normalized);
+  if (callDuplicates(calls).conflicts) throw new Fault(502, "voip_conflicting_cdr");
   if (calls.length > 500) throw new Fault(502, "voip_batch_too_large");
   if (returned && !calls.length)
     throw new Fault(502, "voip_no_verified_did_records");

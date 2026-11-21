@@ -17,11 +17,12 @@ const jwt = (claims) => {
 };
 const svc = jwt({ role: "service_role" }),
   anon = jwt({ role: "anon" });
+const owner = "10000000-0000-4000-8000-000000000001";
 const staff = "10000000-0000-4000-8000-000000000002",
   outsider = "10000000-0000-4000-8000-000000000003",
   client = "10000000-0000-4000-8000-000000000004";
 const tokens = new Map(
-  [staff, outsider, client].map((id) => [
+  [owner, staff, outsider, client].map((id) => [
     jwt({ role: "authenticated", sub: id }),
     id,
   ]),
@@ -42,6 +43,7 @@ const rest = async (path, method = "GET", body) => {
   return text ? JSON.parse(text) : null;
 };
 await rest("crm_memberships", "POST", [
+  { project_id: PROJECT, user_id: owner, role: "josh_admin" },
   { project_id: PROJECT, user_id: staff, role: "staff" },
   { project_id: PROJECT, user_id: client, role: "client" },
 ]);
@@ -62,16 +64,14 @@ const fetchLocal = async (url, opts = {}) => {
   providerReads++;
   throw new Error("External service attempted during local integration test");
 };
-const handler = createHandler({
-  env: {
-    SUPABASE_URL: `https://${TARGET_REF}.supabase.co`,
-    SUPABASE_ANON_KEY: anon,
-    SUPABASE_SERVICE_ROLE_KEY: svc,
-  },
-  fetch: fetchLocal,
-});
-const invoke = async (path, { user = staff, method = "GET", body } = {}) =>
-  handler({
+const crmEnv = {
+  SUPABASE_URL: `https://${TARGET_REF}.supabase.co`,
+  SUPABASE_ANON_KEY: anon,
+  SUPABASE_SERVICE_ROLE_KEY: svc,
+};
+const handler = createHandler({ env: crmEnv, fetch: fetchLocal });
+const invoke = async (path, { user = staff, method = "GET", body } = {}, handlerUnderTest = handler) =>
+  handlerUnderTest({
     httpMethod: method,
     path: "/api/crm/" + path,
     headers: {
@@ -107,6 +107,11 @@ const callsResponse = await invoke("calls");
 assert.equal(callsResponse.statusCode, 200);
 assert.deepEqual(JSON.parse(callsResponse.body), { connected: false, calls: [] });
 assert.equal((await invoke("calls", { user: outsider })).statusCode, 403);
+for (const user of [staff, client, outsider]) {
+  assert.equal((await invoke("calls/sync", {
+    user, method: "POST", body: { day: "2025-11-20" },
+  })).statusCode, 403);
+}
 const inboxResponse = await invoke("notifications");
 assert.equal(inboxResponse.statusCode, 200);
 const inbox = JSON.parse(inboxResponse.body);
@@ -164,6 +169,38 @@ const forged = await fetch(`${base}/crm_leads`, {
   headers: { Authorization: `Bearer ${tokenFor(staff).slice(0, -2)}xx` },
 });
 assert.equal(forged.status, 401);
+assert.equal(providerReads, 0);
+
+const day = "2025-11-20", did = "+15315550100";
+const call = {
+  description: "Inbound DID", destination_type: "IN:USA", destination: "5315550100",
+  callerid: "+14025550101", uniqueid: "synthetic-http-call", date: day + " 12:00:00",
+  disposition: "ANSWERED", seconds: "17",
+};
+const voiceHandler = createHandler({
+  env: { ...crmEnv, CRM_VOIP_ENABLED: "true", VOIP_MS_USERNAME: "synthetic",
+    VOIP_MS_API_PASSWORD: "fixture", VOIP_MS_BUSINESS_DID: did, VOIP_MS_INBOUND_CALL_TYPE: "synthetic-inbound" },
+  fetch: async (url, opts) => {
+    if (new URL(url).origin !== "https://voip.ms") return fetchLocal(url, opts);
+    const params = new URL(url).searchParams;
+    assert.equal(params.get("method"), "getCDR");
+    assert.equal(params.get("calltype"), "synthetic-inbound");
+    assert.equal(params.get("date_from"), day);
+    assert.equal(params.get("date_to"), day);
+    return Response.json({ status: "success", cdr: [call, { ...call, destination: "4025550111" }] });
+  },
+});
+const countsBefore = await invoke("queue");
+for (const inserted of [1, 0]) {
+  const result = await invoke("calls/sync", { user: owner, method: "POST", body: { day } }, voiceHandler);
+  assert.equal(result.statusCode, 200);
+  assert.deepEqual(JSON.parse(result.body), { inserted, duplicates: 1 - inserted, day });
+}
+const calls = JSON.parse((await invoke("calls")).body).calls;
+assert.equal(calls.length, 1);
+assert.equal(calls[0].related_lead_id, lead.id);
+assert.equal(calls[0].historical, true);
+assert.deepEqual(JSON.parse((await invoke("queue")).body), JSON.parse(countsBefore.body));
 assert.equal(providerReads, 0);
 console.log(
   "PASS: HTTP API → signed PostgREST JWT → real RLS/RPC; wrong-project/role, replay, callback, settings isolation, forbidden direct ingest and forged JWT",
