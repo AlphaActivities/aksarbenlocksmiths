@@ -52,7 +52,7 @@ jobs:
       - name: Install Chromium and dependencies
         run: npx playwright install --with-deps chromium
       - name: CRM browser tests
-        run: npm run test:crm:browser
+        run: node scripts/crm/test-browser-isolated.mjs
       - name: Upload browser traces on failure
         if: failure()
         uses: actions/upload-artifact@v4

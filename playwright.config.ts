@@ -10,7 +10,13 @@ export default defineConfig({
     headless: true,
     launchOptions: {
       executablePath: process.env.CRM_CHROMIUM_PATH || undefined,
-      args: ["--no-sandbox", "--disable-dev-shm-usage"],
+      args: [
+        "--no-sandbox",
+        "--disable-dev-shm-usage",
+        ...(process.env.CRM_ISOLATED_CHROMIUM === "1"
+          ? ["--single-process", "--no-zygote", "--disable-gpu"]
+          : []),
+      ],
     },
     trace: "retain-on-failure",
   },
