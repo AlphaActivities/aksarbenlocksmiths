@@ -16,5 +16,18 @@ insert into auth.users(id) values ('10000000-0000-4000-8000-000000000002'),('100
 SQL
 docker run -d --name "$rest" --network "$network" -p 127.0.0.1::3000 -e PGRST_DB_URI=postgres://postgres@db:5432/postgres -e PGRST_DB_SCHEMAS=public -e PGRST_DB_ANON_ROLE=anon -e PGRST_JWT_SECRET=c1-disposable-local-test-signing-key-never-production postgrest/postgrest:v12.2.3 >/dev/null
 port=$(docker inspect --format '{{(index (index .NetworkSettings.Ports "3000/tcp") 0).HostPort}}' "$rest")
-for attempt in {1..30}; do if curl -s -o /dev/null "http://127.0.0.1:$port/"; then break; fi; sleep 1; done
+ready=false
+for attempt in {1..60}; do
+  if curl --fail --silent --max-time 2 --output /dev/null "http://127.0.0.1:$port/"; then
+    ready=true
+    break
+  fi
+  sleep 1
+done
+if [[ "$ready" != true ]]; then
+  echo 'Disposable PostgREST schema cache did not become ready.' >&2
+  docker logs "$rest" >&2 || true
+  docker logs "$pg" >&2 || true
+  exit 1
+fi
 CRM_TEST_REST_URL="http://127.0.0.1:$port" node tests/crm/http-integration.mjs
