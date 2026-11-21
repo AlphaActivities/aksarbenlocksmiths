@@ -697,3 +697,45 @@ body:has(.c1-mobile-menu[open]) { overflow: hidden; }
 .c1-inbox-filters button:hover, .c1-inbox-heading button:hover { background: #2a3e62; }
 .c1-inbox-filters [aria-pressed="true"] { border-color: var(--c1-brass); }
 .c1-desktop-rail { overflow-y: auto; }
+
+/* Shared finish for the dispatch desk, record pages and staff tools. */
+body:has(.c1-shell) { isolation: isolate; }
+.c1-backdrop { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: #101822 url('/images/poster.webp') center / cover; }
+.c1-backdrop video { width: 100%; height: 100%; object-fit: cover; }
+.c1-backdrop::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, #091322ed, #0d1726ac 62%, #091321ba); }
+.c1-shell { color: #f5f2ea; --line: #b7a07849; --paper: linear-gradient(125deg,#1c2a3df5,#111d2ef5); }
+.c1-shell > aside, .c1-mobile-menu { background: linear-gradient(160deg,#19283b,#0b1626 78%); border-color: var(--line); }
+.c1-shell nav { gap: 3px; }
+.c1-shell nav a { padding: 11px 14px; border-radius: 7px; }
+.c1-shell nav a.active { background: linear-gradient(100deg,#ad874536,#233043); color: #ffe3ad; }
+.c1-top { background: #101d2eef; border-color: var(--line); }
+.c1-shell .c1-motion { background: transparent; color: #dbc69f; border: 0; width: 44px; padding: 0; }
+.c1-workspace main { max-width: 76rem; margin-inline: auto; padding: clamp(1rem,3vw,2.4rem); }
+.c1-shell h1 { font-family: Georgia, 'Times New Roman', serif; font-weight: 500; letter-spacing: -.035em; font-size: clamp(1.95rem,3.4vw,3rem); line-height: 1.1; margin: .25em 0; }
+.c1-shell h2 { letter-spacing: -.015em; }
+.c1-shell p:empty { margin: 0; }
+.c1-shell .c1-card, .c1-queue-group, .c1-shell fieldset { background: var(--paper); border-color: var(--line); border-radius: 12px; box-shadow: 0 8px 24px #050a112b; }
+.c1-shell .c1-card { padding: clamp(.85rem,2vw,1.3rem); }
+.c1-queue-group { border-inline-start-color: var(--queue-accent); }
+.c1-shell button:not(.c1-motion):not(.c1-menu-button), .c1-shell .c1-primary { background: #26364a; color: #fff4de; border-color: #9a845c91; }
+.c1-shell form button[type=submit], .c1-shell .c1-primary { background: #cfae73; color: #162235; }
+.c1-shell input,.c1-shell select,.c1-shell textarea { background-color: #101c2b; border-color: #617083; }
+.c1-deck,.c1-inbox-heading p { color: #d2dbe6; margin: .35rem 0 .85rem; }
+.c1-inbox-heading { gap: 4px 12px; margin-bottom: .65rem; }
+.c1-inbox-filters { gap: .25rem; margin: .65rem 0; }
+.c1-inbox-filters button { padding: .35rem .65rem; min-height: 40px; border-radius: 20px; font-size: .85rem; }
+.c1-shell .c1-inbox-filters [aria-pressed=true] { background: #d8bb84; color: #142133; border-color: #f2d8aa; box-shadow: none; }
+.c1-alert-list { gap: .55rem; margin-block: .8rem; }
+.c1-shell .c1-alert-card { margin: 0; border-inline-start-color: var(--c1-alert); }
+.c1-alert-card > svg,.c1-call-emblem { background: #ffffff09; border: 1px solid var(--line); padding: 8px; width: 38px; height: 38px; border-radius: 11px; }
+.c1-alert-card p,.c1-call-empty p { color: #c7d1de; font-size: .92rem; }
+.c1-alert-card a { color: #eed2a0; font-size: .9rem; }
+.c1-call-empty { display: flex; align-items: center; gap: 1rem; }
+.c1-call-empty h2,.c1-call-empty p { margin: .15rem 0; }
+.c1-call-emblem { flex: none; width: 48px; height: 48px; display: grid; place-items: center; color: #e4c48d; }
+@media (max-width: 480px) {
+  .c1-inbox-heading button { min-height: 40px; padding: 6px 12px; font-size: .88rem; }
+  .c1-alert-card { gap: 0 .7rem; }
+  .c1-alert-card a { min-height: 36px; }
+  .c1-top p { font-size: .9rem; }
+}

@@ -464,3 +464,17 @@ test("incoming calls stay separate from the queue and staff cannot sync", async 
   await page.getByRole("link", { name: "Open matching lead" }).click();
   await expect(page.getByRole("heading", { name: "Synthetic Callback" })).toBeVisible();
 });
+
+test("reduced motion keeps the branded still and the offline call log", async ({ page }) => {
+  await mockService(page, "staff", true);
+  const media: string[] = [];
+  page.on("request", req => { if (req.url().endsWith("/videos/wallpaper.mp4")) media.push(req.url()); });
+  await page.emulateMedia({reducedMotion: "reduce"});
+  await page.route("**/api/crm/calls", route => route.fulfill({json:{connected:false,calls:[]}}));
+  await page.goto("/admin/calls");
+  await expect(page.getByRole("heading", {name:"No imported calls."})).toBeVisible();
+  await expect(page.getByText("VoIP.ms is not connected.")).toBeVisible();
+  await expect(page.locator(".c1-backdrop")).toHaveCSS("background-image", /poster.webp/);
+  await expect(page.locator(".c1-backdrop video")).toHaveCount(0);
+  expect(media).toEqual([]);
+});

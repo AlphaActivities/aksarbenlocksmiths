@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { PhoneIncoming } from "lucide-react";
 import { Link } from "react-router-dom";
 import { api, date } from "./api";
 
@@ -42,17 +43,20 @@ export default function Calls({ owner }: { owner: boolean }) {
   return (
     <section>
       <h1>Incoming calls</h1>
-      <p>VoIP.ms call records. The provider's disposition describes the phone connection.</p>
+      <p className="c1-deck">Caller details, connection outcomes and matching customer records.</p>
       {error && <p role="alert">{error}</p>}
       <p role="status">{message || (!log && !error ? "Loading call records…" : "")}</p>
       {log && <>
-        {!log.connected && <p>VoIP.ms is not connected.</p>}
+        {!log.connected && log.calls.length > 0 && <p>VoIP.ms is not connected.</p>}
         {log.connected && owner && <form onSubmit={event => { event.preventDefault(); void sync(); }}>
           <label>Provider date (UTC)<input type="date" required max={new Date().toISOString().slice(0, 10)}
             value={day} onChange={event => setDay(event.target.value)} /></label>
           <button disabled={busy}>{busy ? "Importing…" : "Import call records"}</button>
         </form>}
-        {log.calls.length === 0 ? <p>No imported calls.</p> : (
+        {log.calls.length === 0 ? <div className="c1-call-empty c1-card">
+          <span className="c1-call-emblem"><PhoneIncoming aria-hidden="true" /></span>
+          <div><h2>No imported calls.</h2><p>{log.connected ? "Incoming calls will appear here after an authorized import." : "VoIP.ms is not connected."}</p></div>
+        </div> : (
           <ul className="c1-alert-list" aria-label="Latest 100 imported calls">
             {log.calls.map(call => (
               <li key={call.provider_call_id} className="c1-card">

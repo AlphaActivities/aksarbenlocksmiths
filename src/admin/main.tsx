@@ -1,3 +1,4 @@
+import Backdrop from "./Backdrop";
 import {
   StrictMode,
   useCallback,
@@ -580,6 +581,7 @@ export function App() {
             <span data-brand-target><img src="/images/shield-logo.webp" alt="" /></span>
           </Link>
           <p>Aksarben Locksmiths</p>
+          <Backdrop />
           <Link className="c1-bell" data-active={Boolean(attention)} to="/admin/notifications"
             aria-label={attention ? `${attention} pending attention items` : "Notifications"}>
             <Bell size={21} aria-hidden="true" />

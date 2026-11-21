@@ -119,3 +119,12 @@ test("sync fails closed on absent inbound filter, provider errors, and conflicti
     return Response.json({ status: "success", cdr: [record, { ...record, seconds: "99" }] });
   } }), /voip_conflicting_cdr/);
 });
+
+test("inspection rejects a nonempty day containing only another DID", async () => {
+  await assert.rejects(inspectVoipDay(day, {
+    env: inspectionEnv,
+    fetch: async url => new URL(url).hostname === "checkip.amazonaws.com"
+      ? new Response(inspectionEnv.VOIP_MS_INSPECTION_IPV4)
+      : Response.json({status: "success", cdr: [{...record, destination: "4025550199"}]}),
+  }), /no_verified_did_records/);
+});

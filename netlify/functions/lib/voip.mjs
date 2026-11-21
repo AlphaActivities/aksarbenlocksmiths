@@ -103,6 +103,7 @@ export async function inspectVoipDay(day, deps = {}) {
   }
   if (observedIPv4 !== expectedIPv4) throw new Fault(503, "voip_inspection_egress_mismatch");
   const { matched, returned } = await fetchVoipDay(day, env, request, callType);
+  if (returned && !matched.length) throw new Fault(502, "voip_no_verified_did_records");
   const duplicates = callDuplicates(matched.map(({ normalized }) => normalized));
   return {
     day,
