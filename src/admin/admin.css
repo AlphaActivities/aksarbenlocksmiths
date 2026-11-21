@@ -205,6 +205,15 @@ dd {
   flex: 1;
   min-width: 130px;
 }
+.c1-filters input,
+.c1-filters select {
+  min-width: 0;
+  max-width: 100%;
+}
+.c1-filters input[type="date"] {
+  appearance: none;
+  -webkit-appearance: none;
+}
 .c1-filters button {
   margin-bottom: 12px;
 }
@@ -212,6 +221,46 @@ dd {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 275px), 1fr));
   gap: 16px;
+}
+.c1-queue-group {
+  --queue-accent: #b9cce8;
+  padding: clamp(12px, 2.5vw, 20px);
+  margin: 20px 0;
+  border: 1px solid #374663;
+  border-inline-start: 3px solid var(--queue-accent);
+  border-radius: 12px;
+  background: #111c32;
+}
+.c1-queue-urgent {
+  --queue-accent: #ffb4b4;
+}
+.c1-queue-due {
+  --queue-accent: #ffda94;
+}
+.c1-queue-scheduled {
+  --queue-accent: #b1d9ff;
+}
+.c1-queue-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+.c1-queue-count {
+  min-width: 1.8em;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: #263654;
+  color: var(--queue-accent);
+  font-size: 0.8rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.c1-queue-action {
+  border-top: 1px solid #465471;
+  padding-top: 10px;
+  color: var(--queue-accent);
+  font-weight: 650;
 }
 .c1-card {
   padding: 20px;
@@ -461,6 +510,23 @@ summary {
   }
   .c1-workspace main {
     padding: 12px 16px 50px;
+  }
+  .c1-filters {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .c1-filters label,
+  .c1-filters button {
+    min-width: 0;
+    margin: 0;
+  }
+  .c1-filters label:nth-child(3),
+  .c1-filters button {
+    grid-column: 1 / -1;
+  }
+  .c1-filters input[type="date"] {
+    padding-inline: 8px;
   }
   .c1-launch-logo {
     top: calc(38% - 92px);

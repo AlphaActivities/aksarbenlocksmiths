@@ -182,15 +182,17 @@ function Queue({
       ? l.historical || ["closed", "booked"].includes(l.status)
       : !l.historical && !["closed", "booked"].includes(l.status),
   );
-  const groups: { title: string; rows: Lead[] }[] = history
-    ? [{ title: "History", rows: leads || [] }]
+  const groups: { title: string; kind: string; rows: Lead[] }[] = history
+    ? [{ title: "History", kind: "history", rows: leads || [] }]
     : [
         {
           title: "Urgent inquiries",
+          kind: "urgent",
           rows: leads?.filter((l) => l.urgency === "urgent") || [],
         },
         {
           title: "Callbacks due",
+          kind: "due",
           rows:
             leads?.filter(
               (l) =>
@@ -200,6 +202,7 @@ function Queue({
         },
         {
           title: "Scheduled requests",
+          kind: "scheduled",
           rows:
             leads?.filter(
               (l) =>
@@ -222,10 +225,10 @@ function Queue({
         <p role="status">Loading the queue…</p>
       ) : (
         groups.map((group) => (
-          <section key={group.title}>
-            <h2>
+          <section className={`c1-queue-group c1-queue-${group.kind}`} key={group.title}>
+            <h2 className="c1-queue-heading">
               {group.title}{" "}
-              <span className="c1-muted">{group.rows.length}</span>
+              <span className="c1-queue-count">{group.rows.length}</span>
             </h2>
             {!group.rows.length && <p>No matching records.</p>}
             <div className="c1-grid">
@@ -246,7 +249,7 @@ function Queue({
                     {age(l.created_at)} ·{" "}
                     <time dateTime={l.created_at}>{date(l.created_at)}</time>
                   </p>
-                  <p>
+                  <p className={history ? undefined : "c1-queue-action"}>
                     {l.follow_up_at
                       ? `Follow up ${date(l.follow_up_at)}`
                       : l.status === "new"
