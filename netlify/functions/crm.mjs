@@ -10,6 +10,7 @@ import {
   newKey,
 } from "./lib/core.mjs";
 import { syncIntake } from "./lib/intake.mjs";
+import { syncVoip, voipConfigured } from "./lib/voip.mjs";
 import { recovery } from "./lib/recovery.mjs";
 const cookieName = "c1_access",
   refreshName = "c1_refresh";
@@ -163,6 +164,52 @@ export function createHandler(deps = {}) {
           { attention: await rpc("crm_attention_count", {}, { token }, deps) },
           cookies,
         );
+      if (path === "calls" && method === "GET") {
+        const connected = voipConfigured(env);
+        const q = event.queryStringParameters || {};
+        const params = new URLSearchParams({
+          project_id: `eq.${PROJECT}`, select: "provider_call_id,occurred_at,direction,caller_phone,dialed_phone,business_did,disposition,duration_seconds,historical,related_lead_id",
+          order: "occurred_at.desc,provider_call_id.desc", limit: "101",
+        });
+        if (q.lead) {
+          if (!/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(q.lead)) throw new Fault(422, "invalid_lead");
+          params.set("related_lead_id", `eq.${q.lead}`);
+        }
+        if (q.match === "matched" || q.match === "unmatched")
+          params.append("related_lead_id", q.match === "matched" ? "not.is.null" : "is.null");
+        if (["incoming", "outgoing"].includes(q.direction)) params.set("direction", `eq.${q.direction}`);
+        if (q.outcome === "missed") {
+          params.set("direction", "eq.incoming");
+          params.set("disposition", 'in.("NO ANSWER","NOANSWER","NO_ANSWER","BUSY","FAILED")');
+        } else if (q.outcome) {
+          if (!/^[A-Z][A-Z _-]{0,31}$/.test(q.outcome)) throw new Fault(422, "invalid_outcome");
+          params.set("disposition", `eq.${q.outcome}`);
+        }
+        if (q.before || q.id) {
+          if (!/^\d{4}-\d{2}-\d{2}T[0-9:.]+(?:Z|[+-]\d{2}:\d{2})$/.test(q.before || "") ||
+              !Number.isFinite(Date.parse(q.before)) || !/^[\w.-]{1,100}$/.test(q.id || "")) throw new Fault(422, "invalid_cursor");
+          params.set("or", `(occurred_at.lt.${q.before},and(occurred_at.eq.${q.before},provider_call_id.lt."${q.id}"))`);
+        }
+        const rows = await db(`crm_inbound_calls?${params}`, { token }, deps);
+        const calls = rows.slice(0, 100);
+        const last = calls.at(-1);
+        return reply(200, { connected, calls, next: rows.length > 100 ?
+          { before: last.occurred_at, id: last.provider_call_id } : null }, cookies);
+      }
+      if (path === "calls/sync" && method === "POST") {
+        if (role !== "josh_admin") throw new Fault(403, "owner_required");
+        return reply(200, await syncVoip(body.day, deps), cookies);
+      }
+      if (path === "notifications" && method === "GET") {
+        const offset = Number(event.queryStringParameters?.offset ?? 0);
+        if (!Number.isSafeInteger(offset) || offset < 0)
+          throw new Fault(422, "invalid_offset");
+        return reply(
+          200,
+          await rpc("crm_notification_inbox", { p_offset: offset }, { token }, deps),
+          cookies,
+        );
+      }
       if (path === "queue" && method === "GET") {
         const q = event.queryStringParameters || {};
         for (const k of ["from", "to"])

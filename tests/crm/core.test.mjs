@@ -321,7 +321,7 @@ test("worker clears background badge using canonical count and rejects unsafe ta
   await h.run("notificationclick", {
     notification: { close() {}, data: { url: "https://evil.example" } },
   });
-  assert.equal(h.navigated, "/admin");
+  assert.equal(h.navigated, "/admin/notifications");
 });
 
 test("push dispatch respects preferences, deduplicates accepted delivery and cleans invalid endpoints", async () => {
@@ -408,4 +408,24 @@ test('analytics scrubs contact details, free text, queries and private URLs',asy
  const clean=context.exports.scrubAnalytics({name:'Synthetic QA',phone:'+14025550101',email:'qa@example.invalid',chat_content:'private',message:'private',query:'private',page_path:'/?email=qa@example.invalid',page_location:'/admin/leads/'+id,service_slug:'rekeying',count:2});
  assert.deepEqual(JSON.parse(JSON.stringify(clean)),{service_slug:'rekeying',count:2});
  const url=context.exports.scrubAnalytics({page_path:'/?q=private',service_slug:'rekeying'});assert.equal(url.page_path,'/');
+});
+
+test("notification inbox uses a read-only authorized RPC and validates pagination", async () => {
+  const snapshot = { attention: 0, active: [], history: [] };
+  const fetched = [];
+  const delegate = authFetch("staff");
+  const handler = createHandler({
+    env,
+    fetch: async (url, options) => {
+      if (!url.endsWith("/rpc/crm_notification_inbox")) return delegate(url, options);
+      fetched.push(JSON.parse(options.body));
+      return Response.json(snapshot);
+    },
+  });
+  const response = await handler({ ...event("notifications"), queryStringParameters: { offset: "50" } });
+  assert.equal(response.statusCode, 200);
+  assert.deepEqual(JSON.parse(response.body), snapshot);
+  assert.equal((await handler({ ...event("notifications"), queryStringParameters: { offset: "-1" } })).statusCode, 422);
+  assert.notEqual((await handler(event("notifications", "POST", {}))).statusCode, 200);
+  assert.deepEqual(fetched, [{ p_offset: 50 }]);
 });

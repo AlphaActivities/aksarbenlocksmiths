@@ -65,6 +65,7 @@ export default function Detail({ updated }: { updated: () => void }) {
                 {l.historical ? "Imported History" : l.urgency} · {l.source}
               </p>
               <h1>{l.name}</h1>
+              <Link to={`/admin/calls?lead=${l.id}`}>Customer call history</Link>
               <p>
                 {l.service} · {l.area || "Area not supplied"}
               </p>
