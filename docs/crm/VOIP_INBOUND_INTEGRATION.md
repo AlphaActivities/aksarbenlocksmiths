@@ -1,6 +1,6 @@
 # VoIP.ms inbound call integration contract
 
-Status: implementation specification, NOT a connected provider integration.
+Status: server adapter implemented and tested with synthetic records. Live provider acceptance is pending.
 
 ## Goal
 
@@ -89,3 +89,5 @@ Use an existing approved fixed-egress machine or network first. Confirm the publ
 If no approved host exists, a temporary Linux VPS with an attached reserved IPv4 can run the one-day probe without any customer-facing app or inbound HTTP endpoint. Keep Netlify and Supabase unchanged during the probe. Confirm whether the provider can issue a CDR-only credential. If only the broader account API password is available, first get approval for that scope, then use the dedicated API password on the one verified address for the shortest practical window. Revoke temporary access and release any temporary paid resources after verification.
 
 Both the probe and manual import now require the provider-confirmed inbound Call Type. The importer rejects a batch if the same stable record ID appears with conflicting normalized metadata. The disposable HTTP test covers the owner-only import, replay, lead linkage and unchanged queue.
+
+For multiple verified business numbers, configure VOIP_MS_INBOUND_ROUTES on the server as a JSON array of objects with did and callType strings. Each route requires a confirmed inbound filter and exact destination. The legacy single route still works. Each day is written in one transaction after all routes succeed. An owner can retry the date after a transient failure. The Calls screen filters the most recent 100 records by provider outcome and customer match.

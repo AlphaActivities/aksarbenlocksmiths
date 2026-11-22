@@ -24,8 +24,20 @@ function validCallType(value) {
   return typeof value === "string" && /^[\w:.-]{1,80}$/.test(value);
 }
 
+function inboundRoutes(env) {
+  let routes = [{ did: env.VOIP_MS_BUSINESS_DID, callType: env.VOIP_MS_INBOUND_CALL_TYPE }];
+  if (env.VOIP_MS_INBOUND_ROUTES !== undefined) {
+    try { routes = JSON.parse(env.VOIP_MS_INBOUND_ROUTES); } catch { return []; }
+  }
+  if (!Array.isArray(routes) || !routes.length || routes.length > 10 ||
+      routes.some(route => !route || !/^\+1\d{10}$/.test(route.did) || !validCallType(route.callType)) ||
+      new Set(routes.map(route => route.did)).size !== routes.length) return [];
+  return routes;
+}
+
 export function voipConfigured(env) {
-  return env.CRM_VOIP_ENABLED === "true" && hasCredentials(env) && validCallType(env.VOIP_MS_INBOUND_CALL_TYPE);
+  return env.CRM_VOIP_ENABLED === "true" && Boolean(env.VOIP_MS_USERNAME && env.VOIP_MS_API_PASSWORD) &&
+    inboundRoutes(env).length > 0;
 }
 
 export function normalizeCdr(row, day, did, historical) {
@@ -132,12 +144,14 @@ function callDuplicates(calls) {
 export async function syncVoip(day, deps = {}) {
   const env = deps.env || process.env;
   if (!voipConfigured(env)) throw new Fault(503, "voip_not_connected");
-  const { matched, returned } = await fetchVoipDay(day, env, deps.fetch || fetch, env.VOIP_MS_INBOUND_CALL_TYPE);
-  const calls = matched.map(({ normalized }) => normalized);
+  const calls = [];
+  for (const { did, callType } of inboundRoutes(env)) {
+    const { matched, returned } = await fetchVoipDay(day, { ...env, VOIP_MS_BUSINESS_DID: did }, deps.fetch || fetch, callType);
+    if (returned && !matched.length) throw new Fault(502, "voip_no_verified_did_records");
+    calls.push(...matched.map(({ normalized }) => normalized));
+    if (calls.length > 500) throw new Fault(502, "voip_batch_too_large");
+  }
   if (callDuplicates(calls).conflicts) throw new Fault(502, "voip_conflicting_cdr");
-  if (calls.length > 500) throw new Fault(502, "voip_batch_too_large");
-  if (returned && !calls.length)
-    throw new Fault(502, "voip_no_verified_did_records");
   const result = await rpc("crm_ingest_voip", { p_calls: calls, p_day: day }, { service: true }, deps);
   return { ...result, day };
 }

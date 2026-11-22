@@ -167,7 +167,7 @@ export function createHandler(deps = {}) {
       if (path === "calls" && method === "GET") {
         const connected = voipConfigured(env);
         const calls = await db(
-          `crm_inbound_calls?project_id=eq.${PROJECT}&select=provider_call_id,occurred_at,caller_phone,disposition,duration_seconds,historical,related_lead_id&order=occurred_at.desc,provider_call_id.desc&limit=100`,
+          `crm_inbound_calls?project_id=eq.${PROJECT}&select=provider_call_id,occurred_at,caller_phone,business_did,disposition,duration_seconds,historical,related_lead_id&order=occurred_at.desc,provider_call_id.desc&limit=100`,
           { token }, deps,
         );
         return reply(200, { connected, calls }, cookies);

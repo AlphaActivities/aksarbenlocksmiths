@@ -128,3 +128,30 @@ test("inspection rejects a nonempty day containing only another DID", async () =
       : Response.json({status: "success", cdr: [{...record, destination: "4025550199"}]}),
   }), /no_verified_did_records/);
 });
+
+test("multiple verified routes preserve the dialed DID and fail atomically", async () => {
+  const second = "+15315550102";
+  const routes = [{ did, callType: "first" }, { did: second, callType: "second" }];
+  const env = { ...inspectionEnv, CRM_VOIP_ENABLED: "true", VOIP_MS_INBOUND_ROUTES: JSON.stringify(routes),
+    SUPABASE_URL: "https://umnxslkgksqyqfwwdztg.supabase.co", SUPABASE_SERVICE_ROLE_KEY: "synthetic",
+    SUPABASE_ANON_KEY: "synthetic" };
+  let writes = 0;
+  let failSecond = true;
+  const fetch = async (address, options) => {
+    const url = new URL(address);
+    if (url.hostname === "voip.ms") {
+      const type = url.searchParams.get("calltype");
+      if (failSecond && type === "second") return new Response(null, { status: 503 });
+      return Response.json({ status: "success", cdr: [{ ...record, uniqueid: type,
+        destination: type === "first" ? did : second }] });
+    }
+    writes++;
+    assert.deepEqual(JSON.parse(options.body).p_calls.map(call => call.business_did), [did, second]);
+    return Response.json({ inserted: 2, duplicates: 0 });
+  };
+  await assert.rejects(syncVoip(day, { env, fetch }), /provider_unavailable/);
+  assert.equal(writes, 0);
+  failSecond = false;
+  assert.equal((await syncVoip(day, { env, fetch })).inserted, 2);
+  assert.equal(writes, 1);
+});

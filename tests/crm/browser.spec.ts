@@ -453,12 +453,17 @@ test("incoming calls stay separate from the queue and staff cannot sync", async 
   await page.route("**/api/crm/calls", route => route.fulfill({ json: {
     connected: true,
     calls: [{ provider_call_id: "fixture", occurred_at: "2026-11-17T10:00:00Z",
-      caller_phone: "+14025550101", disposition: "ANSWERED", duration_seconds: 22,
+      business_did: "+15315550100", caller_phone: "+14025550101", disposition: "ANSWERED", duration_seconds: 22,
       historical: true, related_lead_id: liveId }],
   } }));
   await page.goto("/admin/calls");
   await expect(page.getByRole("heading", { name: "Incoming calls" })).toBeVisible();
   await expect(page.getByText(/ANSWERED.*Historical/)).toBeVisible();
+  await expect(page.getByText("Business number +15315550100")).toBeVisible();
+  await page.getByLabel("Provider outcome").selectOption("ANSWERED");
+  await page.getByLabel("Customer match").selectOption("unmatched");
+  await expect(page.getByText("No calls match these filters.")).toBeVisible();
+  await page.getByLabel("Customer match").selectOption("matched");
   await expect(page.getByRole("button", { name: "Import call records" })).toHaveCount(0);
   await expect(page.getByRole("link", { name: "2 pending attention items" })).toBeVisible();
   await page.getByRole("link", { name: "Open matching lead" }).click();
