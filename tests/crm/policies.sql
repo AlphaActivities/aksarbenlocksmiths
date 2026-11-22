@@ -115,6 +115,12 @@ declare
 begin
   assert (crm_ingest_voip(batch, '2026-11-16')->>'inserted')::integer = 1;
   assert (crm_ingest_voip(batch, '2026-11-16')->>'duplicates')::integer = 1;
+  select jsonb_agg((batch->0) || jsonb_build_object('provider_call_id','out.'||n,
+    'direction','outgoing','caller_phone','+15315550100','dialed_phone',
+    case when n = 130 then '+14025550199' else '+14025550101' end))
+    into batch from generate_series(1,130) n;
+  assert (crm_ingest_voip(batch,'2026-11-16')->>'inserted')::integer = 130;
+  assert (crm_ingest_voip(batch,'2026-11-16')->>'duplicates')::integer = 130;
   assert (select count(*) from crm_leads) = baseline_leads;
   assert (select count(*) from crm_events) = baseline_events;
   assert (select count(*) from crm_outbox) = baseline_outbox;
@@ -122,8 +128,10 @@ end $$;
 reset role;
 set local role authenticated;
 do $$begin
-  assert (select count(*) from crm_inbound_calls) = 1;
-  assert (select historical and related_lead_id is not null from crm_inbound_calls);
+  assert (select count(*) from crm_inbound_calls) = 131;
+  assert (select historical and related_lead_id is not null from crm_inbound_calls where provider_call_id = 'test-cdr');
+  assert (select count(*) from crm_inbound_calls where direction = 'outgoing' and related_lead_id is not null) = 129;
+  assert (select related_lead_id is null from crm_inbound_calls where provider_call_id = 'out.130');
   assert not exists (select 1 from jsonb_array_elements(crm_notification_inbox()->'history') h where h->>'id' = 'test-cdr');
   begin
     perform crm_ingest_voip('[]', current_date);

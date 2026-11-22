@@ -19,7 +19,7 @@ const record = {
 test("CDR mapping is DID-bound, inbound-only and retains only required metadata", () => {
   assert.deepEqual(normalizeCdr(record, day, did, true), {
     provider_call_id: "fixture.1", occurred_at: day + "T12:03:52.000Z",
-    caller_phone: "+14025550101", business_did: did,
+    direction: "incoming", dialed_phone: did, caller_phone: "+14025550101", business_did: did,
     disposition: "ANSWERED", duration_seconds: 23, historical: true,
   });
   assert.equal(normalizeCdr({ ...record, description: "Outbound - Forwarding" }, day, did, true), null);
@@ -154,4 +154,26 @@ test("multiple verified routes preserve the dialed DID and fail atomically", asy
   failSecond = false;
   assert.equal((await syncVoip(day, { env, fetch })).inserted, 2);
   assert.equal(writes, 1);
+});
+
+test("outgoing calls use a verified route, store both parties and exclude forwarding legs", async () => {
+  const outbound = { callType: "fixture-out", destinationType: "US", description: "Fixture outbound" };
+  const row = { ...record, description: outbound.description, destination_type: "US", callerid: did,
+    destination: "4025550101", uniqueid: "out.1", disposition: "BUSY" };
+  const routes = [{ did, callType: "fixture-in", outbound }];
+  const env = { ...inspectionEnv, CRM_VOIP_ENABLED: "true", VOIP_MS_INBOUND_ROUTES: JSON.stringify(routes),
+    SUPABASE_URL: "https://umnxslkgksqyqfwwdztg.supabase.co", SUPABASE_ANON_KEY: "fixture", SUPABASE_SERVICE_ROLE_KEY: "fixture" };
+  await syncVoip(day, { env, fetch: async (address, options) => {
+    const url = new URL(address);
+    if (url.hostname === "voip.ms") return Response.json({ status: "success",
+      cdr: url.searchParams.get("calltype") === "fixture-in" ? [record] : [
+        row, { ...row, description: "Outbound - Forwarding" }, { ...row, callerid: "5315550199" },
+      ] });
+    const calls = JSON.parse(options.body).p_calls;
+    assert.equal(calls.length, 2);
+    assert.deepEqual(calls.map(c => [c.direction, c.caller_phone, c.dialed_phone, c.disposition]), [
+      ["incoming", "+14025550101", did, "ANSWERED"], ["outgoing", did, "+14025550101", "BUSY"],
+    ]);
+    return Response.json({ inserted: 2, duplicates: 0 });
+  } });
 });

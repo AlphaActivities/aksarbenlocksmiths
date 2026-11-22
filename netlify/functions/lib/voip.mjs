@@ -32,6 +32,13 @@ function inboundRoutes(env) {
   if (!Array.isArray(routes) || !routes.length || routes.length > 10 ||
       routes.some(route => !route || !/^\+1\d{10}$/.test(route.did) || !validCallType(route.callType)) ||
       new Set(routes.map(route => route.did)).size !== routes.length) return [];
+  for (const route of routes) {
+    if (route.outbound && (!validCallType(route.outbound.callType) ||
+        !validCallType(route.outbound.destinationType) ||
+        typeof route.outbound.description !== "string" ||
+        !route.outbound.description.trim() || route.outbound.description.length > 100 ||
+        /forward|inbound/i.test(route.outbound.description) || /^IN:/i.test(route.outbound.destinationType))) return [];
+  }
   return routes;
 }
 
@@ -40,9 +47,14 @@ export function voipConfigured(env) {
     inboundRoutes(env).length > 0;
 }
 
-export function normalizeCdr(row, day, did, historical) {
-  if (!row || !/^Inbound\b/i.test(row.description || "") ||
-      !/^IN:/i.test(row.destination_type || "") || phone(String(row.destination ?? "")) !== did)
+export function normalizeCdr(row, day, did, historical, outbound) {
+  if (!row) return null;
+  const dialed = phone(String(row.destination ?? ""));
+  if (outbound) {
+    if (row.description !== outbound.description || row.destination_type !== outbound.destinationType ||
+        phone(row.callerid) !== did) return null;
+  } else if ( !/^Inbound\b/i.test(row.description || "") ||
+      !/^IN:/i.test(row.destination_type || "") || dialed !== did)
     return null;
   const rawId = row.uniqueid;
   const id = typeof rawId === "string" || Number.isSafeInteger(rawId) ? String(rawId) : "";
@@ -56,11 +68,12 @@ export function normalizeCdr(row, day, did, historical) {
   const seconds = /^\d{1,7}$/.test(String(row.seconds ?? "")) ? Number(row.seconds) : null;
   return {
     provider_call_id: id, occurred_at: time.toISOString(), caller_phone: phone(row.callerid),
+    direction: outbound ? "outgoing" : "incoming", dialed_phone: dialed,
     business_did: did, disposition: status, duration_seconds: seconds, historical,
   };
 }
 
-async function fetchVoipDay(day, env, request, callType) {
+async function fetchVoipDay(day, env, request, callType, outbound) {
   if (!hasCredentials(env)) throw new Fault(503, "voip_not_connected");
   const utc = new Date(`${day}T00:00:00Z`);
   const today = new Date().toISOString().slice(0, 10);
@@ -88,7 +101,7 @@ async function fetchVoipDay(day, env, request, callType) {
   if (payload?.status !== "success" || !Array.isArray(payload.cdr) || payload.cdr.length > 5000)
     throw new Fault(502, "voip_unexpected_response");
   const matched = payload.cdr.flatMap(row => {
-    const normalized = normalizeCdr(row, day, env.VOIP_MS_BUSINESS_DID, day < today);
+    const normalized = normalizeCdr(row, day, env.VOIP_MS_BUSINESS_DID, day < today, outbound);
     return normalized ? [{ normalized, row }] : [];
   });
   return { matched, returned: payload.cdr.length };
@@ -145,11 +158,13 @@ export async function syncVoip(day, deps = {}) {
   const env = deps.env || process.env;
   if (!voipConfigured(env)) throw new Fault(503, "voip_not_connected");
   const calls = [];
-  for (const { did, callType } of inboundRoutes(env)) {
-    const { matched, returned } = await fetchVoipDay(day, { ...env, VOIP_MS_BUSINESS_DID: did }, deps.fetch || fetch, callType);
-    if (returned && !matched.length) throw new Fault(502, "voip_no_verified_did_records");
-    calls.push(...matched.map(({ normalized }) => normalized));
-    if (calls.length > 500) throw new Fault(502, "voip_batch_too_large");
+  for (const { did, callType, outbound } of inboundRoutes(env)) {
+    for (const profile of [undefined, ...(outbound ? [outbound] : [])]) {
+      const { matched, returned } = await fetchVoipDay(day, { ...env, VOIP_MS_BUSINESS_DID: did },
+        deps.fetch || fetch, profile?.callType ?? callType, profile);
+      if (!profile && returned && !matched.length) throw new Fault(502, "voip_no_verified_did_records");
+      calls.push(...matched.map(({ normalized }) => normalized));
+    }
   }
   if (callDuplicates(calls).conflicts) throw new Fault(502, "voip_conflicting_cdr");
   const result = await rpc("crm_ingest_voip", { p_calls: calls, p_day: day }, { service: true }, deps);

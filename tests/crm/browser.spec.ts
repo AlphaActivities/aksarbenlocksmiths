@@ -450,14 +450,14 @@ test("inbox, bell and app badge reconcile to the same count", async ({ page }) =
 
 test("incoming calls stay separate from the queue and staff cannot sync", async ({ page }) => {
   await mockService(page, "staff", true);
-  await page.route("**/api/crm/calls", route => route.fulfill({ json: {
+  await page.route("**/api/crm/calls*", route => route.fulfill({ json: {
     connected: true,
-    calls: [{ provider_call_id: "fixture", occurred_at: "2026-11-17T10:00:00Z",
+    calls: new URL(route.request().url()).searchParams.get("match") === "unmatched" ? [] : [{ provider_call_id: "fixture", occurred_at: "2026-11-17T10:00:00Z",
       business_did: "+15315550100", caller_phone: "+14025550101", disposition: "ANSWERED", duration_seconds: 22,
       historical: true, related_lead_id: liveId }],
   } }));
   await page.goto("/admin/calls");
-  await expect(page.getByRole("heading", { name: "Incoming calls" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Call history" })).toBeVisible();
   await expect(page.getByText(/ANSWERED.*Historical/)).toBeVisible();
   await expect(page.getByText("Business number +15315550100")).toBeVisible();
   await page.getByLabel("Provider outcome").selectOption("ANSWERED");

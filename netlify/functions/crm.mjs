@@ -166,11 +166,35 @@ export function createHandler(deps = {}) {
         );
       if (path === "calls" && method === "GET") {
         const connected = voipConfigured(env);
-        const calls = await db(
-          `crm_inbound_calls?project_id=eq.${PROJECT}&select=provider_call_id,occurred_at,caller_phone,business_did,disposition,duration_seconds,historical,related_lead_id&order=occurred_at.desc,provider_call_id.desc&limit=100`,
-          { token }, deps,
-        );
-        return reply(200, { connected, calls }, cookies);
+        const q = event.queryStringParameters || {};
+        const params = new URLSearchParams({
+          project_id: `eq.${PROJECT}`, select: "provider_call_id,occurred_at,direction,caller_phone,dialed_phone,business_did,disposition,duration_seconds,historical,related_lead_id",
+          order: "occurred_at.desc,provider_call_id.desc", limit: "101",
+        });
+        if (q.lead) {
+          if (!/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(q.lead)) throw new Fault(422, "invalid_lead");
+          params.set("related_lead_id", `eq.${q.lead}`);
+        }
+        if (q.match === "matched" || q.match === "unmatched")
+          params.append("related_lead_id", q.match === "matched" ? "not.is.null" : "is.null");
+        if (["incoming", "outgoing"].includes(q.direction)) params.set("direction", `eq.${q.direction}`);
+        if (q.outcome === "missed") {
+          params.set("direction", "eq.incoming");
+          params.set("disposition", 'in.("NO ANSWER","NOANSWER","NO_ANSWER","BUSY","FAILED")');
+        } else if (q.outcome) {
+          if (!/^[A-Z][A-Z _-]{0,31}$/.test(q.outcome)) throw new Fault(422, "invalid_outcome");
+          params.set("disposition", `eq.${q.outcome}`);
+        }
+        if (q.before || q.id) {
+          if (!/^\d{4}-\d{2}-\d{2}T[0-9:.]+(?:Z|[+-]\d{2}:\d{2})$/.test(q.before || "") ||
+              !Number.isFinite(Date.parse(q.before)) || !/^[\w.-]{1,100}$/.test(q.id || "")) throw new Fault(422, "invalid_cursor");
+          params.set("or", `(occurred_at.lt.${q.before},and(occurred_at.eq.${q.before},provider_call_id.lt."${q.id}"))`);
+        }
+        const rows = await db(`crm_inbound_calls?${params}`, { token }, deps);
+        const calls = rows.slice(0, 100);
+        const last = calls.at(-1);
+        return reply(200, { connected, calls, next: rows.length > 100 ?
+          { before: last.occurred_at, id: last.provider_call_id } : null }, cookies);
       }
       if (path === "calls/sync" && method === "POST") {
         if (role !== "josh_admin") throw new Fault(403, "owner_required");

@@ -107,8 +107,9 @@ const crmEnv = {
   SUPABASE_SERVICE_ROLE_KEY: svc,
 };
 const handler = createHandler({ env: crmEnv, fetch: fetchLocal });
-const invoke = async (path, { user = staff, method = "GET", body } = {}, handlerUnderTest = handler) =>
+const invoke = async (path, { user = staff, method = "GET", body, queryStringParameters } = {}, handlerUnderTest = handler) =>
   handlerUnderTest({
+    queryStringParameters,
     httpMethod: method,
     path: "/api/crm/" + path,
     headers: {
@@ -142,7 +143,7 @@ assert.equal(queue.attention, 1);
 assert.equal(queue.leads.length, 1);
 const callsResponse = await invoke("calls");
 assert.equal(callsResponse.statusCode, 200);
-assert.deepEqual(JSON.parse(callsResponse.body), { connected: false, calls: [] });
+assert.deepEqual(JSON.parse(callsResponse.body), { connected: false, calls: [], next: null });
 assert.equal((await invoke("calls", { user: outsider })).statusCode, 403);
 for (const user of [staff, client, outsider]) {
   assert.equal((await invoke("calls/sync", {
@@ -240,6 +241,32 @@ assert.equal(calls[0].historical, true);
 assert.deepEqual(JSON.parse((await invoke("queue")).body), JSON.parse(countsBefore.body));
 assert.equal(providerReads, 0);
 
+// Equal timestamps exercise the secondary cursor key across a customer history page.
+const fixtureCalls = Array.from({ length: 130 }, (_, index) => ({
+  provider_call_id: `fixture.page.${String(index).padStart(3, "0")}`,
+  occurred_at: day + "T14:00:00Z", direction: index % 2 ? "outgoing" : "incoming",
+  caller_phone: index % 2 ? did : call.callerid, dialed_phone: index % 2 ? call.callerid : did,
+  business_did: did, disposition: "NO ANSWER", historical: true, duration_seconds: 0,
+}));
+for (const inserted of [130, 0]) {
+  const result = await rest("rpc/crm_ingest_voip", "POST", { p_day: day, p_calls: fixtureCalls });
+  assert.equal(result.inserted, inserted);
+}
+async function callPage(queryStringParameters) {
+  const response = await invoke("calls", { queryStringParameters });
+  assert.equal(response.statusCode, 200);
+  return JSON.parse(response.body);
+}
+const first = await callPage({ lead: lead.id });
+const second = await callPage({ lead: lead.id, ...first.next });
+assert.equal(first.calls.length, 100);
+assert.equal(second.calls.length, 31);
+assert.equal(second.next, null);
+assert.equal(new Set([...first.calls, ...second.calls].map(c => c.provider_call_id)).size, 131);
+assert.equal((await callPage({ lead: lead.id, direction: "outgoing" })).calls.length, 65);
+assert.equal((await callPage({ lead: lead.id, outcome: "missed" })).calls.length, 65);
+assert.deepEqual(JSON.parse((await invoke("queue")).body), JSON.parse(countsBefore.body));
+
 const previousRelease = "72a6d6a118086308a11b755ca8ab1b6895535222";
 const rollbackDir = await mkdtemp(join(tmpdir(), "c1-crm-rollback-"));
 try {
@@ -263,7 +290,7 @@ try {
   }, rollback);
   assert.equal(oldWrite.statusCode, 200);
   assert.ok(JSON.parse((await invoke(`leads/${lead.id}`)).body).events.some(event => event.note === note));
-  assert.deepEqual(JSON.parse((await invoke("calls")).body).calls, calls);
+  assert.deepEqual((await callPage({ lead: lead.id })).calls, first.calls);
   console.log("PASS: previous production CRM handler can read and write with the additive schema retained");
 } finally {
   await rm(rollbackDir, { recursive: true, force: true });
