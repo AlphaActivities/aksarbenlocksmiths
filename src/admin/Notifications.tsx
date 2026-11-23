@@ -28,6 +28,7 @@ export default function Notifications({ inbox, error, refresh }: {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [pageSize, setPageSize] = useState(25);
+  const [categoryCounts, setCategoryCounts] = useState(false);
   const [pageError, setPageError] = useState("");
   const [expanded, setExpanded] = useState(false);
   const [urgentOnly, setUrgentOnly] = useState(false);
@@ -74,6 +75,8 @@ export default function Notifications({ inbox, error, refresh }: {
         <p>Customer work stays active until you record its outcome.</p></div>
         <button onClick={refresh}>Refresh notifications</button>
       </div>
+      <button type="button" className="c1-secondary-action" aria-expanded={categoryCounts} onClick={() => setCategoryCounts(value => !value)}>{categoryCounts ? "Hide category summary" : "Show category summary"}</button>
+      {categoryCounts && <p className="c1-card c1-inbox-summary">Urgent {counts.Urgent}, Inquiries {counts.Inquiries}, Follow ups {counts["Follow-ups"]}, Staff updates {counts["Staff activity"]} loaded.</p>}
       <div className="c1-inbox-filters" role="group" aria-label="Filter notifications">
         {filters.map(label => (
           <button key={label} type="button" aria-pressed={filter === label} onClick={() => setFilter(label)}>
