@@ -64,6 +64,7 @@ export default function Detail({ updated }: { updated: () => void }) {
       >
         Refresh record
       </button>
+      {!loading && !l && !notice && <p className="c1-card" role="status">This customer record is unavailable.</p>}
       {l && (
         <>
           <header className="c1-detail-heading c1-card">
@@ -93,7 +94,9 @@ export default function Detail({ updated }: { updated: () => void }) {
             <dt>Follow up</dt>
             <dd>{l.follow_up_at ? date(l.follow_up_at) : "Not scheduled"}</dd>
             <dt>Email</dt>
-            <dd>{l.email || "Not supplied"}</dd>
+            <dd>{l.email ? <a href={`mailto:${l.email}`}>{l.email}</a> : "Not supplied"}</dd>
+            <dt>Phone</dt>
+            <dd>{phone ? <a href={phone}>{l.phone}</a> : (l.phone || "Not supplied")}</dd>
           </dl>
           <section className="c1-card c1-detail-message"><h2>Customer request</h2><p className="c1-message">{l.message || "No additional message supplied."}</p></section>
           {l.source === "chat" && (
