@@ -24,6 +24,7 @@ export default function Notifications({ inbox, error, refresh }: {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<"newest" | "oldest">("newest");
   const [older, setOlder] = useState<AlertItem[]>([]);
+  const [loadingRefresh, setLoadingRefresh] = useState(false);
   const [offset, setOffset] = useState(50);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -73,7 +74,7 @@ export default function Notifications({ inbox, error, refresh }: {
       <div className="c1-inbox-heading">
         <div><h1><Bell aria-hidden="true" /> Notifications</h1>
         <p>Customer work stays active until you record its outcome.</p></div>
-        <button onClick={refresh}>Refresh notifications</button>
+        <button type="button" disabled={loadingRefresh} onClick={() => { setLoadingRefresh(true); refresh(); window.setTimeout(() => setLoadingRefresh(false), 600); }}>{loadingRefresh ? "Refreshing…" : "Refresh notifications"}</button>
       </div>
       <button type="button" className="c1-secondary-action" aria-expanded={categoryCounts} onClick={() => setCategoryCounts(value => !value)}>{categoryCounts ? "Hide category summary" : "Show category summary"}</button>
       {categoryCounts && <p className="c1-card c1-inbox-summary">Urgent {counts.Urgent}, Inquiries {counts.Inquiries}, Follow ups {counts["Follow-ups"]}, Staff updates {counts["Staff activity"]} loaded.</p>}
