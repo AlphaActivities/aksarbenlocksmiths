@@ -583,12 +583,13 @@ export function App() {
       {session.role === "josh_admin" && <NavLink to="/admin/business"><Shield aria-hidden="true" />Admin</NavLink>}
     </nav>
   );
+  const [signingOut, setSigningOut] = useState(false);
   const signOut = (
-    <button onClick={() => void api("logout", {}).then(() => {
+    <button type="button" disabled={signingOut} onClick={() => { setSigningOut(true); void api("logout", {}).then(() => {
       updateBadge(0);
       window.location.replace("/admin");
-    }).catch(cause => setError(cause.message))}>
-      <LogOut size={18} /> Sign out
+    }).catch(cause => setError(cause.message)).finally(() => setSigningOut(false)); }}>
+      <LogOut size={18} /> {signingOut ? "Signing out…" : "Sign out"}
     </button>
   );
   return (
