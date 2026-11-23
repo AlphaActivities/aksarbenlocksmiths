@@ -955,3 +955,11 @@ body:has(.c1-shell) { isolation: isolate; background: #09111e; }
 .c1-inbox-summary { overflow-wrap:anywhere; }
 .c1-shell button[aria-expanded=true]:not(.c1-menu-button) { border-color:#d8aa58; }
 @media(max-width:420px) { .c1-call-facts { grid-template-columns:minmax(0,1fr); } .c1-call-facts dt { margin-top:.35rem; } }
+
+/* Keep collapsed filter content out of the visual and keyboard flow. */
+.c1-global-filters .c1-filters[hidden] { display:none!important; }
+.c1-global-filters .c1-filters:not([hidden]) { animation:c1-rise 180ms ease both; }
+.c1-call-facts + .c1-secondary-action { margin-bottom:.65rem; }
+.c1-desktop-rail .c1-dashboard-error,.c1-mobile-panel .c1-dashboard-error { font-size:.85rem; overflow-wrap:anywhere; }
+.c1-call-detail-toggle:focus-visible,.c1-filter-toggle:focus-visible,.c1-secondary-action:focus-visible { outline:2px solid #f0cf91; outline-offset:3px; }
+@media(prefers-reduced-motion:reduce) { .c1-global-filters .c1-filters:not([hidden]) { animation:none; } }
