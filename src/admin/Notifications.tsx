@@ -21,6 +21,7 @@ export default function Notifications({ inbox, error, refresh }: {
   inbox: InboxData | null; error: string; refresh: () => void;
 }) {
   const [filter, setFilter] = useState<(typeof filters)[number]>("Active");
+  const [search, setSearch] = useState("");
   const [older, setOlder] = useState<AlertItem[]>([]);
   const [offset, setOffset] = useState(50);
   const [hasMore, setHasMore] = useState(true);
@@ -35,6 +36,7 @@ export default function Notifications({ inbox, error, refresh }: {
       (filter === "Inquiries" && row.category === "inquiry") ||
       (filter === "Follow-ups" && row.category === "follow_up"));
 
+  const filteredRows = rows.filter(row => [row.title, row.name, row.category].some(value => value.toLowerCase().includes(search.trim().toLowerCase())));
   const canLoadOlder = history && hasMore && inbox?.history.length === 50;
   const emptyMessage = {
     Active: "No customer work needs attention.",
@@ -74,12 +76,13 @@ export default function Notifications({ inbox, error, refresh }: {
           </button>
         ))}
       </div>
+      <label className="c1-inbox-search">Search notifications<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Search name or activity" /></label>
       {error && <p role="alert">{error}</p>}
       {pageError && <p role="alert">{pageError}</p>}
       {!inbox && !error && <p role="status">Loading notifications…</p>}
-      {inbox && !rows.length && <p className="c1-card" role="status">{emptyMessage}</p>}
+      {inbox && !filteredRows.length && <p className="c1-card" role="status">{search ? "No notifications match your search in the loaded records." : emptyMessage}</p>}
       <ul className="c1-alert-list">
-        {rows.map(row => {
+        {filteredRows.map(row => {
           const Icon = row.urgent ? ShieldAlert : icons[row.category];
           return (
             <li key={row.id} className="c1-card c1-alert-card" data-category={row.urgent ? "urgent" : row.category}>
