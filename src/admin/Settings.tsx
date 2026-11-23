@@ -68,7 +68,7 @@ export default function Settings({ userId }: { userId: string }) {
       <p>Manage notification sounds, preferences and registered devices for your individual account.</p>
       <p><Link to="/admin/reset-password">Change my password using an email recovery link</Link></p>
       {!data && !notice && <p role="status">Loading your device preferences…</p>}
-      <p role="status">{notice}</p>
+      {notice && <p role="status">{notice}</p>}
       <fieldset className="c1-card c1-sound-settings">
         <legend>In-app notification sounds</legend>
         <p>Saved on this device for your account. Background notification sounds follow your device settings.</p>
@@ -136,6 +136,7 @@ export default function Settings({ userId }: { userId: string }) {
             </p>
           </section>
           <h2>My Devices <span className="c1-device-count">{data.devices.length}</span></h2>
+          <p>Device names help you identify where alerts were registered. Remove devices you no longer use.</p>
           <label>
             Device name
             <input
