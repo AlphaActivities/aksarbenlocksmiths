@@ -57,6 +57,7 @@ function CallPage({ owner, query }: { owner: boolean; query: string }) {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<"newest" | "oldest">("newest");
+  const [reloading, setReloading] = useState(false);
   const path = query ? `calls?${query}` : "calls";
   useEffect(() => {
     let active = true;
@@ -64,6 +65,13 @@ function CallPage({ owner, query }: { owner: boolean; query: string }) {
       .catch(cause => { if (active) setError(cause.message); });
     return () => { active = false; };
   }, [path]);
+
+  async function reload() {
+    setReloading(true); setError("");
+    try { setLog(await api<CallLog>(path)); }
+    catch (cause) { setError((cause as Error).message); }
+    finally { setReloading(false); }
+  }
 
   async function sync() {
     setBusy(true);
@@ -90,6 +98,7 @@ function CallPage({ owner, query }: { owner: boolean; query: string }) {
     <div>
       {error && <p role="alert">{error}</p>}
       <p role="status">{message || (!log && !error ? "Loading call records…" : "")}</p>
+      <button type="button" className="c1-secondary-action" disabled={reloading || busy} onClick={() => void reload()}>{reloading ? "Refreshing calls…" : "Refresh call history"}</button>
       {log && <>
         {!log.connected && <p className="c1-provider-notice" role="status">VoIP.ms is not connected. Only previously imported call records, if any, are displayed.</p>}
         {log.connected && owner && <form onSubmit={event => { event.preventDefault(); void sync(); }}>
