@@ -400,6 +400,7 @@ export function App() {
   const opener = useRef<HTMLButtonElement>(null);
   const heard = useRef<Set<string> | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
   const [inbox, setInbox] = useState<InboxData | null>(null);
   const [inboxError, setInboxError] = useState("");
   const [session, setSession] = useState<Session | null>(null),
@@ -583,7 +584,6 @@ export function App() {
       {session.role === "josh_admin" && <NavLink to="/admin/business"><Shield aria-hidden="true" />Admin</NavLink>}
     </nav>
   );
-  const [signingOut, setSigningOut] = useState(false);
   const signOut = (
     <button type="button" disabled={signingOut} onClick={() => { setSigningOut(true); void api("logout", {}).then(() => {
       updateBadge(0);
