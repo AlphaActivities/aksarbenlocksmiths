@@ -15,10 +15,11 @@ export default function Settings({ userId }: { userId: string }) {
   const [data, setData] = useState<SettingsData | null>(null);
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [label, setLabel] = useState("My device");
   const load = () => api<SettingsData>("settings").then(setData);
   useEffect(() => {
-    void load().catch((e) => setNotice(e.message));
+    void load().catch((e) => setNotice(e.message)).finally(() => setLoading(false));
   }, []);
   const act = async (fn: () => Promise<unknown>, message: string) => {
     setBusy(true);
@@ -67,7 +68,8 @@ export default function Settings({ userId }: { userId: string }) {
       <h1>My Settings</h1>
       <p>Manage notification sounds, preferences and registered devices for your individual account.</p>
       <p><Link to="/admin/reset-password">Change my password using an email recovery link</Link></p>
-      {!data && !notice && <p role="status">Loading your device preferences…</p>}
+      {loading && <p role="status">Loading your device preferences…</p>}
+      {!loading && !data && <p className="c1-card" role="status">Device preferences are unavailable. Use Refresh status after access is restored.</p>}
       {notice && <p role="status">{notice}</p>}
       <fieldset className="c1-card c1-sound-settings">
         <legend>In-app notification sounds</legend>
@@ -141,12 +143,13 @@ export default function Settings({ userId }: { userId: string }) {
             Device name
             <input
               maxLength={80}
+              required
               value={label}
               onChange={(e) => setLabel(e.target.value)}
             />
           </label>
           <div className="c1-actions">
-            <button disabled={busy} onClick={() => void enroll()}>
+            <button disabled={busy || !label.trim()} onClick={() => void enroll()}>
               Enable Notifications / refresh device
             </button>
             <button
