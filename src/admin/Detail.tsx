@@ -48,6 +48,8 @@ export default function Detail({ updated }: { updated: () => void }) {
       setBusy(false);
     }
   };
+  const [activitySearch, setActivitySearch] = useState("");
+  const filteredEvents = data?.events.filter(event => `${event.kind} ${event.note || ""}`.toLowerCase().includes(activitySearch.toLowerCase())) ?? [];
   const l = data?.lead,
     phone = l && dial(l.phone);
   return (
@@ -159,9 +161,10 @@ export default function Detail({ updated }: { updated: () => void }) {
             <button disabled={busy}>{busy ? "Saving…" : "Save result"}</button>
           </form>
           <section className="c1-card c1-detail-activity"><h2>Activity timeline</h2>
-          {!data.events.length && <p>No activity recorded yet.</p>}
+          <label className="c1-activity-search">Search activity<input type="search" value={activitySearch} onChange={event => setActivitySearch(event.target.value)} placeholder="Action or note" /></label>
+          {!filteredEvents.length && <p>{activitySearch ? "No activity matches your search." : "No activity recorded yet."}</p>}
           <ol className="c1-activity">
-            {data.events.map((e) => (
+            {filteredEvents.map((e) => (
               <li key={e.id}>
                 <strong>{e.kind.replace(/_/g, " ")}</strong> ·{" "}
                 {date(e.happened_at)}
