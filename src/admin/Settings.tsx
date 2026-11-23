@@ -62,10 +62,12 @@ export default function Settings({ userId }: { userId: string }) {
       await api("devices", { label, subscription: subscription.toJSON() });
     }, "This device is registered. Send a test and confirm that you saw it.");
   return (
-    <section>
+    <section className="c1-settings">
+      <p className="c1-eyebrow">Personal workspace</p>
       <h1>My Settings</h1>
-      <p>Device settings belong to your individual account.</p>
+      <p>Manage notification sounds, preferences and registered devices for your individual account.</p>
       <p><Link to="/admin/reset-password">Change my password using an email recovery link</Link></p>
+      {!data && !notice && <p role="status">Loading your device preferences…</p>}
       <p role="status">{notice}</p>
       <fieldset className="c1-card c1-sound-settings">
         <legend>In-app notification sounds</legend>
@@ -92,7 +94,7 @@ export default function Settings({ userId }: { userId: string }) {
       </fieldset>
       {data && (
         <>
-          <fieldset disabled={busy}>
+          <fieldset className="c1-card c1-settings-preferences" disabled={busy}>
             <legend>Notify me about</legend>
             {(["inquiries", "handoffs", "follow_ups"] as const).map((key) => (
               <label className="c1-check" key={key}>
@@ -133,7 +135,7 @@ export default function Settings({ userId }: { userId: string }) {
               is disabled.
             </p>
           </section>
-          <h2>My Devices</h2>
+          <h2>My Devices <span className="c1-device-count">{data.devices.length}</span></h2>
           <label>
             Device name
             <input
@@ -159,6 +161,7 @@ export default function Settings({ userId }: { userId: string }) {
               been enabled.
             </p>
           )}
+          {!data.devices.length && <p className="c1-card">No devices registered yet. Register this device to receive supported push notifications.</p>}
           {data.devices.map((device) => (
             <article className="c1-card" key={device.id}>
               <h3>{device.label}</h3>
