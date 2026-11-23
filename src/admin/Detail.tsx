@@ -49,7 +49,8 @@ export default function Detail({ updated }: { updated: () => void }) {
     }
   };
   const [activitySearch, setActivitySearch] = useState("");
-  const filteredEvents = data?.events.filter(event => `${event.kind} ${event.note || ""}`.toLowerCase().includes(activitySearch.toLowerCase())) ?? [];
+  const [activitySort, setActivitySort] = useState<"newest" | "oldest">("newest");
+  const filteredEvents = (data?.events.filter(event => `${event.kind} ${event.note || ""}`.toLowerCase().includes(activitySearch.toLowerCase())) ?? []).sort((a,b) => activitySort === "newest" ? Date.parse(b.happened_at) - Date.parse(a.happened_at) : Date.parse(a.happened_at) - Date.parse(b.happened_at));
   const l = data?.lead,
     phone = l && dial(l.phone);
   return (
@@ -140,6 +141,7 @@ export default function Detail({ updated }: { updated: () => void }) {
                 <input
                   type="datetime-local"
                   required
+                  min={new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0,16)}
                   value={follow}
                   onChange={(e) => setFollow(e.target.value)}
                 />
@@ -162,6 +164,7 @@ export default function Detail({ updated }: { updated: () => void }) {
           </form>
           <section className="c1-card c1-detail-activity"><h2>Activity timeline</h2>
           <label className="c1-activity-search">Search activity<input type="search" value={activitySearch} onChange={event => setActivitySearch(event.target.value)} placeholder="Action or note" /></label>
+          <label className="c1-activity-search">Activity order<select value={activitySort} onChange={event => setActivitySort(event.target.value as "newest" | "oldest")}><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select></label>
           {!filteredEvents.length && <p>{activitySearch ? "No activity matches your search." : "No activity recorded yet."}</p>}
           <ol className="c1-activity">
             {filteredEvents.map((e) => (
