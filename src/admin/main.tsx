@@ -16,7 +16,7 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
-import { Bell, BarChart3, ClipboardList, History, LogOut, Menu, Phone, Settings2, Shield, X } from "lucide-react";
+import { Bell, BarChart3, ClipboardList, LayoutDashboard, History, LogOut, Menu, Phone, Settings2, Shield, X } from "lucide-react";
 import {
   api,
   age,
@@ -272,6 +272,37 @@ function Queue({
     </section>
   );
 }
+function Overview({ data, attention }: { data: Snapshot | null; attention: number | undefined }) {
+  const active = data?.leads.filter(lead => !lead.historical && !["closed", "booked"].includes(lead.status)) ?? [];
+  const urgent = active.filter(lead => lead.urgency === "urgent");
+  const due = active.filter(lead => lead.urgency !== "urgent" && (!lead.follow_up_at || Date.parse(lead.follow_up_at) <= Date.now()));
+  const scheduled = active.filter(lead => lead.urgency !== "urgent" && lead.follow_up_at && Date.parse(lead.follow_up_at) > Date.now());
+  const recent = [...active].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)).slice(0, 5);
+  const metrics = [
+    { label: "Active requests", value: active.length, to: "/admin/queue" },
+    { label: "Urgent inquiries", value: urgent.length, to: "/admin/queue" },
+    { label: "Callbacks due", value: due.length, to: "/admin/queue" },
+    { label: "Scheduled requests", value: scheduled.length, to: "/admin/queue" },
+  ];
+  return <section className="c1-overview">
+    <div className="c1-overview-heading"><div><p className="c1-eyebrow">Private dispatch desk</p><h1>Overview</h1><p>Current callback priorities and recent inquiries, based on the available CRM snapshot.</p></div>
+      <Link className="c1-overview-action" to="/admin/notifications"><Bell size={18} aria-hidden="true" /> {attention ?? "—"} needing attention</Link></div>
+    {!data ? <p role="status">Loading dashboard…</p> : <>
+      <div className="c1-overview-metrics">{metrics.map(item => <Link className="c1-card c1-overview-metric" to={item.to} key={item.label}><span>{item.label}</span><strong>{item.value}</strong><span>View queue</span></Link>)}</div>
+      <div className="c1-overview-sections">
+        <section className="c1-card"><div className="c1-overview-section-heading"><h2>Priority callbacks</h2><Link to="/admin/queue">Open queue</Link></div>
+          {urgent.length + due.length === 0 ? <p>No urgent or due callbacks in this snapshot.</p> :
+            [...urgent, ...due].slice(0, 5).map(lead => <Link className="c1-overview-record" to={`/admin/leads/${lead.id}`} key={lead.id}><span><strong>{lead.name || "Unnamed inquiry"}</strong><small>{lead.service} · {lead.area || "Area not supplied"}</small></span><span className="c1-overview-status">{lead.urgency === "urgent" ? "Urgent" : "Due"}</span></Link>)}
+        </section>
+        <section className="c1-card"><div className="c1-overview-section-heading"><h2>Recent inquiries</h2><Link to="/admin/history">History</Link></div>
+          {!recent.length ? <p>No active inquiries in this snapshot.</p> :
+            recent.map(lead => <Link className="c1-overview-record" to={`/admin/leads/${lead.id}`} key={lead.id}><span><strong>{lead.name || "Unnamed inquiry"}</strong><small>{lead.service} · {age(lead.created_at)}</small></span><span className="c1-overview-status">{lead.status}</span></Link>)}
+        </section>
+      </div>
+      <p className="c1-overview-footnote">Call-provider records are not connected. Missed and outgoing call totals are not estimated here. Date and service filters apply to the current snapshot.</p>
+    </>}
+  </section>;
+}
 function Reports({ data }: { data: Snapshot | null }) {
   return (
     <section>
@@ -519,7 +550,8 @@ export function App() {
     <nav aria-label="Private dashboard" onClick={event => {
       if ((event.target as HTMLElement).closest("a")) menu.current?.close();
     }}>
-      <Link to="/admin" aria-current={/^\/admin\/?$/.test(location.pathname) ? "page" : undefined}><ClipboardList aria-hidden="true" />Queue</Link>
+      <NavLink to="/admin" end><LayoutDashboard aria-hidden="true" />Overview</NavLink>
+      <NavLink to="/admin/queue"><ClipboardList aria-hidden="true" />Queue</NavLink>
       <NavLink to="/admin/notifications"><Bell aria-hidden="true" />Notifications</NavLink>
       <NavLink to="/admin/calls"><Phone aria-hidden="true" />Calls</NavLink>
       <NavLink to="/admin/history"><History aria-hidden="true" />History</NavLink>
@@ -590,7 +622,7 @@ export function App() {
         </header>
         <main id="c1-content" tabIndex={-1}>
           <p role="alert">{error}</p>
-          {["/admin", "/admin/", "/admin/history", "/admin/reports"].includes(
+          {["/admin", "/admin/", "/admin/queue", "/admin/history", "/admin/reports"].includes(
             location.pathname,
           ) && (
             <div className="c1-filters">
@@ -629,14 +661,12 @@ export function App() {
                   ))}
                 </select>
               </label>
-              <button onClick={refresh}>{location.pathname === "/admin/reports" ? "Refresh reports" : location.pathname === "/admin/history" ? "Refresh history" : "Refresh queue"}</button>
+              <button onClick={refresh}>{location.pathname === "/admin/reports" ? "Refresh reports" : location.pathname === "/admin/history" ? "Refresh history" : location.pathname === "/admin/queue" ? "Refresh queue" : "Refresh overview"}</button>
             </div>
           )}
           <Routes>
-            <Route
-              path="/admin"
-              element={<Queue data={data} refresh={() => { refresh(); refreshInbox(); }} />}
-            />
+            <Route path="/admin" element={<Overview data={data} attention={attention} />} />
+            <Route path="/admin/queue" element={<Queue data={data} refresh={() => { refresh(); refreshInbox(); }} />} />
             <Route
               path="/admin/history"
               element={<Queue data={data} history refresh={refresh} />}
