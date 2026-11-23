@@ -39,7 +39,7 @@ export default function Entrance({ attention }: { attention: number | null }) {
             fill: "forwards",
             easing: "cubic-bezier(.33,0,.18,1)",
           },
-        );
+        ) ?? null;
       }
       setPhase("fly");
     }, 4000);
