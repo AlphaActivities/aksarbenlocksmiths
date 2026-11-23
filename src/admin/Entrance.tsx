@@ -8,6 +8,7 @@ export default function Entrance({ attention }: { attention: number | null }) {
     catch { return "welcome"; }
   });
   const complete = useRef(false);
+  const [visible, setVisible] = useState(true);
   const flightAnimation = useRef<Animation | null>(null);
   const initiallyDone = useRef(phase === "done");
   const [greeted, setGreeted] = useState(false);
@@ -60,6 +61,7 @@ export default function Entrance({ attention }: { attention: number | null }) {
     if (phase === "done" && !complete.current) {
       complete.current = true;
       document.documentElement.dataset.c1Ready = "true";
+      setVisible(false);
       try { sessionStorage.setItem("c1-intro-viewed", "1"); }
       catch { /* The introduction still works when storage is unavailable. */ }
     }
@@ -69,7 +71,7 @@ export default function Entrance({ attention }: { attention: number | null }) {
     flightAnimation.current = null;
     setPhase("done");
   };
-  if (phase === "done") return null;
+  if (phase === "done" || !visible) return null;
   return (
     <div
       className={`c1-entrance ${phase}`}
@@ -78,7 +80,7 @@ export default function Entrance({ attention }: { attention: number | null }) {
     >
       <div className="c1-launch-logo" ref={logo}>
         <img src="/images/shield-logo.webp" alt="" />
-        <span />
+        <span aria-hidden="true" />
       </div>
       <div className="c1-intro-copy-layer">
         <p className="c1-greeting">Welcome to Aksarben</p>
@@ -88,7 +90,7 @@ export default function Entrance({ attention }: { attention: number | null }) {
           </span>
         )}
         <div className="c1-launch-copy">
-          <span className="c1-ring" />
+          <span className="c1-ring" aria-hidden="true" />
           <p>
             Entering your
             <br />
