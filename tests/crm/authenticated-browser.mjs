@@ -109,7 +109,7 @@ export async function authenticateBrowser({ handler, fixturePassword, refreshCou
     expect(refreshCount()).toBeGreaterThan(0);
 
     await nav.getByRole("link", { name: "Queue", exact: true }).click();
-    await expect(page).toHaveURL(/\/admin\/?$/);
+    await expect(page).toHaveURL(/\/admin\/queue\/?$/);
     await expect(heading("Your callback queue")).toBeVisible();
     await page.getByText("Add a callback manually", { exact: true }).click();
     await page.getByLabel("Name", { exact: true }).fill("Synthetic browser callback");
