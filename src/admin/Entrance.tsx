@@ -11,6 +11,7 @@ export default function Entrance({ attention }: { attention: number | null }) {
   const flightAnimation = useRef<Animation | null>(null);
   const initiallyDone = useRef(phase === "done");
   const [greeted, setGreeted] = useState(false);
+  const [dateLabel] = useState(() => new Intl.DateTimeFormat(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" }).format(new Date()));
   const finished = phase === "done";
   useEffect(() => {
     if (initiallyDone.current || finished) return;
@@ -93,14 +94,7 @@ export default function Entrance({ attention }: { attention: number | null }) {
             <br />
             callback dashboard
           </p>
-          <p className="c1-typed-date">
-            {new Intl.DateTimeFormat(undefined, {
-              weekday: "long",
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-            }).format(new Date())}
-          </p>
+          <p className="c1-typed-date">{dateLabel}</p>
         </div>
         <button type="button" className="c1-skip-intro" onClick={skip}>
           Skip introduction
