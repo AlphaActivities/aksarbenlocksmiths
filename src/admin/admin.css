@@ -946,3 +946,12 @@ body:has(.c1-shell) { isolation: isolate; background: #09111e; }
  .c1-settings .c1-actions button { flex:1 1 100%; }
 }
 @media(max-width:360px) { .c1-global-filters .c1-filters { grid-template-columns:minmax(0,1fr); } .c1-global-filters .c1-filters label:last-of-type { grid-column:1; } }
+
+/* Expanded call metadata and quiet secondary controls. */
+.c1-call-detail-toggle { background:#1b2c43!important; border-color:#bca16b77!important; color:#f0d9b0!important; margin:.4rem 0; }
+.c1-call-facts { display:grid; grid-template-columns:minmax(105px,160px) minmax(0,1fr); gap:.4rem .8rem; padding:.85rem; margin:.4rem 0 1rem; border:1px solid #bca16b55; border-radius:10px; background:#101e31; font-size:.86rem; }
+.c1-call-facts dt { color:#b9c8dc; font-weight:500; }
+.c1-call-facts dd { overflow-wrap:anywhere; margin:0; }
+.c1-inbox-summary { overflow-wrap:anywhere; }
+.c1-shell button[aria-expanded=true]:not(.c1-menu-button) { border-color:#d8aa58; }
+@media(max-width:420px) { .c1-call-facts { grid-template-columns:minmax(0,1fr); } .c1-call-facts dt { margin-top:.35rem; } }
