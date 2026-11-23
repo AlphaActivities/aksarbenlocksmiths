@@ -629,7 +629,7 @@ export function App() {
                   ))}
                 </select>
               </label>
-              <button onClick={refresh}>Refresh queue</button>
+              <button onClick={refresh}>{location.pathname === "/admin/reports" ? "Refresh reports" : location.pathname === "/admin/history" ? "Refresh history" : "Refresh queue"}</button>
             </div>
           )}
           <Routes>
