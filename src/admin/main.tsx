@@ -185,6 +185,7 @@ function Queue({
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [sort, setSort] = useState("newest");
+  const [urgencyFilter, setUrgencyFilter] = useState("all");
   const leads = data?.leads.filter((l) =>
     history
       ? l.historical || ["closed", "booked"].includes(l.status)
@@ -192,7 +193,7 @@ function Queue({
   );
   const visibleLeads = leads?.filter(l => {
     const matchesText = [l.name, l.phone, l.email, l.service, l.area, l.message].some(value => (value || "").toLowerCase().includes(search.trim().toLowerCase()));
-    return matchesText && (statusFilter === "all" || l.status === statusFilter);
+    return matchesText && (statusFilter === "all" || l.status === statusFilter) && (urgencyFilter === "all" || l.urgency === urgencyFilter);
   }).sort((a, b) => sort === "oldest" ? Date.parse(a.created_at) - Date.parse(b.created_at) : sort === "name" ? (a.name || "").localeCompare(b.name || "") : Date.parse(b.created_at) - Date.parse(a.created_at));
   const groups: { title: string; kind: string; rows: Lead[] }[] = history
     ? [{ title: "History", kind: "history", rows: visibleLeads || [] }]
@@ -233,7 +234,7 @@ function Queue({
           ? "Original submission dates. Historical imports never create new alerts or active counts."
           : "Emergency inquiries, callbacks due and scheduled work. Log the outcome after every call."}
       </p>
-      <div className="c1-queue-search"><label>Search records<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Name, phone, service, or area" aria-label="Search callback records" /></label><label>Status<select value={statusFilter} onChange={event => setStatusFilter(event.target.value)}><option value="all">All statuses</option>{[...new Set((leads || []).map(lead => lead.status))].sort().map(status => <option key={status} value={status}>{status}</option>)}</select></label><label>Sort by<select value={sort} onChange={event => setSort(event.target.value)}><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="name">Customer name</option></select></label>{(search || statusFilter !== "all" || sort !== "newest") && <button type="button" onClick={() => { setSearch(""); setStatusFilter("all"); setSort("newest"); }}>Clear filters</button>}</div>
+      <div className="c1-queue-search"><label>Search records<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Name, phone, service, or area" aria-label="Search callback records" /></label><label>Status<select value={statusFilter} onChange={event => setStatusFilter(event.target.value)}><option value="all">All statuses</option>{[...new Set((leads || []).map(lead => lead.status))].sort().map(status => <option key={status} value={status}>{status}</option>)}</select></label><label>Priority<select value={urgencyFilter} onChange={event => setUrgencyFilter(event.target.value)}><option value="all">All priorities</option><option value="urgent">Urgent</option><option value="scheduled">Scheduled</option><option value="quote">Quote requests</option></select></label><label>Sort by<select value={sort} onChange={event => setSort(event.target.value)}><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="name">Customer name</option></select></label>{(search || statusFilter !== "all" || urgencyFilter !== "all" || sort !== "newest") && <button type="button" onClick={() => { setSearch(""); setStatusFilter("all"); setUrgencyFilter("all"); setSort("newest"); }}>Clear filters</button>}</div>
       {!history && <Manual saved={refresh} />}
       {data && <p className="c1-queue-summary" role="status">Showing {visibleLeads?.length ?? 0} of {leads?.length ?? 0} records.</p>}
       {!data ? (
@@ -245,7 +246,7 @@ function Queue({
               {group.title}{" "}
               <span className="c1-queue-count">{group.rows.length}</span>
             </h2>
-            {!group.rows.length && <p>{search || statusFilter !== "all" ? "No records match these filters." : "No matching records."}</p>}
+            {!group.rows.length && <p>{search || statusFilter !== "all" || urgencyFilter !== "all" ? "No records match these filters." : "No matching records."}</p>}
             <div className="c1-grid">
               {group.rows.map((l) => (
                 <Link
