@@ -7,6 +7,7 @@ export default function Team() {
   const [busy,setBusy] = useState(false);
   const [loading,setLoading] = useState(true);
   const [search,setSearch] = useState("");
+  const [sort,setSort] = useState<"email" | "role">("email");
   const load = () => api<Member[]>("team").then(setMembers);
   useEffect(()=>{void load().catch(e=>setNotice(e.message)).finally(()=>setLoading(false));},[]);
   const save = async (e:FormEvent<HTMLFormElement>) => {
@@ -18,10 +19,11 @@ export default function Team() {
     try { setMembers(await api<Member[]>("team",{email:data.get("email"),role:data.get("role"),remove}));setNotice("C1 access updated. Customer records were preserved.");form.reset(); }
     catch(e){setNotice((e as Error).message);} finally{setBusy(false);}
   };
-  const visible = members.filter(m => `${m.email} ${m.role}`.toLowerCase().includes(search.toLowerCase()));
+  const visible = members.filter(m => `${m.email} ${m.role}`.toLowerCase().includes(search.toLowerCase())).sort((a,b)=>sort === "role" ? a.role.localeCompare(b.role) || a.email.localeCompare(b.email) : a.email.localeCompare(b.email));
   return <section className="c1-card c1-team"><h2>Staff management</h2>
     <p>Josh alone manages access. Auth accounts must first be created privately in Supabase. The owner account cannot be removed or reassigned here.</p>
     <label>Search team members<input type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Email or role" /></label>
+    <label>Sort members<select value={sort} onChange={e=>setSort(e.target.value as "email" | "role")}><option value="email">Email</option><option value="role">Access role</option></select></label>
     {loading && <p role="status">Loading staff access…</p>}
     {!loading && !visible.length && <p role="status">{search ? "No members match this search." : "No staff members are currently listed."}</p>}
     <ul className="c1-team-list">{visible.map(m=><li key={m.user_id}><span>{m.email}</span><span className="c1-team-role">{m.role}</span></li>)}</ul>
