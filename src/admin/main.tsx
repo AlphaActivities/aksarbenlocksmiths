@@ -225,6 +225,7 @@ function Queue({
       ];
   return (
     <section>
+      <p className="c1-eyebrow">{history ? "Completed and imported" : "Dispatch priorities"}</p>
       <h1>{history ? "History" : "Your callback queue"}</h1>
       <p>
         {history
@@ -233,6 +234,7 @@ function Queue({
       </p>
       <div className="c1-queue-search"><label>Search records<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Name, phone, service, or area" aria-label="Search callback records" /></label><label>Status<select value={statusFilter} onChange={event => setStatusFilter(event.target.value)}><option value="all">All statuses</option>{[...new Set((leads || []).map(lead => lead.status))].sort().map(status => <option key={status} value={status}>{status}</option>)}</select></label>{(search || statusFilter !== "all") && <button type="button" onClick={() => { setSearch(""); setStatusFilter("all"); }}>Clear filters</button>}</div>
       {!history && <Manual saved={refresh} />}
+      {data && <p className="c1-queue-summary" role="status">Showing {visibleLeads?.length ?? 0} of {leads?.length ?? 0} records.</p>}
       {!data ? (
         <p role="status">Loading the queue…</p>
       ) : (
@@ -307,6 +309,7 @@ function Overview({ data, attention }: { data: Snapshot | null; attention: numbe
             recent.map(lead => <Link className="c1-overview-record" to={`/admin/leads/${lead.id}`} key={lead.id}><span><strong>{lead.name || "Unnamed inquiry"}</strong><small>{lead.service} · {age(lead.created_at)}</small></span><span className="c1-overview-status">{lead.status}</span></Link>)}
         </section>
       </div>
+      <div className="c1-overview-quicklinks" aria-label="Quick actions"><Link to="/admin/calls"><Phone aria-hidden="true" size={18} /> Call history</Link><Link to="/admin/notifications"><Bell aria-hidden="true" size={18} /> Notifications</Link><Link to="/admin/reports"><BarChart3 aria-hidden="true" size={18} /> Reports</Link></div>
       <p className="c1-overview-footnote">Call-provider records are not connected. Missed and outgoing call totals are not estimated here. Date and service filters apply to the current snapshot.</p>
     </>}
   </section>;
@@ -717,7 +720,7 @@ export function App() {
               element={
                 <section>
                   <h1>Record not found</h1>
-                  <Link to="/admin">Return to queue</Link>
+                  <Link to="/admin">Return to overview</Link>
                 </section>
               }
             />
