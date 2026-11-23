@@ -52,6 +52,7 @@ export default function Calls({ owner }: { owner: boolean }) {
 function CallPage({ owner, query }: { owner: boolean; query: string }) {
   const [log, setLog] = useState<CallLog | null>(null);
   const [day, setDay] = useState(() => new Date().toISOString().slice(0, 10));
+  const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -65,7 +66,8 @@ function CallPage({ owner, query }: { owner: boolean; query: string }) {
   useEffect(() => {
     let active = true;
     api<CallLog>(path).then(result => { if (active) setLog(result); })
-      .catch(cause => { if (active) setError(cause.message); });
+      .catch(cause => { if (active) setError(cause.message); })
+      .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, [path]);
 
@@ -100,8 +102,9 @@ function CallPage({ owner, query }: { owner: boolean; query: string }) {
   return (
     <div>
       {error && <p role="alert">{error}</p>}
-      <p role="status">{message || (!log && !error ? "Loading call records…" : "")}</p>
-      <button type="button" className="c1-secondary-action" disabled={reloading || busy} onClick={() => void reload()}>{reloading ? "Refreshing calls…" : "Refresh call history"}</button>
+      {message && <p role="status">{message}</p>}
+      {loading && <p role="status">Loading call records…</p>}
+      <button type="button" className="c1-secondary-action" disabled={loading || reloading || busy} onClick={() => void reload()}>{reloading ? "Refreshing calls…" : "Refresh call history"}</button>
       {log && <>
         {!log.connected && <p className="c1-provider-notice" role="status">VoIP.ms is not connected. Only previously imported call records, if any, are displayed.</p>}
         {log.connected && owner && <form onSubmit={event => { event.preventDefault(); void sync(); }}>
