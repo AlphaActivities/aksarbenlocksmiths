@@ -27,11 +27,11 @@ export default function Team() {
     {loading && <p role="status">Loading staff access…</p>}
     {!loading && !visible.length && <p role="status">{search ? "No members match this search." : "No staff members are currently listed."}</p>}
     <ul className="c1-team-list">{visible.map(m=><li key={m.user_id}><span>{m.email}</span><span className="c1-team-role">{m.role}</span></li>)}</ul>
-    <form onSubmit={e=>void save(e)}>
+    <form onSubmit={e=>void save(e)} aria-label="Manage team access">
       <label>Existing account email<input name="email" type="email" required maxLength={254}/></label>
       <label>Access role<select name="role"><option value="staff">Staff</option><option value="client">Client</option></select></label>
       <label>Action<select name="action"><option value="save">Add or update access</option><option value="remove">Remove C1 access</option></select></label>
       <button disabled={busy}>{busy ? "Saving…" : "Apply access change"}</button>
-    </form><p role="status">{notice}</p>
+    </form>{notice && <p role="status">{notice}</p>}
   </section>;
 }
