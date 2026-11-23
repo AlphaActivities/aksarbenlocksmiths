@@ -44,6 +44,7 @@ export default function Settings({ userId }: { userId: string }) {
         throw new Error(
           "Push is not supported here. On iPhone, first add this app to the Home Screen.",
         );
+      if (!label.trim()) throw new Error("Enter a name for this device.");
       if (!data?.push_enabled || !data.vapid_public_key)
         throw new Error(
           "Push delivery is not enabled for this installation yet.",
@@ -60,7 +61,7 @@ export default function Settings({ userId }: { userId: string }) {
           userVisibleOnly: true,
           applicationServerKey: keyBytes(data.vapid_public_key),
         }));
-      await api("devices", { label, subscription: subscription.toJSON() });
+      await api("devices", { label: label.trim(), subscription: subscription.toJSON() });
     }, "This device is registered. Send a test and confirm that you saw it.");
   return (
     <section className="c1-settings">
