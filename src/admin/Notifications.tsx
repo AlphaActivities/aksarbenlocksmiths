@@ -27,6 +27,7 @@ export default function Notifications({ inbox, error, refresh }: {
   const [offset, setOffset] = useState(50);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [pageSize, setPageSize] = useState(25);
   const [pageError, setPageError] = useState("");
   const [expanded, setExpanded] = useState(false);
   const [urgentOnly, setUrgentOnly] = useState(false);
@@ -86,13 +87,14 @@ export default function Notifications({ inbox, error, refresh }: {
       {pageError && <p role="alert">{pageError}</p>}
       {!inbox && !error && <p role="status">Loading notifications…</p>}
       {inbox && !filteredRows.length && <p className="c1-card" role="status">{search ? "No notifications match your search in the loaded records." : emptyMessage}</p>}
-      {inbox && <p className="c1-inbox-summary" role="status">Showing {filteredRows.length} notifications{search ? " matching your search" : ""}.</p>}
+      {inbox && <p className="c1-inbox-summary" role="status">Showing {Math.min(pageSize, filteredRows.length)} of {filteredRows.length} notifications{search ? " matching your search" : ""}.</p>}
       <label className="c1-inbox-urgent-toggle"><input type="checkbox" checked={urgentOnly} onChange={event => setUrgentOnly(event.target.checked)} /> Urgent only</label>
       {(search || urgentOnly) && <button type="button" className="c1-secondary-action" onClick={() => { setSearch(""); setUrgentOnly(false); }}>Clear notification filters</button>}
       {filter === "History" && inbox && <button type="button" className="c1-secondary-action" aria-expanded={expanded} onClick={() => setExpanded(value => !value)}>{expanded ? "Hide history explanation" : "About notification history"}</button>}
       {expanded && filter === "History" && <p className="c1-card">Notification history records previously handled activity. Active attention counts are tracked separately.</p>}
+      {filteredRows.length > pageSize && <button type="button" className="c1-secondary-action" onClick={() => setPageSize(value => value + 25)}>Show more loaded notifications ({filteredRows.length - pageSize} remaining)</button>}
       <ul className="c1-alert-list">
-        {filteredRows.map(row => {
+        {filteredRows.slice(0, pageSize).map(row => {
           const Icon = row.urgent ? ShieldAlert : icons[row.category];
           return (
             <li key={row.id} className="c1-card c1-alert-card" data-category={row.urgent ? "urgent" : row.category}>
