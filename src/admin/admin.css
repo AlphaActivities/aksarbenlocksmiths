@@ -820,3 +820,38 @@ body:has(.c1-shell) { isolation: isolate; background: #09111e; }
 .c1-inbox-search { display:grid; gap:.35rem; max-width:440px; margin:.7rem 0; color:#d6deea; font-size:.9rem; }
 .c1-inbox-search input { width:100%; min-height:44px; border-radius:9px; padding:.65rem .75rem; }
 @media(max-width:480px) { .c1-call-navigation { align-items:stretch; flex-direction:column; } .c1-call-navigation button { width:100%; } .c1-inbox-search { max-width:none; } }
+
+/* Customer details, reporting and settings: cohesive premium surfaces. */
+.c1-detail-toolbar { display:flex; align-items:center; flex-wrap:wrap; gap:1rem; margin:.4rem 0 1rem; }
+.c1-detail-toolbar a { color:#eed2a0; }
+.c1-detail-heading { display:flex; justify-content:space-between; align-items:center; gap:1.5rem; flex-wrap:wrap; margin:1rem 0; }
+.c1-detail-heading > div { min-width:0; overflow-wrap:anywhere; }
+.c1-detail-heading .c1-primary { display:inline-flex; justify-content:center; align-items:center; min-height:44px; padding:.7rem 1rem; border-radius:10px; text-decoration:none; }
+.c1-detail-facts { display:grid; grid-template-columns:minmax(100px, .45fr) minmax(0,1fr); gap:.6rem 1rem; margin:1rem 0; }
+.c1-detail-facts dt { color:#c2cddd; }
+.c1-detail-facts dd { margin:0; overflow-wrap:anywhere; }
+.c1-detail-message,.c1-detail-form,.c1-detail-activity { margin:1rem 0; }
+.c1-detail-message h2,.c1-detail-activity h2 { margin-top:0; }
+.c1-detail-message p { overflow-wrap:anywhere; white-space:pre-wrap; }
+.c1-detail-form { display:grid; gap:.8rem; }
+.c1-detail-form label { display:grid; gap:.35rem; min-width:0; }
+.c1-detail-form :is(select,input,textarea) { width:100%; min-width:0; }
+.c1-detail-form button { min-height:44px; justify-self:start; }
+.c1-detail-activity ol { padding-left:1.4rem; }
+.c1-detail-activity li { padding:.65rem .25rem; border-bottom:1px solid #b7a07835; overflow-wrap:anywhere; }
+.c1-report-metrics { margin:1rem 0; }
+.c1-report-metric { display:flex; flex-direction:column; gap:.7rem; min-width:0; }
+.c1-report-metric h2 { font-size:1rem; font-weight:500; margin:0; color:#d5deeb; }
+.c1-report-metric .c1-metric { font-size:clamp(2.1rem,4vw,3.4rem); color:#f2d6a2; font-variant-numeric:tabular-nums; }
+.c1-report-metric p { font-size:.85rem; color:#c2cddd; margin:0; }
+.c1-report-note { color:#cbd5e2; line-height:1.65; }
+.c1-settings > p { max-width:65ch; }
+.c1-settings fieldset { margin:1.1rem 0; min-width:0; }
+.c1-settings fieldset legend { padding:.3rem .5rem; color:#eed2a0; }
+.c1-settings .c1-card { margin-block:1rem; }
+.c1-settings-preferences .c1-check { display:flex; align-items:center; gap:.75rem; padding:.55rem 0; }
+.c1-settings-preferences input[type=checkbox] { width:18px; height:18px; flex:none; accent-color:#d8bb84; }
+.c1-device-count { font:600 .85rem system-ui,sans-serif; color:#f2d6a2; border:1px solid #d8aa5873; border-radius:999px; padding:.15rem .5rem; }
+.c1-settings .c1-actions { display:flex; gap:.65rem; flex-wrap:wrap; }
+.c1-settings .c1-actions button { min-height:44px; }
+@media(max-width:600px) { .c1-detail-facts { grid-template-columns:minmax(0,1fr); gap:.25rem; } .c1-detail-facts dd { margin-bottom:.75rem; } .c1-detail-heading .c1-primary { width:100%; } .c1-detail-form button { justify-self:stretch; } .c1-settings .c1-actions button { flex:1 1 100%; } }
