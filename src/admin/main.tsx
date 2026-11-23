@@ -410,6 +410,7 @@ export function App() {
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [filtersExpanded, setFiltersExpanded] = useState(true);
+  const [signOutError, setSignOutError] = useState("");
   const [from, setFrom] = useState(""),
     [to, setTo] = useState(""),
     [service, setService] = useState("");
@@ -588,7 +589,7 @@ export function App() {
     <button type="button" disabled={signingOut} onClick={() => { setSigningOut(true); void api("logout", {}).then(() => {
       updateBadge(0);
       window.location.replace("/admin");
-    }).catch(cause => setError(cause.message)).finally(() => setSigningOut(false)); }}>
+    }).catch(cause => setSignOutError(cause.message)).finally(() => setSigningOut(false)); }}>
       <LogOut size={18} /> {signingOut ? "Signing out…" : "Sign out"}
     </button>
   );
@@ -606,6 +607,7 @@ export function App() {
         {navigation}
         <p>{session.email}</p>
         {signOut}
+        {signOutError && <p role="alert" className="c1-dashboard-error">{signOutError}</p>}
       </aside>
       <dialog
         ref={menu}
@@ -624,6 +626,7 @@ export function App() {
           <button type="button" onClick={() => menu.current?.close()} aria-label="Close navigation"><X aria-hidden="true" /></button>
           {navigation}
           {signOut}
+          {signOutError && <p role="alert" className="c1-dashboard-error">{signOutError}</p>}
         </div>
       </dialog>
       <div className="c1-workspace">
@@ -651,12 +654,13 @@ export function App() {
           ) && (
             <div className="c1-global-filters">
             <button type="button" className="c1-filter-toggle" aria-expanded={filtersExpanded} aria-controls="c1-global-filter-fields" onClick={() => setFiltersExpanded(value => !value)}>{filtersExpanded ? "Hide date and service filters" : "Show date and service filters"}{(from || to || service) ? " · Filters active" : ""}</button>
-            {filtersExpanded && <div className="c1-filters" id="c1-global-filter-fields">
+            <div className="c1-filters" id="c1-global-filter-fields" hidden={!filtersExpanded}>
               <label>
                 From
                 <input
                   type="date"
                   value={from}
+                  max={to || undefined}
                   onChange={(e) => setFrom(e.target.value)}
                 />
               </label>
@@ -690,7 +694,7 @@ export function App() {
               <button type="button" onClick={refresh} disabled={refreshing}>{refreshing ? "Refreshing…" : location.pathname === "/admin/reports" ? "Refresh reports" : location.pathname === "/admin/history" ? "Refresh history" : location.pathname === "/admin/queue" ? "Refresh queue" : "Refresh overview"}</button>
               {lastUpdated && <p className="c1-last-updated" role="status">Updated {lastUpdated.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</p>}
               {(from || to || service) && <button type="button" className="c1-secondary-action" onClick={() => { setFrom(""); setTo(""); setService(""); }}>Reset date and service filters</button>}
-            </div>}
+            </div>
             </div>
           )}
           <Routes>
