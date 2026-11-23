@@ -29,6 +29,7 @@ export default function Notifications({ inbox, error, refresh }: {
   const [loading, setLoading] = useState(false);
   const [pageError, setPageError] = useState("");
   const [expanded, setExpanded] = useState(false);
+  const [urgentOnly, setUrgentOnly] = useState(false);
   const history = filter === "History" || filter === "Staff activity";
   const active = inbox?.active ?? [];
   const rows = history
@@ -38,7 +39,7 @@ export default function Notifications({ inbox, error, refresh }: {
       (filter === "Inquiries" && row.category === "inquiry") ||
       (filter === "Follow-ups" && row.category === "follow_up"));
 
-  const filteredRows = rows.filter(row => [row.title, row.name, row.category].some(value => value.toLowerCase().includes(search.trim().toLowerCase()))).sort((a,b) => sort === "newest" ? Date.parse(b.occurred_at) - Date.parse(a.occurred_at) : Date.parse(a.occurred_at) - Date.parse(b.occurred_at));
+  const filteredRows = rows.filter(row => (!urgentOnly || row.urgent) && [row.title, row.name, row.category].some(value => value.toLowerCase().includes(search.trim().toLowerCase()))).sort((a,b) => sort === "newest" ? Date.parse(b.occurred_at) - Date.parse(a.occurred_at) : Date.parse(a.occurred_at) - Date.parse(b.occurred_at));
   const canLoadOlder = history && hasMore && inbox?.history.length === 50;
   const counts = { Active: inbox?.attention ?? 0, Urgent: active.filter(row => row.urgent).length, Inquiries: active.filter(row => row.category === "inquiry").length, "Follow-ups": active.filter(row => row.category === "follow_up").length, "Staff activity": (inbox?.history ?? []).filter(row => row.category === "staff").length + older.filter(row => row.category === "staff").length, History: (inbox?.history ?? []).length + older.length };
   const emptyMessage = {
@@ -86,7 +87,8 @@ export default function Notifications({ inbox, error, refresh }: {
       {!inbox && !error && <p role="status">Loading notifications…</p>}
       {inbox && !filteredRows.length && <p className="c1-card" role="status">{search ? "No notifications match your search in the loaded records." : emptyMessage}</p>}
       {inbox && <p className="c1-inbox-summary" role="status">Showing {filteredRows.length} notifications{search ? " matching your search" : ""}.</p>}
-      {search && <button type="button" className="c1-secondary-action" onClick={() => setSearch("")}>Clear notification search</button>}
+      <label className="c1-inbox-urgent-toggle"><input type="checkbox" checked={urgentOnly} onChange={event => setUrgentOnly(event.target.checked)} /> Urgent only</label>
+      {(search || urgentOnly) && <button type="button" className="c1-secondary-action" onClick={() => { setSearch(""); setUrgentOnly(false); }}>Clear notification filters</button>}
       {filter === "History" && inbox && <button type="button" className="c1-secondary-action" aria-expanded={expanded} onClick={() => setExpanded(value => !value)}>{expanded ? "Hide history explanation" : "About notification history"}</button>}
       {expanded && filter === "History" && <p className="c1-card">Notification history records previously handled activity. Active attention counts are tracked separately.</p>}
       <ul className="c1-alert-list">
