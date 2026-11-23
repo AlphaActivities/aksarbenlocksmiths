@@ -408,6 +408,7 @@ export function App() {
     [error, setError] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [filtersExpanded, setFiltersExpanded] = useState(true);
   const [from, setFrom] = useState(""),
     [to, setTo] = useState(""),
     [service, setService] = useState("");
@@ -647,7 +648,9 @@ export function App() {
           {["/admin", "/admin/", "/admin/queue", "/admin/history", "/admin/reports"].includes(
             location.pathname,
           ) && (
-            <div className="c1-filters">
+            <div className="c1-global-filters">
+            <button type="button" className="c1-filter-toggle" aria-expanded={filtersExpanded} aria-controls="c1-global-filter-fields" onClick={() => setFiltersExpanded(value => !value)}>{filtersExpanded ? "Hide date and service filters" : "Show date and service filters"}{(from || to || service) ? " · Filters active" : ""}</button>
+            {filtersExpanded && <div className="c1-filters" id="c1-global-filter-fields">
               <label>
                 From
                 <input
@@ -685,6 +688,8 @@ export function App() {
               </label>
               <button type="button" onClick={refresh} disabled={refreshing}>{refreshing ? "Refreshing…" : location.pathname === "/admin/reports" ? "Refresh reports" : location.pathname === "/admin/history" ? "Refresh history" : location.pathname === "/admin/queue" ? "Refresh queue" : "Refresh overview"}</button>
               {lastUpdated && <p className="c1-last-updated" role="status">Updated {lastUpdated.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</p>}
+              {(from || to || service) && <button type="button" className="c1-secondary-action" onClick={() => { setFrom(""); setTo(""); setService(""); }}>Reset date and service filters</button>}
+            </div>}
             </div>
           )}
           <Routes>
