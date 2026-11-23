@@ -800,3 +800,13 @@ body:has(.c1-shell) { isolation: isolate; background: #09111e; }
 @media (max-width:1000px) { .c1-overview-metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media (max-width:620px) { .c1-overview-sections { grid-template-columns:minmax(0,1fr); } .c1-overview-metrics { gap:.65rem; } .c1-overview-heading { align-items:flex-start; } }
 @media (max-width:350px) { .c1-overview-metrics { grid-template-columns:minmax(0,1fr); } }
+
+/* Searchable queue and history, touch-friendly controls. */
+.c1-queue-search { display:flex; flex-wrap:wrap; align-items:end; gap:.75rem; margin:1rem 0; }
+.c1-queue-search label { display:grid; gap:.35rem; flex:1 1 200px; min-width:0; color:#d6deea; font-size:.9rem; }
+.c1-queue-search input,.c1-queue-search select { width:100%; min-width:0; min-height:44px; border-radius:9px; padding:.65rem .75rem; }
+.c1-queue-search button { min-height:44px; }
+.c1-shell :is(a,button,input,select,textarea,summary):focus-visible { outline:2px solid #f0d29c; outline-offset:3px; }
+.c1-mobile-panel > button:first-child { display:grid; place-items:center; margin-left:auto; width:44px; height:44px; border-radius:10px; }
+.c1-mobile-menu nav a { width:100%; }
+@media(max-width:480px) { .c1-queue-search { display:grid; grid-template-columns:minmax(0,1fr); } .c1-queue-search label { width:100%; } }
