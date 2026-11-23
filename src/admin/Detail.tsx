@@ -11,14 +11,17 @@ export default function Detail({ updated }: { updated: () => void }) {
     [follow, setFollow] = useState("");
   const [key, setKey] = useState(() => crypto.randomUUID());
   const [notice, setNotice] = useState(""),
-    [busy, setBusy] = useState(false);
+    [busy, setBusy] = useState(false),
+    [loading, setLoading] = useState(true);
   const load = useCallback(
     () => api<{ lead: Lead; events: Activity[] }>(`leads/${id}`).then(setData),
     [id],
   );
   useEffect(() => {
     setData(null);
-    void load().catch((e) => setNotice(e.message));
+    setLoading(true);
+    setNotice("");
+    void load().catch((e) => setNotice(e.message)).finally(() => setLoading(false));
   }, [load]);
   const submit = async (event: FormEvent) => {
     event.preventDefault();
@@ -49,8 +52,9 @@ export default function Detail({ updated }: { updated: () => void }) {
     phone = l && dial(l.phone);
   return (
     <section>
-      <Link to="/admin">← Queue</Link>
-      <p role="status">{notice}</p>
+      <div className="c1-detail-toolbar"><Link to="/admin/queue">Back to queue</Link><Link to="/admin/history">View history</Link></div>
+      {loading && <p role="status">Loading customer record…</p>}
+      {notice && <p role="status">{notice}</p>}
       <button
         disabled={busy}
         onClick={() => void load().catch((e) => setNotice(e.message))}
@@ -59,7 +63,7 @@ export default function Detail({ updated }: { updated: () => void }) {
       </button>
       {l && (
         <>
-          <header className="c1-detail-heading">
+          <header className="c1-detail-heading c1-card">
             <div>
               <p>
                 {l.historical ? "Imported History" : l.urgency} · {l.source}
@@ -78,7 +82,7 @@ export default function Detail({ updated }: { updated: () => void }) {
               <p>No valid callback number supplied</p>
             )}
           </header>
-          <dl>
+          <dl className="c1-detail-facts c1-card">
             <dt>Received</dt>
             <dd>{date(l.created_at)}</dd>
             <dt>Status</dt>
@@ -88,7 +92,7 @@ export default function Detail({ updated }: { updated: () => void }) {
             <dt>Email</dt>
             <dd>{l.email || "Not supplied"}</dd>
           </dl>
-          <p className="c1-message">{l.message}</p>
+          <section className="c1-card c1-detail-message"><h2>Customer request</h2><p className="c1-message">{l.message || "No additional message supplied."}</p></section>
           {l.source === "chat" && (
             <section className="c1-card">
               <h2>Conversation · {l.conversation_state}</h2>
@@ -99,7 +103,7 @@ export default function Detail({ updated }: { updated: () => void }) {
               ))}
             </section>
           )}
-          <form onSubmit={(e) => void submit(e)}>
+          <form className="c1-card c1-detail-form" onSubmit={(e) => void submit(e)}>
             <h2>Log a result or follow up</h2>
             <label>
               Next action
@@ -154,7 +158,8 @@ export default function Detail({ updated }: { updated: () => void }) {
             </p>
             <button disabled={busy}>{busy ? "Saving…" : "Save result"}</button>
           </form>
-          <h2>Activity</h2>
+          <section className="c1-card c1-detail-activity"><h2>Activity timeline</h2>
+          {!data.events.length && <p>No activity recorded yet.</p>}
           <ol className="c1-activity">
             {data.events.map((e) => (
               <li key={e.id}>
@@ -163,7 +168,7 @@ export default function Detail({ updated }: { updated: () => void }) {
                 {e.note && <p>{e.note}</p>}
               </li>
             ))}
-          </ol>
+          </ol></section>
         </>
       )}
     </section>
