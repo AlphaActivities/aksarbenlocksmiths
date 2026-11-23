@@ -810,3 +810,13 @@ body:has(.c1-shell) { isolation: isolate; background: #09111e; }
 .c1-mobile-panel > button:first-child { display:grid; place-items:center; margin-left:auto; width:44px; height:44px; border-radius:10px; }
 .c1-mobile-menu nav a { width:100%; }
 @media(max-width:480px) { .c1-queue-search { display:grid; grid-template-columns:minmax(0,1fr); } .c1-queue-search label { width:100%; } }
+
+/* Calls and notifications: navigation and state clarity. */
+.c1-call-navigation { display:flex; align-items:center; justify-content:space-between; gap:.75rem; flex-wrap:wrap; margin:1rem 0; color:#d6deea; }
+.c1-call-navigation button { min-height:44px; }
+.c1-call-page-count { color:#c7d1de; font-size:.9rem; }
+.c1-call-next { display:inline-flex; align-items:center; min-height:44px; padding:.65rem 1rem; border:1px solid #d8aa5873; border-radius:10px; color:#ffe3ad; background:#1d2c40; }
+.c1-provider-notice { padding:.85rem 1rem; border:1px solid #d8aa5855; border-radius:10px; background:#1d2c40; color:#f1dfc0; }
+.c1-inbox-search { display:grid; gap:.35rem; max-width:440px; margin:.7rem 0; color:#d6deea; font-size:.9rem; }
+.c1-inbox-search input { width:100%; min-height:44px; border-radius:9px; padding:.65rem .75rem; }
+@media(max-width:480px) { .c1-call-navigation { align-items:stretch; flex-direction:column; } .c1-call-navigation button { width:100%; } .c1-inbox-search { max-width:none; } }
