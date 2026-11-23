@@ -25,7 +25,11 @@ export default function Detail({ updated }: { updated: () => void }) {
   }, [load]);
   const submit = async (event: FormEvent) => {
     event.preventDefault();
-    if (!data) return;
+    if (!data || busy) return;
+    if (action === "schedule" && (!follow || !Number.isFinite(Date.parse(follow)) || Date.parse(follow) < Date.now())) {
+      setNotice("Choose a valid future follow up time.");
+      return;
+    }
     setBusy(true);
     setNotice("");
     try {
@@ -41,7 +45,7 @@ export default function Detail({ updated }: { updated: () => void }) {
       updated();
       setKey(crypto.randomUUID());
       setNote("");
-      setNotice("Saved.");
+      setNotice("Customer activity saved.");
     } catch (e) {
       setNotice((e as Error).message);
     } finally {
