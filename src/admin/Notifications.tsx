@@ -22,6 +22,7 @@ export default function Notifications({ inbox, error, refresh }: {
 }) {
   const [filter, setFilter] = useState<(typeof filters)[number]>("Active");
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState<"newest" | "oldest">("newest");
   const [older, setOlder] = useState<AlertItem[]>([]);
   const [offset, setOffset] = useState(50);
   const [hasMore, setHasMore] = useState(true);
@@ -36,7 +37,7 @@ export default function Notifications({ inbox, error, refresh }: {
       (filter === "Inquiries" && row.category === "inquiry") ||
       (filter === "Follow-ups" && row.category === "follow_up"));
 
-  const filteredRows = rows.filter(row => [row.title, row.name, row.category].some(value => value.toLowerCase().includes(search.trim().toLowerCase())));
+  const filteredRows = rows.filter(row => [row.title, row.name, row.category].some(value => value.toLowerCase().includes(search.trim().toLowerCase()))).sort((a,b) => sort === "newest" ? Date.parse(b.occurred_at) - Date.parse(a.occurred_at) : Date.parse(a.occurred_at) - Date.parse(b.occurred_at));
   const canLoadOlder = history && hasMore && inbox?.history.length === 50;
   const counts = { Active: inbox?.attention ?? 0, Urgent: active.filter(row => row.urgent).length, Inquiries: active.filter(row => row.category === "inquiry").length, "Follow-ups": active.filter(row => row.category === "follow_up").length, "Staff activity": (inbox?.history ?? []).filter(row => row.category === "staff").length + older.filter(row => row.category === "staff").length, History: (inbox?.history ?? []).length + older.length };
   const emptyMessage = {
@@ -78,6 +79,7 @@ export default function Notifications({ inbox, error, refresh }: {
         ))}
       </div>
       <label className="c1-inbox-search">Search notifications<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Search name or activity" /></label>
+      <label className="c1-inbox-search">Sort notifications<select value={sort} onChange={event => setSort(event.target.value as "newest" | "oldest")}><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select></label>
       {error && <p role="alert">{error}</p>}
       {pageError && <p role="alert">{pageError}</p>}
       {!inbox && !error && <p role="status">Loading notifications…</p>}
