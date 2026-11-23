@@ -312,25 +312,27 @@ function Overview({ data, attention }: { data: Snapshot | null; attention: numbe
 }
 function Reports({ data }: { data: Snapshot | null }) {
   return (
-    <section>
+    <section className="c1-reports">
+      <p className="c1-eyebrow">Dispatch intelligence</p>
       <h1>Reports</h1>
       <p>
         Date and service filters apply to confirmed events, not phone-tap
         intent. Historical imports are excluded.
       </p>
-      <div className="c1-grid">
+      <div className="c1-grid c1-report-metrics">
         {[
           ["inquiry_confirmed", "Confirmed inquiries"],
           ["callback_completed", "Callbacks completed"],
           ["booked", "Booked jobs"],
         ].map(([key, label]) => (
-          <article className="c1-card" key={key}>
+          <article className="c1-card c1-report-metric" key={key}>
             <h2>{label}</h2>
             <strong className="c1-metric">{data?.metrics[key] ?? "—"}</strong>
+            <p>Confirmed CRM event</p>
           </article>
         ))}
       </div>
-      <p>
+      <p className="c1-card c1-report-note">
         Website phone and email taps are intent signals in site analytics.
         Provider call records are not connected; VoIP.ms is deferred. An
         answered call is not counted as a booking.
