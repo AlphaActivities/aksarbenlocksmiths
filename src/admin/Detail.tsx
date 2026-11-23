@@ -11,18 +11,25 @@ export default function Detail({ updated }: { updated: () => void }) {
     [follow, setFollow] = useState("");
   const [key, setKey] = useState(() => crypto.randomUUID());
   const [notice, setNotice] = useState(""),
-    [busy, setBusy] = useState(false);
+    [busy, setBusy] = useState(false),
+    [loading, setLoading] = useState(true);
   const load = useCallback(
     () => api<{ lead: Lead; events: Activity[] }>(`leads/${id}`).then(setData),
     [id],
   );
   useEffect(() => {
     setData(null);
-    void load().catch((e) => setNotice(e.message));
+    setLoading(true);
+    setNotice("");
+    void load().catch((e) => setNotice(e.message)).finally(() => setLoading(false));
   }, [load]);
   const submit = async (event: FormEvent) => {
     event.preventDefault();
-    if (!data) return;
+    if (!data || busy) return;
+    if (action === "schedule" && (!follow || !Number.isFinite(Date.parse(follow)) || Date.parse(follow) < Date.now())) {
+      setNotice("Choose a valid future follow up time.");
+      return;
+    }
     setBusy(true);
     setNotice("");
     try {
@@ -38,33 +45,42 @@ export default function Detail({ updated }: { updated: () => void }) {
       updated();
       setKey(crypto.randomUUID());
       setNote("");
-      setNotice("Saved.");
+      if (action === "schedule") setFollow("");
+      setNotice("Customer activity saved.");
     } catch (e) {
       setNotice((e as Error).message);
     } finally {
       setBusy(false);
     }
   };
+  const [activitySearch, setActivitySearch] = useState("");
+  const [activitySort, setActivitySort] = useState<"newest" | "oldest">("newest");
+  const [refreshing, setRefreshing] = useState(false);
+  const refreshRecord = async () => { setRefreshing(true); setNotice(""); try { await load(); } catch (cause) { setNotice((cause as Error).message); } finally { setRefreshing(false); } };
+  const filteredEvents = (data?.events.filter(event => `${event.kind} ${event.note || ""}`.toLowerCase().includes(activitySearch.toLowerCase())) ?? []).sort((a,b) => activitySort === "newest" ? Date.parse(b.happened_at) - Date.parse(a.happened_at) : Date.parse(a.happened_at) - Date.parse(b.happened_at));
   const l = data?.lead,
     phone = l && dial(l.phone);
   return (
     <section>
-      <Link to="/admin">← Queue</Link>
-      <p role="status">{notice}</p>
+      <div className="c1-detail-toolbar"><Link to="/admin/queue">Back to queue</Link><Link to="/admin/history">View history</Link></div>
+      {loading && <p role="status">Loading customer record…</p>}
+      {notice && <p role="status" className="c1-action-notice">{notice}</p>}
       <button
-        disabled={busy}
-        onClick={() => void load().catch((e) => setNotice(e.message))}
+        disabled={busy || refreshing}
+        onClick={() => void refreshRecord()}
       >
-        Refresh record
+        {refreshing ? "Refreshing record…" : "Refresh record"}
       </button>
+      {!loading && !l && !notice && <p className="c1-card" role="status">This customer record is unavailable.</p>}
       {l && (
         <>
-          <header className="c1-detail-heading">
+          <header className="c1-detail-heading c1-card">
             <div>
               <p>
                 {l.historical ? "Imported History" : l.urgency} · {l.source}
               </p>
               <h1>{l.name}</h1>
+              <Link to={`/admin/calls?lead=${l.id}`}>Customer call history</Link>
               <p>
                 {l.service} · {l.area || "Area not supplied"}
               </p>
@@ -77,7 +93,7 @@ export default function Detail({ updated }: { updated: () => void }) {
               <p>No valid callback number supplied</p>
             )}
           </header>
-          <dl>
+          <dl className="c1-detail-facts c1-card">
             <dt>Received</dt>
             <dd>{date(l.created_at)}</dd>
             <dt>Status</dt>
@@ -85,9 +101,11 @@ export default function Detail({ updated }: { updated: () => void }) {
             <dt>Follow up</dt>
             <dd>{l.follow_up_at ? date(l.follow_up_at) : "Not scheduled"}</dd>
             <dt>Email</dt>
-            <dd>{l.email || "Not supplied"}</dd>
+            <dd>{l.email ? <a href={`mailto:${l.email}`}>{l.email}</a> : "Not supplied"}</dd>
+            <dt>Phone</dt>
+            <dd>{phone ? <a href={phone}>{l.phone}</a> : (l.phone || "Not supplied")}</dd>
           </dl>
-          <p className="c1-message">{l.message}</p>
+          <section className="c1-card c1-detail-message"><h2>Customer request</h2><p className="c1-message">{l.message || "No additional message supplied."}</p></section>
           {l.source === "chat" && (
             <section className="c1-card">
               <h2>Conversation · {l.conversation_state}</h2>
@@ -98,7 +116,7 @@ export default function Detail({ updated }: { updated: () => void }) {
               ))}
             </section>
           )}
-          <form onSubmit={(e) => void submit(e)}>
+          <form className="c1-card c1-detail-form" onSubmit={(e) => void submit(e)}>
             <h2>Log a result or follow up</h2>
             <label>
               Next action
@@ -133,6 +151,7 @@ export default function Detail({ updated }: { updated: () => void }) {
                 <input
                   type="datetime-local"
                   required
+                  min={new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0,16)}
                   value={follow}
                   onChange={(e) => setFollow(e.target.value)}
                 />
@@ -153,16 +172,19 @@ export default function Detail({ updated }: { updated: () => void }) {
             </p>
             <button disabled={busy}>{busy ? "Saving…" : "Save result"}</button>
           </form>
-          <h2>Activity</h2>
+          <section className="c1-card c1-detail-activity"><h2>Activity timeline</h2>
+          <label className="c1-activity-search">Search activity<input type="search" value={activitySearch} onChange={event => setActivitySearch(event.target.value)} placeholder="Action or note" /></label>
+          <label className="c1-activity-search">Activity order<select value={activitySort} onChange={event => setActivitySort(event.target.value as "newest" | "oldest")}><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select></label>
+          {!filteredEvents.length && <p>{activitySearch ? "No activity matches your search." : "No activity recorded yet."}</p>}
           <ol className="c1-activity">
-            {data.events.map((e) => (
+            {filteredEvents.map((e) => (
               <li key={e.id}>
                 <strong>{e.kind.replace(/_/g, " ")}</strong> ·{" "}
                 {date(e.happened_at)}
                 {e.note && <p>{e.note}</p>}
               </li>
             ))}
-          </ol>
+          </ol></section>
         </>
       )}
     </section>

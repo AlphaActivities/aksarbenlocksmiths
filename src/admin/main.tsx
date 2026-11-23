@@ -1,3 +1,4 @@
+import Backdrop from "./Backdrop";
 import {
   StrictMode,
   useCallback,
@@ -15,7 +16,7 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
-import { Bell, LogOut, Phone } from "lucide-react";
+import { Bell, BarChart3, ClipboardList, LayoutDashboard, History, LogOut, Menu, Phone, Settings2, Shield, X } from "lucide-react";
 import {
   api,
   age,
@@ -26,6 +27,9 @@ import {
   type Lead,
 } from "./api";
 import Settings from "./Settings";
+import Calls from "./Calls";
+import Notifications, { type InboxData } from "./Notifications";
+import { playTone, soundChoices } from "./sounds";
 import Detail from "./Detail";
 import Entrance from "./Entrance";
 import Recovery from "./Recovery";
@@ -54,7 +58,7 @@ function Login({ signedIn }: { signedIn: () => void }) {
     <main className="c1-login">
       <img src="/images/shield-logo.webp" alt="Aksarben Locksmiths" />
       <h1>Private callback queue</h1>
-      <p>Sign in with your individual staff account.</p>
+      <p>Sign in with your individual staff account to manage inquiries, callbacks and customer activity.</p>
       <form onSubmit={(e) => void submit(e)}>
         <label>
           Email
@@ -76,7 +80,7 @@ function Login({ signedIn }: { signedIn: () => void }) {
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
-        <p role="alert">{error}</p>
+        {error && <p role="alert" className="c1-dashboard-error">{error}</p>}
         <button disabled={busy}>{busy ? "Signing in…" : "Sign in"}</button>
       </form>
       <p><Link to="/admin/reset-password">Forgot password?</Link></p>
@@ -115,8 +119,9 @@ function Manual({ saved }: { saved: () => void }) {
     }
   };
   return (
-    <details className="c1-card">
+    <details className="c1-card c1-manual">
       <summary>Add a callback manually</summary>
+      <p>Record a customer request when it arrives outside the website. Required fields are marked by the form.</p>
       <form onSubmit={(e) => void submit(e)}>
         <label>
           Name
@@ -129,7 +134,7 @@ function Manual({ saved }: { saved: () => void }) {
             type="tel"
             required
             maxLength={40}
-            pattern="[+0-9() .-]{7,40}"
+            pattern="[+0-9\(\) .\-]{7,40}"
           />
         </label>
         <label>
@@ -163,7 +168,7 @@ function Manual({ saved }: { saved: () => void }) {
           <textarea name="message" maxLength={6000} />
         </label>
         <p role="status">{notice}</p>
-        <button disabled={busy}>Save callback</button>
+        <button disabled={busy}>{busy ? "Saving callback…" : "Save callback"}</button>
       </form>
     </details>
   );
@@ -177,24 +182,32 @@ function Queue({
   history?: boolean;
   refresh: () => void;
 }) {
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [sort, setSort] = useState("newest");
+  const [urgencyFilter, setUrgencyFilter] = useState("all");
   const leads = data?.leads.filter((l) =>
     history
       ? l.historical || ["closed", "booked"].includes(l.status)
       : !l.historical && !["closed", "booked"].includes(l.status),
   );
+  const visibleLeads = leads?.filter(l => {
+    const matchesText = [l.name, l.phone, l.email, l.service, l.area, l.message].some(value => (value || "").toLowerCase().includes(search.trim().toLowerCase()));
+    return matchesText && (statusFilter === "all" || l.status === statusFilter) && (urgencyFilter === "all" || l.urgency === urgencyFilter);
+  }).sort((a, b) => sort === "oldest" ? Date.parse(a.created_at) - Date.parse(b.created_at) : sort === "name" ? (a.name || "").localeCompare(b.name || "") : Date.parse(b.created_at) - Date.parse(a.created_at));
   const groups: { title: string; kind: string; rows: Lead[] }[] = history
-    ? [{ title: "History", kind: "history", rows: leads || [] }]
+    ? [{ title: "History", kind: "history", rows: visibleLeads || [] }]
     : [
         {
           title: "Urgent inquiries",
           kind: "urgent",
-          rows: leads?.filter((l) => l.urgency === "urgent") || [],
+          rows: visibleLeads?.filter((l) => l.urgency === "urgent") || [],
         },
         {
           title: "Callbacks due",
           kind: "due",
           rows:
-            leads?.filter(
+            visibleLeads?.filter(
               (l) =>
                 l.urgency !== "urgent" &&
                 (!l.follow_up_at || Date.parse(l.follow_up_at) <= Date.now()),
@@ -204,7 +217,7 @@ function Queue({
           title: "Scheduled requests",
           kind: "scheduled",
           rows:
-            leads?.filter(
+            visibleLeads?.filter(
               (l) =>
                 l.urgency !== "urgent" &&
                 l.follow_up_at &&
@@ -214,13 +227,16 @@ function Queue({
       ];
   return (
     <section>
+      <p className="c1-eyebrow">{history ? "Completed and imported" : "Dispatch priorities"}</p>
       <h1>{history ? "History" : "Your callback queue"}</h1>
       <p>
         {history
           ? "Original submission dates. Historical imports never create new alerts or active counts."
           : "Emergency inquiries, callbacks due and scheduled work. Log the outcome after every call."}
       </p>
+      <div className="c1-queue-search"><label>Search records<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Name, phone, service, or area" aria-label="Search callback records" /></label><label>Status<select value={statusFilter} onChange={event => setStatusFilter(event.target.value)}><option value="all">All statuses</option>{[...new Set((leads || []).map(lead => lead.status))].sort().map(status => <option key={status} value={status}>{status}</option>)}</select></label><label>Priority<select value={urgencyFilter} onChange={event => setUrgencyFilter(event.target.value)}><option value="all">All priorities</option><option value="urgent">Urgent</option><option value="scheduled">Scheduled</option><option value="quote">Quote requests</option></select></label><label>Sort by<select value={sort} onChange={event => setSort(event.target.value)}><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="name">Customer name</option></select></label>{(search || statusFilter !== "all" || urgencyFilter !== "all" || sort !== "newest") && <button type="button" onClick={() => { setSearch(""); setStatusFilter("all"); setUrgencyFilter("all"); setSort("newest"); }}>Clear filters</button>}</div>
       {!history && <Manual saved={refresh} />}
+      {data && <p className="c1-queue-summary" role="status">Showing {visibleLeads?.length ?? 0} of {leads?.length ?? 0} records.</p>}
       {!data ? (
         <p role="status">Loading the queue…</p>
       ) : (
@@ -230,7 +246,7 @@ function Queue({
               {group.title}{" "}
               <span className="c1-queue-count">{group.rows.length}</span>
             </h2>
-            {!group.rows.length && <p>No matching records.</p>}
+            {!group.rows.length && <p>{search || statusFilter !== "all" || urgencyFilter !== "all" ? "No records match these filters." : "No matching records."}</p>}
             <div className="c1-grid">
               {group.rows.map((l) => (
                 <Link
@@ -268,27 +284,61 @@ function Queue({
     </section>
   );
 }
+function Overview({ data, attention }: { data: Snapshot | null; attention: number | undefined }) {
+  const active = data?.leads.filter(lead => !lead.historical && !["closed", "booked"].includes(lead.status)) ?? [];
+  const urgent = active.filter(lead => lead.urgency === "urgent");
+  const due = active.filter(lead => lead.urgency !== "urgent" && (!lead.follow_up_at || Date.parse(lead.follow_up_at) <= Date.now()));
+  const scheduled = active.filter(lead => lead.urgency !== "urgent" && lead.follow_up_at && Date.parse(lead.follow_up_at) > Date.now());
+  const recent = [...active].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)).slice(0, 5);
+  const metrics = [
+    { label: "Active requests", value: active.length, to: "/admin/queue" },
+    { label: "Urgent inquiries", value: urgent.length, to: "/admin/queue" },
+    { label: "Callbacks due", value: due.length, to: "/admin/queue" },
+    { label: "Scheduled requests", value: scheduled.length, to: "/admin/queue" },
+  ];
+  return <section className="c1-overview">
+    <div className="c1-overview-heading"><div><p className="c1-eyebrow">Private dispatch desk</p><h1>Overview</h1><p>Current callback priorities and recent inquiries, based on the available CRM snapshot.</p></div>
+      <Link className="c1-overview-action" to="/admin/notifications"><Bell size={18} aria-hidden="true" /> {attention ?? "—"} needing attention</Link></div>
+    {!data ? <p role="status">Loading dashboard…</p> : <>
+      <div className="c1-overview-metrics">{metrics.map(item => <Link className="c1-card c1-overview-metric" to={item.to} key={item.label}><span>{item.label}</span><strong>{item.value}</strong><span>View queue</span></Link>)}</div>
+      <div className="c1-overview-sections">
+        <section className="c1-card"><div className="c1-overview-section-heading"><h2>Priority callbacks</h2><Link to="/admin/queue">Open queue</Link></div>
+          {urgent.length + due.length === 0 ? <p>No urgent or due callbacks in this snapshot.</p> :
+            [...urgent, ...due].slice(0, 5).map(lead => <Link className="c1-overview-record" to={`/admin/leads/${lead.id}`} key={lead.id}><span><strong>{lead.name || "Unnamed inquiry"}</strong><small>{lead.service} · {lead.area || "Area not supplied"}</small></span><span className="c1-overview-status">{lead.urgency === "urgent" ? "Urgent" : "Due"}</span></Link>)}
+        </section>
+        <section className="c1-card"><div className="c1-overview-section-heading"><h2>Recent inquiries</h2><Link to="/admin/history">History</Link></div>
+          {!recent.length ? <p>No active inquiries in this snapshot.</p> :
+            recent.map(lead => <Link className="c1-overview-record" to={`/admin/leads/${lead.id}`} key={lead.id}><span><strong>{lead.name || "Unnamed inquiry"}</strong><small>{lead.service} · {age(lead.created_at)}</small></span><span className="c1-overview-status">{lead.status}</span></Link>)}
+        </section>
+      </div>
+      <div className="c1-overview-quicklinks" aria-label="Quick actions"><Link to="/admin/calls"><Phone aria-hidden="true" size={18} /> Call history</Link><Link to="/admin/notifications"><Bell aria-hidden="true" size={18} /> Notifications</Link><Link to="/admin/reports"><BarChart3 aria-hidden="true" size={18} /> Reports</Link></div>
+      <p className="c1-overview-footnote">Call-provider records are not connected. Missed and outgoing call totals are not estimated here. Date and service filters apply to the current snapshot.</p>
+    </>}
+  </section>;
+}
 function Reports({ data }: { data: Snapshot | null }) {
   return (
-    <section>
+    <section className="c1-reports">
+      <p className="c1-eyebrow">Dispatch intelligence</p>
       <h1>Reports</h1>
       <p>
         Date and service filters apply to confirmed events, not phone-tap
         intent. Historical imports are excluded.
       </p>
-      <div className="c1-grid">
+      <div className="c1-grid c1-report-metrics">
         {[
           ["inquiry_confirmed", "Confirmed inquiries"],
           ["callback_completed", "Callbacks completed"],
           ["booked", "Booked jobs"],
         ].map(([key, label]) => (
-          <article className="c1-card" key={key}>
+          <article className="c1-card c1-report-metric" key={key}>
             <h2>{label}</h2>
             <strong className="c1-metric">{data?.metrics[key] ?? "—"}</strong>
+            <p>Confirmed CRM event</p>
           </article>
         ))}
       </div>
-      <p>
+      <p className="c1-card c1-report-note">
         Website phone and email taps are intent signals in site analytics.
         Provider call records are not connected; VoIP.ms is deferred. An
         answered call is not counted as a booking.
@@ -299,28 +349,34 @@ function Reports({ data }: { data: Snapshot | null }) {
 function Business() {
   const [result, setResult] = useState(""),
     [busy, setBusy] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [failure, setFailure] = useState("");
   useEffect(() => {
     void api<{ intake_enabled: boolean; push_enabled: boolean }>("business")
-      .then((r) =>
-        setResult(
-          `Website sync ${r.intake_enabled ? "enabled" : "disabled"} · Push ${r.push_enabled ? "enabled" : "disabled"} · VoIP deferred`,
-        ),
-      )
-      .catch((e) => setResult(e.message));
+      .then((r) => {
+        setResult(`Website sync ${r.intake_enabled ? "enabled" : "disabled"} · Push ${r.push_enabled ? "enabled" : "disabled"} · VoIP deferred`);
+        setLoaded(true);
+      })
+      .catch((e) => { setFailure(e.message); setLoaded(true); });
   }, []);
   return (
     <section>
       <h1>Business settings</h1>
+      <p className="c1-eyebrow">Organization administration</p>
       <p>C1 · Mike Aksarben Locksmiths</p>
       <p>
         Account roles and delivery switches are managed on the server. Never
         enter credentials into this dashboard.
       </p>
-      <p role="status">{result}</p>
+      {!loaded && <p className="c1-card c1-business-status" role="status">Loading business configuration…</p>}
+      {result && <p className="c1-card c1-business-status" role="status">{result}</p>}
+      {failure && <p className="c1-dashboard-error" role="alert">{failure}</p>}
       <button
         disabled={busy}
         onClick={() => {
+          if (!window.confirm("Reconcile website submissions now? Existing records will be preserved.")) return;
           setBusy(true);
+          setFailure("");
           void api<{ status: string; inserted?: number; duplicates?: number }>(
             "reconcile",
             {},
@@ -330,11 +386,11 @@ function Business() {
                 `Sync ${r.status}. New: ${r.inserted ?? 0}; duplicates: ${r.duplicates ?? 0}.`,
               ),
             )
-            .catch((e) => setResult(e.message))
+            .catch((e) => setFailure(e.message))
             .finally(() => setBusy(false));
         }}
       >
-        Reconcile website submissions
+        {busy ? "Reconciling submissions…" : "Reconcile website submissions"}
       </button>
       <Team />
     </section>
@@ -344,10 +400,23 @@ export function App() {
   const location = useLocation();
   const isRecovery = location.pathname === "/admin/reset-password";
   const queueSequence = useRef(0);
+  const inboxSequence = useRef(0);
+  const menu = useRef<HTMLDialogElement>(null);
+  const opener = useRef<HTMLButtonElement>(null);
+  const heard = useRef<Set<string> | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  const [inbox, setInbox] = useState<InboxData | null>(null);
+  const [inboxError, setInboxError] = useState("");
   const [session, setSession] = useState<Session | null>(null),
     [checking, setChecking] = useState(true),
     [data, setData] = useState<Snapshot | null>(null),
     [error, setError] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [filtersExpanded, setFiltersExpanded] = useState(true);
+
+  const [signOutError, setSignOutError] = useState("");
   const [from, setFrom] = useState(""),
     [to, setTo] = useState(""),
     [service, setService] = useState("");
@@ -363,6 +432,7 @@ export function App() {
   }, []);
   const refresh = useCallback(() => {
     const sequence = ++queueSequence.current;
+    setRefreshing(true);
     const q = new URLSearchParams();
     if (from) q.set("from", new Date(`${from}T00:00:00`).toISOString());
     if (to) {
@@ -375,18 +445,63 @@ export function App() {
       .then((r) => {
         if (sequence !== queueSequence.current) return;
         setData(r);
-        updateBadge(r.attention);
+        setLastUpdated(new Date());
         setError("");
       })
       .catch((e) => {
         if (sequence === queueSequence.current) setError(e.message);
-      });
+      })
+      .finally(() => { if (sequence === queueSequence.current) setRefreshing(false); });
   }, [from, to, service]);
+  const refreshInbox = useCallback(() => {
+    if (!session) return;
+    const sequence = ++inboxSequence.current;
+    void api<InboxData>("notifications").then(result => {
+      if (sequence !== inboxSequence.current) return;
+      const items = [...result.active, ...result.history.filter(item => item.category === "staff")];
+      const key = (item: (typeof items)[number]) => `${item.category}:${item.id}:${item.occurred_at}`;
+      if (heard.current) {
+        const previous = heard.current;
+        if (document.visibilityState === "visible") {
+          const choices = soundChoices(session.user_id);
+          const tone = items.filter(item => !previous.has(key(item))).map(item =>
+            choices[item.category === "staff" ? "staff" : item.urgent ? "urgent" : "inquiry"]
+          ).find(value => value !== "silent");
+          if (tone) void playTone(tone);
+        }
+        items.forEach(item => previous.add(key(item)));
+      } else {
+        heard.current = new Set(items.map(key));
+      }
+      setInbox(result);
+      setInboxError("");
+    }).catch(cause => {
+      if (sequence === inboxSequence.current) setInboxError(cause.message);
+    });
+  }, [session]);
+  const attention = inbox?.attention ?? data?.attention;
+  useEffect(() => {
+    if (session && attention !== undefined) updateBadge(attention);
+  }, [session, attention, inbox]);
+  useEffect(() => {
+    menu.current?.close();
+  }, [location.pathname]);
+  useEffect(() => {
+    const desktop = matchMedia("(min-width: 901px)");
+    const closeMenu = () => { if (desktop.matches) menu.current?.close(); };
+    desktop.addEventListener("change", closeMenu);
+    return () => desktop.removeEventListener("change", closeMenu);
+  }, []);
   useEffect(() => {
     if (isRecovery) { setChecking(false); return; }
     loadSession();
     const logout = () => {
       queueSequence.current++;
+      inboxSequence.current++;
+      heard.current = null;
+      setInbox(null);
+      setInboxError("");
+      setMenuOpen(false);
       setSession(null);
       setData(null);
       updateBadge(0);
@@ -396,35 +511,51 @@ export function App() {
   }, [loadSession, isRecovery]);
   useEffect(() => {
     if (!session) return;
-    refresh();
-    const timer = setInterval(refresh, 30000);
-    const visible = () => {
-      if (document.visibilityState === "visible") refresh();
+    const refreshDashboard = () => {
+      refresh();
+      refreshInbox();
     };
-    window.addEventListener("focus", refresh);
+    refreshDashboard();
+    const timer = setInterval(refreshDashboard, 30000);
+    const visible = () => {
+      if (document.visibilityState === "visible") refreshDashboard();
+    };
+    window.addEventListener("focus", refreshDashboard);
     document.addEventListener("visibilitychange", visible);
-    navigator.serviceWorker?.addEventListener("message", refresh);
+    navigator.serviceWorker?.addEventListener("message", refreshDashboard);
     return () => {
       clearInterval(timer);
-      window.removeEventListener("focus", refresh);
+      window.removeEventListener("focus", refreshDashboard);
       document.removeEventListener("visibilitychange", visible);
-      navigator.serviceWorker?.removeEventListener("message", refresh);
+      navigator.serviceWorker?.removeEventListener("message", refreshDashboard);
     };
-  }, [session, refresh]);
+  }, [session, refresh, refreshInbox]);
   useEffect(() => {
     const feedback = (e: MouseEvent) => {
       if (
         e.detail &&
-        (e.target as Element).closest(".c1-shell button,.c1-shell a") &&
+        e.target instanceof Element &&
+        e.target.closest(".c1-shell button:not(:disabled),.c1-shell a") &&
         !matchMedia("(prefers-reduced-motion: reduce)").matches
       )
         navigator.vibrate?.(9);
     };
+    const unlock = () => {
+      if (session && Object.values(soundChoices(session.user_id)).some(tone => tone !== "silent"))
+        void playTone("silent", true);
+    };
     document.addEventListener("click", feedback);
-    return () => document.removeEventListener("click", feedback);
-  }, []);
+    document.addEventListener("pointerdown", unlock);
+    document.addEventListener("keydown", unlock);
+    return () => {
+      document.removeEventListener("click", feedback);
+      document.removeEventListener("pointerdown", unlock);
+      document.removeEventListener("keydown", unlock);
+    };
+  }, [session]);
   useEffect(() => {
-    document.title = "Aksarben | Private callback queue";
+    const names: Record<string, string> = { "/admin": "Overview", "/admin/queue": "Queue", "/admin/calls": "Calls", "/admin/notifications": "Notifications", "/admin/history": "History", "/admin/reports": "Reports", "/admin/settings": "My Settings", "/admin/business": "Business Settings" };
+    document.title = `${names[location.pathname] || (location.pathname.startsWith("/admin/leads/") ? "Customer" : "Private dashboard")} | Aksarben`;
   }, [location.pathname]);
   if (location.pathname === "/admin/reset-password") return <Recovery />;
   if (checking)
@@ -446,71 +577,96 @@ export function App() {
         )}
       </>
     );
+  const navigation = (
+    <nav aria-label="Private dashboard" onClick={event => {
+      if ((event.target as HTMLElement).closest("a")) menu.current?.close();
+    }}>
+      <NavLink to="/admin" end><LayoutDashboard aria-hidden="true" />Overview</NavLink>
+      <NavLink to="/admin/queue"><ClipboardList aria-hidden="true" />Queue</NavLink>
+      <NavLink to="/admin/notifications"><Bell aria-hidden="true" />Notifications</NavLink>
+      <NavLink to="/admin/calls"><Phone aria-hidden="true" />Calls</NavLink>
+      <NavLink to="/admin/history"><History aria-hidden="true" />History</NavLink>
+      <NavLink to="/admin/reports"><BarChart3 aria-hidden="true" />Reports</NavLink>
+      <NavLink to="/admin/settings"><Settings2 aria-hidden="true" />My Settings</NavLink>
+      {session.role === "josh_admin" && <NavLink to="/admin/business"><Shield aria-hidden="true" />Admin</NavLink>}
+    </nav>
+  );
+  const signOut = (
+    <button type="button" disabled={signingOut} onClick={() => { setSigningOut(true); void api("logout", {}).then(() => {
+      updateBadge(0);
+      window.location.replace("/admin");
+    }).catch(cause => setSignOutError(cause.message)).finally(() => setSigningOut(false)); }}>
+      <LogOut size={18} /> {signingOut ? "Signing out…" : "Sign out"}
+    </button>
+  );
   return (
     <div className="c1-shell">
-      <Entrance attention={data?.attention ?? null} />
+      {["/admin", "/admin/"].includes(location.pathname) && <Entrance attention={attention ?? null} />}
       <a className="c1-skip" href="#c1-content">
-        Skip to queue
+        Skip to content
       </a>
-      <aside>
+      <aside className="c1-desktop-rail">
         <Link className="c1-brand" to="/admin">
-          <span data-brand-target>
-            <img src="/images/shield-logo.webp" alt="Aksarben Locksmiths" />
-          </span>
+          <span data-brand-target><img src="/images/shield-logo.webp" alt="Aksarben Locksmiths" /></span>
           <strong>Callback queue</strong>
         </Link>
-        <nav aria-label="Private dashboard">
-          <NavLink end to="/admin">
-            Queue
-          </NavLink>
-          <NavLink to="/admin/history">History</NavLink>
-          <NavLink to="/admin/reports">Reports</NavLink>
-          <NavLink to="/admin/settings">My Settings</NavLink>
-          {session.role === "josh_admin" && (
-            <NavLink to="/admin/business">Admin</NavLink>
-          )}
-        </nav>
+        {navigation}
         <p>{session.email}</p>
-        <button
-          onClick={() =>
-            void api("logout", {})
-              .then(() => {
-                updateBadge(0);
-                window.location.replace("/admin");
-              })
-              .catch((e) => setError(e.message))
-          }
-        >
-          <LogOut size={18} /> Sign out
-        </button>
+        {signOut}
+        {signOutError && <p role="alert" className="c1-dashboard-error">{signOutError}</p>}
       </aside>
+      <dialog
+        ref={menu}
+        id="c1-mobile-menu"
+        className="c1-mobile-menu"
+        aria-label="Dashboard navigation"
+        onClick={event => {
+          if (event.target === event.currentTarget) menu.current?.close();
+        }}
+        onClose={() => {
+          setMenuOpen(false);
+          opener.current?.focus();
+        }}
+      >
+        <div className="c1-mobile-panel">
+          <button type="button" onClick={() => menu.current?.close()} aria-label="Close navigation"><X aria-hidden="true" /></button>
+          {navigation}
+          {signOut}
+          {signOutError && <p role="alert" className="c1-dashboard-error">{signOutError}</p>}
+        </div>
+      </dialog>
       <div className="c1-workspace">
         <header className="c1-top">
-          <p>C1 · Aksarben Locksmiths</p>
-          {data && data.attention > 0 ? (
-            <Link
-              to="/admin"
-              aria-label={`${data.attention} pending attention items`}
-            >
-              <Bell size={20} /> {data.attention}
-            </Link>
-          ) : (
-            <span className="c1-muted">
-              {data ? "All caught up" : "Checking attention…"}
-            </span>
-          )}
+          <button ref={opener} type="button" className="c1-menu-button" aria-label="Open navigation"
+            aria-controls="c1-mobile-menu" aria-expanded={menuOpen}
+            onClick={() => { menu.current?.showModal(); setMenuOpen(true); }}>
+            <Menu aria-hidden="true" />
+          </button>
+          <Link to="/admin" className="c1-mobile-brand" aria-label="Callback queue">
+            <span data-brand-target><img src="/images/shield-logo.webp" alt="" /></span>
+          </Link>
+          <p className="c1-wordmark">Aksarben <span>Locksmiths</span></p>
+          <Backdrop />
+          <Link className="c1-bell" data-active={Boolean(attention)} to="/admin/notifications"
+            aria-label={attention ? `${attention} pending attention items` : "Notifications"}>
+            <Bell size={21} aria-hidden="true" />
+            {Boolean(attention) && <span aria-hidden="true">{attention}</span>}
+          </Link>
         </header>
-        <main id="c1-content">
-          <p role="alert">{error}</p>
-          {["/admin", "/admin/", "/admin/history", "/admin/reports"].includes(
+        <main id="c1-content" tabIndex={-1}>
+          {error && <p role="alert" className="c1-dashboard-error">{error}</p>}
+          {["/admin", "/admin/", "/admin/queue", "/admin/history", "/admin/reports"].includes(
             location.pathname,
           ) && (
-            <div className="c1-filters">
+            <div className="c1-global-filters">
+            <button type="button" className="c1-filter-toggle" aria-expanded={filtersExpanded} aria-controls="c1-global-filter-fields" onClick={() => setFiltersExpanded(value => !value)}>{filtersExpanded ? "Hide date and service filters" : "Show date and service filters"}{(from || to || service) ? " · Filters active" : ""}</button>
+            <div className="c1-filters" id="c1-global-filter-fields" hidden={!filtersExpanded}>
               <label>
                 From
                 <input
                   type="date"
                   value={from}
+                  max={to || undefined}
                   onChange={(e) => setFrom(e.target.value)}
                 />
               </label>
@@ -541,24 +697,30 @@ export function App() {
                   ))}
                 </select>
               </label>
-              <button onClick={refresh}>Refresh queue</button>
+              <button type="button" onClick={refresh} disabled={refreshing}>{refreshing ? "Refreshing…" : location.pathname === "/admin/reports" ? "Refresh reports" : location.pathname === "/admin/history" ? "Refresh history" : location.pathname === "/admin/queue" ? "Refresh queue" : "Refresh overview"}</button>
+              {lastUpdated && <p className="c1-last-updated" role="status">Updated {lastUpdated.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</p>}
+              {(from || to || service) && <button type="button" className="c1-secondary-action" onClick={() => { setFrom(""); setTo(""); setService(""); }}>Reset date and service filters</button>}
+            </div>
             </div>
           )}
           <Routes>
-            <Route
-              path="/admin"
-              element={<Queue data={data} refresh={refresh} />}
-            />
+            <Route path="/admin" element={<Overview data={data} attention={attention} />} />
+            <Route path="/admin/queue" element={<Queue data={data} refresh={() => { refresh(); refreshInbox(); }} />} />
             <Route
               path="/admin/history"
               element={<Queue data={data} history refresh={refresh} />}
             />
+            <Route path="/admin/calls" element={<Calls owner={session.role === "josh_admin"} />} />
             <Route path="/admin/reports" element={<Reports data={data} />} />
             <Route
               path="/admin/leads/:id"
-              element={<Detail updated={refresh} />}
+              element={<Detail updated={() => { refresh(); refreshInbox(); }} />}
             />
-            <Route path="/admin/settings" element={<Settings />} />
+            <Route path="/admin/settings" element={<Settings userId={session.user_id} />} />
+            <Route path="/admin/notifications" element={<Notifications inbox={inbox} error={inboxError} refresh={() => {
+              refresh();
+              refreshInbox();
+            }} />} />
             <Route
               path="/admin/business"
               element={
@@ -576,7 +738,7 @@ export function App() {
               element={
                 <section>
                   <h1>Record not found</h1>
-                  <Link to="/admin">Return to queue</Link>
+                  <Link to="/admin">Return to overview</Link>
                 </section>
               }
             />

@@ -5,7 +5,7 @@ const adminPath = (path) => path === "/admin" || path.startsWith("/admin/");
 const target = (payload) =>
   uuid.test(payload?.lead_id || "")
     ? `/admin/leads/${payload.lead_id}`
-    : "/admin";
+    : "/admin/notifications";
 self.addEventListener("install", (event) =>
   event.waitUntil(self.skipWaiting()),
 );
@@ -67,7 +67,7 @@ self.addEventListener("push", (event) => {
           ? "Aksarben notification test"
           : "Aksarben needs your attention",
         {
-          body: "Open your private queue to review.",
+          body: "Open your private dashboard to review.",
           icon: "/admin/icon-192.png",
           badge: "/admin/icon-192.png",
           tag: `c1-${uuid.test(payload.id || "") ? payload.id : "attention"}`,

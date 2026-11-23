@@ -56,7 +56,7 @@ export default function Recovery() {
         <label>New password<input type="password" autoComplete="new-password" required minLength={12} maxLength={256} value={password} onChange={(e)=>setPassword(e.target.value)} /></label>
         <label>Confirm new password<input type="password" autoComplete="new-password" required minLength={12} maxLength={256} value={confirm} onChange={(e)=>setConfirm(e.target.value)} /></label>
       </>}
-      <p role="alert">{error}</p><p role="status">{notice}</p>
+      {error && <p role="alert" className="c1-dashboard-error">{error}</p>}{notice && <p role="status" className="c1-action-notice">{notice}</p>}
       <button disabled={busy}>{busy ? "Please wait…" : stage === "request" ? "Email password reset link" : stage === "verify" ? "Continue with recovery link" : "Save new password"}</button>
     </form>}
     {stage === "update" && <button type="button" disabled={busy} onClick={()=>{setPassword("");setConfirm("");setStage("request");setError("");}}>Request a new link</button>}

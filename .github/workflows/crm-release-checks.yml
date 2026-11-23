@@ -1,0 +1,69 @@
+name: Premium CRM release checks
+
+on:
+  push:
+    branches: [premium-dashboard, work/luxury-ui-foundation-20261123]
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/admin/**"
+      - "netlify/functions/**"
+      - "public/admin/**"
+      - "supabase/migrations/**"
+      - "tests/crm/**"
+      - "scripts/crm/**"
+      - "playwright.config.ts"
+      - "package.json"
+      - "package-lock.json"
+      - "src/data/posts/**"
+      - ".github/workflows/crm-release-checks.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: crm-release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  crm:
+    name: CRM lint, database, browser and build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Lint and typecheck CRM
+        run: npm run check:crm
+      - name: CRM unit tests
+        run: npm run test:crm
+      - name: Embedded database policy tests
+        run: npm run test:crm:db:wasm
+      - name: Build and SEO checks
+        run: npm run build:ci
+      - name: Install Chromium, WebKit and dependencies
+        run: npx playwright install --with-deps chromium webkit
+      - name: Disposable PostgreSQL, authenticated browser, and rollback rehearsal
+        env:
+          CRM_TEST_AUTHENTICATED_BROWSER: "1"
+        run: npm run test:crm:http
+      - name: CRM browser tests
+        run: node scripts/crm/test-browser-isolated.mjs
+      - name: Upload browser traces on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crm-browser-failure-artifacts
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api, date, type Settings as SettingsData } from "./api";
+import { playTone, saveSoundChoices, soundChoices, tones, type SoundCategory } from "./sounds";
 function keyBytes(value: string): ArrayBuffer {
   const raw = atob(
     (value + "=".repeat((4 - (value.length % 4)) % 4))
@@ -9,14 +10,16 @@ function keyBytes(value: string): ArrayBuffer {
   );
   return Uint8Array.from(raw, (c) => c.charCodeAt(0)).buffer as ArrayBuffer;
 }
-export default function Settings() {
+export default function Settings({ userId }: { userId: string }) {
+  const [sounds, setSounds] = useState(() => soundChoices(userId));
   const [data, setData] = useState<SettingsData | null>(null);
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [label, setLabel] = useState("My device");
   const load = () => api<SettingsData>("settings").then(setData);
   useEffect(() => {
-    void load().catch((e) => setNotice(e.message));
+    void load().catch((e) => setNotice(e.message)).finally(() => setLoading(false));
   }, []);
   const act = async (fn: () => Promise<unknown>, message: string) => {
     setBusy(true);
@@ -41,6 +44,7 @@ export default function Settings() {
         throw new Error(
           "Push is not supported here. On iPhone, first add this app to the Home Screen.",
         );
+      if (!label.trim()) throw new Error("Enter a name for this device.");
       if (!data?.push_enabled || !data.vapid_public_key)
         throw new Error(
           "Push delivery is not enabled for this installation yet.",
@@ -57,17 +61,43 @@ export default function Settings() {
           userVisibleOnly: true,
           applicationServerKey: keyBytes(data.vapid_public_key),
         }));
-      await api("devices", { label, subscription: subscription.toJSON() });
+      await api("devices", { label: label.trim(), subscription: subscription.toJSON() });
     }, "This device is registered. Send a test and confirm that you saw it.");
   return (
-    <section>
+    <section className="c1-settings">
+      <p className="c1-eyebrow">Personal workspace</p>
       <h1>My Settings</h1>
-      <p>Device settings belong to your individual account.</p>
+      <p>Manage notification sounds, preferences and registered devices for your individual account.</p>
       <p><Link to="/admin/reset-password">Change my password using an email recovery link</Link></p>
-      <p role="status">{notice}</p>
+      {loading && <p role="status">Loading your device preferences…</p>}
+      {!loading && !data && <p className="c1-card" role="status">Device preferences are unavailable. Use Refresh status after access is restored.</p>}
+      {notice && <p role="status">{notice}</p>}
+      <fieldset className="c1-card c1-sound-settings">
+        <legend>In-app notification sounds</legend>
+        <p>Saved on this device for your account. Background notification sounds follow your device settings.</p>
+        {Object.entries({ inquiry: "Inquiries", urgent: "Urgent callbacks", staff: "Staff updates" }).map(([key, label]) => {
+          const category = key as SoundCategory;
+          return <div className="c1-sound-option" key={category}>
+            <label><span id={`c1-sound-${category}`}>{label}</span>
+              <select aria-labelledby={`c1-sound-${category}`} value={sounds[category]} onChange={event => {
+                const next = { ...sounds, [category]: event.target.value as keyof typeof tones };
+                if (saveSoundChoices(userId, next)) {
+                  setSounds(next);
+                  setNotice("Sound preferences saved on this device.");
+                  void playTone("silent", true);
+                } else setNotice("This browser could not save the sound preference.");
+              }}>
+                {Object.entries(tones).map(([value, title]) => <option key={value} value={value}>{title}</option>)}
+              </select>
+            </label>
+            <button type="button" onClick={() => void playTone(sounds[category], true)}
+              disabled={sounds[category] === "silent"} aria-label={`Preview ${label.toLowerCase()} sound`}>Preview</button>
+          </div>;
+        })}
+      </fieldset>
       {data && (
         <>
-          <fieldset disabled={busy}>
+          <fieldset className="c1-card c1-settings-preferences" disabled={busy}>
             <legend>Notify me about</legend>
             {(["inquiries", "handoffs", "follow_ups"] as const).map((key) => (
               <label className="c1-check" key={key}>
@@ -108,17 +138,19 @@ export default function Settings() {
               is disabled.
             </p>
           </section>
-          <h2>My Devices</h2>
+          <h2>My Devices <span className="c1-device-count">{data.devices.length}</span></h2>
+          <p>Device names help you identify where alerts were registered. Remove devices you no longer use.</p>
           <label>
             Device name
             <input
               maxLength={80}
+              required
               value={label}
               onChange={(e) => setLabel(e.target.value)}
             />
           </label>
           <div className="c1-actions">
-            <button disabled={busy} onClick={() => void enroll()}>
+            <button disabled={busy || !label.trim()} onClick={() => void enroll()}>
               Enable Notifications / refresh device
             </button>
             <button
@@ -134,6 +166,7 @@ export default function Settings() {
               been enabled.
             </p>
           )}
+          {!data.devices.length && <p className="c1-card">No devices registered yet. Register this device to receive supported push notifications.</p>}
           {data.devices.map((device) => (
             <article className="c1-card" key={device.id}>
               <h3>{device.label}</h3>

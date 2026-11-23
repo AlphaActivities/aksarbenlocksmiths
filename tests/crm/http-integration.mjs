@@ -1,6 +1,11 @@
 // Disposable PostgREST + PostgreSQL only. No live provider/database targets are contacted.
 import assert from "node:assert/strict";
 import { createHmac, randomUUID } from "node:crypto";
+import { execFileSync } from "node:child_process";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 import { createHandler } from "../../netlify/functions/crm.mjs";
 import { TARGET_REF, PROJECT } from "../../netlify/functions/lib/core.mjs";
 const base = process.env.CRM_TEST_REST_URL;
@@ -17,16 +22,30 @@ const jwt = (claims) => {
 };
 const svc = jwt({ role: "service_role" }),
   anon = jwt({ role: "anon" });
+const owner = "10000000-0000-4000-8000-000000000001";
 const staff = "10000000-0000-4000-8000-000000000002",
   outsider = "10000000-0000-4000-8000-000000000003",
   client = "10000000-0000-4000-8000-000000000004";
 const tokens = new Map(
-  [staff, outsider, client].map((id) => [
+  [owner, staff, outsider, client].map((id) => [
     jwt({ role: "authenticated", sub: id }),
     id,
   ]),
 );
 const tokenFor = (id) => [...tokens].find(([, v]) => v === id)[0];
+const people = new Map(Object.entries({ owner, staff, outsider, client }).map(
+  ([role, id]) => [id, { id, email: `${role}@example.invalid` }],
+));
+const fixturePassword = "synthetic-local-stage-password";
+const refreshTokens = new Map();
+let refreshed = 0;
+function sessionFor(person) {
+  const refresh_token = randomUUID();
+  refreshTokens.set(refresh_token, person);
+  return Response.json({
+    access_token: tokenFor(person.id), refresh_token, expires_in: 600, user: person,
+  });
+}
 const serviceHeaders = {
   Authorization: `Bearer ${svc}`,
   "Content-Type": "application/json",
@@ -42,19 +61,39 @@ const rest = async (path, method = "GET", body) => {
   return text ? JSON.parse(text) : null;
 };
 await rest("crm_memberships", "POST", [
+  { project_id: PROJECT, user_id: owner, role: "josh_admin" },
   { project_id: PROJECT, user_id: staff, role: "staff" },
   { project_id: PROJECT, user_id: client, role: "client" },
 ]);
 let providerReads = 0;
 const fetchLocal = async (url, opts = {}) => {
-  if (url.includes("/auth/v1/user")) {
+  const target = new URL(url);
+  assert.equal(target.origin, `https://${TARGET_REF}.supabase.co`, "unexpected fixture API origin");
+  if (target.pathname === "/auth/v1/user") {
     const token = opts.headers.Authorization?.replace("Bearer ", "");
-    const id = tokens.get(token);
-    return id
-      ? Response.json({ id, email: "qa@example.invalid" })
+    const person = people.get(tokens.get(token));
+    return person
+      ? Response.json(person)
       : Response.json({}, { status: 401 });
   }
-  if (url.includes("/rest/v1/"))
+  if (target.pathname === "/auth/v1/token") {
+    const body = JSON.parse(opts.body);
+    if (target.searchParams.get("grant_type") === "password") {
+      const person = [...people.values()].find(({ email }) => email === body.email);
+      if (person && body.password === fixturePassword) return sessionFor(person);
+    }
+    if (target.searchParams.get("grant_type") === "refresh_token") {
+      const person = refreshTokens.get(body.refresh_token);
+      if (person) {
+        refreshTokens.delete(body.refresh_token);
+        refreshed++;
+        return sessionFor(person);
+      }
+    }
+    return Response.json({}, { status: 401 });
+  }
+  if (target.pathname === "/auth/v1/logout") return new Response(null, { status: 204 });
+  if (target.pathname.startsWith("/rest/v1/"))
     return fetch(
       url.replace(`https://${TARGET_REF}.supabase.co/rest/v1`, base),
       opts,
@@ -62,16 +101,15 @@ const fetchLocal = async (url, opts = {}) => {
   providerReads++;
   throw new Error("External service attempted during local integration test");
 };
-const handler = createHandler({
-  env: {
-    SUPABASE_URL: `https://${TARGET_REF}.supabase.co`,
-    SUPABASE_ANON_KEY: anon,
-    SUPABASE_SERVICE_ROLE_KEY: svc,
-  },
-  fetch: fetchLocal,
-});
-const invoke = async (path, { user = staff, method = "GET", body } = {}) =>
-  handler({
+const crmEnv = {
+  SUPABASE_URL: `https://${TARGET_REF}.supabase.co`,
+  SUPABASE_ANON_KEY: anon,
+  SUPABASE_SERVICE_ROLE_KEY: svc,
+};
+const handler = createHandler({ env: crmEnv, fetch: fetchLocal });
+const invoke = async (path, { user = staff, method = "GET", body, queryStringParameters } = {}, handlerUnderTest = handler) =>
+  handlerUnderTest({
+    queryStringParameters,
     httpMethod: method,
     path: "/api/crm/" + path,
     headers: {
@@ -103,6 +141,22 @@ assert.equal(r.statusCode, 200);
 const queue = JSON.parse(r.body);
 assert.equal(queue.attention, 1);
 assert.equal(queue.leads.length, 1);
+const callsResponse = await invoke("calls");
+assert.equal(callsResponse.statusCode, 200);
+assert.deepEqual(JSON.parse(callsResponse.body), { connected: false, calls: [], next: null });
+assert.equal((await invoke("calls", { user: outsider })).statusCode, 403);
+for (const user of [staff, client, outsider]) {
+  assert.equal((await invoke("calls/sync", {
+    user, method: "POST", body: { day: "2025-11-20" },
+  })).statusCode, 403);
+}
+const inboxResponse = await invoke("notifications");
+assert.equal(inboxResponse.statusCode, 200);
+const inbox = JSON.parse(inboxResponse.body);
+assert.equal(inbox.attention, queue.attention);
+assert.equal(inbox.active[0].lead_id, queue.leads[0].id);
+assert.deepEqual(inbox.history, []);
+assert.equal((await invoke("notifications", { user: outsider })).statusCode, 403);
 const lead = queue.leads[0];
 r = await invoke(`leads/${lead.id}`, {
   method: "POST",
@@ -154,6 +208,102 @@ const forged = await fetch(`${base}/crm_leads`, {
 });
 assert.equal(forged.status, 401);
 assert.equal(providerReads, 0);
+
+const day = "2025-11-20", did = "+15315550100";
+const call = {
+  description: "Inbound DID", destination_type: "IN:USA", destination: "5315550100",
+  callerid: "+14025550101", uniqueid: "synthetic-http-call", date: day + " 12:00:00",
+  disposition: "ANSWERED", seconds: "17",
+};
+const voiceHandler = createHandler({
+  env: { ...crmEnv, CRM_VOIP_ENABLED: "true", VOIP_MS_USERNAME: "synthetic",
+    VOIP_MS_API_PASSWORD: "fixture", VOIP_MS_BUSINESS_DID: did, VOIP_MS_INBOUND_CALL_TYPE: "synthetic-inbound" },
+  fetch: async (url, opts) => {
+    if (new URL(url).origin !== "https://voip.ms") return fetchLocal(url, opts);
+    const params = new URL(url).searchParams;
+    assert.equal(params.get("method"), "getCDR");
+    assert.equal(params.get("calltype"), "synthetic-inbound");
+    assert.equal(params.get("date_from"), day);
+    assert.equal(params.get("date_to"), day);
+    return Response.json({ status: "success", cdr: [call, { ...call, destination: "4025550111" }] });
+  },
+});
+const countsBefore = await invoke("queue");
+for (const inserted of [1, 0]) {
+  const result = await invoke("calls/sync", { user: owner, method: "POST", body: { day } }, voiceHandler);
+  assert.equal(result.statusCode, 200);
+  assert.deepEqual(JSON.parse(result.body), { inserted, duplicates: 1 - inserted, day });
+}
+const calls = JSON.parse((await invoke("calls")).body).calls;
+assert.equal(calls.length, 1);
+assert.equal(calls[0].related_lead_id, lead.id);
+assert.equal(calls[0].historical, true);
+assert.deepEqual(JSON.parse((await invoke("queue")).body), JSON.parse(countsBefore.body));
+assert.equal(providerReads, 0);
+
+// Equal timestamps exercise the secondary cursor key across a customer history page.
+const fixtureCalls = Array.from({ length: 130 }, (_, index) => ({
+  provider_call_id: `fixture.page.${String(index).padStart(3, "0")}`,
+  occurred_at: day + "T14:00:00Z", direction: index % 2 ? "outgoing" : "incoming",
+  caller_phone: index % 2 ? did : call.callerid, dialed_phone: index % 2 ? call.callerid : did,
+  business_did: did, disposition: "NO ANSWER", historical: true, duration_seconds: 0,
+}));
+for (const inserted of [130, 0]) {
+  const result = await rest("rpc/crm_ingest_voip", "POST", { p_day: day, p_calls: fixtureCalls });
+  assert.equal(result.inserted, inserted);
+}
+async function callPage(queryStringParameters) {
+  const response = await invoke("calls", { queryStringParameters });
+  assert.equal(response.statusCode, 200);
+  return JSON.parse(response.body);
+}
+const first = await callPage({ lead: lead.id });
+const second = await callPage({ lead: lead.id, ...first.next });
+assert.equal(first.calls.length, 100);
+assert.equal(second.calls.length, 31);
+assert.equal(second.next, null);
+assert.equal(new Set([...first.calls, ...second.calls].map(c => c.provider_call_id)).size, 131);
+assert.equal((await callPage({ lead: lead.id, direction: "outgoing" })).calls.length, 65);
+assert.equal((await callPage({ lead: lead.id, outcome: "missed" })).calls.length, 65);
+assert.deepEqual(JSON.parse((await invoke("queue")).body), JSON.parse(countsBefore.body));
+
+const previousRelease = "72a6d6a118086308a11b755ca8ab1b6895535222";
+const rollbackDir = await mkdtemp(join(tmpdir(), "c1-crm-rollback-"));
+try {
+  const archive = execFileSync("git", ["archive", previousRelease, "netlify/functions"]);
+  execFileSync("tar", ["-x", "-C", rollbackDir], { input: archive });
+  const { createHandler: previousHandler } = await import(
+    pathToFileURL(join(rollbackDir, "netlify/functions/crm.mjs")).href
+  );
+  const rollback = previousHandler({ env: crmEnv, fetch: fetchLocal });
+  for (const user of [owner, staff, client, outsider]) {
+    for (const path of ["queue", "attention", "business"]) {
+      const before = await invoke(path, { user }, handler);
+      const after = await invoke(path, { user }, rollback);
+      assert.equal(after.statusCode, before.statusCode, `rollback status for ${path}`);
+      assert.deepEqual(JSON.parse(after.body), JSON.parse(before.body), `rollback data for ${path}`);
+    }
+  }
+  const note = "Synthetic result written after restoring the previous application";
+  const oldWrite = await invoke(`leads/${lead.id}`, {
+    method: "POST", body: { action: "note", note, version: detail.lead.version, request_key: randomUUID() },
+  }, rollback);
+  assert.equal(oldWrite.statusCode, 200);
+  assert.ok(JSON.parse((await invoke(`leads/${lead.id}`)).body).events.some(event => event.note === note));
+  assert.deepEqual((await callPage({ lead: lead.id })).calls, first.calls);
+  console.log("PASS: previous production CRM handler can read and write with the additive schema retained");
+} finally {
+  await rm(rollbackDir, { recursive: true, force: true });
+}
+
+if (process.env.CRM_TEST_AUTHENTICATED_BROWSER === "1") {
+  const { authenticateBrowser } = await import("./authenticated-browser.mjs");
+  await authenticateBrowser({
+    handler: createHandler({ env: { ...crmEnv, NETLIFY_DEV: "true" }, fetch: fetchLocal }),
+    fixturePassword,
+    refreshCount: () => refreshed,
+  });
+}
 console.log(
   "PASS: HTTP API → signed PostgREST JWT → real RLS/RPC; wrong-project/role, replay, callback, settings isolation, forbidden direct ingest and forged JWT",
 );
