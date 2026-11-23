@@ -45,6 +45,7 @@ export default function Detail({ updated }: { updated: () => void }) {
       updated();
       setKey(crypto.randomUUID());
       setNote("");
+      if (action === "schedule") setFollow("");
       setNotice("Customer activity saved.");
     } catch (e) {
       setNotice((e as Error).message);
@@ -54,6 +55,8 @@ export default function Detail({ updated }: { updated: () => void }) {
   };
   const [activitySearch, setActivitySearch] = useState("");
   const [activitySort, setActivitySort] = useState<"newest" | "oldest">("newest");
+  const [refreshing, setRefreshing] = useState(false);
+  const refreshRecord = async () => { setRefreshing(true); setNotice(""); try { await load(); } catch (cause) { setNotice((cause as Error).message); } finally { setRefreshing(false); } };
   const filteredEvents = (data?.events.filter(event => `${event.kind} ${event.note || ""}`.toLowerCase().includes(activitySearch.toLowerCase())) ?? []).sort((a,b) => activitySort === "newest" ? Date.parse(b.happened_at) - Date.parse(a.happened_at) : Date.parse(a.happened_at) - Date.parse(b.happened_at));
   const l = data?.lead,
     phone = l && dial(l.phone);
@@ -61,12 +64,12 @@ export default function Detail({ updated }: { updated: () => void }) {
     <section>
       <div className="c1-detail-toolbar"><Link to="/admin/queue">Back to queue</Link><Link to="/admin/history">View history</Link></div>
       {loading && <p role="status">Loading customer record…</p>}
-      {notice && <p role="status">{notice}</p>}
+      {notice && <p role="status" className="c1-action-notice">{notice}</p>}
       <button
-        disabled={busy}
-        onClick={() => void load().catch((e) => setNotice(e.message))}
+        disabled={busy || refreshing}
+        onClick={() => void refreshRecord()}
       >
-        Refresh record
+        {refreshing ? "Refreshing record…" : "Refresh record"}
       </button>
       {!loading && !l && !notice && <p className="c1-card" role="status">This customer record is unavailable.</p>}
       {l && (
