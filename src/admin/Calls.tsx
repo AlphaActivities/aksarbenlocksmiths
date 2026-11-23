@@ -19,6 +19,8 @@ type CallLog = { connected: boolean; calls: Call[]; next?: { before: string; id:
 
 export default function Calls({ owner }: { owner: boolean }) {
   const [params, setParams] = useSearchParams();
+  const page = params.get("before") && params.get("id") ? "Older call records" : "Most recent call records";
+  function resetFilters() { const next = new URLSearchParams(); if (params.get("lead")) next.set("lead", params.get("lead")!); setParams(next); }
   function filter(key: string, value: string) {
     const next = new URLSearchParams(params);
     next.delete("before");
@@ -42,6 +44,7 @@ export default function Calls({ owner }: { owner: boolean }) {
         {["ANSWERED","NO ANSWER","BUSY","FAILED"].map(value => <option key={value}>{value}</option>)}
       </select></label>
     </fieldset>
+    <div className="c1-call-navigation"><span role="status">{page}</span><button type="button" onClick={resetFilters}>Clear filters and return to newest</button></div>
     <CallPage key={params.toString()} query={params.toString()} owner={owner} />
   </section>;
 }
@@ -85,7 +88,7 @@ function CallPage({ owner, query }: { owner: boolean; query: string }) {
       {error && <p role="alert">{error}</p>}
       <p role="status">{message || (!log && !error ? "Loading call records…" : "")}</p>
       {log && <>
-        {!log.connected && log.calls.length > 0 && <p>VoIP.ms is not connected.</p>}
+        {!log.connected && <p className="c1-provider-notice" role="status">VoIP.ms is not connected. Only previously imported call records, if any, are displayed.</p>}
         {log.connected && owner && <form onSubmit={event => { event.preventDefault(); void sync(); }}>
           <label>Provider date (UTC)<input type="date" required max={new Date().toISOString().slice(0, 10)}
             value={day} onChange={event => setDay(event.target.value)} /></label>
@@ -95,7 +98,7 @@ function CallPage({ owner, query }: { owner: boolean; query: string }) {
           <span className="c1-call-emblem"><PhoneIncoming aria-hidden="true" /></span>
           <div><h2>{query ? "No calls match these filters." : "No imported calls."}</h2><p>{log.connected ? "Call records will appear here after an authorized import." : "VoIP.ms is not connected."}</p></div>
         </div> : (
-          <><ul className="c1-alert-list" aria-label="Imported calls">
+          <><p className="c1-call-page-count">Showing {log.calls.length} call records on this page.</p><ul className="c1-alert-list" aria-label="Imported calls">
             {log.calls.map(call => (
               <li key={call.provider_call_id} className="c1-card">
                 <h2>{call.direction === "outgoing" ? call.dialed_phone ?? "Destination unavailable" : call.caller_phone ?? "Caller ID unavailable"}</h2>
@@ -107,7 +110,7 @@ function CallPage({ owner, query }: { owner: boolean; query: string }) {
                 {call.related_lead_id ? <Link to={`/admin/leads/${call.related_lead_id}`}>Open matching lead</Link> : <p>Unmatched caller</p>}
               </li>
             ))}
-          </ul>{log.next && <Link to={`?${next}`}>Older calls</Link>}</>
+          </ul>{log.next && <Link className="c1-call-next" to={`?${next}`}>View older calls</Link>}</>
         )}
       </>}
     </div>
