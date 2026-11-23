@@ -119,8 +119,9 @@ function Manual({ saved }: { saved: () => void }) {
     }
   };
   return (
-    <details className="c1-card">
+    <details className="c1-card c1-manual">
       <summary>Add a callback manually</summary>
+      <p>Record a customer request when it arrives outside the website. Required fields are marked by the form.</p>
       <form onSubmit={(e) => void submit(e)}>
         <label>
           Name
@@ -167,7 +168,7 @@ function Manual({ saved }: { saved: () => void }) {
           <textarea name="message" maxLength={6000} />
         </label>
         <p role="status">{notice}</p>
-        <button disabled={busy}>Save callback</button>
+        <button disabled={busy}>{busy ? "Saving callback…" : "Save callback"}</button>
       </form>
     </details>
   );
@@ -355,12 +356,13 @@ function Business() {
   return (
     <section>
       <h1>Business settings</h1>
+      <p className="c1-eyebrow">Organization administration</p>
       <p>C1 · Mike Aksarben Locksmiths</p>
       <p>
         Account roles and delivery switches are managed on the server. Never
         enter credentials into this dashboard.
       </p>
-      <p role="status">{result}</p>
+      <p className="c1-card c1-business-status" role="status">{result || "Loading business configuration…"}</p>
       <button
         disabled={busy}
         onClick={() => {
