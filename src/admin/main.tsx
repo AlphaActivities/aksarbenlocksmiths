@@ -214,7 +214,7 @@ function Queue({
           title: "Scheduled requests",
           kind: "scheduled",
           rows:
-            leads?.filter(
+            visibleLeads?.filter(
               (l) =>
                 l.urgency !== "urgent" &&
                 l.follow_up_at &&
