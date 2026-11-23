@@ -38,6 +38,7 @@ export default function Notifications({ inbox, error, refresh }: {
 
   const filteredRows = rows.filter(row => [row.title, row.name, row.category].some(value => value.toLowerCase().includes(search.trim().toLowerCase())));
   const canLoadOlder = history && hasMore && inbox?.history.length === 50;
+  const counts = { Active: inbox?.attention ?? 0, Urgent: active.filter(row => row.urgent).length, Inquiries: active.filter(row => row.category === "inquiry").length, "Follow-ups": active.filter(row => row.category === "follow_up").length, "Staff activity": (inbox?.history ?? []).filter(row => row.category === "staff").length + older.filter(row => row.category === "staff").length, History: (inbox?.history ?? []).length + older.length };
   const emptyMessage = {
     Active: "No customer work needs attention.",
     Urgent: "No urgent callbacks are waiting.",
@@ -72,7 +73,7 @@ export default function Notifications({ inbox, error, refresh }: {
       <div className="c1-inbox-filters" role="group" aria-label="Filter notifications">
         {filters.map(label => (
           <button key={label} type="button" aria-pressed={filter === label} onClick={() => setFilter(label)}>
-            {label}{label === "Active" && inbox ? ` (${inbox.attention})` : ""}
+            {label}{inbox ? ` (${counts[label]})` : ""}
           </button>
         ))}
       </div>
@@ -81,6 +82,7 @@ export default function Notifications({ inbox, error, refresh }: {
       {pageError && <p role="alert">{pageError}</p>}
       {!inbox && !error && <p role="status">Loading notifications…</p>}
       {inbox && !filteredRows.length && <p className="c1-card" role="status">{search ? "No notifications match your search in the loaded records." : emptyMessage}</p>}
+      {inbox && <p className="c1-inbox-summary" role="status">Showing {filteredRows.length} notifications{search ? " matching your search" : ""}.</p>}
       <ul className="c1-alert-list">
         {filteredRows.map(row => {
           const Icon = row.urgent ? ShieldAlert : icons[row.category];
