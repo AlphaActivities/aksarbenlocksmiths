@@ -28,6 +28,7 @@ export default function Notifications({ inbox, error, refresh }: {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [pageError, setPageError] = useState("");
+  const [expanded, setExpanded] = useState(false);
   const history = filter === "History" || filter === "Staff activity";
   const active = inbox?.active ?? [];
   const rows = history
@@ -85,6 +86,9 @@ export default function Notifications({ inbox, error, refresh }: {
       {!inbox && !error && <p role="status">Loading notifications…</p>}
       {inbox && !filteredRows.length && <p className="c1-card" role="status">{search ? "No notifications match your search in the loaded records." : emptyMessage}</p>}
       {inbox && <p className="c1-inbox-summary" role="status">Showing {filteredRows.length} notifications{search ? " matching your search" : ""}.</p>}
+      {search && <button type="button" className="c1-secondary-action" onClick={() => setSearch("")}>Clear notification search</button>}
+      {filter === "History" && inbox && <button type="button" className="c1-secondary-action" aria-expanded={expanded} onClick={() => setExpanded(value => !value)}>{expanded ? "Hide history explanation" : "About notification history"}</button>}
+      {expanded && filter === "History" && <p className="c1-card">Notification history records previously handled activity. Active attention counts are tracked separately.</p>}
       <ul className="c1-alert-list">
         {filteredRows.map(row => {
           const Icon = row.urgent ? ShieldAlert : icons[row.category];
