@@ -56,6 +56,7 @@ function CallPage({ owner, query }: { owner: boolean; query: string }) {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState<"newest" | "oldest">("newest");
   const path = query ? `calls?${query}` : "calls";
   useEffect(() => {
     let active = true;
@@ -79,7 +80,7 @@ function CallPage({ owner, query }: { owner: boolean; query: string }) {
     }
   }
 
-  const visibleCalls = log?.calls.filter(call => [call.caller_phone, call.dialed_phone, call.business_did, call.disposition].some(value => (value || "").toLowerCase().includes(search.trim().toLowerCase()))) ?? [];
+  const visibleCalls = (log?.calls.filter(call => [call.caller_phone, call.dialed_phone, call.business_did, call.disposition].some(value => (value || "").toLowerCase().includes(search.trim().toLowerCase()))) ?? []).sort((a,b) => sort === "newest" ? Date.parse(b.occurred_at) - Date.parse(a.occurred_at) : Date.parse(a.occurred_at) - Date.parse(b.occurred_at));
   const next = new URLSearchParams(query);
   if (log?.next) {
     next.set("before", log.next.before);
@@ -97,6 +98,7 @@ function CallPage({ owner, query }: { owner: boolean; query: string }) {
           <button disabled={busy}>{busy ? "Importing…" : "Import call records"}</button>
         </form>}
         <label className="c1-call-search">Search this page<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Phone number or outcome" /></label>
+        <label className="c1-call-search">Sort this page<select value={sort} onChange={event => setSort(event.target.value as "newest" | "oldest")}><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select></label>
         {visibleCalls.length === 0 ? <div className="c1-call-empty c1-card">
           <span className="c1-call-emblem"><PhoneIncoming aria-hidden="true" /></span>
           <div><h2>{search ? "No calls match your search on this page." : query ? "No calls match these filters." : "No imported calls."}</h2><p>{log.connected ? "Call records will appear here after an authorized import." : "VoIP.ms is not connected."}</p></div>
