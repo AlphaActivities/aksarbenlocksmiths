@@ -95,7 +95,6 @@ export default function Notifications({ inbox, error, refresh }: {
       {(search || urgentOnly) && <button type="button" className="c1-secondary-action" onClick={() => { setSearch(""); setUrgentOnly(false); }}>Clear notification filters</button>}
       {filter === "History" && inbox && <button type="button" className="c1-secondary-action" aria-expanded={expanded} onClick={() => setExpanded(value => !value)}>{expanded ? "Hide history explanation" : "About notification history"}</button>}
       {expanded && filter === "History" && <p className="c1-card">Notification history records previously handled activity. Active attention counts are tracked separately.</p>}
-      {filteredRows.length > pageSize && <button type="button" className="c1-secondary-action" onClick={() => setPageSize(value => value + 25)}>Show more loaded notifications ({filteredRows.length - pageSize} remaining)</button>}
       <ul className="c1-alert-list">
         {filteredRows.slice(0, pageSize).map(row => {
           const Icon = row.urgent ? ShieldAlert : icons[row.category];
@@ -112,6 +111,7 @@ export default function Notifications({ inbox, error, refresh }: {
           );
         })}
       </ul>
+      {filteredRows.length > pageSize && <button type="button" className="c1-secondary-action" onClick={() => setPageSize(value => value + 25)}>Show more loaded notifications ({filteredRows.length - pageSize} remaining)</button>}
       {canLoadOlder &&
         <button onClick={() => void loadOlder()} disabled={loading}>{loading ? "Loading…" : "Load older activity"}</button>}
     </section>
