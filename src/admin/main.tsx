@@ -399,6 +399,8 @@ export function App() {
     [checking, setChecking] = useState(true),
     [data, setData] = useState<Snapshot | null>(null),
     [error, setError] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [from, setFrom] = useState(""),
     [to, setTo] = useState(""),
     [service, setService] = useState("");
@@ -414,6 +416,7 @@ export function App() {
   }, []);
   const refresh = useCallback(() => {
     const sequence = ++queueSequence.current;
+    setRefreshing(true);
     const q = new URLSearchParams();
     if (from) q.set("from", new Date(`${from}T00:00:00`).toISOString());
     if (to) {
@@ -426,11 +429,13 @@ export function App() {
       .then((r) => {
         if (sequence !== queueSequence.current) return;
         setData(r);
+        setLastUpdated(new Date());
         setError("");
       })
       .catch((e) => {
         if (sequence === queueSequence.current) setError(e.message);
-      });
+      })
+      .finally(() => { if (sequence === queueSequence.current) setRefreshing(false); });
   }, [from, to, service]);
   const refreshInbox = useCallback(() => {
     if (!session) return;
@@ -533,7 +538,8 @@ export function App() {
     };
   }, [session]);
   useEffect(() => {
-    document.title = "Aksarben | Private callback queue";
+    const names: Record<string, string> = { "/admin": "Overview", "/admin/queue": "Queue", "/admin/calls": "Calls", "/admin/notifications": "Notifications", "/admin/history": "History", "/admin/reports": "Reports", "/admin/settings": "My Settings", "/admin/business": "Business Settings" };
+    document.title = `${names[location.pathname] || (location.pathname.startsWith("/admin/leads/") ? "Customer" : "Private dashboard")} | Aksarben`;
   }, [location.pathname]);
   if (location.pathname === "/admin/reset-password") return <Recovery />;
   if (checking)
@@ -630,7 +636,7 @@ export function App() {
           </Link>
         </header>
         <main id="c1-content" tabIndex={-1}>
-          <p role="alert">{error}</p>
+          {error && <p role="alert" className="c1-dashboard-error">{error}</p>}
           {["/admin", "/admin/", "/admin/queue", "/admin/history", "/admin/reports"].includes(
             location.pathname,
           ) && (
@@ -670,7 +676,8 @@ export function App() {
                   ))}
                 </select>
               </label>
-              <button onClick={refresh}>{location.pathname === "/admin/reports" ? "Refresh reports" : location.pathname === "/admin/history" ? "Refresh history" : location.pathname === "/admin/queue" ? "Refresh queue" : "Refresh overview"}</button>
+              <button type="button" onClick={refresh} disabled={refreshing}>{refreshing ? "Refreshing…" : location.pathname === "/admin/reports" ? "Refresh reports" : location.pathname === "/admin/history" ? "Refresh history" : location.pathname === "/admin/queue" ? "Refresh queue" : "Refresh overview"}</button>
+              {lastUpdated && <p className="c1-last-updated" role="status">Updated {lastUpdated.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</p>}
             </div>
           )}
           <Routes>
