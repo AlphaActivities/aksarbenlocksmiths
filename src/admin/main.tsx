@@ -349,14 +349,15 @@ function Reports({ data }: { data: Snapshot | null }) {
 function Business() {
   const [result, setResult] = useState(""),
     [busy, setBusy] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [failure, setFailure] = useState("");
   useEffect(() => {
     void api<{ intake_enabled: boolean; push_enabled: boolean }>("business")
-      .then((r) =>
-        setResult(
-          `Website sync ${r.intake_enabled ? "enabled" : "disabled"} · Push ${r.push_enabled ? "enabled" : "disabled"} · VoIP deferred`,
-        ),
-      )
-      .catch((e) => setResult(e.message));
+      .then((r) => {
+        setResult(`Website sync ${r.intake_enabled ? "enabled" : "disabled"} · Push ${r.push_enabled ? "enabled" : "disabled"} · VoIP deferred`);
+        setLoaded(true);
+      })
+      .catch((e) => { setFailure(e.message); setLoaded(true); });
   }, []);
   return (
     <section>
@@ -367,11 +368,15 @@ function Business() {
         Account roles and delivery switches are managed on the server. Never
         enter credentials into this dashboard.
       </p>
-      <p className="c1-card c1-business-status" role="status">{result || "Loading business configuration…"}</p>
+      {!loaded && <p className="c1-card c1-business-status" role="status">Loading business configuration…</p>}
+      {result && <p className="c1-card c1-business-status" role="status">{result}</p>}
+      {failure && <p className="c1-dashboard-error" role="alert">{failure}</p>}
       <button
         disabled={busy}
         onClick={() => {
+          if (!window.confirm("Reconcile website submissions now? Existing records will be preserved.")) return;
           setBusy(true);
+          setFailure("");
           void api<{ status: string; inserted?: number; duplicates?: number }>(
             "reconcile",
             {},
@@ -381,11 +386,11 @@ function Business() {
                 `Sync ${r.status}. New: ${r.inserted ?? 0}; duplicates: ${r.duplicates ?? 0}.`,
               ),
             )
-            .catch((e) => setResult(e.message))
+            .catch((e) => setFailure(e.message))
             .finally(() => setBusy(false));
         }}
       >
-        Reconcile website submissions
+        {busy ? "Reconciling submissions…" : "Reconcile website submissions"}
       </button>
       <Team />
     </section>
@@ -410,6 +415,7 @@ export function App() {
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [filtersExpanded, setFiltersExpanded] = useState(true);
+
   const [signOutError, setSignOutError] = useState("");
   const [from, setFrom] = useState(""),
     [to, setTo] = useState(""),
