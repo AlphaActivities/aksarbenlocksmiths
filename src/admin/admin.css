@@ -708,7 +708,20 @@ body:has(.c1-shell) { isolation: isolate; background: #09111e; }
 .c1-shell nav a svg { flex: none; width: 18px; height: 18px; stroke-width: 1.7; }
 .c1-shell nav a[aria-current="page"] { background: linear-gradient(100deg,#ad874536,#233043); color: #ffe3ad; }
 .c1-top { column-gap: clamp(6px, 1vw, 14px); background: #101d2eef; border-color: var(--line); }
-.c1-shell .c1-motion { display: inline-flex; align-items: center; justify-content: center; gap: .3rem; min-width: 44px; min-height: 44px; padding: 0 .48rem; background: #182739; color: #ead6af; border: 1px solid #74674f; border-radius: .65rem; font-size: .75rem; }
+/* Film control retired: the wallpaper is decorative and plays automatically. */
+.c1-top .c1-mobile-brand { min-width: 0; }
+.c1-top .c1-wordmark { min-width: 0; overflow-wrap: normal; }
+.c1-top .c1-bell { flex-shrink: 0; }
+@media (max-width: 480px) {
+  .c1-top { gap: 6px; padding-inline: 10px; }
+  .c1-top .c1-wordmark { flex: 1 1 auto; font-size: clamp(.88rem, 3.9vw, 1.05rem); }
+  .c1-top .c1-wordmark span { font-size: clamp(.56rem, 2.6vw, .68rem); }
+  .c1-shell .c1-menu-button { width: 42px; height: 42px; }
+  .c1-top .c1-mobile-brand { width: 36px; height: 42px; }
+  .c1-mobile-brand span { width: 34px; height: 34px; }
+  .c1-shell .c1-card { padding: .9rem; }
+  .c1-shell .c1-inbox-filters { gap: .35rem; }
+}
 .c1-top .c1-wordmark { font-family: Georgia, serif; letter-spacing: .025em; }
 @media (max-width: 540px) {
   .c1-top .c1-wordmark { font-size: 1.05rem; line-height: 1.08; }
