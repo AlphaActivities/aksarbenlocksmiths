@@ -131,7 +131,10 @@ export async function authenticateBrowser({ handler, fixturePassword, refreshCou
     await expect(page.getByRole("list").getByText("callback completed", { exact: true })).toBeVisible();
     await nav.getByRole("link", { name: "Notifications", exact: true }).click();
     await expect(btn("Active (0)")).toBeVisible();
-    await btn("Staff activity").click();
+    const staffActivity = page.getByRole("group", { name: "Filter notifications" })
+      .getByRole("button", { name: /^Staff activity \(\d+\)$/ });
+    await staffActivity.click();
+    await expect(staffActivity).toHaveAttribute("aria-pressed", "true");
     await expect(page.getByRole("link", { name: "Open record for Synthetic browser callback" })).toBeVisible();
     await signOut();
 
@@ -143,7 +146,9 @@ export async function authenticateBrowser({ handler, fixturePassword, refreshCou
       else
         await expect(heading("Business settings")).toBeVisible();
       await page.goto("/admin/calls");
-      await expect(page.getByText("VoIP.ms is not connected.")).toBeVisible();
+      await expect(page.getByRole("status").filter({
+        hasText: /^VoIP\.ms is not connected\./,
+      })).toBeVisible();
       await expect(btn("Import call records")).toHaveCount(0);
       await signOut();
     }

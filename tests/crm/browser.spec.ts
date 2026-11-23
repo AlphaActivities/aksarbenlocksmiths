@@ -214,7 +214,7 @@ test("private sign in, callback dialer, note, follow up and explicit booking", a
   ).toHaveAttribute("href", "tel:+14025550101");
   await page.getByLabel("Private note").fill("Synthetic result");
   await page.getByRole("button", { name: "Save result" }).click();
-  await expect(page.getByText("Saved.", { exact: true })).toBeVisible();
+  await expect(page.getByRole("status").filter({ hasText: "Customer activity saved." })).toBeVisible();
   await page.getByLabel("Next action").selectOption("schedule");
   await page.getByLabel(/Follow up time/).fill("2027-01-05T12:30");
   await page.getByRole("button", { name: "Save result" }).click();
@@ -236,10 +236,8 @@ test("History and filters do not change attention; staff cannot use Admin", asyn
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await mockService(page, "staff", true);
-  await page.goto("/admin");
-  await expect(
-    page.getByRole("heading", { name: "Your callback queue" }),
-  ).toBeVisible();
+  await page.goto("/admin/queue");
+  await expect(page.getByRole("heading", { name: "Your callback queue" })).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Admin", exact: true }),
   ).toHaveCount(0);
@@ -350,12 +348,12 @@ test("notification filters and record navigation keep attention intact", async (
   await page.goto("/admin");
   await page.getByRole("link", { name: "2 pending attention items" }).click();
   await expect(page.getByRole("button", { name: "Active (2)" })).toBeVisible();
-  await page.getByRole("button", { name: "Follow-ups", exact: true }).click();
+  await page.getByRole("button", { name: "Follow-ups (0)", exact: true }).click();
   await expect(page.getByRole("status").filter({ hasText: "No follow-ups need attention." })).toBeVisible();
-  await page.getByRole("button", { name: "Urgent", exact: true }).click();
+  await page.getByRole("button", { name: "Urgent (1)", exact: true }).click();
   await expect(page.getByRole("link", { name: /Open record for Synthetic Callback/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /Open record for Synthetic Handoff/ })).toHaveCount(0);
-  await page.getByRole("button", { name: "History", exact: true }).click();
+  await page.getByRole("button", { name: "History (1)", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Callback completed" })).toBeVisible();
   await page.getByRole("link", { name: /Open record for Synthetic Callback/ }).click();
   await expect(page).toHaveURL(new RegExp(`/admin/leads/${liveId}$`));
@@ -478,7 +476,7 @@ test("reduced motion keeps the branded still and the offline call log", async ({
   await page.route("**/api/crm/calls", route => route.fulfill({json:{connected:false,calls:[]}}));
   await page.goto("/admin/calls");
   await expect(page.getByRole("heading", {name:"No imported calls."})).toBeVisible();
-  await expect(page.getByText("VoIP.ms is not connected.")).toBeVisible();
+  await expect(page.getByText("VoIP.ms is not connected.", { exact: true })).toBeVisible();
   await expect(page.locator(".c1-backdrop")).toHaveCSS("background-image", /poster.webp/);
   await expect(page.locator(".c1-backdrop video")).toHaveCount(0);
   expect(media).toEqual([]);
@@ -520,4 +518,28 @@ test("entrance spacing, logo destination and viewport coverage", async ({page}) 
       return Math.max(rect.left - left, rect.top - top, right - rect.right, bottom - rect.bottom);
     })).toBeLessThanOrEqual(0.5);
   }
+});
+
+test("owner staff list safely renders, searches and sorts members without email", async ({ page }) => {
+  await mockService(page, "josh_admin", true);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const errors: string[] = [];
+  page.on("pageerror", error => errors.push(error.message));
+  await page.route("**/api/crm/business", route => route.fulfill({ json: { intake_enabled: false, push_enabled: false } }));
+  await page.route("**/api/crm/team", route => route.fulfill({ json: [
+    { user_id: liveId, email: null, role: "josh_admin" },
+    { user_id: historyId, email: "staff@example.invalid", role: "staff" },
+    { user_id: chatId, email: "client@example.invalid", role: "client" },
+  ] }));
+  await page.goto("/admin/business");
+  await expect(page.getByRole("heading", { name: "Business settings", exact: true })).toBeVisible();
+  await expect(page.locator(".c1-team-list li")).toHaveCount(3);
+  await expect(page.locator(".c1-team-list")).toContainText("Email unavailable");
+  await page.getByLabel("Search team members").fill("staff");
+  await expect(page.locator(".c1-team-list li")).toHaveCount(1);
+  await expect(page.locator(".c1-team-list")).toContainText("staff@example.invalid");
+  await page.getByLabel("Search team members").fill("");
+  await page.getByLabel("Sort members").selectOption("role");
+  await expect(page.locator(".c1-team-list li").first()).toContainText("client");
+  expect(errors).toEqual([]);
 });
