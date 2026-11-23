@@ -55,6 +55,7 @@ function CallPage({ owner, query }: { owner: boolean; query: string }) {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
   const path = query ? `calls?${query}` : "calls";
   useEffect(() => {
     let active = true;
@@ -78,6 +79,7 @@ function CallPage({ owner, query }: { owner: boolean; query: string }) {
     }
   }
 
+  const visibleCalls = log?.calls.filter(call => [call.caller_phone, call.dialed_phone, call.business_did, call.disposition].some(value => (value || "").toLowerCase().includes(search.trim().toLowerCase()))) ?? [];
   const next = new URLSearchParams(query);
   if (log?.next) {
     next.set("before", log.next.before);
@@ -94,12 +96,13 @@ function CallPage({ owner, query }: { owner: boolean; query: string }) {
             value={day} onChange={event => setDay(event.target.value)} /></label>
           <button disabled={busy}>{busy ? "Importing…" : "Import call records"}</button>
         </form>}
-        {log.calls.length === 0 ? <div className="c1-call-empty c1-card">
+        <label className="c1-call-search">Search this page<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Phone number or outcome" /></label>
+        {visibleCalls.length === 0 ? <div className="c1-call-empty c1-card">
           <span className="c1-call-emblem"><PhoneIncoming aria-hidden="true" /></span>
-          <div><h2>{query ? "No calls match these filters." : "No imported calls."}</h2><p>{log.connected ? "Call records will appear here after an authorized import." : "VoIP.ms is not connected."}</p></div>
+          <div><h2>{search ? "No calls match your search on this page." : query ? "No calls match these filters." : "No imported calls."}</h2><p>{log.connected ? "Call records will appear here after an authorized import." : "VoIP.ms is not connected."}</p></div>
         </div> : (
-          <><p className="c1-call-page-count">Showing {log.calls.length} call records on this page.</p><ul className="c1-alert-list" aria-label="Imported calls">
-            {log.calls.map(call => (
+          <><p className="c1-call-page-count">Showing {visibleCalls.length} of {log.calls.length} call records on this page.</p><ul className="c1-alert-list" aria-label="Imported calls">
+            {visibleCalls.map(call => (
               <li key={call.provider_call_id} className="c1-card">
                 <h2>{call.direction === "outgoing" ? call.dialed_phone ?? "Destination unavailable" : call.caller_phone ?? "Caller ID unavailable"}</h2>
                 <p>{call.direction === "outgoing" ? "Outgoing" : "Incoming"}</p>
