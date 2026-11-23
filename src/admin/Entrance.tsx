@@ -8,6 +8,7 @@ export default function Entrance({ attention }: { attention: number | null }) {
     catch { return "welcome"; }
   });
   const complete = useRef(false);
+  const flightAnimation = useRef<Animation | null>(null);
   const initiallyDone = useRef(phase === "done");
   const [greeted, setGreeted] = useState(false);
   const finished = phase === "done";
@@ -25,7 +26,7 @@ export default function Entrance({ attention }: { attention: number | null }) {
         ?.getBoundingClientRect();
       const origin = logo.current?.getBoundingClientRect();
       if (destination && origin) {
-        logo.current?.animate(
+        flightAnimation.current = logo.current?.animate(
           [
             { transform: "translate(0,0) scale(1)", offset: 0 },
             {
@@ -50,6 +51,8 @@ export default function Entrance({ attention }: { attention: number | null }) {
       clearTimeout(flight);
       clearTimeout(fade);
       clearTimeout(finish);
+      flightAnimation.current?.cancel();
+      flightAnimation.current = null;
     };
   }, [finished]);
   useEffect(() => {
@@ -60,6 +63,11 @@ export default function Entrance({ attention }: { attention: number | null }) {
       catch { /* The introduction still works when storage is unavailable. */ }
     }
   }, [phase]);
+  const skip = () => {
+    flightAnimation.current?.cancel();
+    flightAnimation.current = null;
+    setPhase("done");
+  };
   if (phase === "done") return null;
   return (
     <div
@@ -94,7 +102,7 @@ export default function Entrance({ attention }: { attention: number | null }) {
             }).format(new Date())}
           </p>
         </div>
-        <button type="button" onClick={() => setPhase("done")}>
+        <button type="button" className="c1-skip-intro" onClick={skip}>
           Skip introduction
         </button>
       </div>
