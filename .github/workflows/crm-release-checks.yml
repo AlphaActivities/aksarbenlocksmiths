@@ -2,7 +2,7 @@ name: Premium CRM release checks
 
 on:
   push:
-    branches: [premium-dashboard]
+    branches: [premium-dashboard, work/luxury-ui-foundation-20261123]
   pull_request:
     branches: [main]
     paths:
