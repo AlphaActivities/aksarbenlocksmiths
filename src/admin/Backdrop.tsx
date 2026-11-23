@@ -19,7 +19,7 @@ export default function Backdrop() {
     const player = video.current;
     if (!eligible || !player) return;
     const play = () => {
-      if (document.hidden) {
+      if (document.hidden || !eligible) {
         player.pause();
         return;
       }
@@ -33,6 +33,7 @@ export default function Backdrop() {
     document.addEventListener("pointerdown", play, { once: true });
     document.addEventListener("keydown", play, { once: true });
     return () => {
+      player.pause();
       document.removeEventListener("visibilitychange", play);
       document.removeEventListener("pointerdown", play);
       document.removeEventListener("keydown", play);
