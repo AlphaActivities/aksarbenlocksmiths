@@ -58,6 +58,7 @@ function CallPage({ owner, query }: { owner: boolean; query: string }) {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<"newest" | "oldest">("newest");
   const [reloading, setReloading] = useState(false);
+  const [expanded, setExpanded] = useState<string[]>([]);
   const path = query ? `calls?${query}` : "calls";
   useEffect(() => {
     let active = true;
@@ -121,6 +122,8 @@ function CallPage({ owner, query }: { owner: boolean; query: string }) {
                 <p><time dateTime={call.occurred_at}>{date(call.occurred_at)}</time> · {call.disposition}
                   {call.duration_seconds !== null && ` · ${call.duration_seconds} sec`}
                   {call.historical && " · Historical"}</p>
+                <button type="button" className="c1-call-detail-toggle" aria-expanded={expanded.includes(call.provider_call_id)} onClick={() => setExpanded(previous => previous.includes(call.provider_call_id) ? previous.filter(id => id !== call.provider_call_id) : [...previous, call.provider_call_id])}>{expanded.includes(call.provider_call_id) ? "Hide call details" : "More call details"}</button>
+                {expanded.includes(call.provider_call_id) && <dl className="c1-call-facts"><dt>Provider reference</dt><dd>{call.provider_call_id}</dd><dt>Caller</dt><dd>{call.caller_phone || "Unavailable"}</dd><dt>Dialed</dt><dd>{call.dialed_phone || "Unavailable"}</dd><dt>Imported history</dt><dd>{call.historical ? "Yes" : "No"}</dd></dl>}
                 {call.related_lead_id ? <Link to={`/admin/leads/${call.related_lead_id}`}>Open matching lead</Link> : <p>Unmatched caller</p>}
               </li>
             ))}
