@@ -81,6 +81,7 @@ export function createHandler(deps = {}) {
           ...(payload ? { body: JSON.stringify(payload) } : {}),
           signal: AbortSignal.timeout(15000),
         });
+        if (res.status === 429 || res.status >= 500) throw new Fault(503, "auth_unavailable");
         if (!res.ok) throw new Fault(401, "sign_in_required");
         return res.status === 204 ? {} : res.json();
       };
@@ -137,7 +138,7 @@ export function createHandler(deps = {}) {
         if (!token) throw new Fault(401, "sign_in_required");
         user = await auth("user", null, token);
       } catch (e) {
-        if (!jar[refreshName]) throw e;
+        if (e.status !== 401 || !jar[refreshName]) throw e;
         const session = await auth("token?grant_type=refresh_token", {
           refresh_token: jar[refreshName],
         });
