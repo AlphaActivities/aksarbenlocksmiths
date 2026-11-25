@@ -17,9 +17,11 @@ async function authorized(request, env) {
 }
 
 import baseline from './baseline/worker/index.mjs';
+import { serveCrm } from './crm.mjs';
 
 export default { async fetch(request, env) {
   if (!(await authorized(request, env))) return new Response('Access denied', {status: 403, headers: {'Cache-Control':'no-store'}});
+  if (new URL(request.url).pathname.startsWith('/api/crm/')) return serveCrm(request, env);
   const headers = new Headers(request.headers);
   headers.set('oai-authenticated-user-id', 'verified-reviewer');
   return baseline.fetch(new Request(request,{headers}));

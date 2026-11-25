@@ -55,7 +55,7 @@ export function createHandler(deps = {}) {
       if (!["GET", "POST", "DELETE"].includes(method))
         throw new Fault(405, "method_not_allowed");
       if (method !== "GET") {
-        const allowed = new Set(["https://aksarbenlocksmiths.com"]);
+        const allowed = new Set(deps.allowedOrigin ? [deps.allowedOrigin] : ["https://aksarbenlocksmiths.com"]);
         if (env.DEPLOY_PRIME_URL) {
           const preview = new URL(env.DEPLOY_PRIME_URL);
           if (preview.protocol === "https:" && /^(?:[a-z0-9-]+--)?aksarbenlocksmiths\.netlify\.app$/.test(preview.hostname)) allowed.add(preview.origin);
