@@ -1,8 +1,8 @@
 import { createHandler } from '../../netlify/functions/crm.mjs';
 
 const stagingOrigin = 'https://aksarben-admin-review.gta-alpha-activities.workers.dev';
-const readable = new Set(['session', 'attention', 'queue', 'settings', 'business', 'team']);
-const writable = new Set(['login', 'logout']);
+const readable = new Set(['session', 'attention', 'queue', 'settings', 'business', 'team', 'notifications']);
+const writable = new Set(['login', 'logout', 'settings', 'devices']);
 const leadRoute = /^leads\/[0-9a-f-]{36}$/i;
 
 function unavailable(status, error) {
@@ -19,14 +19,16 @@ export async function serveCrm(request, env, upstream = fetch) {
   const route = url.pathname.slice('/api/crm/'.length);
   const method = request.method;
   const isLead = leadRoute.test(route);
+  const device = /^devices\/[0-9a-f-]{36}$/i.test(route);
+  const confirm = /^devices\/[0-9a-f-]{36}\/confirm$/i.test(route);
   const supported = method === 'GET'
     ? readable.has(route) || isLead
-    : method === 'POST' && (writable.has(route) || isLead);
+    : (method === 'POST' && (writable.has(route) || isLead || confirm)) || (method === 'DELETE' && device);
   if (!supported) return unavailable(501, 'staging_integration_unavailable');
 
-  if (method === 'POST') {
+  if (method === 'POST' || method === 'DELETE') {
     if (request.headers.get('Origin') !== stagingOrigin) return unavailable(403, 'origin_rejected');
-    if (!request.headers.get('Content-Type')?.startsWith('application/json')) {
+    if (method === 'POST' && !request.headers.get('Content-Type')?.startsWith('application/json')) {
       return unavailable(415, 'json_required');
     }
   }
