@@ -487,7 +487,7 @@ export function App() {
     menu.current?.close();
   }, [location.pathname]);
   useEffect(() => {
-    const desktop = matchMedia("(min-width: 901px)");
+    const desktop = matchMedia("(min-width: 1024px)");
     const closeMenu = () => { if (desktop.matches) menu.current?.close(); };
     desktop.addEventListener("change", closeMenu);
     return () => desktop.removeEventListener("change", closeMenu);
