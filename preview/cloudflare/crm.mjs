@@ -3,7 +3,7 @@ import { createHandler } from '../../netlify/functions/crm.mjs';
 
 const stagingOrigin = 'https://aksarben-admin-review.gta-alpha-activities.workers.dev';
 const readable = new Set(['session', 'attention', 'queue', 'settings', 'business', 'team', 'notifications']);
-const writable = new Set(['login', 'logout', 'settings', 'devices']);
+const writable = new Set(['login', 'logout', 'settings', 'devices', 'devices/current']);
 const leadRoute = /^leads\/[0-9a-f-]{36}$/i;
 
 function unavailable(status, error) {
@@ -13,7 +13,7 @@ function unavailable(status, error) {
   });
 }
 
-export async function serveCrm(request, env, upstream = fetch) {
+export async function serveCrm(request, env, upstream = (...args) => globalThis.fetch(...args)) {
   const url = new URL(request.url);
   if (url.origin !== stagingOrigin) return unavailable(404, 'not_found');
 

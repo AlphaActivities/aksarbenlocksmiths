@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api, date, type Settings as SettingsData } from "./api";
 import { playTone, saveSoundChoices, soundChoices, tones, type SoundCategory } from "./sounds";
@@ -15,12 +15,30 @@ export default function Settings({ userId }: { userId: string }) {
   const [data, setData] = useState<SettingsData | null>(null);
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
+  const supported = window.isSecureContext && "Notification" in window && "serviceWorker" in navigator && "PushManager" in window;
+  const [permission, setPermission] = useState<NotificationPermission | "unsupported">(supported ? Notification.permission : "unsupported");
+  const [deviceStatus, setDeviceStatus] = useState<"Checking…" | "Registered" | "Not registered" | "Unavailable">("Checking…");
   const [loading, setLoading] = useState(true);
   const label = /iPhone/i.test(navigator.userAgent) ? "iPhone" : /iPad/i.test(navigator.userAgent) ? "iPad" : /Android/i.test(navigator.userAgent) ? "Android device" : "Desktop browser";
-  const load = () => api<SettingsData>("settings").then(setData);
+  const load = useCallback(async () => {
+    const settings = await api<SettingsData>("settings");
+    setData(settings);
+    setPermission(supported ? Notification.permission : "unsupported");
+    if (!supported) { setDeviceStatus("Unavailable"); return; }
+    setDeviceStatus("Checking…");
+    try {
+      const registration = await navigator.serviceWorker.getRegistration("/admin/");
+      const local = await registration?.pushManager.getSubscription();
+      if (!local) { setDeviceStatus("Not registered"); return; }
+      const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(new URL(local.endpoint).href));
+      const endpoint_hash = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
+      const result = await api<{ registered: boolean }>("devices/current", { endpoint_hash });
+      setDeviceStatus(result.registered ? "Registered" : "Not registered");
+    } catch { setDeviceStatus("Unavailable"); }
+  }, [supported]);
   useEffect(() => {
     void load().catch((e) => setNotice(e.message)).finally(() => setLoading(false));
-  }, []);
+  }, [load]);
   const act = async (fn: () => Promise<unknown>, message: string | ((result: unknown) => string)) => {
     setBusy(true);
     setNotice("");
@@ -44,13 +62,14 @@ export default function Settings({ userId }: { userId: string }) {
         throw new Error(
           "Push is not supported here. On iPhone, first add this app to the Home Screen.",
         );
-      if (!label.trim()) throw new Error("Enter a name for this device.");
       if (!data?.push_enabled || !data.vapid_public_key)
         throw new Error(
           "Push delivery is not enabled for this installation yet.",
         );
       // Permission follows the user's tap; never prompt on page load.
-      if ((await Notification.requestPermission()) !== "granted")
+      const allowed = Notification.permission === "granted" ? "granted" : await Notification.requestPermission();
+      setPermission(allowed);
+      if (allowed !== "granted")
         throw new Error(
           "Notifications are blocked. Change this app’s permission in your device settings.",
         );
@@ -78,13 +97,17 @@ export default function Settings({ userId }: { userId: string }) {
       {!loading && !data && <p className="c1-card" role="status">Device preferences are unavailable. Use Refresh status after access is restored.</p>}
       {notice && <p role="status">{notice}</p>}
       {data && (
-        <section className="c1-card" aria-labelledby="device-notifications-title">
+        <section className="c1-card c1-device-settings" aria-labelledby="device-notifications-title">
           <h2 id="device-notifications-title">Device notifications</h2>
           <p>On iPhone, open the CRM from its Home Screen icon to enable alerts.</p>
           
+          <div className="c1-device-status">
+            <span>Browser permission: <strong>{{granted:"Granted",denied:"Blocked",default:"Not requested",unsupported:"Unsupported"}[permission]}</strong></span>
+            <span>Current device: <strong>{deviceStatus}</strong></span>
+          </div>
           <div className="c1-actions">
-            <button disabled={busy || !label.trim() || !data.push_enabled} onClick={() => void enroll()}>
-              Enable Notifications
+            <button disabled={busy || !supported || permission === "denied" || !data.push_enabled} onClick={() => void enroll()}>
+              {deviceStatus === "Registered" ? "Refresh this device registration" : "Enable Notifications"}
             </button>
             <button
               disabled={busy}

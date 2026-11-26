@@ -25,7 +25,7 @@ test('authenticated device test sends only to the owned staging device, without 
     const url = new URL(input);
     if (url.hostname === 'web.push.apple.com') {
       assert.equal(options.method, 'POST');
-      assert.equal(options.redirect, 'error');
+      assert.equal(options.redirect, 'manual');
       assert.equal(options.headers['Content-Encoding'], 'aes128gcm');
       assert.ok(options.body.byteLength > 0);
       sends++;

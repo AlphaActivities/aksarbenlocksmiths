@@ -351,6 +351,15 @@ export function createHandler(deps = {}) {
         );
         return reply(200, { ok: true }, cookies);
       }
+      if (deps.allowedOrigin && path === "devices/current" && method === "POST") {
+        if (!/^[0-9a-f]{64}$/.test(body.endpoint_hash ?? "")) throw new Fault(422, "invalid_device");
+        const matches = await db(
+          `crm_devices?endpoint_hash=eq.${body.endpoint_hash}&user_id=eq.${user.id}&select=id&limit=1`,
+          { token },
+          deps,
+        );
+        return reply(200, { registered: matches.length === 1 }, cookies);
+      }
       if (path === "devices" && method === "POST") {
         const subscription = checkSubscription(body.subscription);
         const rows = await db(

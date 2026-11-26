@@ -1,13 +1,13 @@
 import webpush from "web-push";
 import { db, rpc, checkSubscription, Fault, newKey, PROJECT } from "./core.mjs";
-export async function sendWorkerPush(subscription, payload, vapid, upstream = fetch) {
+export async function sendWorkerPush(subscription, payload, vapid, upstream = (...args) => globalThis.fetch(...args)) {
   const checked = checkSubscription(subscription).subscription;
   const request = webpush.generateRequestDetails(checked, payload, {
     vapidDetails: vapid, TTL: 300,
   });
   const response = await upstream(request.endpoint, {
     method: request.method, headers: request.headers, body: request.body,
-    redirect: "error", signal: AbortSignal.timeout(5000),
+    redirect: "manual", signal: AbortSignal.timeout(5000),
   });
   await response.body?.cancel();
   if (!response.ok) {
