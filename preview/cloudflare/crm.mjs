@@ -60,6 +60,9 @@ export async function serveCrm(request, env, upstream = fetch) {
     env: {
       SUPABASE_URL: 'https://umnxslkgksqyqfwwdztg.supabase.co',
       SUPABASE_ANON_KEY: env.SUPABASE_ANON_KEY,
+      VAPID_PUBLIC_KEY: env.VAPID_PUBLIC_KEY,
+      // Keep delivery disabled until the staging dispatcher is verified.
+      CRM_PUSH_ENABLED: 'false',
     },
     fetch: upstream,
     allowedOrigin: stagingOrigin,
