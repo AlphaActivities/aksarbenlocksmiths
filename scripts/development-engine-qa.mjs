@@ -117,7 +117,7 @@ async function browserSmoke() {
       : null
     browser = await chromium.launch(customChromium ? { executablePath: await customChromium.executablePath(), args: customChromium.args } : {})
     for (const width of [390, 820, 1440]) {
-      const metrics = { width, status: 'failed', consoleErrors: 0, pageErrors: 0, localNetworkErrors: 0, externalRequestsBlocked: 0 }
+      const metrics = { width, status: 'failed', consoleErrors: 0, pageErrors: 0, localNetworkErrors: 0, blockingNetworkErrors: 0, failedResourceTypes: {}, externalRequestsBlocked: 0 }
       result.browser.push(metrics)
       const context = await browser.newContext({ viewport: { width, height: 900 }, serviceWorkers: 'block' })
       try {
@@ -131,20 +131,28 @@ async function browserSmoke() {
         const page = await context.newPage()
         page.on('pageerror', () => metrics.pageErrors++)
         page.on('console', event => { if (event.type() === 'error') metrics.consoleErrors++ })
-        page.on('requestfailed', request => { if (new URL(request.url()).origin === origin) metrics.localNetworkErrors++ })
-        page.on('response', response => { if (new URL(response.url()).origin === origin && response.status() >= 400) metrics.localNetworkErrors++ })
+        function recordNetworkError(request) {
+          if (new URL(request.url()).origin !== origin) return
+          const type = request.resourceType()
+          metrics.localNetworkErrors++
+          metrics.failedResourceTypes[type] = (metrics.failedResourceTypes[type] ?? 0) + 1
+          if (['document', 'script', 'stylesheet', 'xhr', 'fetch'].includes(type)) metrics.blockingNetworkErrors++
+          if (process.env.QA_LOCAL_DEBUG === '1') console.error(type, new URL(request.url()).pathname)
+        }
+        page.on('requestfailed', recordNetworkError)
+        page.on('response', response => { if (response.status() >= 400) recordNetworkError(response.request()) })
         const response = await page.goto(origin + config.page, { waitUntil: 'networkidle' })
         assert(response?.ok())
         assert.equal(new URL(page.url()).origin, origin)
         await page.locator('input[type="password"]').first().waitFor({ state: 'visible', timeout: 15_000 })
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true)
-        assert.equal(metrics.pageErrors, 0)
-        assert.equal(metrics.localNetworkErrors, 0)
         if (repo === 'Rodents-Extermination') assert.equal(await page.getByText('Live data · Edits save', { exact: true }).count(), 0)
         await page.screenshot({ path: resolve(output, 'signed-out-' + width + '.png'), animations: 'disabled', mask: [page.locator('input, textarea, [contenteditable]')] })
         await page.reload({ waitUntil: 'networkidle' })
         assert.equal(new URL(page.url()).origin, origin)
         await page.locator('input[type="password"]').first().waitFor({ state: 'visible', timeout: 15_000 })
+        assert.equal(metrics.pageErrors, 0)
+        assert.equal(metrics.blockingNetworkErrors, 0)
         metrics.status = 'passed'
       } catch (error) {
         if (process.env.QA_LOCAL_DEBUG === '1') console.error(error.message)
