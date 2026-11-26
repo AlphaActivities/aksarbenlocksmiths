@@ -93,6 +93,68 @@ export default function Settings({ userId }: { userId: string }) {
               Refresh status
             </button>
           </div>
+          <h3>Registered devices</h3>
+          {!data.devices.length && <p className="c1-card">No devices registered yet. Register this device to receive supported push notifications.</p>}
+          {data.devices.map((device) => (
+            <article className="c1-card" key={device.id}>
+              <h3>{device.label}</h3>
+              <p>Registered {date(device.refreshed_at)}</p>
+              <div className="c1-actions">
+                <button
+                  disabled={busy || !data.push_enabled}
+                  onClick={() =>
+                    void act(
+                      () => api(`devices/${device.id}/test`, {}),
+                      (result) => (result as {status?: string})?.status === "provider_acceptance_only"
+                        ? "Provider accepted the test. Check this device for the alert."
+                        : "Test queued. Check this device for the alert.",
+                    )
+                  }
+                >
+                  Send test to this device
+                </button>
+                <button
+                  disabled={busy}
+                  onClick={() =>
+                    void act(async () => {
+                      await api(`devices/${device.id}`, {}, "DELETE");
+                    }, "Device registration removed.")
+                  }
+                >
+                  Remove
+                </button>
+              </div>
+              {data.receipts
+                .filter((r) => r.device_id === device.id)
+                .map((r) => (
+                  <p key={r.outbox_id}>
+                    {r.confirmed_at ? (
+                      `Receipt confirmed ${date(r.confirmed_at)}`
+                    ) : r.state === "accepted" ? (
+                      <>
+                        Provider accepted the alert.{" "}
+                        <button
+                          disabled={busy}
+                          onClick={() =>
+                            void act(
+                              () =>
+                                api(`devices/${device.id}/confirm`, {
+                                  outbox_id: r.outbox_id,
+                                }),
+                              "Visual receipt recorded.",
+                            )
+                          }
+                        >
+                          I saw this alert on {device.label}
+                        </button>
+                      </>
+                    ) : (
+                      "Delivery failed."
+                    )}
+                  </p>
+                ))}
+            </article>
+          ))}
           {!data.push_enabled && (
             <p>
               Push is currently disabled. Register and test after delivery has
@@ -167,69 +229,6 @@ export default function Settings({ userId }: { userId: string }) {
               is disabled.
             </p>
           </section>
-          <h2>My Devices <span className="c1-device-count">{data.devices.length}</span></h2>
-          <p>Devices are identified automatically. Remove devices you no longer use.</p>
-          {!data.devices.length && <p className="c1-card">No devices registered yet. Register this device to receive supported push notifications.</p>}
-          {data.devices.map((device) => (
-            <article className="c1-card" key={device.id}>
-              <h3>{device.label}</h3>
-              <p>Registered {date(device.refreshed_at)}</p>
-              <div className="c1-actions">
-                <button
-                  disabled={busy || !data.push_enabled}
-                  onClick={() =>
-                    void act(
-                      () => api(`devices/${device.id}/test`, {}),
-                      (result) => (result as {status?: string})?.status === "provider_acceptance_only"
-                        ? "Provider accepted the test. Check this device for the alert."
-                        : "Test queued. Check this device for the alert.",
-                    )
-                  }
-                >
-                  Send test to this device
-                </button>
-                <button
-                  disabled={busy}
-                  onClick={() =>
-                    void act(async () => {
-                      await api(`devices/${device.id}`, {}, "DELETE");
-                    }, "Device registration removed.")
-                  }
-                >
-                  Remove
-                </button>
-              </div>
-              {data.receipts
-                .filter((r) => r.device_id === device.id)
-                .map((r) => (
-                  <p key={r.outbox_id}>
-                    {r.confirmed_at ? (
-                      `Receipt confirmed ${date(r.confirmed_at)}`
-                    ) : r.state === "accepted" ? (
-                      <>
-                        Provider accepted the alert.{" "}
-                        <button
-                          disabled={busy}
-                          onClick={() =>
-                            void act(
-                              () =>
-                                api(`devices/${device.id}/confirm`, {
-                                  outbox_id: r.outbox_id,
-                                }),
-                              "Visual receipt recorded.",
-                            )
-                          }
-                        >
-                          I saw this alert on {device.label}
-                        </button>
-                      </>
-                    ) : (
-                      "Delivery failed."
-                    )}
-                  </p>
-                ))}
-            </article>
-          ))}
         </>
       )}
     </section>
