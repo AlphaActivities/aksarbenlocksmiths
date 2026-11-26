@@ -1,3 +1,4 @@
+import { vapidSettings, sendWorkerPush } from './push.mjs';
 import { createHandler } from '../../netlify/functions/crm.mjs';
 
 const stagingOrigin = 'https://aksarben-admin-review.gta-alpha-activities.workers.dev';
@@ -20,10 +21,11 @@ export async function serveCrm(request, env, upstream = fetch) {
   const method = request.method;
   const isLead = leadRoute.test(route);
   const device = /^devices\/[0-9a-f-]{36}$/i.test(route);
+  const test = /^devices\/[0-9a-f-]{36}\/test$/i.test(route);
   const confirm = /^devices\/[0-9a-f-]{36}\/confirm$/i.test(route);
   const supported = method === 'GET'
     ? readable.has(route) || isLead
-    : (method === 'POST' && (writable.has(route) || isLead || confirm)) || (method === 'DELETE' && device);
+    : (method === 'POST' && (writable.has(route) || isLead || confirm || test)) || (method === 'DELETE' && device);
   if (!supported) return unavailable(501, 'staging_integration_unavailable');
 
   if (method === 'POST' || method === 'DELETE') {
@@ -56,15 +58,18 @@ export async function serveCrm(request, env, upstream = fetch) {
     }
   }
 
+  const vapid = vapidSettings(env);
   const handler = createHandler({
     env: {
       SUPABASE_URL: 'https://umnxslkgksqyqfwwdztg.supabase.co',
       SUPABASE_ANON_KEY: env.SUPABASE_ANON_KEY,
-      VAPID_PUBLIC_KEY: env.VAPID_PUBLIC_KEY,
-      // Keep delivery disabled until the staging dispatcher is verified.
-      CRM_PUSH_ENABLED: 'false',
+      VAPID_PUBLIC_KEY: vapid?.publicKey,
+      CRM_PUSH_ENABLED: vapid ? 'true' : 'false',
     },
     fetch: upstream,
+    ...(vapid && {
+      sendDeviceTest: (subscription, payload) => sendWorkerPush(subscription, JSON.stringify(payload), vapid, upstream),
+    }),
     allowedOrigin: stagingOrigin,
   });
   const result = await handler({

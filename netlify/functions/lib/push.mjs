@@ -1,5 +1,22 @@
 import webpush from "web-push";
 import { db, rpc, checkSubscription, Fault, newKey, PROJECT } from "./core.mjs";
+export async function sendWorkerPush(subscription, payload, vapid, upstream = fetch) {
+  const checked = checkSubscription(subscription).subscription;
+  const request = webpush.generateRequestDetails(checked, payload, {
+    vapidDetails: vapid, TTL: 300,
+  });
+  const response = await upstream(request.endpoint, {
+    method: request.method, headers: request.headers, body: request.body,
+    redirect: "error", signal: AbortSignal.timeout(5000),
+  });
+  await response.body?.cancel();
+  if (!response.ok) {
+    const error = new Fault(502, "push_provider_rejected");
+    error.statusCode = response.status;
+    throw error;
+  }
+}
+
 export async function dispatchPush(deps = {}) {
   const env = deps.env || process.env;
   if (env.CRM_PUSH_ENABLED !== "true") return { status: "disabled" };
@@ -17,9 +34,9 @@ export async function dispatchPush(deps = {}) {
         TTL: 300,
         timeout: 5000,
       }));
-  await rpc("crm_enqueue_follow_ups", {}, { service: true }, deps);
+  if (!deps.claim) await rpc("crm_enqueue_follow_ups", {}, { service: true }, deps);
   const owner = newKey();
-  const outbox = await rpc(
+  const outbox = deps.claim ? await deps.claim(owner) : await rpc(
     "crm_claim_outbox",
     { p_owner: owner },
     { service: true },
@@ -63,6 +80,7 @@ export async function dispatchPush(deps = {}) {
       for (const device of devices) {
         if (
           !users.has(device.user_id) ||
+          (deps.deviceFilter && !deps.deviceFilter(device)) ||
           (item.target_device && item.target_device !== device.id)
         )
           continue;

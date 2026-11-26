@@ -360,6 +360,9 @@ export function createHandler(deps = {}) {
             method: "POST",
             body: {
               ...subscription,
+              ...(deps.sendDeviceTest && {
+                subscription: { ...subscription.subscription, vapid_public_key: env.VAPID_PUBLIC_KEY },
+              }),
               user_id: user.id,
               label: bounded(body.label, 80, true),
               refreshed_at: new Date().toISOString(),
@@ -372,8 +375,9 @@ export function createHandler(deps = {}) {
       }
       const device = path.match(/^devices\/([\w-]+)(\/test|\/confirm)?$/);
       if (device && UUID.test(device[1])) {
+        const directTest = method === "POST" && device[2] === "/test" && deps.sendDeviceTest;
         const own = await db(
-          `crm_devices?id=eq.${device[1]}&select=id`,
+          `crm_devices?id=eq.${device[1]}&user_id=eq.${user.id}&select=${directTest ? "id,subscription" : "id"}`,
           { token },
           deps,
         );
@@ -389,6 +393,16 @@ export function createHandler(deps = {}) {
         if (method === "POST" && device[2] === "/test") {
           if (env.CRM_PUSH_ENABLED !== "true")
             throw new Fault(409, "push_not_enabled");
+          if (directTest) {
+            const subscription = own[0].subscription;
+            if (subscription?.vapid_public_key !== env.VAPID_PUBLIC_KEY)
+              throw new Fault(409, "refresh_device_registration");
+            const count = await rpc("crm_attention_count", {}, { token }, deps);
+            await deps.sendDeviceTest(subscription, {
+              id: newKey(), kind: "test", attention_count: count,
+            });
+            return reply(200, { status: "provider_acceptance_only" }, cookies);
+          }
           const id = newKey();
           await db(
             "crm_outbox",

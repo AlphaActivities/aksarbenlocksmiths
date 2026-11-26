@@ -21,13 +21,13 @@ export default function Settings({ userId }: { userId: string }) {
   useEffect(() => {
     void load().catch((e) => setNotice(e.message)).finally(() => setLoading(false));
   }, []);
-  const act = async (fn: () => Promise<unknown>, message: string) => {
+  const act = async (fn: () => Promise<unknown>, message: string | ((result: unknown) => string)) => {
     setBusy(true);
     setNotice("");
     try {
-      await fn();
+      const result = await fn();
       await load();
-      setNotice(message);
+      setNotice(typeof message === "function" ? message(result) : message);
     } catch (e) {
       setNotice((e as Error).message);
     } finally {
@@ -55,12 +55,17 @@ export default function Settings({ userId }: { userId: string }) {
           "Notifications are blocked. Change this app’s permission in your device settings.",
         );
       const registration = await navigator.serviceWorker.ready;
-      const subscription =
-        (await registration.pushManager.getSubscription()) ||
-        (await registration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: keyBytes(data.vapid_public_key),
-        }));
+      const key = keyBytes(data.vapid_public_key);
+      let subscription = await registration.pushManager.getSubscription();
+      const current = subscription?.options.applicationServerKey;
+      if (subscription && (!current || new Uint8Array(current).toString() !== new Uint8Array(key).toString())) {
+        if (!await subscription.unsubscribe()) throw new Error("Unable to replace the previous device subscription.");
+        subscription = null;
+      }
+      subscription ??= await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: key,
+      });
       await api("devices", { label: label.trim(), subscription: subscription.toJSON() });
     }, "This device is registered. Send a test and confirm that you saw it.");
   return (
@@ -72,6 +77,38 @@ export default function Settings({ userId }: { userId: string }) {
       {loading && <p role="status">Loading your device preferences…</p>}
       {!loading && !data && <p className="c1-card" role="status">Device preferences are unavailable. Use Refresh status after access is restored.</p>}
       {notice && <p role="status">{notice}</p>}
+      {data && (
+        <section className="c1-card" aria-labelledby="device-notifications-title">
+          <h2 id="device-notifications-title">Device notifications</h2>
+          <p>On iPhone, open the CRM from its Home Screen icon to enable alerts.</p>
+          <label>
+            Device name
+            <input
+              maxLength={80}
+              required
+              value={label}
+              onChange={(e) => setLabel(e.target.value)}
+            />
+          </label>
+          <div className="c1-actions">
+            <button disabled={busy || !label.trim() || !data.push_enabled} onClick={() => void enroll()}>
+              Enable Notifications
+            </button>
+            <button
+              disabled={busy}
+              onClick={() => void act(load, "Device status refreshed.")}
+            >
+              Refresh status
+            </button>
+          </div>
+          {!data.push_enabled && (
+            <p>
+              Push is currently disabled. Register and test after delivery has
+              been enabled.
+            </p>
+          )}
+        </section>
+      )}
       <fieldset className="c1-card c1-sound-settings">
         <legend>In-app notification sounds</legend>
         <p>Saved on this device for your account. Background notification sounds follow your device settings.</p>
@@ -140,32 +177,6 @@ export default function Settings({ userId }: { userId: string }) {
           </section>
           <h2>My Devices <span className="c1-device-count">{data.devices.length}</span></h2>
           <p>Device names help you identify where alerts were registered. Remove devices you no longer use.</p>
-          <label>
-            Device name
-            <input
-              maxLength={80}
-              required
-              value={label}
-              onChange={(e) => setLabel(e.target.value)}
-            />
-          </label>
-          <div className="c1-actions">
-            <button disabled={busy || !label.trim()} onClick={() => void enroll()}>
-              Enable Notifications / refresh device
-            </button>
-            <button
-              disabled={busy}
-              onClick={() => void act(load, "Device status refreshed.")}
-            >
-              Refresh status
-            </button>
-          </div>
-          {!data.push_enabled && (
-            <p>
-              Push is currently disabled. Register and test after delivery has
-              been enabled.
-            </p>
-          )}
           {!data.devices.length && <p className="c1-card">No devices registered yet. Register this device to receive supported push notifications.</p>}
           {data.devices.map((device) => (
             <article className="c1-card" key={device.id}>
@@ -173,11 +184,13 @@ export default function Settings({ userId }: { userId: string }) {
               <p>Registered {date(device.refreshed_at)}</p>
               <div className="c1-actions">
                 <button
-                  disabled={busy}
+                  disabled={busy || !data.push_enabled}
                   onClick={() =>
                     void act(
                       () => api(`devices/${device.id}/test`, {}),
-                      "Test queued. Provider acceptance does not confirm that you saw an alert.",
+                      (result) => (result as {status?: string})?.status === "provider_acceptance_only"
+                        ? "Provider accepted the test. Check this device for the alert."
+                        : "Test queued. Check this device for the alert.",
                     )
                   }
                 >
