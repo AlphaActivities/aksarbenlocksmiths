@@ -117,12 +117,16 @@ async function browserSmoke() {
       : null
     browser = await chromium.launch(customChromium ? { executablePath: await customChromium.executablePath(), args: customChromium.args } : {})
     for (const width of [390, 820, 1440]) {
+      const fixtureSession = origin + '/api/crm/session'
       const metrics = { width, status: 'failed', consoleErrors: 0, pageErrors: 0, localNetworkErrors: 0, blockingNetworkErrors: 0, failedResourceTypes: {}, externalRequestsBlocked: 0 }
       result.browser.push(metrics)
       const context = await browser.newContext({ viewport: { width, height: 900 }, serviceWorkers: 'block' })
       try {
         await context.route('**/*', route => {
           const request = route.request()
+          if (config.embedded && request.url() === fixtureSession && request.method() === 'GET') {
+            return route.fulfill({ status: 401, json: { error: 'unauthorized' } })
+          }
           if (new URL(request.url()).origin === origin && request.method() === 'GET' && !new URL(request.url()).pathname.startsWith('/api/')) return route.continue()
           metrics.externalRequestsBlocked++
           return route.fulfill({ status: 204, body: '' })
@@ -132,7 +136,7 @@ async function browserSmoke() {
         page.on('pageerror', () => metrics.pageErrors++)
         page.on('console', event => { if (event.type() === 'error') metrics.consoleErrors++ })
         function recordNetworkError(request) {
-          if (new URL(request.url()).origin !== origin) return
+          if (new URL(request.url()).origin !== origin || (config.embedded && request.url() === fixtureSession)) return
           const type = request.resourceType()
           metrics.localNetworkErrors++
           metrics.failedResourceTypes[type] = (metrics.failedResourceTypes[type] ?? 0) + 1
