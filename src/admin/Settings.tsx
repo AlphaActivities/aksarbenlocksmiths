@@ -16,7 +16,7 @@ export default function Settings({ userId }: { userId: string }) {
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [label, setLabel] = useState("My device");
+  const label = /iPhone/i.test(navigator.userAgent) ? "iPhone" : /iPad/i.test(navigator.userAgent) ? "iPad" : /Android/i.test(navigator.userAgent) ? "Android device" : "Desktop browser";
   const load = () => api<SettingsData>("settings").then(setData);
   useEffect(() => {
     void load().catch((e) => setNotice(e.message)).finally(() => setLoading(false));
@@ -81,15 +81,7 @@ export default function Settings({ userId }: { userId: string }) {
         <section className="c1-card" aria-labelledby="device-notifications-title">
           <h2 id="device-notifications-title">Device notifications</h2>
           <p>On iPhone, open the CRM from its Home Screen icon to enable alerts.</p>
-          <label>
-            Device name
-            <input
-              maxLength={80}
-              required
-              value={label}
-              onChange={(e) => setLabel(e.target.value)}
-            />
-          </label>
+          
           <div className="c1-actions">
             <button disabled={busy || !label.trim() || !data.push_enabled} onClick={() => void enroll()}>
               Enable Notifications
@@ -176,7 +168,7 @@ export default function Settings({ userId }: { userId: string }) {
             </p>
           </section>
           <h2>My Devices <span className="c1-device-count">{data.devices.length}</span></h2>
-          <p>Device names help you identify where alerts were registered. Remove devices you no longer use.</p>
+          <p>Devices are identified automatically. Remove devices you no longer use.</p>
           {!data.devices.length && <p className="c1-card">No devices registered yet. Register this device to receive supported push notifications.</p>}
           {data.devices.map((device) => (
             <article className="c1-card" key={device.id}>
