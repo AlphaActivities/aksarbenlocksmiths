@@ -10,7 +10,7 @@ const configs = {
   aksarbenlocksmiths: { worker: 'aksarben-admin-review', page: '/admin/', embedded: true, types: ['exec', '--no', '--', 'tsc', '-p', 'tsconfig.crm.json'], tests: ['run', 'test:crm'] },
   'Rodents-Extermination': { worker: 'rodents-admin-review', page: '/admin/', types: ['run', 'typecheck'], files: ['tests/submit-lead.test.mjs'] },
   'Missy-dours-homes': { worker: 'missy-crm-review', page: '/dashboard/login', fallback: '/admin.html', types: ['run', 'typecheck'], tests: ['run', 'test:concierge'] },
-  'Pulse-of-divinity': { worker: 'divinity-crm-review', page: '/admin/', types: ['run', 'typecheck'], tests: ['test'] },
+  'Pulse-of-divinity': { worker: 'divinity-crm-review', page: '/admin/login/', types: ['run', 'typecheck'], tests: ['test'] },
 }
 const repo = process.env.GITHUB_REPOSITORY?.split('/').at(-1) ?? process.argv[2]
 const config = Object.hasOwn(configs, repo) ? configs[repo] : undefined
@@ -84,7 +84,7 @@ async function browserSmoke() {
   const assets = config.embedded ? (await import(pathToFileURL(resolve(staging, 'baseline/worker/assets.mjs')))).assets : null
   const directory = assets ? null : await realpath(resolve(staging, spec.assets.directory))
   const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.mjs': 'text/javascript', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.png': 'image/png', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.json': 'application/json', '.webmanifest': 'application/manifest+json', '.ico': 'image/x-icon' }
-  const allowedPaths = new Set([config.page, config.fallback, '/admin/', '/admin', '/admin/index.html', '/dashboard/login'].filter(Boolean))
+  const allowedPaths = new Set([config.page, config.fallback, '/admin/', '/admin', '/admin/index.html', '/admin/login/', '/dashboard/login'].filter(Boolean))
   const server = createServer(async (request, response) => {
     try {
       const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname)
@@ -143,6 +143,7 @@ async function browserSmoke() {
         if (repo === 'Rodents-Extermination') assert.equal(await page.getByText('Live data · Edits save', { exact: true }).count(), 0)
         await page.screenshot({ path: resolve(output, 'signed-out-' + width + '.png'), animations: 'disabled', mask: [page.locator('input, textarea, [contenteditable]')] })
         await page.reload({ waitUntil: 'networkidle' })
+        assert.equal(new URL(page.url()).origin, origin)
         await page.locator('input[type="password"]').first().waitFor({ state: 'visible', timeout: 15_000 })
         metrics.status = 'passed'
       } catch (error) {

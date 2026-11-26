@@ -15,7 +15,6 @@ jobs:
     env:
       CI: 'true'
       WRANGLER_SEND_METRICS: 'false'
-      QA_OUT: ${{ runner.temp }}/engine-results
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,7 +24,8 @@ jobs:
           node-version: '22'
       - name: Install isolated browser tools
         run: |
-          mkdir -p "$QA_OUT"
+          mkdir -p "$RUNNER_TEMP/engine-results"
+          echo "QA_OUT=$RUNNER_TEMP/engine-results" >> "$GITHUB_ENV"
           npm install --prefix "$RUNNER_TEMP/engine-tools" --no-audit --no-fund --no-save playwright@1.56.1
           "$RUNNER_TEMP/engine-tools/node_modules/.bin/playwright" install --with-deps chromium
           echo "QA_PLAYWRIGHT=$RUNNER_TEMP/engine-tools/node_modules/playwright" >> "$GITHUB_ENV"
