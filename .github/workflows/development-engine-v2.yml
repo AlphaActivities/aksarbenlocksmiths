@@ -1,0 +1,25 @@
+name: Development Engine V2 acceptance
+on:
+  push:
+    branches: [dev/development-engine-v2]
+    paths:
+      - 'tools/development-engine-v2/**'
+      - '.github/workflows/development-engine-v2.yml'
+permissions:
+  contents: read
+concurrency:
+  group: development-engine-v2-acceptance
+  cancel-in-progress: true
+jobs:
+  acceptance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run isolated controller and synthetic tests
+        run: node --test tools/development-engine-v2/*.test.mjs tools/development-engine-v2/synthetic/*.test.mjs
