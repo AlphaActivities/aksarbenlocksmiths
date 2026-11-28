@@ -8,3 +8,6 @@ Run `node --test tools/development-engine-v2/*.test.mjs` for the controller and 
 
 ## Live inference verification
 Record the model identifier, request count, reported Neurons, and the GitHub verification run. Store evidence in Alpha Dev after the run succeeds. Keep prompts and credentials out of the verification record.
+
+## Assignment completion evidence
+Match each execution result to its exact submission commit. Treat a successful test run as evidence only for the checks it actually performed. Keep production release approval separate.
