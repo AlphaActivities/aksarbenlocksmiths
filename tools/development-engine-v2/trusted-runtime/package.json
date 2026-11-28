@@ -1,0 +1,10 @@
+{
+  "name": "alpha-v2-trusted-runtime",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "esbuild trusted-runner.mjs --bundle --platform=node --format=esm --minify --external:cloudflare:* --outfile=trusted-bundle.mjs"
+  },
+  "dependencies": { "postgres": "4.1.1" },
+  "devDependencies": { "esbuild": "0.28.2" }
+}
