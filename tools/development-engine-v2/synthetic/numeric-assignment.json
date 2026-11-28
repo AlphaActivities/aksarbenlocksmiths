@@ -1,0 +1,490 @@
+{
+  "tasks": [
+    {
+      "position": 1,
+      "client": "mike",
+      "operation": "add",
+      "operand": 11
+    },
+    {
+      "position": 2,
+      "client": "mike",
+      "operation": "multiply",
+      "operand": 12
+    },
+    {
+      "position": 3,
+      "client": "mike",
+      "operation": "add",
+      "operand": 13
+    },
+    {
+      "position": 4,
+      "client": "mike",
+      "operation": "multiply",
+      "operand": 14
+    },
+    {
+      "position": 5,
+      "client": "mike",
+      "operation": "add",
+      "operand": 15
+    },
+    {
+      "position": 6,
+      "client": "mike",
+      "operation": "multiply",
+      "operand": 16
+    },
+    {
+      "position": 7,
+      "client": "mike",
+      "operation": "add",
+      "operand": 17
+    },
+    {
+      "position": 8,
+      "client": "mike",
+      "operation": "multiply",
+      "operand": 18
+    },
+    {
+      "position": 9,
+      "client": "mike",
+      "operation": "add",
+      "operand": 19
+    },
+    {
+      "position": 10,
+      "client": "mike",
+      "operation": "multiply",
+      "operand": 20
+    },
+    {
+      "position": 11,
+      "client": "mike",
+      "operation": "add",
+      "operand": 21
+    },
+    {
+      "position": 12,
+      "client": "juan",
+      "operation": "add",
+      "operand": 21
+    },
+    {
+      "position": 13,
+      "client": "juan",
+      "operation": "multiply",
+      "operand": 22
+    },
+    {
+      "position": 14,
+      "client": "juan",
+      "operation": "add",
+      "operand": 23
+    },
+    {
+      "position": 15,
+      "client": "juan",
+      "operation": "multiply",
+      "operand": 24
+    },
+    {
+      "position": 16,
+      "client": "juan",
+      "operation": "add",
+      "operand": 25
+    },
+    {
+      "position": 17,
+      "client": "juan",
+      "operation": "multiply",
+      "operand": 26
+    },
+    {
+      "position": 18,
+      "client": "juan",
+      "operation": "add",
+      "operand": 27
+    },
+    {
+      "position": 19,
+      "client": "juan",
+      "operation": "multiply",
+      "operand": 28
+    },
+    {
+      "position": 20,
+      "client": "juan",
+      "operation": "add",
+      "operand": 29
+    },
+    {
+      "position": 21,
+      "client": "juan",
+      "operation": "multiply",
+      "operand": 30
+    },
+    {
+      "position": 22,
+      "client": "juan",
+      "operation": "add",
+      "operand": 31
+    },
+    {
+      "position": 23,
+      "client": "missy",
+      "operation": "add",
+      "operand": 31
+    },
+    {
+      "position": 24,
+      "client": "missy",
+      "operation": "multiply",
+      "operand": 32
+    },
+    {
+      "position": 25,
+      "client": "missy",
+      "operation": "add",
+      "operand": 33
+    },
+    {
+      "position": 26,
+      "client": "missy",
+      "operation": "multiply",
+      "operand": 34
+    },
+    {
+      "position": 27,
+      "client": "missy",
+      "operation": "add",
+      "operand": 35
+    },
+    {
+      "position": 28,
+      "client": "missy",
+      "operation": "multiply",
+      "operand": 36
+    },
+    {
+      "position": 29,
+      "client": "missy",
+      "operation": "add",
+      "operand": 37
+    },
+    {
+      "position": 30,
+      "client": "missy",
+      "operation": "multiply",
+      "operand": 38
+    },
+    {
+      "position": 31,
+      "client": "missy",
+      "operation": "add",
+      "operand": 39
+    },
+    {
+      "position": 32,
+      "client": "missy",
+      "operation": "multiply",
+      "operand": 40
+    },
+    {
+      "position": 33,
+      "client": "missy",
+      "operation": "add",
+      "operand": 41
+    },
+    {
+      "position": 34,
+      "client": "darcy",
+      "operation": "add",
+      "operand": 41
+    },
+    {
+      "position": 35,
+      "client": "darcy",
+      "operation": "multiply",
+      "operand": 42
+    },
+    {
+      "position": 36,
+      "client": "darcy",
+      "operation": "add",
+      "operand": 43
+    },
+    {
+      "position": 37,
+      "client": "darcy",
+      "operation": "multiply",
+      "operand": 44
+    },
+    {
+      "position": 38,
+      "client": "darcy",
+      "operation": "add",
+      "operand": 45
+    },
+    {
+      "position": 39,
+      "client": "darcy",
+      "operation": "multiply",
+      "operand": 46
+    },
+    {
+      "position": 40,
+      "client": "darcy",
+      "operation": "add",
+      "operand": 47
+    },
+    {
+      "position": 41,
+      "client": "darcy",
+      "operation": "multiply",
+      "operand": 48
+    },
+    {
+      "position": 42,
+      "client": "darcy",
+      "operation": "add",
+      "operand": 49
+    },
+    {
+      "position": 43,
+      "client": "darcy",
+      "operation": "multiply",
+      "operand": 50
+    },
+    {
+      "position": 44,
+      "client": "darcy",
+      "operation": "add",
+      "operand": 51
+    }
+  ],
+  "proposals": [
+    [
+      1,
+      "add",
+      11
+    ],
+    [
+      2,
+      "multiply",
+      12
+    ],
+    [
+      3,
+      "add",
+      13
+    ],
+    [
+      4,
+      "multiply",
+      14
+    ],
+    [
+      5,
+      "add",
+      15
+    ],
+    [
+      6,
+      "multiply",
+      16
+    ],
+    [
+      7,
+      "add",
+      17
+    ],
+    [
+      8,
+      "multiply",
+      18
+    ],
+    [
+      9,
+      "add",
+      19
+    ],
+    [
+      10,
+      "multiply",
+      20
+    ],
+    [
+      11,
+      "add",
+      21
+    ],
+    [
+      12,
+      "add",
+      21
+    ],
+    [
+      13,
+      "multiply",
+      22
+    ],
+    [
+      14,
+      "add",
+      23
+    ],
+    [
+      15,
+      "multiply",
+      24
+    ],
+    [
+      16,
+      "add",
+      25
+    ],
+    [
+      17,
+      "multiply",
+      26
+    ],
+    [
+      18,
+      "add",
+      27
+    ],
+    [
+      19,
+      "multiply",
+      28
+    ],
+    [
+      20,
+      "add",
+      29
+    ],
+    [
+      21,
+      "multiply",
+      30
+    ],
+    [
+      22,
+      "add",
+      31
+    ],
+    [
+      23,
+      "add",
+      31
+    ],
+    [
+      24,
+      "multiply",
+      32
+    ],
+    [
+      25,
+      "add",
+      33
+    ],
+    [
+      26,
+      "multiply",
+      34
+    ],
+    [
+      27,
+      "add",
+      35
+    ],
+    [
+      28,
+      "multiply",
+      36
+    ],
+    [
+      29,
+      "add",
+      37
+    ],
+    [
+      30,
+      "multiply",
+      38
+    ],
+    [
+      31,
+      "add",
+      39
+    ],
+    [
+      32,
+      "multiply",
+      40
+    ],
+    [
+      33,
+      "add",
+      41
+    ],
+    [
+      34,
+      "add",
+      41
+    ],
+    [
+      35,
+      "multiply",
+      42
+    ],
+    [
+      36,
+      "add",
+      43
+    ],
+    [
+      37,
+      "multiply",
+      44
+    ],
+    [
+      38,
+      "add",
+      45
+    ],
+    [
+      39,
+      "multiply",
+      46
+    ],
+    [
+      40,
+      "add",
+      47
+    ],
+    [
+      41,
+      "multiply",
+      48
+    ],
+    [
+      42,
+      "add",
+      49
+    ],
+    [
+      43,
+      "multiply",
+      50
+    ],
+    [
+      44,
+      "add",
+      51
+    ]
+  ]
+}
