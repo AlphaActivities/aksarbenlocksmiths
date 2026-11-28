@@ -1,0 +1,6 @@
+{
+  "client": "mike",
+  "kind": "append-documentation",
+  "base": "80e09f62fde0e118dba0630643b323ee91b26eef18ae39b1398135d032305989",
+  "text": "## Live inference verification\nRecord the model identifier, request count, reported Neurons, and the GitHub verification run. Store evidence in Alpha Dev after the run succeeds. Keep prompts and credentials out of the verification record."
+}
